@@ -1,0 +1,12 @@
+
+
+xen-create-image
+----------------
+
+  This is a simple script which is designed to create new images of 
+ Debian Sarge which may be used with the Xen virtual machine.
+
+
+Steve
+--
+$Id: README,v 1.1 2005-12-17 14:24:11 steve Exp $
