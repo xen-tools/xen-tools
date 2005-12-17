@@ -48,7 +48,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: xen-create-image,v 1.1 2005-12-17 14:21:36 steve Exp $
+# $Id: xen-create-image,v 1.2 2005-12-17 15:21:32 steve Exp $
 #
 
 use strict;
