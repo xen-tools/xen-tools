@@ -60,5 +60,5 @@ test-verbose:
 	@perl -MTest::Harness -e '$$Test::Harness::verbose=1; runtests @ARGV;' tests/*.t
 
 
-update: tags
+update: 
 	cvs -z3 update -A -d 2>/dev/null
