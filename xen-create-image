@@ -48,7 +48,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: xen-create-image,v 1.5 2005-12-18 03:36:40 steve Exp $
+# $Id: xen-create-image,v 1.6 2005-12-18 03:43:29 steve Exp $
 #
 
 use strict;
@@ -209,8 +209,6 @@ print "Done\n";
 #  Copy some files from the host system, after setting up the hostname.
 #
 #
-`echo '$HOSTNAME' > $dir/etc/hostname`;
-
 my @hostFiles = ( "/etc/resolv.conf",
 		  "/etc/hosts",
 		  "/etc/passwd",
@@ -233,44 +231,6 @@ if ( -d $dir . "/lib/tls" )
 }
 
 
-#
-#  Now setup the IP address
-#
-print "Setting up IP address .. ";
-open( IP, ">", $dir . "/etc/network/interfaces" );
-print IP<<E_O_IP;
-# This file describes the network interfaces available on your system
-# and how to activate them. For more information, see interfaces(5).
-
-# The loopback network interface
-auto lo
-iface lo inet loopback
-
-# The primary network interface
-auto eth0
-E_O_IP
-
-if ( $DHCP )
-{
-    print IP "iface eth0 dhcp\n";
-}
-else
-{
-    print IP <<E_O_STATIC;
-iface eth0 inet static
- address $IP
- gateway $GATEWAY
- netmask $NETMASK
- network $NETWORK
- broadcast $BROADCAST
-E_O_STATIC
-}
-
-close( IP );
-
-print "Done\n";
-
-
 
 #
 #  Now setup the fstab
@@ -287,17 +247,21 @@ close( TAB );
 print "Done\n";
 
 
+#
+#  Setup the /etc/network/interfaces file upon the guest image
+#
+setupNetworking( $dir );
 
 
 #
 #  Install OpenSSH
 #
-installOpenSSH();
+installOpenSSH( $dir );
 
 #
 #  Fixup Inittab file
 #
-fixupInittab();
+fixupInittab( $dir );
 
 
 
@@ -464,19 +428,79 @@ EOF
 
 
 
+=head2 setupNetworking
+
+  Setup the /etc/network/interfaces file, and the hostname 
+ upon the virtual instance.
+
+=cut
+
+sub setupNetworking
+{
+    my ( $prefix ) = ( @_ );
+
+    `echo '$HOSTNAME' > $prefix/etc/hostname`;
+
+    open( IP, ">", $prefix . "/etc/network/interfaces" );
+
+    if ( $DHCP )
+    {
+	print IP<<E_O_DHCP;
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+	    
+# The primary network interface
+auto eth0
+iface eth0 inet dhcp
+
+E_O_DHCP
+    }
+    else
+    {
+	print IP<<E_O_STATIC_IP;
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+	    
+# The primary network interface
+auto eth0
+iface eth0 inet static
+ address $IP
+ gateway $GATEWAY
+ netmask $NETMASK
+ network $NETWORK
+ broadcast $BROADCAST
+
+E_O_STATIC_IP
+    }
+
+    close( IP );
+}
+
+
 
 =head2 installOpenSSH
 
-  Install OpenSSH upon the virtual instance.
+  Install OpenSSH upon the virtual instance via apt-get.
 
 =cut
 
 sub installOpenSSH
 {
-    `chroot $dir /usr/bin/apt-get update`;
-    `DEBIAN_FRONTEND=noninteractive chroot $dir /usr/bin/apt-get --yes --force-yes install ssh`;
-    `chroot $dir /etc/init.d/ssh stop`;
+    my ( $prefix ) = ( @_ );
+
+    `chroot $prefix /usr/bin/apt-get update`;
+    `DEBIAN_FRONTEND=noninteractive chroot $prefix /usr/bin/apt-get --yes --force-yes install ssh`;
+    `chroot $prefix /etc/init.d/ssh stop`;
 }
+
 
 
 =head2 fixupInittab
@@ -491,6 +515,9 @@ sub installOpenSSH
 
 sub fixupInittab
 {
+    my ( $prefix ) = ( @_ );
+
+
     my @init;
     open( INITTAB, "<", "/etc/inittab" );
     foreach my $line ( <INITTAB> )
@@ -512,7 +539,7 @@ sub fixupInittab
     close( INITTAB );
     
     
-    open( OUTPUT, ">", "$dir/etc/inittab" );
+    open( OUTPUT, ">", "$prefix/etc/inittab" );
     foreach my $line ( @init )
     {
 	print OUTPUT $line . "\n";
