@@ -187,7 +187,7 @@ broadcast = 255.255.255.0
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.20 2005-12-18 23:43:24 steve Exp $
+ $Id: xen-create-image,v 1.21 2005-12-18 23:45:17 steve Exp $
 
 =cut
 
@@ -883,10 +883,12 @@ sub fixupInittab
 	{
 	    if ( $line =~ /^1/ )
 	    {
-		$line = "s0:12345:respawn:/sbin/getty 115200 ttyS0 linux"
+            # NOP - leave line unchanged.
 	    }
 	    else
 	    {
+            # Otherwise comment out the line, we don't need multiple
+            # terminals since we can only access one.
 		$line = "#" . $line;
 	    }
 	}
