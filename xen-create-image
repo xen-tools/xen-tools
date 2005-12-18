@@ -48,7 +48,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: xen-create-image,v 1.7 2005-12-18 03:45:26 steve Exp $
+# $Id: xen-create-image,v 1.8 2005-12-18 03:53:33 steve Exp $
 #
 
 use strict;
@@ -79,6 +79,20 @@ my $MIRROR="http://ftp.us.debian.org/debian"; # set with '--mirror=http://www.et
 my $SIZE="2000M";		# set with '--size=1000M[b] / 1G[b]"
 my $SWAP_SIZE="128M";		# set with '--swapsize=... like --size"
 my $MEMORY="96M";              # set with --memory=128Mb/128M
+my $FS='ext3';
+
+
+#
+# Constants for filesystem usage.
+#
+my %FILESYSTEM_CREATE;
+my %FILESYSTEM_MOUNT;
+
+$FILESYSTEM_CREATE{'ext3'} = '/sbin/mkfs.ext3 -F ';
+$FILESYSTEM_CREATE{'xfs'}  = '/sbin/mkfs.xfs -d name=';
+
+$FILESYSTEM_MOUNT{'ext3'} = '-t ext3';
+$FILESYSTEM_MOUNT{'xfs'}  = '-t xfs';
 
 
 #
@@ -96,7 +110,8 @@ GetOptions(
 	   "mirror=s", \$MIRROR,
 	   "size=s", \$SIZE,
 	   "swapsize=s", \$SWAP_SIZE,
-	   "memory=s", \$MEMORY
+	   "memory=s", \$MEMORY,
+	   "fs=s", \$FS
 	  );
 
 
@@ -147,7 +162,9 @@ print "Creating disk image: $image\n";
 $SIZE =~ s/Mb*$/k/i;
 `/bin/dd if=/dev/zero of=$image bs=$SIZE count=1 seek=1024 >/dev/null 2>/dev/null`;
 print "Creating EXT3 filesystem\n";
-`/sbin/mkfs.ext3 -F $image`;
+
+my $create = $FILESYSTEM_CREATE{lc( $FS ) } . $image;
+`$create`;
 print "Done\n";
 
 
@@ -155,7 +172,8 @@ print "Done\n";
 #  Now mount the image, in a secure temporary location.
 #
 my $dir = tempdir( CLEANUP => 1 );
-`mount -t ext3 -o loop $image $dir`;
+my $mount_cmd = "mount " . $FILESYSTEM_MOUNT{lc($FS)} . " -o loop $image $dir";
+`$mount_cmd`;
 
 
 # Test that the mount worked
@@ -432,6 +450,20 @@ EOF
 	$NETMASK="";
 	$BROADCAST="";
 	$IP="";
+    }
+
+    #
+    #  Ensure we know how to create *and* mount the given filesystem.
+    #
+    if ( !defined( $FILESYSTEM_CREATE{lc( $FS ) } ) ||
+	 !defined( $FILESYSTEM_MOUNT{lc( $FS ) } ) )
+    {
+	print "Unknown filesystem.  Valid choices are:\n";
+	foreach my $key (sort keys %FILESYSTEM_MOUNT ) 
+	{
+	    print "\t" . $key . "\n";
+	}
+	exit;
     }
 }
 
