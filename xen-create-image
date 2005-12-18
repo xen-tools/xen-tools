@@ -187,7 +187,7 @@ broadcast = 255.255.255.0
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.17 2005-12-18 19:07:19 steve Exp $
+ $Id: xen-create-image,v 1.18 2005-12-18 19:11:28 steve Exp $
 
 =cut
 
@@ -217,15 +217,12 @@ use Pod::Usage;
 
 
 #
-#  Configuration options.
+#  Configuration options, initially read from the configuration files
+# but may be overridden by the command line.
+#
+#  Command line flags *always* take precedence over the configuration files(s).
 #
 my %CONFIG;
-
-
-#
-# Options set on the command line.
-#
-my $DIR;        # Mandatory.
 
 
 
@@ -312,15 +309,15 @@ print "---\n";
 #
 #  If the output directories don't exist then create them.
 #
-if ( ! -d $DIR . "/domains/" )
+if ( ! -d $CONFIG{'dir'} . "/domains/" )
 {
-    mkdir $DIR . '/domains', 0777
-      || die "Cannot create $DIR/domains - $!";
+    mkdir $CONFIG{'dir'} . '/domains', 0777
+      || die "Cannot create $CONFIG{'dir'}/domains - $!";
 }
-if ( ! -d $DIR . "/domains/" . $CONFIG{'hostname'} )
+if ( ! -d $CONFIG{'dir'} . "/domains/" . $CONFIG{'hostname'} )
 {
-    mkdir $DIR. '/domains/' . $CONFIG{'hostname'}, 0777
-      || die "Cannot create $DIR/domains/$CONFIG{'hostname'} - $!" ;
+    mkdir $CONFIG{'dir'}. '/domains/' . $CONFIG{'hostname'}, 0777
+      || die "Cannot create $CONFIG{'dir'}/domains/$CONFIG{'hostname'} - $!" ;
 }
 
 
@@ -328,8 +325,8 @@ if ( ! -d $DIR . "/domains/" . $CONFIG{'hostname'} )
 #
 # The two images we'll use, one for the disk image, one for swap.
 #
-my $image = $DIR . '/domains/' . $CONFIG{'hostname'} . "/disk.img" ;
-my $swap  = $DIR . '/domains/' . $CONFIG{'hostname'} . "/swap.img" ;
+my $image = $CONFIG{'dir'} . '/domains/' . $CONFIG{'hostname'} . "/disk.img" ;
+my $swap  = $CONFIG{'dir'} . '/domains/' . $CONFIG{'hostname'} . "/swap.img" ;
 
 #
 #  Create swapfile and initialise it.
@@ -611,7 +608,7 @@ sub parseCommandLineArguments
 	       "mask=s",     \$CONFIG{'netmask'},
 	       "broadcast=s",\$CONFIG{'broadcast'},
 	       "network=s",  \$CONFIG{'network'},
-	       "dir=s", \$DIR,
+	       "dir=s",      \$CONFIG{'dir'},
 	       "dhcp",       \$CONFIG{'dhcp'},
 	       "mirror=s",   \$CONFIG{'mirror'},
 	       "size=s",     \$CONFIG{'size'},
@@ -651,7 +648,7 @@ EOF
     }
 
 
-    if (!defined( $DIR ) )
+    if (!defined( $CONFIG{'dir'} ) )
     {
 	print<<EOF
 
@@ -670,9 +667,15 @@ EOF
     #
     #  Make sure the directory exists.
     #
-    if ( ! -d $DIR )
+    if ( ! -d $CONFIG{'dir'} )
     {
-	print "Output directory '$DIR' doesn't exist\n";
+	print "Output directory '$CONFIG{'dir'}' doesn't exist\n";
+	exit;
+    }
+
+    if ( ! -w $CONFIG{'dir'} )
+    {
+	print "Output directory '$CONFIG{'dir'}' isn't writable.\n";
 	exit;
     }
 
