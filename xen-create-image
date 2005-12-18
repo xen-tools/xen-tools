@@ -120,7 +120,7 @@ Read the manual, with examples.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.12 2005-12-18 16:18:59 steve Exp $
+ $Id: xen-create-image,v 1.13 2005-12-18 16:22:11 steve Exp $
 
 =cut
 
@@ -163,7 +163,6 @@ my $DIR;        # Mandatory.
 # DHCP must be selected.
 #
 #
-my $GATEWAY;                   # set with '--gateway=dd.dd.dd.dd'
 my $NETMASK="255.255.255.0";   # set with '--mask=dd.dd.dd.dd'
 my $BROADCAST="192.168.1.255"; # set with '--broadcase=ddd.dd.dd.d'
 my $NETWORK="192.168.1.0";     # set with '--network=dd.dd.dd.dd'
@@ -201,6 +200,10 @@ $FILESYSTEM_MOUNT{'reiserfs'}  = '-t reiserfs';
 #
 #  Read configuration file(s) if they exist.
 #
+if ( -e "etc/xen-tools.conf" )
+{
+    readConfigurationFile( "etc/xen-tools.conf" );
+}
 if ( -e "/etc/xen-tools/xen-tools.conf" )
 {
     readConfigurationFile( "/etc/xen-tools/xen-tools.conf" );
@@ -211,15 +214,11 @@ if ( -e $ENV{'HOME'} . ".xen-tools.conf" )
 }
 
 
-
-
 #
 #  Parse command line arguments, these override the values from the
 # configuration file.
 #
 parseCommandLineArguments();
-
-
 
 
 #
@@ -468,13 +467,13 @@ sub readConfigurationFile
 
     my $line       = ""; 
 
-    while (defined($line = <FILY>) ) 
+    while (defined($line = <FILE>) ) 
     {
         chomp $line;
 	if ($line =~ s/\\$//) 
 	{
-	    $line .= <FILY>;
-	    redo unless eof(FILY);
+	    $line .= <FILE>;
+	    redo unless eof(FILE);
 	}
       
 	# Skip lines beginning with comments
@@ -526,7 +525,7 @@ sub parseCommandLineArguments
     GetOptions(
 	       "hostname=s", \$HOSTNAME,
 	       "ip=s", \$CONFIG{'ip'},
-	       "gateway=s", \$GATEWAY,
+	       "gateway=s", \$CONFIG{'gateway'},
 	       "mask=s", \$NETMASK,
 	       "broadcast=s", \$BROADCAST,
 	       "network=s", \$NETWORK,
@@ -645,10 +644,10 @@ EOF
 
     if ( $CONFIG{'dhcp'} )
     {
-	$GATEWAY="";
-	$NETMASK="";
-	$BROADCAST="";
-	$CONFIG{'ip'} = '';
+	$CONFIG{'gateway'} = '';
+	$NETMASK	   = "";
+	$BROADCAST	   = "";
+	$CONFIG{'ip'}	   = '';
     }
 
     #
@@ -713,7 +712,7 @@ iface lo inet loopback
 auto eth0
 iface eth0 inet static
  address $CONFIG{'ip'}
- gateway $GATEWAY
+ gateway $CONFIG{'gateway'}
  netmask $NETMASK
  network $NETWORK
  broadcast $BROADCAST
