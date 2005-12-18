@@ -13,10 +13,11 @@
    --manual   Read this scripts manual.
 
   Size / General options:
-   --size     Set the size of the primary disk image.
-   --swap     Set the size of the swap partition.   
+   --dir      Specify where the output images should go.
    --fs       Specify the filesystem type to use.
    --memory   Setup the amount of memory allocated to the instance.
+   --size     Set the size of the primary disk image.
+   --swap     Set the size of the swap partition.   
 
   Networking options:
    --dhcp      Setup the image to get an IP address via DHCP
@@ -27,7 +28,6 @@
 
   Mandatory options:
 
-   --dir       Specify where the output images should go.
    --hostname  Set the images hostname.
 
 =cut
@@ -38,6 +38,34 @@
 
 =over 8
 
+=item B<--broadcast>
+Specify the broadcast address for the virtual image, only useful if DHCP is not used.
+
+=item B<--dhcp>
+Specify that the virtual image should use DHCP to obtain its networking information.
+
+=item B<--fs>
+Specify the filesystem the image should be given.  Valid options are 'ext3',
+'xfs', or 'reiserfs'.
+
+=item B<--gateway>
+Specify the gateway address for the virtual image, only useful if DHCP is not used.
+
+=item B<--help>
+Show the brief help information.
+
+=item B<--manual>
+Read the manual, with examples.
+
+=item B<--memory>
+Specify the amount of memory the virtual image should be allocated.  Defaults
+to 96Mb.
+
+=item B<--mirror>
+Specify the mirror to use to the installation of Sarge, defaults to http://ftp.us.debian.org/debian
+
+=item B<--network>
+Specify the network the virtual image is living upon.  Only useful if DHCP is not used.
 =item B<--size>  
 Specify the size of the virtual images primary drive.  The size may be
 suffixed with either Mb, or Gb.
@@ -46,19 +74,13 @@ suffixed with either Mb, or Gb.
 Specify the size of the virtual images swap partition.  The size may be
 suffixed with either Mb, or Gb.
 
-=item B<--help>
-Show the brief help information.
-
-=item B<--manual>
-Read the manual, with examples.
 
 =back
 
 =cut
 
 
-
-=head1 EXAMPLE
+=head1 EXAMPLES
 
   The following will create a 2Gb disk image, along with a 128Mb 
  swap file with Debian Sarge setup and running via DHCP.
@@ -66,6 +88,32 @@ Read the manual, with examples.
      xen-create-image --size=2Gb --swap=128Mb --dhcp \
           --dir=/home/xen --hostname=vm01.my.flat
 
+  This next example sets up a host which has the name 'vm02' and
+ IP address 192.168.1.200, with the gateway address of 192.168.1.1
+
+     xen-create-image --size=2Gb --swap=128Mb \
+          --ip=192.168.1.200 --netmask=255.255.255.0 --network=192.168.1.0 \
+          --gateway=192.168.1.1 \
+          --dir=/home/xen --hostname=vm02
+
+  To save time these command line options may be specified in the
+ configuration file discussed later.
+
+  The directory specified for the output will be used to store the files
+ which are produced.  To avoid clutter each host will have its images 
+ stored beneath the specified directory, named after the hostname.
+
+  For example the images created above will be stored as:
+
+   $dir/domains/vm01.my.flat/
+   $dir/domains/vm01.my.flat/disk.img
+   $dir/domains/vm01.my.flat/swap.img
+
+   $dir/domains/vm02.my.flat/
+   $dir/domains/vm02.my.flat/disk.img
+   $dir/domains/vm02.my.flat/swap.img
+
+  The '/domains/' subdirectory will be created if necessary.
 
 =cut
 
@@ -74,43 +122,62 @@ Read the manual, with examples.
 =head1 DESCRIPTION
 
 
-  This is a reasonably simple script which is more of a cheap hack
- than a production tool, however it does appear to work nicely for
- my own uses.
+  xen-create-image is a simple script which allows you to create new
+ Xen instances of Debian Sarge.  The new images conmprise of two
+ files:
 
-  The output of this script will be two files for each new instance:
-
-   1.  One 2Gb file for the installations primary disk image.
-   2.  One 128Mb file for the images swap partition.
-
-  Usage:
-
-
-  The initial two arguments '--hostname' and '--dir' are mandatory,
- and control the hostname and output directory respectively.  Other
- parameters are all network based, either give the list as shown above
- or use the '--dhcp' option to setup the host with a DHCP allocated
- IP address.
-
-  'dir' is used to create the output disk images which are referenced
- in the Xen configuration file.  They will be created as:
-
-
-   $dir/domains/
-   $dir/domains/$hostname/disk.img
-   $dir/domains/$hostname/swap.img
-
-  The '/domains/' subdirectory, and sub-subdirectory named after the
- hostname will be created if necessary.
-
-  Basic setup with your hosts file, resolv.conf, etc works just fine.
+   1.  One disk image which will be treated as the primary disk drive.
+   2.  One swap image.
 
   The image will also have an OpenSSH server installed upon it, and
- an appropriate /etc/inittab file created.
+ an appropriate /etc/inittab file created, along with copies of the
+ hosts password and shadow files.
 
-  You are *strongly* advised to chroot() into the new instance once
- it has been setup to prune the users in the /etc/passwd file which
- will be copied from your hosts system.
+
+=head1 CONFIGURATION
+
+  To reduce the length of the command line each of the options may
+ be specified inside a configuration file.
+
+  The script will check three files for options:
+
+   1. /etc/xen-tools/xen-tools.conf
+   2. ~/.xen-tools.conf
+   3. ./etc/xen-tools.conf
+
+  The files may contain comments, which begin with the hash '#' character
+ and are otherwise of the format 'key = value.
+
+  A sample configuration file would look like this:
+
+
+=for example begin
+
+#
+# General options.
+#
+dir    = /home/xen   # Ouptut directory
+memory = 128Mb       # 128Mb for each new image.
+
+#
+#  Images
+#
+fs   = ext3      # We like EXT3
+swap = 128mb     # 128Mb of swap.
+size = 2Gb       # 2Gb images.
+
+#
+# Networking options.
+#
+network   = 192.168.1.0
+gateway   = 192.168.1.1
+broadcast = 255.255.255.0
+
+=for example end
+
+  This allows a new image to be created with only two command line flags:
+
+      xen-create-image --hostname='vm03.my.flat' --ip=192.168.1.201
 
 
 =head1 AUTHOR
@@ -120,10 +187,14 @@ Read the manual, with examples.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.15 2005-12-18 18:38:21 steve Exp $
+ $Id: xen-create-image,v 1.16 2005-12-18 19:05:58 steve Exp $
 
 =cut
 
+
+=head1 CONTRIBUTORS
+
+  Radu Spineanu
 
 =head1 LICENSE
 
