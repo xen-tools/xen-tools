@@ -48,7 +48,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: xen-create-image,v 1.4 2005-12-18 03:33:54 steve Exp $
+# $Id: xen-create-image,v 1.5 2005-12-18 03:36:40 steve Exp $
 #
 
 use strict;
@@ -152,7 +152,7 @@ print "Done\n";
 #  Now mount the image, in a secure temporary location.
 #
 my $dir = tempdir( CLEANUP => 1 );
-`mount -t xfs -o loop $image $dir`;
+`mount -t ext3 -o loop $image $dir`;
 
 
 # Test that the mount worked
