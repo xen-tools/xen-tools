@@ -187,7 +187,7 @@ broadcast = 255.255.255.0
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.16 2005-12-18 19:05:58 steve Exp $
+ $Id: xen-create-image,v 1.17 2005-12-18 19:07:19 steve Exp $
 
 =cut
 
@@ -228,13 +228,6 @@ my %CONFIG;
 my $DIR;        # Mandatory.
 
 
-#
-# Either *all* the relevent networking options must be setup, or
-# DHCP must be selected.
-#
-#
-my $MIRROR="http://ftp.us.debian.org/debian"; # set with '--mirror=http://www.etc.com"'
-
 
 
 #
@@ -265,7 +258,7 @@ $CONFIG{'memory'} = '96Mb';
 $CONFIG{'size'}   = '2000Mb';
 $CONFIG{'swap'}   = '128M';
 $CONFIG{'fs'}     = 'ext3';
-
+$CONFIG{'mirror'} = 'http://ftp.us.debian.org/debian';
 
 #
 #  Read configuration file(s) if they exist.
@@ -382,7 +375,7 @@ if ( ! $mount =~ /$image/) {
 #  Install the base system.
 #
 print "Running debootstrap to install the system.   This will take a while!\n";
-`debootstrap sarge $dir $MIRROR`;
+`debootstrap sarge $dir $CONFIG{'mirror'}`;
 print "Done\n";
 
 #
@@ -404,7 +397,7 @@ print APT<<E_O_APT;
 
 
 # Stable
-deb $MIRROR     sarge main contrib non-free
+deb $CONFIG{'mirror'}     sarge main contrib non-free
 
 # 
 #  Security updates
@@ -620,13 +613,13 @@ sub parseCommandLineArguments
 	       "network=s",  \$CONFIG{'network'},
 	       "dir=s", \$DIR,
 	       "dhcp",       \$CONFIG{'dhcp'},
-	       "mirror=s", \$MIRROR,
+	       "mirror=s",   \$CONFIG{'mirror'},
 	       "size=s",     \$CONFIG{'size'},
 	       "swap=s",     \$CONFIG{'swap'},
 	       "memory=s",   \$CONFIG{'memory'},
-	       "fs=s",    \$CONFIG{'fs'},
-	       "help",    \$HELP,
-	       "manual",  \$MANUAL
+	       "fs=s",       \$CONFIG{'fs'},
+	       "help",       \$HELP,
+	       "manual",     \$MANUAL
 	      );
     
     pod2usage(1) if $HELP;
@@ -715,7 +708,7 @@ EOF
     #    
     #  Check mirror format
     #
-    if (!($MIRROR =~ /^http/i)) 
+    if (!($CONFIG{'mirror'} =~ /^http/i)) 
     {
 	print "Please enter a valid mirror.\n";
 	exit;
