@@ -120,7 +120,7 @@ Read the manual, with examples.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.13 2005-12-18 16:22:11 steve Exp $
+ $Id: xen-create-image,v 1.14 2005-12-18 16:32:32 steve Exp $
 
 =cut
 
@@ -154,7 +154,6 @@ my %CONFIG;
 #
 # Options set on the command line.
 #
-my $HOSTNAME;   # Mandatory.
 my $DIR;        # Mandatory.
 
 
@@ -163,17 +162,9 @@ my $DIR;        # Mandatory.
 # DHCP must be selected.
 #
 #
-my $NETMASK="255.255.255.0";   # set with '--mask=dd.dd.dd.dd'
-my $BROADCAST="192.168.1.255"; # set with '--broadcase=ddd.dd.dd.d'
-my $NETWORK="192.168.1.0";     # set with '--network=dd.dd.dd.dd'
-
 my $MIRROR="http://ftp.us.debian.org/debian"; # set with '--mirror=http://www.etc.com"'
-my $SIZE="2000M";		# set with '--size=1000M[b] / 1G[b]"
-my $SWAP_SIZE="128M";		# set with '--swapsize=... like --size"
-my $MEMORY="96M";              # set with --memory=128Mb/128M
 my $FS='ext3';
-my $HELP;
-my $MANUAL;
+
 
 
 #
@@ -193,8 +184,17 @@ $FILESYSTEM_MOUNT{'reiserfs'}  = '-t reiserfs';
 
 
 #
-#  Start of the script.
+#  Setup defaults:
 #
+#  Memory = 96M, Image = 2000Mb, Swap = 128Mb, and filesystem is ext3.
+#
+#  These may be overriden by one of the configuration files, or by the
+# command line arguments.
+#
+$CONFIG{'memory'} = '96Mb';
+$CONFIG{'size'}   = '2000Mb';
+$CONFIG{'swap'}   = '128M';
+$CONFIG{'fs'}     = 'ext3';
 
 
 #
@@ -227,7 +227,24 @@ parseCommandLineArguments();
 #
 checkArguments();
 
+print "\n";
+print "Hostname :  $CONFIG{'hostname'}\n";
+print "Image size: $CONFIG{'size'}\n";
+print "Swap size:  $CONFIG{'swap'}\n";
+print "Fileystem:  $CONFIG{'fs'}\n";
 
+if ( $CONFIG{'dhcp'} ) 
+{
+    print "DHCP\n";
+}
+else
+{
+   $CONFIG{'ip'}        && print "IP       : $CONFIG{'ip'}\n";
+   $CONFIG{'network'}   && print "Network  : $CONFIG{'network'}\n";
+   $CONFIG{'broadcast'} && print "Broadcast: $CONFIG{'broadcast'}\n";
+   $CONFIG{'gateway'}   && print "Gateway  : $CONFIG{'gateway'}\n";
+}
+print "---\n";
 
 #
 #  If the output directories don't exist then create them.
@@ -237,10 +254,10 @@ if ( ! -d $DIR . "/domains/" )
     mkdir $DIR . '/domains', 0777
       || die "Cannot create $DIR/domains - $!";
 }
-if ( ! -d $DIR . "/domains/" . $HOSTNAME )
+if ( ! -d $DIR . "/domains/" . $CONFIG{'hostname'} )
 {
-    mkdir $DIR. '/domains/' . $HOSTNAME, 0777
-      || die "Cannot create $DIR/domains/$HOSTNAME - $!" ;
+    mkdir $DIR. '/domains/' . $CONFIG{'hostname'}, 0777
+      || die "Cannot create $DIR/domains/$CONFIG{'hostname'} - $!" ;
 }
 
 
@@ -248,15 +265,15 @@ if ( ! -d $DIR . "/domains/" . $HOSTNAME )
 #
 # The two images we'll use, one for the disk image, one for swap.
 #
-my $image = $DIR . '/domains/' . $HOSTNAME . "/disk.img" ;
-my $swap  = $DIR . '/domains/' . $HOSTNAME . "/swap.img" ;
+my $image = $DIR . '/domains/' . $CONFIG{'hostname'} . "/disk.img" ;
+my $swap  = $DIR . '/domains/' . $CONFIG{'hostname'} . "/swap.img" ;
 
 #
 #  Create swapfile and initialise it.
 #
 print "Creating swapfile : $swap\n";
-$SWAP_SIZE =~ s/Mb*$//i;
-`/bin/dd if=/dev/zero of=$swap bs=1024k count=$SWAP_SIZE >/dev/null 2>/dev/null`;
+$CONFIG{'swap'} =~ s/Mb*$//i;
+`/bin/dd if=/dev/zero of=$swap bs=1024k count=$CONFIG{'swap'} >/dev/null 2>/dev/null`;
 print "Initializing swap file\n";
 `/sbin/mkswap $swap`;
 print "Done\n";
@@ -265,8 +282,8 @@ print "Done\n";
 #  Create disk file and initialise it.
 #
 print "Creating disk image: $image\n";
-$SIZE =~ s/Mb*$/k/i;
-`/bin/dd if=/dev/zero of=$image bs=$SIZE count=1 seek=1024 >/dev/null 2>/dev/null`;
+$CONFIG{'size'} =~ s/Mb*$/k/i;
+`/bin/dd if=/dev/zero of=$image bs=$CONFIG{'size'} count=1 seek=1024 >/dev/null 2>/dev/null`;
 print "Creating EXT3 filesystem\n";
 
 my $create = $FILESYSTEM_CREATE{lc( $FS ) } . $image;
@@ -402,11 +419,11 @@ fixupInittab( $dir );
 # Finally setup Xen to allow us to create the image.
 #
 print "Setting up Xen configuration file .. ";
-open( XEN, ">", "/etc/xen/$HOSTNAME.cfg" );
+open( XEN, ">", "/etc/xen/$CONFIG{'hostname'}.cfg" );
 print XEN<<E_O_XEN;
 kernel = "/boot/vmlinuz-2.6.12-xenU"
-memory = $MEMORY
-name   = "$HOSTNAME"
+memory = $CONFIG{'memory'}
+name   = "$CONFIG{'hostname'}"
 disk   = [ 'file:$image,sda1,w','file:$swap,sda2,w' ]
 root   = "/dev/sda1 ro"
 E_O_XEN
@@ -428,7 +445,7 @@ print "Done\n";
 #
 print <<EOEND;
 
-  To finish the setup of your new host $HOSTNAME please run:
+  To finish the setup of your new host $CONFIG{'hostname'} please run:
 
     mkdir /mnt/tmp
     mount -t ext3 -o loop $image /mnt/tmp
@@ -447,7 +464,7 @@ print <<EOEND;
 
  Once completed you may start your new instance of Xen with:
 
-    xm create $HOSTNAME.cfg -c
+    xm create $CONFIG{'hostname'}.cfg -c
 
 EOEND
 
@@ -519,25 +536,27 @@ sub readConfigurationFile
 
 sub parseCommandLineArguments
 {
+    my $HELP   = 0;
+    my $MANUAL = 0;
 
     #  Parse options.
     #
     GetOptions(
-	       "hostname=s", \$HOSTNAME,
-	       "ip=s", \$CONFIG{'ip'},
-	       "gateway=s", \$CONFIG{'gateway'},
-	       "mask=s", \$NETMASK,
-	       "broadcast=s", \$BROADCAST,
-	       "network=s", \$NETWORK,
+	       "hostname=s", \$CONFIG{'hostname'},
+	       "ip=s",       \$CONFIG{'ip'},
+	       "gateway=s",  \$CONFIG{'gateway'},
+	       "mask=s",     \$CONFIG{'netmask'},
+	       "broadcast=s",\$CONFIG{'broadcast'},
+	       "network=s",  \$CONFIG{'network'},
 	       "dir=s", \$DIR,
-	       "dhcp", \$CONFIG{'dhcp'},
+	       "dhcp",       \$CONFIG{'dhcp'},
 	       "mirror=s", \$MIRROR,
-	       "size=s", \$SIZE,
-	       "swapsize=s", \$SWAP_SIZE,
-	       "memory=s", \$MEMORY,
-	       "fs=s", \$FS,
-	       "help", \$HELP,
-	       "manual", \$MANUAL
+	       "size=s",     \$CONFIG{'size'},
+	       "swap=s",     \$CONFIG{'swap'},
+	       "memory=s",   \$CONFIG{'memory'},
+	       "fs=s",    \$FS,
+	       "help",    \$HELP,
+	       "manual",  \$MANUAL
 	      );
     
     pod2usage(1) if $HELP;
@@ -556,7 +575,7 @@ sub parseCommandLineArguments
 sub checkArguments
 {
 
-    if (!defined( $HOSTNAME ) )
+    if (!defined( $CONFIG{'hostname'} ) )
     {
 	print<<EOF
 
@@ -597,7 +616,7 @@ EOF
     # 
     #  Make sure we have a valid size
     #
-    if ( !(($SIZE =~ /^\d+[GM]b*$/i) && ($SWAP_SIZE =~ /^\d+[GM]b*$/i)) )
+    if ( !(($CONFIG{'size'} =~ /^\d+[GM]b*$/i) && ($CONFIG{'swap'} =~ /^\d+[GM]b*$/i)) )
     {
         print "Invalid size formats.  Please use something like:\n";
 	print " --size=128Mb\n";
@@ -607,19 +626,19 @@ EOF
 
 
     # Convert Gb -> Mb
-    if ( $SIZE =~ /^(\d+)Gb*$/i )
+    if ( $CONFIG{'size'} =~ /^(\d+)Gb*$/i )
     {
-	$SIZE = $1 * 1024 . "M";
+	$CONFIG{'size'} = $1 * 1024 . "M";
     }
-    if ( $SWAP_SIZE =~ /^(\d+)Gb*$/i )
+    if ( $CONFIG{'swap'} =~ /^(\d+)Gb*$/i )
     {
-	$SWAP_SIZE = $1 * 1024 . "M";
+	$CONFIG{'swap'} = $1 * 1024 . "M";
     }
 
     # Strip trailing Mb from the memory size.
-    if ( $MEMORY =~ /^(\d+)Mb*$/i )
+    if ( $CONFIG{'memory'} =~ /^(\d+)Mb*$/i )
     {
-	$MEMORY = $1;
+	$CONFIG{'memory'} = $1;
     }
 
 
@@ -644,10 +663,10 @@ EOF
 
     if ( $CONFIG{'dhcp'} )
     {
-	$CONFIG{'gateway'} = '';
-	$NETMASK	   = "";
-	$BROADCAST	   = "";
-	$CONFIG{'ip'}	   = '';
+	$CONFIG{'gateway'}   = '';
+	$CONFIG{'netmask'}   = '';
+	$CONFIG{'broadcast'} = '';
+	$CONFIG{'ip'}	     = '';
     }
 
     #
@@ -678,7 +697,7 @@ sub setupNetworking
 {
     my ( $prefix ) = ( @_ );
 
-    `echo '$HOSTNAME' > $prefix/etc/hostname`;
+    `echo '$CONFIG{'hostname'}' > $prefix/etc/hostname`;
 
     open( IP, ">", $prefix . "/etc/network/interfaces" );
 
@@ -713,9 +732,9 @@ auto eth0
 iface eth0 inet static
  address $CONFIG{'ip'}
  gateway $CONFIG{'gateway'}
- netmask $NETMASK
- network $NETWORK
- broadcast $BROADCAST
+ netmask $CONFIG{'netmask'}
+ network $CONFIG{'network'}
+ broadcast $CONFIG{'broadcast'}
 
 E_O_STATIC_IP
     }
