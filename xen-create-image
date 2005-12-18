@@ -1,60 +1,148 @@
 #!/usr/bin/perl -w
-#
-#  Create a new Xen instances containing an installation of Debian
-#
-#  This is a reasonably simple script which is more of a cheap hack
-# than a production tool, however it does appear to work nicely for
-# my own uses.
-#
-#  The output of this script will be two files for each new instance:
-#
-#   1.  One 2Gb file for the installations primary disk image.
-#   2.  One 128Mb file for the images swap partition.
-#
-#  Usage:
-#
-# ./xen-create-image --hostname='vm03' --dir=/home/zen \
-#   --ip=192.168.1.93 --gateway=192.168.1.1 \
-#   --network=192.168.1.0 --mask=255.255.255.0 \
-#
-#  The initial two arguments '--hostname' and '--dir' are mandatory,
-# and control the hostname and output directory respectively.  Other
-# parameters are all network based, either give the list as shown above
-# or use the '--dhcp' option to setup the host with a DHCP allocated
-# IP address.
-#
-#  'dir' is used to create the output disk images which are referenced
-# in the Xen configuration file.  They will be created as:
-#
-#
-#   $dir/domains/
-#   $dir/domains/$hostname/disk.img
-#   $dir/domains/$hostname/swap.img
-#
-#  The '/domains/' subdirectory, and sub-subdirectory named after the
-# hostname will be created if necessary.
-#
-#  Basic setup with your hosts file, resolv.conf, etc works just fine.
-#
-#  The image will also have an OpenSSH server installed upon it, and
-# an appropriate /etc/inittab file created.
-#
-#  You are *strongly* advised to chroot() into the new instance once
-# it has been setup to prune the users in the /etc/passwd file which
-# will be copied from your hosts system.
-#
-#
-# Steve
-# --
-# http://www.steve.org.uk/
-#
-# $Id: xen-create-image,v 1.8 2005-12-18 03:53:33 steve Exp $
-#
+
+=head1 NAME
+
+  xen-create-image - Create a new Xen instance of Debian Sarge.
+
+=head1 SYNOPSIS
+
+  xen-create-image [options]
+
+  Help Options:
+   --help     Show this scripts help information.
+   --manual   Read this scripts manual.
+
+  Size / General options:
+   --size     Set the size of the primary disk image.
+   --swap     Set the size of the swap partition.   
+   --fs       Specify the filesystem type to use.
+   --memory   Setup the amount of memory allocated to the instance.
+
+  Networking options:
+   --dhcp      Setup the image to get an IP address via DHCP
+   --network   Setup the network the host is upon.
+   --gateway   Setup the iamge's network gateway.
+   --broadcast Setup the image's network broadcast address.
+   --mirror    Setup the mirror to use when installing Sarge.
+
+  Mandatory options:
+
+   --dir       Specify where the output images should go.
+   --hostname  Set the images hostname.
+
+=cut
+
+
+
+=head1 OPTIONS
+
+=over 8
+
+=item B<--size>  
+Specify the size of the virtual images primary drive.  The size may be
+suffixed with either Mb, or Gb.
+
+=item B<--swap>
+Specify the size of the virtual images swap partition.  The size may be
+suffixed with either Mb, or Gb.
+
+=item B<--help>
+Show the brief help information.
+
+=item B<--manual>
+Read the manual, with examples.
+
+=back
+
+=cut
+
+
+
+=head1 EXAMPLE
+
+  The following will create a 2Gb disk image, along with a 128Mb 
+ swap file with Debian Sarge setup and running via DHCP.
+
+     xen-create-image --size=2Gb --swap=128Mb --dhcp \
+          --dir=/home/xen --hostname=vm01.my.flat
+
+
+=cut
+
+
+
+=head1 DESCRIPTION
+
+
+  This is a reasonably simple script which is more of a cheap hack
+ than a production tool, however it does appear to work nicely for
+ my own uses.
+
+  The output of this script will be two files for each new instance:
+
+   1.  One 2Gb file for the installations primary disk image.
+   2.  One 128Mb file for the images swap partition.
+
+  Usage:
+
+
+  The initial two arguments '--hostname' and '--dir' are mandatory,
+ and control the hostname and output directory respectively.  Other
+ parameters are all network based, either give the list as shown above
+ or use the '--dhcp' option to setup the host with a DHCP allocated
+ IP address.
+
+  'dir' is used to create the output disk images which are referenced
+ in the Xen configuration file.  They will be created as:
+
+
+   $dir/domains/
+   $dir/domains/$hostname/disk.img
+   $dir/domains/$hostname/swap.img
+
+  The '/domains/' subdirectory, and sub-subdirectory named after the
+ hostname will be created if necessary.
+
+  Basic setup with your hosts file, resolv.conf, etc works just fine.
+
+  The image will also have an OpenSSH server installed upon it, and
+ an appropriate /etc/inittab file created.
+
+  You are *strongly* advised to chroot() into the new instance once
+ it has been setup to prune the users in the /etc/passwd file which
+ will be copied from your hosts system.
+
+
+=head1 AUTHOR
+
+
+ Steve
+ --
+ http://www.steve.org.uk/
+
+ $Id: xen-create-image,v 1.9 2005-12-18 04:13:16 steve Exp $
+
+=cut
+
+
+=head1 LICENSE
+
+Copyright (c) 2005 by Steve Kemp.  All rights reserved.
+
+This module is free software;
+you can redistribute it and/or modify it under
+the same terms as Perl itself.
+The LICENSE file contains the full text of the license.
+
+=cut
+
 
 use strict;
 use File::Copy;
 use File::Temp qw/ tempdir /;
 use Getopt::Long;
+use Pod::Usage;
+
 
 
 #
@@ -80,6 +168,8 @@ my $SIZE="2000M";		# set with '--size=1000M[b] / 1G[b]"
 my $SWAP_SIZE="128M";		# set with '--swapsize=... like --size"
 my $MEMORY="96M";              # set with --memory=128Mb/128M
 my $FS='ext3';
+my $HELP;
+my $MANUAL;
 
 
 #
@@ -111,8 +201,13 @@ GetOptions(
 	   "size=s", \$SIZE,
 	   "swapsize=s", \$SWAP_SIZE,
 	   "memory=s", \$MEMORY,
-	   "fs=s", \$FS
+	   "fs=s", \$FS,
+	   "help", \$HELP,
+	   "manual", \$MANUAL
 	  );
+
+pod2usage(1) if $HELP;
+pod2usage(-verbose => 2 ) if $MANUAL;
 
 
 #
