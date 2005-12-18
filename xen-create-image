@@ -120,7 +120,7 @@ Read the manual, with examples.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.9 2005-12-18 04:13:16 steve Exp $
+ $Id: xen-create-image,v 1.10 2005-12-18 16:08:13 steve Exp $
 
 =cut
 
@@ -178,11 +178,13 @@ my $MANUAL;
 my %FILESYSTEM_CREATE;
 my %FILESYSTEM_MOUNT;
 
-$FILESYSTEM_CREATE{'ext3'} = '/sbin/mkfs.ext3 -F ';
-$FILESYSTEM_CREATE{'xfs'}  = '/sbin/mkfs.xfs -d name=';
+$FILESYSTEM_CREATE{'ext3'}     = '/sbin/mkfs.ext3 -F ';
+$FILESYSTEM_CREATE{'xfs'}      = '/sbin/mkfs.xfs -d name=';
+$FILESYSTEM_CREATE{'reiserfs'} = '/sbin/mkfs.reiserfs -f -q ';
 
-$FILESYSTEM_MOUNT{'ext3'} = '-t ext3';
-$FILESYSTEM_MOUNT{'xfs'}  = '-t xfs';
+$FILESYSTEM_MOUNT{'ext3'}      = '-t ext3';
+$FILESYSTEM_MOUNT{'xfs'}       = '-t xfs';
+$FILESYSTEM_MOUNT{'reiserfs'}  = '-t reiserfs';
 
 
 #
