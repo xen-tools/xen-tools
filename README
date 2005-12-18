@@ -7,6 +7,18 @@ xen-create-image
  Debian Sarge which may be used with the Xen virtual machine.
 
 
+TODO
+----
+
+  1. Test more filesystem types.
+  2. Move each file copying / creation into a seperate routine
+  3. Remove $NETWORK, $GATEWAY, $FS, etc and use a hash:
+	$config{$NETWORK}, etc.
+  4. See if there can be simple tests made without splitting things
+     into modules.
+  5. Add progress indicators to long jobs.  How??
+  6. Add --verbose.
+
 Steve
 --
-$Id: README,v 1.2 2005-12-17 15:21:32 steve Exp $
+$Id: README,v 1.3 2005-12-18 03:55:42 steve Exp $
