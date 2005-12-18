@@ -48,7 +48,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: xen-create-image,v 1.6 2005-12-18 03:43:29 steve Exp $
+# $Id: xen-create-image,v 1.7 2005-12-18 03:45:26 steve Exp $
 #
 
 use strict;
@@ -78,6 +78,8 @@ my $DHCP=0;                    # This setting overides the other network options
 my $MIRROR="http://ftp.us.debian.org/debian"; # set with '--mirror=http://www.etc.com"'
 my $SIZE="2000M";		# set with '--size=1000M[b] / 1G[b]"
 my $SWAP_SIZE="128M";		# set with '--swapsize=... like --size"
+my $MEMORY="96M";              # set with --memory=128Mb/128M
+
 
 #
 #  Parse options.
@@ -93,7 +95,8 @@ GetOptions(
 	   "dhcp", \$DHCP,
 	   "mirror=s", \$MIRROR,
 	   "size=s", \$SIZE,
-	   "swapsize=s", \$SWAP_SIZE
+	   "swapsize=s", \$SWAP_SIZE,
+	   "memory=s", \$MEMORY
 	  );
 
 
@@ -278,7 +281,7 @@ print "Setting up Xen configuration file .. ";
 open( XEN, ">", "/etc/xen/$HOSTNAME.cfg" );
 print XEN<<E_O_XEN;
 kernel = "/boot/vmlinuz-2.6.12-xenU"
-memory = 96
+memory = $MEMORY
 name   = "$HOSTNAME"
 disk   = [ 'file:$image,sda1,w','file:$swap,sda2,w' ]
 root   = "/dev/sda1 ro"
@@ -395,6 +398,12 @@ EOF
     if ( $SWAP_SIZE =~ /^(\d+)Gb*$/i )
     {
 	$SWAP_SIZE = $1 * 1024 . "M";
+    }
+
+    # Strip trailing Mb from the memory size.
+    if ( $MEMORY =~ /^(\d+)Mb*$/i )
+    {
+	$MEMORY = $1;
     }
 
 
