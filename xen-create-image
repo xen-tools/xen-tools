@@ -120,7 +120,7 @@ Read the manual, with examples.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.14 2005-12-18 16:32:32 steve Exp $
+ $Id: xen-create-image,v 1.15 2005-12-18 18:38:21 steve Exp $
 
 =cut
 
@@ -163,7 +163,6 @@ my $DIR;        # Mandatory.
 #
 #
 my $MIRROR="http://ftp.us.debian.org/debian"; # set with '--mirror=http://www.etc.com"'
-my $FS='ext3';
 
 
 
@@ -284,9 +283,9 @@ print "Done\n";
 print "Creating disk image: $image\n";
 $CONFIG{'size'} =~ s/Mb*$/k/i;
 `/bin/dd if=/dev/zero of=$image bs=$CONFIG{'size'} count=1 seek=1024 >/dev/null 2>/dev/null`;
-print "Creating EXT3 filesystem\n";
+print "Creating $CONFIG{'fs'} filesystem\n";
 
-my $create = $FILESYSTEM_CREATE{lc( $FS ) } . $image;
+my $create = $FILESYSTEM_CREATE{lc( $CONFIG{'fs'} ) } . $image;
 `$create`;
 print "Done\n";
 
@@ -295,7 +294,7 @@ print "Done\n";
 #  Now mount the image, in a secure temporary location.
 #
 my $dir = tempdir( CLEANUP => 1 );
-my $mount_cmd = "mount " . $FILESYSTEM_MOUNT{lc($FS)} . " -o loop $image $dir";
+my $mount_cmd = "mount " . $FILESYSTEM_MOUNT{lc($CONFIG{'fs'})} . " -o loop $image $dir";
 `$mount_cmd`;
 
 
@@ -382,7 +381,7 @@ if ( -d $dir . "/lib/tls" )
 print "Setting up /etc/fstab .. ";
 open( TAB, ">", $dir . "/etc/fstab" );
 print TAB<<E_O_TAB;
-/dev/sda1     /     ext3     errors=remount-ro     0     1
+/dev/sda1     /     $CONFIG{'fs'}     errors=remount-ro     0     1
 /dev/sda2     none  swap     sw                    0     0
 proc          /proc proc     defaults              0     0
 E_O_TAB
@@ -448,7 +447,7 @@ print <<EOEND;
   To finish the setup of your new host $CONFIG{'hostname'} please run:
 
     mkdir /mnt/tmp
-    mount -t ext3 -o loop $image /mnt/tmp
+    mount -t $CONFIG{'fs'} -o loop $image /mnt/tmp
 
     chroot /mnt/tmp /bin/bash
 
@@ -554,7 +553,7 @@ sub parseCommandLineArguments
 	       "size=s",     \$CONFIG{'size'},
 	       "swap=s",     \$CONFIG{'swap'},
 	       "memory=s",   \$CONFIG{'memory'},
-	       "fs=s",    \$FS,
+	       "fs=s",    \$CONFIG{'fs'},
 	       "help",    \$HELP,
 	       "manual",  \$MANUAL
 	      );
@@ -672,8 +671,8 @@ EOF
     #
     #  Ensure we know how to create *and* mount the given filesystem.
     #
-    if ( !defined( $FILESYSTEM_CREATE{lc( $FS ) } ) ||
-	 !defined( $FILESYSTEM_MOUNT{lc( $FS ) } ) )
+    if ( !defined( $FILESYSTEM_CREATE{lc( $CONFIG{'fs'} ) } ) ||
+	 !defined( $FILESYSTEM_MOUNT{lc( $CONFIG{'fs'} ) } ) )
     {
 	print "Unknown filesystem.  Valid choices are:\n";
 	foreach my $key (sort keys %FILESYSTEM_MOUNT ) 
