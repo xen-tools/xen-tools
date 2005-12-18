@@ -120,7 +120,7 @@ Read the manual, with examples.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.11 2005-12-18 16:15:39 steve Exp $
+ $Id: xen-create-image,v 1.12 2005-12-18 16:18:59 steve Exp $
 
 =cut
 
@@ -163,12 +163,11 @@ my $DIR;        # Mandatory.
 # DHCP must be selected.
 #
 #
-my $IP;                        # set with '--ip=dd.dd.dd.dd'
 my $GATEWAY;                   # set with '--gateway=dd.dd.dd.dd'
 my $NETMASK="255.255.255.0";   # set with '--mask=dd.dd.dd.dd'
 my $BROADCAST="192.168.1.255"; # set with '--broadcase=ddd.dd.dd.d'
 my $NETWORK="192.168.1.0";     # set with '--network=dd.dd.dd.dd'
-my $DHCP=0;                    # This setting overides the other network options
+
 my $MIRROR="http://ftp.us.debian.org/debian"; # set with '--mirror=http://www.etc.com"'
 my $SIZE="2000M";		# set with '--size=1000M[b] / 1G[b]"
 my $SWAP_SIZE="128M";		# set with '--swapsize=... like --size"
@@ -215,7 +214,7 @@ if ( -e $ENV{'HOME'} . ".xen-tools.conf" )
 
 
 #
-#  Parse command line arguments,these override the values from the
+#  Parse command line arguments, these override the values from the
 # configuration file.
 #
 parseCommandLineArguments();
@@ -412,7 +411,7 @@ name   = "$HOSTNAME"
 disk   = [ 'file:$image,sda1,w','file:$swap,sda2,w' ]
 root   = "/dev/sda1 ro"
 E_O_XEN
-if ( $DHCP )
+if ( $CONFIG{'dhcp'} )
 {
     print XEN "dhcp=\"dhcp\"\n";
 }
@@ -526,13 +525,13 @@ sub parseCommandLineArguments
     #
     GetOptions(
 	       "hostname=s", \$HOSTNAME,
-	       "ip=s", \$IP,
+	       "ip=s", \$CONFIG{'ip'},
 	       "gateway=s", \$GATEWAY,
 	       "mask=s", \$NETMASK,
 	       "broadcast=s", \$BROADCAST,
 	       "network=s", \$NETWORK,
 	       "dir=s", \$DIR,
-	       "dhcp", \$DHCP,
+	       "dhcp", \$CONFIG{'dhcp'},
 	       "mirror=s", \$MIRROR,
 	       "size=s", \$SIZE,
 	       "swapsize=s", \$SWAP_SIZE,
@@ -637,19 +636,19 @@ EOF
     #
     #  Only one of DHCP / IP is required.
     #
-    if ( $DHCP && $IP )
+    if ( $CONFIG{'ip'} && $CONFIG{'dhcp'})
     {
 	print "You've chosen both DHCP and an IP address.\n";
 	print "Only one is supported\n";
 	exit;
     }
 
-    if ( $DHCP )
+    if ( $CONFIG{'dhcp'} )
     {
 	$GATEWAY="";
 	$NETMASK="";
 	$BROADCAST="";
-	$IP="";
+	$CONFIG{'ip'} = '';
     }
 
     #
@@ -684,7 +683,7 @@ sub setupNetworking
 
     open( IP, ">", $prefix . "/etc/network/interfaces" );
 
-    if ( $DHCP )
+    if ( $CONFIG{'dhcp'} )
     {
 	print IP<<E_O_DHCP;
 # This file describes the network interfaces available on your system
@@ -713,7 +712,7 @@ iface lo inet loopback
 # The primary network interface
 auto eth0
 iface eth0 inet static
- address $IP
+ address $CONFIG{'ip'}
  gateway $GATEWAY
  netmask $NETMASK
  network $NETWORK
