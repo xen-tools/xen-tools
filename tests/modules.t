@@ -7,6 +7,10 @@
 
 use Test::More qw( no_plan );
 
+BEGIN{ use_ok( 'English' ); }
+require_ok( 'English' );
+
+
 BEGIN{ use_ok( 'File::Copy' ); }
 require_ok( 'File::Copy' );
 
@@ -17,6 +21,10 @@ require_ok( 'File::Temp' );
 
 BEGIN{ use_ok( 'Getopt::Long' ); }
 require_ok( 'Getopt::Long' );
+
+
+BEGIN{ use_ok( 'Pod::Usage' ); }
+require_ok( 'Pod::Usage' );
 
 
 BEGIN{ use_ok( 'strict' ); }
