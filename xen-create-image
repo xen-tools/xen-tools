@@ -187,7 +187,7 @@ broadcast = 255.255.255.0
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.19 2005-12-18 21:08:46 steve Exp $
+ $Id: xen-create-image,v 1.20 2005-12-18 23:43:24 steve Exp $
 
 =cut
 
@@ -209,12 +209,26 @@ The LICENSE file contains the full text of the license.
 
 
 use strict;
+use English;
 use File::Copy;
 use File::Temp qw/ tempdir /;
 use Getopt::Long;
 use Pod::Usage;
 
 
+
+if ( $EFFECTIVE_USER_ID != 0 )
+{
+    print <<E_O_ROOT;
+
+  In order to use this script you must be running with root privileges.
+
+  (This is necessary to mount the disk images.)
+
+E_O_ROOT
+
+    exit;
+}
 
 #
 #  Configuration options, initially read from the configuration files
