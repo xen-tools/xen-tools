@@ -23,6 +23,10 @@ BEGIN{ use_ok( 'Getopt::Long' ); }
 require_ok( 'Getopt::Long' );
 
 
+BEGIN{ use_ok( 'IPC::Open3' ); }
+require_ok( 'IPC::Open3' );
+
+
 BEGIN{ use_ok( 'Pod::Usage' ); }
 require_ok( 'Pod::Usage' );
 
