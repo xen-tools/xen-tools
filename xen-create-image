@@ -193,7 +193,7 @@ broadcast = 255.255.255.0
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.32 2005-12-19 20:54:00 steve Exp $
+ $Id: xen-create-image,v 1.33 2005-12-19 21:00:45 steve Exp $
 
 =cut
 
@@ -358,17 +358,16 @@ my $swap  = $CONFIG{'dir'} . '/domains/' . $CONFIG{'hostname'} . "/swap.img" ;
 #
 #  Create swapfile and initialise it.
 #
-print "Creating swapfile : $swap\n";
+print "\n\nCreating and initializaing swapfile : $swap\n";
 $CONFIG{'swap'} =~ s/Mb*$//i;
 `/bin/dd if=/dev/zero of=$swap bs=1024k count=$CONFIG{'swap'} >/dev/null 2>/dev/null`;
-print "Initializing swap file\n";
 `/sbin/mkswap $swap`;
 print "Done\n";
 
 #
 #  Create disk file and initialise it.
 #
-print "Creating disk image: $image\n";
+print "\n\nCreating disk image: $image\n";
 $CONFIG{'size'} =~ s/Mb*$/k/i;
 `/bin/dd if=/dev/zero of=$image bs=$CONFIG{'size'} count=1 seek=1024 >/dev/null 2>/dev/null`;
 print "Creating $CONFIG{'fs'} filesystem\n";
@@ -399,23 +398,27 @@ if ( ! $mount =~ /$image/) {
 #  Copy any local .deb files into the debootstrap archive as a potential
 # speedup.
 #
-print "Copying files from host to image.\n";
+print "\n\nCopying files from host to image.\n";
 `mkdir -p $dir/var/cache/apt/archives`;
 foreach my $file ( glob( "/var/cache/apt/archives/*.deb" ) )
 {
     my $t = $file;
+    if ( $t =~ /(.*)\/(.*)/ )
+    {
+	$t = $2;
+    }
     while( length( $t ) < 80 ) { $t .= " "; }
     print "\r" . $t;
 
     File::Copy::cp( $file, "$dir/var/cache/apt/archives" );
 }
-print "Done .........                                                         \n";
+print "\rDone .........                                                         \n";
 
 
 #
 #  Install the base system - with a simple sense of progress.
 #
-print "Running debootstrap to install the system.   This will take a while!\n";
+print "\n\nRunning debootstrap to install the system.   This will take a while!\n";
 my $debootstrap = "debootstrap $CONFIG{'dist'} $dir $CONFIG{'mirror'}";
 runCommandWithProgress( $debootstrap );
 print "Done\n";
@@ -423,16 +426,20 @@ print "Done\n";
 #
 #  Copy these files as a speed boost for the next run.
 #
-print "Caching debootstrap files upon the host system\n\n";
+print "\n\nCaching debootstrap files upon the host system\n\n";
 foreach my $file ( glob( "$dir/var/cache/apt/archives/*.deb" ) )
 {
     my $t = $file;
+    if ( $t =~ /(.*)\/(.*)/ )
+    {
+	$t = $2;
+    }
     while( length( $t ) < 80 ) { $t .= " "; }
     print "\r" . $t;
 
     File::Copy::cp( $file, "/var/cache/apt/archives" );
 }
-print "Done .........                                                         \n";
+print "\rDone .........                                                         \n";
 
 
 
@@ -446,7 +453,7 @@ print "Done .........                                                         \n
 #
 #  OK now we can do the basic setup.
 #
-print "Setting up APT sources .. ";
+print "\n\nSetting up APT sources .. ";
 open( APT, ">", $dir . "/etc/apt/sources.list" );
 print APT<<E_O_APT;
 #
@@ -485,10 +492,16 @@ my @hostFiles = ( "/etc/resolv.conf",
 		  "/etc/shadow",
 		  "/etc/gshadow" );
 
+print "\n\nCopying some files from the host to the guest\n";
 foreach my $file ( @hostFiles )
 {
+    my $t = $file;
+    while( length( $t ) < 80 ) { $t .= " "; }
+    print "\r" . $t;
     File::Copy::cp( $file, $dir . "/etc" );
 }
+print "\rDone .........                                                         \n";
+
 
 
 #
@@ -504,7 +517,7 @@ if ( -d $dir . "/lib/tls" )
 #
 #  Now setup the fstab
 #
-print "Setting up /etc/fstab .. ";
+print "\n\nSetting up /etc/fstab .. ";
 open( TAB, ">", $dir . "/etc/fstab" );
 print TAB<<E_O_TAB;
 /dev/sda1     /     $CONFIG{'fs'}     errors=remount-ro     0     1
@@ -519,18 +532,26 @@ print "Done\n";
 #
 #  Setup the /etc/network/interfaces file upon the guest image
 #
+print "\n\nSetting up networking\n";
 setupNetworking( $dir );
+print "Done\n";
 
 
 #
 #  Install OpenSSH
 #
+print "\n\nInstalling OpenSSH\n";
 installOpenSSH( $dir );
+print "done\n";
+
 
 #
 #  Fixup Inittab file
 #
+print "\n\nSetting up initial console\n";
 fixupInittab( $dir );
+print "done\n";
+
 
 
 
@@ -543,7 +564,7 @@ fixupInittab( $dir );
 #
 # Finally setup Xen to allow us to create the image.
 #
-print "Setting up Xen configuration file .. ";
+print "\n\nCreating Xen configuration file in /etc/xen .. ";
 open( XEN, ">", "/etc/xen/$CONFIG{'hostname'}.cfg" );
 print XEN<<E_O_XEN;
 kernel = "/boot/vmlinuz-2.6.12-xenU"
@@ -561,7 +582,6 @@ else
     print XEN "#dhcp=\"dhcp\"\n";
 }
 close( XEN );
-
 print "Done\n";
 
 
@@ -570,20 +590,12 @@ print "Done\n";
 #
 print <<EOEND;
 
-  To finish the setup of your new host $CONFIG{'hostname'} please run:
+  To make any manual tweaks to the setup of $CONFIG{'hostname'} please run:
 
     mkdir /mnt/tmp
     mount -t $CONFIG{'fs'} -o loop $image /mnt/tmp
-
     chroot /mnt/tmp /bin/bash
 
-    # Get security upgrades.
-    apt-get upgrade
-
-    # setup passwords, etc.
-    passwd root
-
-    # Cleanup.
     exit
     umount /mnt/tmp
 
