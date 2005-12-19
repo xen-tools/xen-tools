@@ -7,7 +7,7 @@
 #  Only used to build distribution tarballs.
 #
 DIST_PREFIX = /tmp
-VERSION     = `date +%d-%m-%y`
+VERSION     = 0.1
 BASE        = xen-tools
 
 
