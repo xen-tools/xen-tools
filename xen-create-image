@@ -47,6 +47,9 @@ Specify the broadcast address for the virtual image, only useful if DHCP is not 
 =item B<--dhcp>
 Specify that the virtual image should use DHCP to obtain its networking information.
 
+=item B<--dist>
+Specify the distribution to install, defaults to 'sarge'.
+
 =item B<--fs>
 Specify the filesystem the image should be given.  Valid options are 'ext3',
 'xfs', or 'reiserfs'.
@@ -190,7 +193,7 @@ broadcast = 255.255.255.0
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.26 2005-12-19 17:40:39 steve Exp $
+ $Id: xen-create-image,v 1.27 2005-12-19 18:26:48 steve Exp $
 
 =cut
 
@@ -261,6 +264,8 @@ $CONFIG{'size'}   = '2000Mb';
 $CONFIG{'swap'}   = '128M';
 $CONFIG{'fs'}     = 'ext3';
 $CONFIG{'mirror'} = 'http://ftp.us.debian.org/debian';
+$CONFIG{'dist'}   = 'sarge';
+
 
 #
 #  Read configuration file(s) if they exist.
@@ -398,7 +403,7 @@ foreach my $file ( glob( "/var/cache/apt/archives/*.deb" ) )
 #  Install the base system.
 #
 print "Running debootstrap to install the system.   This will take a while!\n";
-`debootstrap sarge $dir $CONFIG{'mirror'}`;
+`debootstrap $CONFIG{'dist'} $dir $CONFIG{'mirror'}`;
 print "Done\n";
 
 #
@@ -670,6 +675,7 @@ sub parseCommandLineArguments
 	       "memory=s",   \$CONFIG{'memory'},
 	       "fs=s",       \$CONFIG{'fs'},
 	       "boot",       \$CONFIG{'boot'},
+	       "dist",       \$CONFIG{'dist'},
 	       "help",       \$HELP,
 	       "manual",     \$MANUAL
 	      );
