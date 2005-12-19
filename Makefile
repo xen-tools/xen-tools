@@ -1,13 +1,18 @@
 #
-#  Utility makefile for people working with Yawns.
+#  Utility makefile for people working with xen-tools
 #
+# Steve
+# --
+# http://www.steve.org.uk/
+#
+# $Id: Makefile,v 1.8 2005-12-19 14:55:26 steve Exp $
 
 
 #
 #  Only used to build distribution tarballs.
 #
 DIST_PREFIX = /tmp
-VERSION     = 0.1
+VERSION     = 0.2
 BASE        = xen-tools
 
 
@@ -52,6 +57,7 @@ install:
 	cp xen-update-image /usr/bin
 	chmod 755 /usr/bin/xen-create-image
 	chmod 755 /usr/bin/xen-delete-image
+	chmod 755 /usr/bin/xen-duplicate-image
 	chmod 755 /usr/bin/xen-update-image
 	mkdir /etc/xen-tools
 	cp etc/xen-tools.conf /etc/xen-tools
