@@ -50,10 +50,9 @@ TODO
   2. Move each file copying / creation into a seperate routine
   3. See if there can be simple tests made without splitting things
      into modules.
-  4. Add progress indicators to long jobs.  How??
-  5. Add --verbose.
+  4. Add --verbose.
 
 
 Steve
 --
-$Id: README,v 1.6 2005-12-19 18:08:53 steve Exp $
+$Id: README,v 1.7 2005-12-19 20:45:24 steve Exp $
