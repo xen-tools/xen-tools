@@ -193,7 +193,7 @@ broadcast = 255.255.255.0
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.28 2005-12-19 18:28:05 steve Exp $
+ $Id: xen-create-image,v 1.29 2005-12-19 18:30:14 steve Exp $
 
 =cut
 
@@ -309,21 +309,26 @@ E_O_ROOT
 
 
 print "\n";
-print "Hostname :  $CONFIG{'hostname'}\n";
-print "Image size: $CONFIG{'size'}\n";
-print "Swap size:  $CONFIG{'swap'}\n";
-print "Fileystem:  $CONFIG{'fs'}\n";
+print "Hostname       :  $CONFIG{'hostname'}\n";
+print "Distribution   :  $CONFIG{'dist'}\n";
+print "Image size     :  $CONFIG{'size'}\n";
+print "Swap size      :  $CONFIG{'swap'}\n";
+print "Memory size    :  $CONFIG{'memory'}\n";
+print "Fileystem Type :  $CONFIG{'fs'}\n";
 
 if ( $CONFIG{'dhcp'} ) 
 {
+    print "---\n";
     print "DHCP\n";
 }
 else
 {
-   $CONFIG{'ip'}        && print "IP       : $CONFIG{'ip'}\n";
-   $CONFIG{'network'}   && print "Network  : $CONFIG{'network'}\n";
-   $CONFIG{'broadcast'} && print "Broadcast: $CONFIG{'broadcast'}\n";
-   $CONFIG{'gateway'}   && print "Gateway  : $CONFIG{'gateway'}\n";
+    print "---\n";
+    $CONFIG{'ip'}        && print "IP       : $CONFIG{'ip'}\n";
+    $CONFIG{'network'}   && print "Network  : $CONFIG{'network'}\n";
+    $CONFIG{'netmask'}   && print "Netmask  : $CONFIG{'netmask'}\n";
+    $CONFIG{'broadcast'} && print "Broadcast: $CONFIG{'broadcast'}\n";
+    $CONFIG{'gateway'}   && print "Gateway  : $CONFIG{'gateway'}\n";
 }
 print "---\n";
 
