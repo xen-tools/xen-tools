@@ -64,7 +64,7 @@ Read the manual
  --
  http://www.steve.org.uk/
 
- $Id: xen-update-image,v 1.1 2005-12-18 23:57:46 steve Exp $
+ $Id: xen-update-image,v 1.2 2005-12-19 11:04:18 steve Exp $
 
 =cut
 
@@ -101,10 +101,6 @@ my %CONFIG;
 #
 #  Read configuration file(s) if they exist.
 #
-if ( -e "etc/xen-tools.conf" )
-{
-    readConfigurationFile( "etc/xen-tools.conf" );
-}
 if ( -e "/etc/xen-tools/xen-tools.conf" )
 {
     readConfigurationFile( "/etc/xen-tools/xen-tools.conf" );

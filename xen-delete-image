@@ -56,7 +56,7 @@ Read the manual
  --
  http://www.steve.org.uk/
 
- $Id: xen-delete-image,v 1.1 2005-12-18 21:28:50 steve Exp $
+ $Id: xen-delete-image,v 1.2 2005-12-19 11:04:18 steve Exp $
 
 =cut
 
@@ -92,10 +92,6 @@ my %CONFIG;
 #
 #  Read configuration file(s) if they exist.
 #
-if ( -e "etc/xen-tools.conf" )
-{
-    readConfigurationFile( "etc/xen-tools.conf" );
-}
 if ( -e "/etc/xen-tools/xen-tools.conf" )
 {
     readConfigurationFile( "/etc/xen-tools/xen-tools.conf" );
