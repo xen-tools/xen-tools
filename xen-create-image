@@ -190,7 +190,7 @@ broadcast = 255.255.255.0
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.24 2005-12-19 17:17:04 steve Exp $
+ $Id: xen-create-image,v 1.25 2005-12-19 17:39:19 steve Exp $
 
 =cut
 
@@ -217,6 +217,7 @@ use File::Copy;
 use File::Temp qw/ tempdir /;
 use Getopt::Long;
 use Pod::Usage;
+
 
 
 
@@ -908,9 +909,9 @@ sub fixupInittab
 		#
 		# Leave line unchanged - but change 'tty1' to 'console'.
 		#
-		if ( $line =~ /(.*) tty[0-9]/ )
+		if ( $line =~ /(.*)tty1$/ )
 		{
-		    $line = $1 . " console";
+		    $line = $1 . "console";
 		}
 
 		#
