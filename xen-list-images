@@ -50,7 +50,7 @@ Read the manual
  --
  http://www.steve.org.uk/
 
- $Id: xen-list-images,v 1.1 2005-12-19 17:39:19 steve Exp $
+ $Id: xen-list-images,v 1.2 2005-12-19 18:05:47 steve Exp $
 
 =cut
 
@@ -68,6 +68,7 @@ The LICENSE file contains the full text of the license.
 
 
 use strict;
+use File::Temp qw/ tempdir /;
 use Getopt::Long;
 use Pod::Usage;
 
@@ -118,13 +119,52 @@ foreach my $entry ( glob( $dir . "*" ) )
    #
    if ( -e "/etc/xen/" . $entry . ".cfg" )
    {
+       my $image = $CONFIG{'dir'} . "/domains/$entry/disk.img";
+       my $swap  = $CONFIG{'dir'} . "/domains/$entry/swap.img";
+
        #
        #  Disk && Swap files.
        #
-       if ( ( -e $CONFIG{'dir'} . "/domains/$entry/disk.img" ) &&
-	    ( -e $CONFIG{'dir'} . "/domains/$entry/swap.img" ) )
+       if ( ( -e $image ) &&
+	    ( -e $swap ) )
        {
-	   print "Image: $entry\n";
+
+	   print "Image: $entry ";
+	   #
+	   # Mount the image securely
+	   #
+	   my $dir = tempdir( CLEANUP => 1 );
+	   my $mount_cmd = "mount -t auto -o loop $image $dir";
+	   `$mount_cmd`;
+
+
+	   #
+	   #  Read /etc/network/interfaces
+	   #
+	   my $found = 0;
+	   open( IN, "<", $dir . "/etc/network/interfaces" );
+	   foreach my $line ( <IN> )
+	   {
+	       if ( ( $line =~ /dhcp/ ) &&
+		    ( $line =~ /eth/ ) )
+	       {
+		   print " DHCP\n";
+		   $found = 1;
+	       }
+	       if ( $line =~ /address ([0-9\.]+)/ )
+	       {
+		   print $1 . "\n";
+		   $found = 1;
+	       }
+	   }
+	   close( IN );
+	   if ( ! $found ) { print "Unknown IP address\n"; }
+
+	   #
+	   # Unmount the image.
+	   #
+	   `umount $dir`;
+
        }
    }
 }
