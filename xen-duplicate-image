@@ -100,7 +100,7 @@ Specify the virtual instance that we should copy.
  --
  http://www.steve.org.uk/
 
- $Id: xen-duplicate-image,v 1.2 2005-12-19 14:54:40 steve Exp $
+ $Id: xen-duplicate-image,v 1.3 2005-12-19 15:04:25 steve Exp $
 
 =cut
 
@@ -487,6 +487,12 @@ EOF
 	exit;
     }
 
+
+    # Strip trailing Mb from the memory size.
+    if ( $CONFIG{'memory'} =~ /^(\d+)Mb*$/i )
+    {
+	$CONFIG{'memory'} = $1;
+    }
 
     #
     #  Only one of DHCP / IP is required.
