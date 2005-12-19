@@ -193,7 +193,7 @@ broadcast = 255.255.255.0
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.30 2005-12-19 18:39:43 steve Exp $
+ $Id: xen-create-image,v 1.31 2005-12-19 20:43:18 steve Exp $
 
 =cut
 
@@ -219,6 +219,7 @@ use English;
 use File::Copy;
 use File::Temp qw/ tempdir /;
 use Getopt::Long;
+use IPC::Open3;
 use Pod::Usage;
 
 
@@ -405,10 +406,11 @@ foreach my $file ( glob( "/var/cache/apt/archives/*.deb" ) )
 }
 
 #
-#  Install the base system.
+#  Install the base system - with a simple sense of progress.
 #
 print "Running debootstrap to install the system.   This will take a while!\n";
-`debootstrap $CONFIG{'dist'} $dir $CONFIG{'mirror'}`;
+my $debootstrap = "debootstrap $CONFIG{'dist'} $dir $CONFIG{'mirror'}";
+runCommandWithProgress( $debootstrap );
 print "Done\n";
 
 #
@@ -951,4 +953,41 @@ sub fixupInittab
 	print OUTPUT $line . "\n";
     }
     close( OUTPUT )
+}
+
+
+
+=head2 runCommandWithProgress
+
+  Run a command whilst immediately writing the output to the console.
+
+  This is a cheap hack to give a sense of 'progress'.
+
+=cut
+
+sub runCommandWithProgress 
+{
+    my ( $cmd ) = ( @_ );
+
+    my $pid = open3(undef, \*READ,0, $cmd );
+
+    my $output ='';
+    while(1)
+    {
+	
+	select(undef,undef,undef,.01);
+
+	if( sysread \*READ,$output,1024 )
+	{
+	    while( length( $output ) < 80 ) { $output .= " " ; }
+	    $output =~ s/\n//g;
+	    print STDERR "\r";
+	    print STDERR $output;
+	}
+	else
+	{
+	    print STDERR "\rFinished\n\n";
+	    return;
+	}
+    }
 }
