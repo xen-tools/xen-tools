@@ -38,6 +38,9 @@
 
 =over 8
 
+=item B<--boot>
+Start the new virtual instance as soon as the installation has finished.
+
 =item B<--broadcast>
 Specify the broadcast address for the virtual image, only useful if DHCP is not used.
 
@@ -123,15 +126,15 @@ suffixed with either Mb, or Gb.
 
 
   xen-create-image is a simple script which allows you to create new
- Xen instances of Debian Sarge.  The new images conmprise of two
- files:
+ Xen instances of Debian Sarge.  The new image will be comprised of
+ two seperate files:
 
    1.  One disk image which will be treated as the primary disk drive.
    2.  One swap image.
 
-  The image will also have an OpenSSH server installed upon it, and
- an appropriate /etc/inittab file created, along with copies of the
- hosts password and shadow files.
+  The image will have OpenSSH installed upon it, and an appropriate
+ /etc/inittab file created, along with copies of the hosts password
+ and shadow files.
 
 
 =head1 CONFIGURATION
@@ -139,11 +142,10 @@ suffixed with either Mb, or Gb.
   To reduce the length of the command line each of the options may
  be specified inside a configuration file.
 
-  The script will check three files for options:
+  The script will check two files for options:
 
    1. /etc/xen-tools/xen-tools.conf
    2. ~/.xen-tools.conf
-   3. ./etc/xen-tools.conf
 
   The files may contain comments, which begin with the hash '#' character
  and are otherwise of the format 'key = value.
@@ -187,7 +189,7 @@ broadcast = 255.255.255.0
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.21 2005-12-18 23:45:17 steve Exp $
+ $Id: xen-create-image,v 1.22 2005-12-19 11:03:45 steve Exp $
 
 =cut
 
@@ -274,10 +276,6 @@ $CONFIG{'mirror'} = 'http://ftp.us.debian.org/debian';
 #
 #  Read configuration file(s) if they exist.
 #
-if ( -e "etc/xen-tools.conf" )
-{
-    readConfigurationFile( "etc/xen-tools.conf" );
-}
 if ( -e "/etc/xen-tools/xen-tools.conf" )
 {
     readConfigurationFile( "/etc/xen-tools/xen-tools.conf" );
@@ -561,6 +559,26 @@ print <<EOEND;
 EOEND
 
 
+#
+#  Should we immediately start the new instance?
+#  If so fork() and do it so that we can return to the user, they can
+# attach to the console via the command : 'xm console $name'.
+#
+#
+if ( $CONFIG{'boot'} )
+{
+    my $pid = fork();
+    if ( $pid )
+    {
+	exit;
+    }
+    else
+    {
+	system( "xm create $CONFIG{'hostname'}.cfg" );
+    }
+}
+
+
 
 =head2 readConfigurationFile
 
@@ -647,6 +665,7 @@ sub parseCommandLineArguments
 	       "swap=s",     \$CONFIG{'swap'},
 	       "memory=s",   \$CONFIG{'memory'},
 	       "fs=s",       \$CONFIG{'fs'},
+	       "boot",       \$CONFIG{'boot'},
 	       "help",       \$HELP,
 	       "manual",     \$MANUAL
 	      );
