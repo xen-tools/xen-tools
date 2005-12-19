@@ -48,6 +48,7 @@ diff:
 install:
 	cp xen-create-image /usr/bin
 	cp xen-delete-image /usr/bin
+	cp xen-duplicate-image /usr/bin
 	cp xen-update-image /usr/bin
 	chmod 755 /usr/bin/xen-create-image
 	chmod 755 /usr/bin/xen-delete-image
@@ -78,8 +79,10 @@ test-verbose:
 uninstall:
 	rm /usr/bin/xen-create-image
 	rm /usr/bin/xen-delete-image
+	rm /usr/bin/xen-duplicate-image
 	rm /usr/bin/xen-update-image
-
+	rm /etc/xen-tools/xen-tools.conf
+	rmdir /etc/xen-tools/
 
 update: 
 	cvs -z3 update -A -d 2>/dev/null
