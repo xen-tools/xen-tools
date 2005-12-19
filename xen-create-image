@@ -190,7 +190,7 @@ broadcast = 255.255.255.0
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.23 2005-12-19 11:11:06 steve Exp $
+ $Id: xen-create-image,v 1.24 2005-12-19 17:17:04 steve Exp $
 
 =cut
 
@@ -905,12 +905,25 @@ sub fixupInittab
 	{
 	    if ( $line =~ /^1/ )
 	    {
-            # NOP - leave line unchanged.
+		#
+		# Leave line unchanged - but change 'tty1' to 'console'.
+		#
+		if ( $line =~ /(.*) tty[0-9]/ )
+		{
+		    $line = $1 . " console";
+		}
+
+		#
+		# Reference:  
+		#   http://wiki.xensource.com/xenwiki/DebianSarge
+		#
 	    }
 	    else
 	    {
-            # Otherwise comment out the line, we don't need multiple
-            # terminals since we can only access one.
+		#
+		# Otherwise comment out the line, we don't need multiple
+		# terminals since we can only access one.
+		#
 		$line = "#" . $line;
 	    }
 	}
