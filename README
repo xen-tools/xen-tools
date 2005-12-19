@@ -24,6 +24,14 @@ xen-delete-image
 
 
 
+xen-list-images
+---------------
+
+  List all the created images, along with the network address.
+ (Or just 'DHCP' for dynamically configured images.)
+
+
+
 xen-update-image
 ----------------
 
@@ -48,4 +56,4 @@ TODO
 
 Steve
 --
-$Id: README,v 1.5 2005-12-19 16:37:48 steve Exp $
+$Id: README,v 1.6 2005-12-19 18:08:53 steve Exp $
