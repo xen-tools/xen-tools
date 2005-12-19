@@ -7,6 +7,34 @@ xen-create-image
  Debian Sarge which may be used with the Xen virtual machine.
 
 
+
+xen-clone-image
+---------------
+
+  This allows a simple cloning operation to be conducted.  An existing
+ image will be copied to a new directory and the networking information
+ will be updated.  No other changes are applied.
+
+
+
+xen-delete-image
+----------------
+
+  This script will delete an image by hostname.
+
+
+
+xen-update-image
+----------------
+
+  This script runs "apt-get update; apt-get upgrade" for a given
+ Xen image.
+
+  NOTE:  The image should not be mounted/live/running or things will
+ be corrupted.  (Still if the image is "live" you may just use SSH, right?)
+
+
+
 TODO
 ----
 
@@ -17,6 +45,7 @@ TODO
   4. Add progress indicators to long jobs.  How??
   5. Add --verbose.
 
+
 Steve
 --
-$Id: README,v 1.4 2005-12-18 23:44:06 steve Exp $
+$Id: README,v 1.5 2005-12-19 16:37:48 steve Exp $
