@@ -190,7 +190,7 @@ broadcast = 255.255.255.0
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.25 2005-12-19 17:39:19 steve Exp $
+ $Id: xen-create-image,v 1.26 2005-12-19 17:40:39 steve Exp $
 
 =cut
 
@@ -909,10 +909,7 @@ sub fixupInittab
 		#
 		# Leave line unchanged - but change 'tty1' to 'console'.
 		#
-		if ( $line =~ /(.*)tty1$/ )
-		{
-		    $line = $1 . "console";
-		}
+		$line = '1:2345:respawn:/sbin/getty 38400 console';
 
 		#
 		# Reference:  
