@@ -5,7 +5,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.10 2005-12-19 18:08:45 steve Exp $
+# $Id: Makefile,v 1.11 2005-12-19 18:19:29 steve Exp $
 
 
 #
@@ -33,6 +33,12 @@ nop:
 
 .PHONY:
 	@true
+
+
+changelog:
+	-if [ -x /usr/bin/cvs2cl ] ; then cvs2cl; fi
+	-rm ChangeLog.bak
+
 
 clean:
 	@find . -name '.*~' -exec rm \{\} \;
@@ -65,7 +71,7 @@ install:
 	cp etc/xen-tools.conf /etc/xen-tools
 
 
-release: clean
+release: clean changelog
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)
 	rm -f $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz
 	cp -R . $(DIST_PREFIX)/$(BASE)-$(VERSION)
