@@ -1,0 +1,768 @@
+#!/usr/bin/perl -w
+
+=head1 NAME
+
+  xen-duplicate-image - Duplicate an existing Xen instance.
+
+=head1 SYNOPSIS
+
+  xen-duplicate-image [options]
+
+  Help Options:
+   --help     Show this scripts help information.
+   --manual   Read this scripts manual.
+
+  General options:
+   --dir      Specify where the output images should go.
+
+  Networking options:
+   --dhcp      Setup the image to get an IP address via DHCP
+   --network   Setup the network the host is upon.
+   --gateway   Setup the iamge's network gateway.
+   --broadcast Setup the image's network broadcast address.
+   --mirror    Setup the mirror to use when installing Sarge.
+
+  Mandatory options:
+
+   --hostname  Set the images hostname.
+   --from      The image name we should copy
+
+=cut
+
+
+
+=head1 OPTIONS
+
+=over 8
+
+=item B<--broadcast>
+Specify the broadcast address for the virtual image, only useful if DHCP is not used.
+
+=item B<--dhcp>
+Specify that the virtual image should use DHCP to obtain its networking information.
+
+=item B<--gateway>
+Specify the gateway address for the virtual image, only useful if DHCP is not used.
+
+=item B<--help>
+Show the brief help information.
+
+=item B<--manual>
+Read the manual, with examples.
+
+=item B<--network>
+Specify the network the virtual image is living upon.  Only useful if DHCP is not used.
+
+=item B<--from>
+Specify the virtual instance that we should copy.
+
+=back
+
+=cut
+
+
+=head1 EXAMPLES
+
+  The following will copy the existing image vm01, and
+ save it as vm02 - with DHCP enabled.
+
+     xen-duplicate-image --dir=/home/xen \
+        --from=vm01  --hostname=vm02.my.flat --dhcp
+
+=cut
+
+
+
+=head1 DESCRIPTION
+
+  xen-duplicate-image is a simple script which allows you to create new
+ Xen instances of Debian Sarge.  The new image will be an identical
+ copy of an existing image.
+
+
+=head1 CONFIGURATION
+
+  To reduce the length of the command line each of the options may
+ be specified inside a configuration file.
+
+  The script will check two files for options:
+
+   1. /etc/xen-tools/xen-tools.conf
+   2. ~/.xen-tools.conf
+
+  The files may contain comments, which begin with the hash '#' character
+ and are otherwise of the format 'key = value.
+
+=head1 AUTHOR
+
+
+ Steve
+ --
+ http://www.steve.org.uk/
+
+ $Id: xen-duplicate-image,v 1.1 2005-12-19 11:23:05 steve Exp $
+
+=cut
+
+
+=head1 CONTRIBUTORS
+
+  Radu Spineanu
+
+=head1 LICENSE
+
+Copyright (c) 2005 by Steve Kemp.  All rights reserved.
+
+This module is free software;
+you can redistribute it and/or modify it under
+the same terms as Perl itself.
+The LICENSE file contains the full text of the license.
+
+=cut
+
+
+use strict;
+use English;
+use File::Copy;
+use File::Temp qw/ tempdir /;
+use Getopt::Long;
+use Pod::Usage;
+
+
+
+#
+#  Configuration options, initially read from the configuration files
+# but may be overridden by the command line.
+#
+#  Command line flags *always* take precedence over the configuration files(s).
+#
+my %CONFIG;
+
+
+#
+#  Read configuration file(s) if they exist.
+#
+if ( -e "/etc/xen-tools/xen-tools.conf" )
+{
+    readConfigurationFile( "/etc/xen-tools/xen-tools.conf" );
+}
+if ( -e $ENV{'HOME'} . ".xen-tools.conf" )
+{
+    readConfigurationFile( $ENV{'HOME'} . ".xen-tools.conf" );
+}
+
+
+#
+#  Parse command line arguments, these override the values from the
+# configuration file.
+#
+parseCommandLineArguments();
+
+
+#
+#  Check that the arguments the user has supplied are both 
+# valid, and complete.
+#
+checkArguments();
+
+
+if ( $EFFECTIVE_USER_ID != 0 )
+{
+    print <<E_O_ROOT;
+
+  In order to use this script you must be running with root privileges.
+
+  (This is necessary to mount the disk images.)
+
+E_O_ROOT
+
+    exit;
+}
+
+print "\n";
+print "Source      :  $CONFIG{'from'}\n";
+print "Destination :  $CONFIG{'hostname'}\n";
+
+if ( $CONFIG{'dhcp'} ) 
+{
+    print "DHCP\n";
+}
+else
+{
+   $CONFIG{'ip'}        && print "IP       : $CONFIG{'ip'}\n";
+   $CONFIG{'network'}   && print "Network  : $CONFIG{'network'}\n";
+   $CONFIG{'broadcast'} && print "Broadcast: $CONFIG{'broadcast'}\n";
+   $CONFIG{'gateway'}   && print "Gateway  : $CONFIG{'gateway'}\n";
+}
+print "---\n";
+
+#
+#  If the output directories don't exist then create them.
+#
+if ( ! -d $CONFIG{'dir'} . "/domains/" )
+{
+    mkdir $CONFIG{'dir'} . '/domains', 0777
+      || die "Cannot create $CONFIG{'dir'}/domains - $!";
+}
+if ( ! -d $CONFIG{'dir'} . "/domains/" . $CONFIG{'hostname'} )
+{
+    mkdir $CONFIG{'dir'}. '/domains/' . $CONFIG{'hostname'}, 0777
+      || die "Cannot create $CONFIG{'dir'}/domains/$CONFIG{'hostname'} - $!" ;
+}
+
+
+
+#
+# The two images we'll use, one for the disk image, one for swap.
+#
+my $image_in = $CONFIG{'dir'} .'/domains/'. $CONFIG{'from'} . "/disk.img" ;
+my $image_out= $CONFIG{'dir'}.'/domains/'. $CONFIG{'hostname'} . "/disk.img" ;
+
+my $swap_in  = $CONFIG{'dir'} .'/domains/' .$CONFIG{'from'} . "/swap.img" ;
+my $swap_out = $CONFIG{'dir'} .'/domains/' .$CONFIG{'hostname'} . "/swap.img" ;
+
+
+#
+#  If the output directories don't exist then create them.
+#
+if ( ! -d $CONFIG{'dir'} . "/domains/" )
+{
+    mkdir $CONFIG{'dir'} . '/domains', 0777
+      || die "Cannot create $CONFIG{'dir'}/domains - $!";
+}
+if ( ! -d $CONFIG{'dir'} . "/domains/" . $CONFIG{'hostname'} )
+{
+    mkdir $CONFIG{'dir'}. '/domains/' . $CONFIG{'hostname'}, 0777
+      || die "Cannot create $CONFIG{'dir'}/domains/$CONFIG{'hostname'} - $!" ;
+}
+
+#
+#  Copy the swap file, and disk images.
+#
+print "Copying swapfile ...\n";
+File::Copy::cp( $swap_in,  $swap_out );
+print "done\n";
+
+print "Copying disk image ...\n";
+File::Copy::cp( $image_in, $image_out );
+print "done\n";
+
+#
+#  Now mount the image, in a secure temporary location.
+#
+
+my $dir = tempdir( CLEANUP => 1 );
+my $mount_cmd = "mount -t auto -o loop $image_out $dir";
+`$mount_cmd`;
+
+
+# Test that the mount worked
+
+my $mount = `/bin/mount`;
+
+if ( ! $mount =~ /$image_out/) {
+    print "Something went wrong trying to mount the new filesystem\n";
+    exit;
+}
+
+#
+#  Copy any local .deb files into the debootstrap archive as a potential
+# speedup.
+#
+`mkdir -p $dir/var/cache/apt/archives`;
+foreach my $file ( glob( "/var/cache/apt/archives/*.deb" ) )
+{
+    File::Copy::cp( $file, "$dir/var/cache/apt/archives" );
+}
+
+#
+#  Install the base system.
+#
+print "Running debootstrap to install the system.   This will take a while!\n";
+`debootstrap sarge $dir $CONFIG{'mirror'}`;
+print "Done\n";
+
+#
+#  Copy these files as a speed boost for the next run.
+#
+foreach my $file ( glob( "$dir/var/cache/apt/archives/*.deb" ) )
+{
+    File::Copy::cp( $file, "/var/cache/apt/archives" );
+}
+
+#
+#  If the debootstrap failed then we'll setup the output directories
+# for the configuration files here.
+#
+`mkdir -p $dir/etc/apt`;
+`mkdir -p $dir/etc/network`;
+
+#
+#  OK now we can do the basic setup.
+#
+print "Setting up APT sources .. ";
+open( APT, ">", $dir . "/etc/apt/sources.list" );
+print APT<<E_O_APT;
+#
+#  /etc/apt/sources.list
+#
+
+
+# Stable
+deb $CONFIG{'mirror'}     sarge main contrib non-free
+
+# 
+#  Security updates
+#
+deb     http://security.debian.org/ stable/updates  main contrib non-free
+
+
+E_O_APT
+close( APT );
+
+print "Done\n";
+
+
+
+#
+#  Copy some files from the host system, after setting up the hostname.
+#
+#
+my @hostFiles = ( "/etc/resolv.conf",
+		  "/etc/hosts",
+		  "/etc/passwd",
+		  "/etc/group",
+		  "/etc/shadow",
+		  "/etc/gshadow" );
+
+foreach my $file ( @hostFiles )
+{
+    File::Copy::cp( $file, $dir . "/etc" );
+}
+
+
+#
+#  Disable TLS
+#
+if ( -d $dir . "/lib/tls" ) 
+{
+    `mv $dir/lib/tls $dir/lib/tls.disabled`;
+}
+
+
+
+#
+#  Now setup the fstab
+#
+print "Setting up /etc/fstab .. ";
+open( TAB, ">", $dir . "/etc/fstab" );
+print TAB<<E_O_TAB;
+/dev/sda1     /     $CONFIG{'fs'}     errors=remount-ro     0     1
+/dev/sda2     none  swap     sw                    0     0
+proc          /proc proc     defaults              0     0
+E_O_TAB
+close( TAB );
+
+print "Done\n";
+
+
+#
+#  Setup the /etc/network/interfaces file upon the guest image
+#
+setupNetworking( $dir );
+
+
+#
+#  Install OpenSSH
+#
+installOpenSSH( $dir );
+
+#
+#  Fixup Inittab file
+#
+fixupInittab( $dir );
+
+
+
+#
+#  Now unmount the image.
+#
+`umount $dir`;
+
+
+#
+# Finally setup Xen to allow us to create the image.
+#
+print "Setting up Xen configuration file .. ";
+open( XEN, ">", "/etc/xen/$CONFIG{'hostname'}.cfg" );
+print XEN<<E_O_XEN;
+kernel = "/boot/vmlinuz-2.6.12-xenU"
+memory = $CONFIG{'memory'}
+name   = "$CONFIG{'hostname'}"
+disk   = [ 'file:$image_out,sda1,w','file:$swap_out,sda2,w' ]
+root   = "/dev/sda1 ro"
+E_O_XEN
+if ( $CONFIG{'dhcp'} )
+{
+    print XEN "dhcp=\"dhcp\"\n";
+}
+else
+{
+    print XEN "#dhcp=\"dhcp\"\n";
+}
+close( XEN );
+
+print "Done\n";
+
+
+#
+#  Give status message
+#
+print <<EOEND;
+
+  To finish the setup of your new host $CONFIG{'hostname'} please run:
+
+    mkdir /mnt/tmp
+    mount -t $CONFIG{'fs'} -o loop $image_out /mnt/tmp
+
+    chroot /mnt/tmp /bin/bash
+
+    # Get security upgrades.
+    apt-get upgrade
+
+    # setup passwords, etc.
+    passwd root
+
+    # Cleanup.
+    exit
+    umount /mnt/tmp
+
+ Once completed you may start your new instance of Xen with:
+
+    xm create $CONFIG{'hostname'}.cfg -c
+
+EOEND
+
+
+#
+#  Should we immediately start the new instance?
+#  If so fork() and do it so that we can return to the user, they can
+# attach to the console via the command : 'xm console $name'.
+#
+#
+if ( $CONFIG{'boot'} )
+{
+    my $pid = fork();
+    if ( $pid )
+    {
+	exit;
+    }
+    else
+    {
+	system( "xm create $CONFIG{'hostname'}.cfg" );
+    }
+}
+
+
+
+=head2 readConfigurationFile
+
+  Read the configuration file specified.
+
+=cut
+
+sub readConfigurationFile
+{
+    my ($file) = ( @_ );
+
+    open( FILE, "<", $file ) or die "Cannot read file '$file' - $!";
+
+    my $line       = ""; 
+
+    while (defined($line = <FILE>) ) 
+    {
+        chomp $line;
+	if ($line =~ s/\\$//) 
+	{
+	    $line .= <FILE>;
+	    redo unless eof(FILE);
+	}
+      
+	# Skip lines beginning with comments
+	next if ( $line =~ /^([ \t]*)\#/ );
+
+	# Skip blank lines
+	next if ( length( $line ) < 1 );
+
+	# Strip trailing comments.
+	if ( $line =~ /(.*)\#(.*)/ )
+	{
+	    $line = $1;
+	}
+
+	# Find variable settings
+	if ( $line =~ /([^=]+)=([^\n]+)/ )
+	{
+	    my $key = $1;
+	    my $val = $2;
+
+	    # Strip leading and trailing whitespace.
+	    $key =~ s/^\s+//;
+	    $key =~ s/\s+$//;
+	    $val =~ s/^\s+//;
+	    $val =~ s/\s+$//;
+	    
+	    # Store value.
+	    $CONFIG{ $key } = $val;
+	}
+    }
+
+    close( FILE );
+}
+
+
+
+
+=head2 parseCommandLineArguments
+
+  Parse the arguments specified upon the command line.
+
+=cut
+
+sub parseCommandLineArguments
+{
+    my $HELP   = 0;
+    my $MANUAL = 0;
+
+    #  Parse options.
+    #
+    GetOptions(
+	       "hostname=s", \$CONFIG{'hostname'},
+	       "from=s",     \$CONFIG{'from'},
+	       "ip=s",       \$CONFIG{'ip'},
+	       "gateway=s",  \$CONFIG{'gateway'},
+	       "mask=s",     \$CONFIG{'netmask'},
+	       "broadcast=s",\$CONFIG{'broadcast'},
+	       "network=s",  \$CONFIG{'network'},
+	       "dir=s",      \$CONFIG{'dir'},
+	       "dhcp",       \$CONFIG{'dhcp'},
+	       "help",       \$HELP,
+	       "manual",     \$MANUAL
+	      );
+    
+    pod2usage(1) if $HELP;
+    pod2usage(-verbose => 2 ) if $MANUAL;
+}
+
+
+
+=head2 checkArguments
+
+  Check that the arguments the user has specified are complete and
+ make sense.
+
+=cut
+
+sub checkArguments
+{
+
+    if (!defined( $CONFIG{'hostname'} ) )
+    {
+	print<<EOF
+
+  You should set a hostname with '--hostname=foo'.
+
+  This option is required.
+EOF
+      ;
+	exit;
+    }
+
+
+    if (!defined( $CONFIG{'dir'} ) )
+    {
+	print<<EOF
+
+  You should set an output directory with '--dir=/my/path'.
+
+  This option is required.  Subdirectories will be created
+ beneath the directory you name.
+
+EOF
+	  ;
+	exit;
+    }
+
+
+
+    #
+    #  Make sure the directory exists.
+    #
+    if ( ! -d $CONFIG{'dir'} )
+    {
+	print "Output directory '$CONFIG{'dir'}' doesn't exist\n";
+	exit;
+    }
+
+    if ( ! -w $CONFIG{'dir'} )
+    {
+	print "Output directory '$CONFIG{'dir'}' isn't writable.\n";
+	exit;
+    }
+
+    #
+    # Make sure the source image we're copying exists.
+    #
+    my $source = $CONFIG{'dir'} . "/domains/" . $CONFIG{'from'} . "/disk.img";
+    if ( ! -e $source )
+    {
+	print "The source image you've specified doesn't exist";
+	exit;
+    }
+
+
+    #
+    #  Only one of DHCP / IP is required.
+    #
+    if ( $CONFIG{'ip'} && $CONFIG{'dhcp'})
+    {
+	print "You've chosen both DHCP and an IP address.\n";
+	print "Only one is supported\n";
+	exit;
+    }
+
+    #
+    #  If we're using DHCP then the other networking options should
+    # be unsent.
+    #
+    if ( $CONFIG{'dhcp'} )
+    {
+	$CONFIG{'gateway'}   = '';
+	$CONFIG{'netmask'}   = '';
+	$CONFIG{'broadcast'} = '';
+	$CONFIG{'ip'}	     = '';
+    }
+}
+
+
+
+=head2 setupNetworking
+
+  Setup the /etc/network/interfaces file, and the hostname 
+ upon the virtual instance.
+
+=cut
+
+sub setupNetworking
+{
+    my ( $prefix ) = ( @_ );
+
+    `echo '$CONFIG{'hostname'}' > $prefix/etc/hostname`;
+
+    open( IP, ">", $prefix . "/etc/network/interfaces" );
+
+    if ( $CONFIG{'dhcp'} )
+    {
+	print IP<<E_O_DHCP;
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+	    
+# The primary network interface
+auto eth0
+iface eth0 inet dhcp
+
+E_O_DHCP
+    }
+    else
+    {
+	print IP<<E_O_STATIC_IP;
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+	    
+# The primary network interface
+auto eth0
+iface eth0 inet static
+ address $CONFIG{'ip'}
+ gateway $CONFIG{'gateway'}
+ netmask $CONFIG{'netmask'}
+ network $CONFIG{'network'}
+ broadcast $CONFIG{'broadcast'}
+
+E_O_STATIC_IP
+    }
+
+    close( IP );
+}
+
+
+
+=head2 installOpenSSH
+
+  Install OpenSSH upon the virtual instance via apt-get.
+
+=cut
+
+sub installOpenSSH
+{
+    my ( $prefix ) = ( @_ );
+
+    `chroot $prefix /usr/bin/apt-get update`;
+    `DEBIAN_FRONTEND=noninteractive chroot $prefix /usr/bin/apt-get --yes --force-yes install ssh`;
+    `chroot $prefix /etc/init.d/ssh stop`;
+}
+
+
+
+=head2 fixupInittab
+
+  Copy the host systems /etc/inittab to the virtual installation 
+ making a couple of minor changes:
+
+  1. Setup the first console to be "Linux".
+  2. Disable all virtual consoles.
+
+=cut 
+
+sub fixupInittab
+{
+    my ( $prefix ) = ( @_ );
+
+
+    my @init;
+    open( INITTAB, "<", "/etc/inittab" );
+    foreach my $line ( <INITTAB> )
+    {
+	chomp $line;
+	if ( $line =~ /:respawn:/ )
+	{
+	    if ( $line =~ /^1/ )
+	    {
+            # NOP - leave line unchanged.
+	    }
+	    else
+	    {
+            # Otherwise comment out the line, we don't need multiple
+            # terminals since we can only access one.
+		$line = "#" . $line;
+	    }
+	}
+	push @init, $line;
+    }
+    close( INITTAB );
+    
+    
+    open( OUTPUT, ">", "$prefix/etc/inittab" );
+    foreach my $line ( @init )
+    {
+	print OUTPUT $line . "\n";
+    }
+    close( OUTPUT )
+}
