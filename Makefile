@@ -19,6 +19,9 @@ nop:
 	@echo " clean     - Remove bogus files."
 	@echo " commit    - Commit changes, after running check."
 	@echo " diff      - Run a 'cvs diff'."
+	@echo " install   - Install the software"
+	@echo " release   - Make a release tarball"
+	@echo " uninstall - Remove the software"
 	@echo " update    - Update from the CVS repository."
 	@echo " "
 
@@ -42,6 +45,17 @@ diff:
 	cvs diff --unified 2>/dev/null
 
 
+install:
+	cp xen-create-image /usr/bin
+	cp xen-delete-image /usr/bin
+	cp xen-update-image /usr/bin
+	chmod 755 /usr/bin/xen-create-image
+	chmod 755 /usr/bin/xen-delete-image
+	chmod 755 /usr/bin/xen-update-image
+	mkdir /etc/xen-tools
+	cp etc/xen-tools.conf /etc/xen-tools
+
+
 release: clean
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)
 	rm -f $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz
@@ -52,12 +66,19 @@ release: clean
 	mv $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz .
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)
 
+
 test:
 	@perl -MTest::Harness -e '$$Test::Harness::verbose=0; runtests @ARGV;' tests/*.t
 
 
 test-verbose:
 	@perl -MTest::Harness -e '$$Test::Harness::verbose=1; runtests @ARGV;' tests/*.t
+
+
+uninstall:
+	rm /usr/bin/xen-create-image
+	rm /usr/bin/xen-delete-image
+	rm /usr/bin/xen-update-image
 
 
 update: 
