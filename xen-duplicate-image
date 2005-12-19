@@ -100,7 +100,7 @@ Specify the virtual instance that we should copy.
  --
  http://www.steve.org.uk/
 
- $Id: xen-duplicate-image,v 1.1 2005-12-19 11:23:05 steve Exp $
+ $Id: xen-duplicate-image,v 1.2 2005-12-19 14:54:40 steve Exp $
 
 =cut
 
@@ -266,122 +266,17 @@ if ( ! $mount =~ /$image_out/) {
 }
 
 #
-#  Copy any local .deb files into the debootstrap archive as a potential
-# speedup.
-#
-`mkdir -p $dir/var/cache/apt/archives`;
-foreach my $file ( glob( "/var/cache/apt/archives/*.deb" ) )
-{
-    File::Copy::cp( $file, "$dir/var/cache/apt/archives" );
-}
-
-#
-#  Install the base system.
-#
-print "Running debootstrap to install the system.   This will take a while!\n";
-`debootstrap sarge $dir $CONFIG{'mirror'}`;
-print "Done\n";
-
-#
-#  Copy these files as a speed boost for the next run.
-#
-foreach my $file ( glob( "$dir/var/cache/apt/archives/*.deb" ) )
-{
-    File::Copy::cp( $file, "/var/cache/apt/archives" );
-}
-
-#
-#  If the debootstrap failed then we'll setup the output directories
-# for the configuration files here.
+#  Setup the output directories for the configuration files here - note
+# that this should already exist.
 #
 `mkdir -p $dir/etc/apt`;
 `mkdir -p $dir/etc/network`;
-
-#
-#  OK now we can do the basic setup.
-#
-print "Setting up APT sources .. ";
-open( APT, ">", $dir . "/etc/apt/sources.list" );
-print APT<<E_O_APT;
-#
-#  /etc/apt/sources.list
-#
-
-
-# Stable
-deb $CONFIG{'mirror'}     sarge main contrib non-free
-
-# 
-#  Security updates
-#
-deb     http://security.debian.org/ stable/updates  main contrib non-free
-
-
-E_O_APT
-close( APT );
-
-print "Done\n";
-
-
-
-#
-#  Copy some files from the host system, after setting up the hostname.
-#
-#
-my @hostFiles = ( "/etc/resolv.conf",
-		  "/etc/hosts",
-		  "/etc/passwd",
-		  "/etc/group",
-		  "/etc/shadow",
-		  "/etc/gshadow" );
-
-foreach my $file ( @hostFiles )
-{
-    File::Copy::cp( $file, $dir . "/etc" );
-}
-
-
-#
-#  Disable TLS
-#
-if ( -d $dir . "/lib/tls" ) 
-{
-    `mv $dir/lib/tls $dir/lib/tls.disabled`;
-}
-
-
-
-#
-#  Now setup the fstab
-#
-print "Setting up /etc/fstab .. ";
-open( TAB, ">", $dir . "/etc/fstab" );
-print TAB<<E_O_TAB;
-/dev/sda1     /     $CONFIG{'fs'}     errors=remount-ro     0     1
-/dev/sda2     none  swap     sw                    0     0
-proc          /proc proc     defaults              0     0
-E_O_TAB
-close( TAB );
-
-print "Done\n";
 
 
 #
 #  Setup the /etc/network/interfaces file upon the guest image
 #
 setupNetworking( $dir );
-
-
-#
-#  Install OpenSSH
-#
-installOpenSSH( $dir );
-
-#
-#  Fixup Inittab file
-#
-fixupInittab( $dir );
-
 
 
 #
@@ -414,34 +309,6 @@ close( XEN );
 
 print "Done\n";
 
-
-#
-#  Give status message
-#
-print <<EOEND;
-
-  To finish the setup of your new host $CONFIG{'hostname'} please run:
-
-    mkdir /mnt/tmp
-    mount -t $CONFIG{'fs'} -o loop $image_out /mnt/tmp
-
-    chroot /mnt/tmp /bin/bash
-
-    # Get security upgrades.
-    apt-get upgrade
-
-    # setup passwords, etc.
-    passwd root
-
-    # Cleanup.
-    exit
-    umount /mnt/tmp
-
- Once completed you may start your new instance of Xen with:
-
-    xm create $CONFIG{'hostname'}.cfg -c
-
-EOEND
 
 
 #
@@ -703,66 +570,3 @@ E_O_STATIC_IP
 }
 
 
-
-=head2 installOpenSSH
-
-  Install OpenSSH upon the virtual instance via apt-get.
-
-=cut
-
-sub installOpenSSH
-{
-    my ( $prefix ) = ( @_ );
-
-    `chroot $prefix /usr/bin/apt-get update`;
-    `DEBIAN_FRONTEND=noninteractive chroot $prefix /usr/bin/apt-get --yes --force-yes install ssh`;
-    `chroot $prefix /etc/init.d/ssh stop`;
-}
-
-
-
-=head2 fixupInittab
-
-  Copy the host systems /etc/inittab to the virtual installation 
- making a couple of minor changes:
-
-  1. Setup the first console to be "Linux".
-  2. Disable all virtual consoles.
-
-=cut 
-
-sub fixupInittab
-{
-    my ( $prefix ) = ( @_ );
-
-
-    my @init;
-    open( INITTAB, "<", "/etc/inittab" );
-    foreach my $line ( <INITTAB> )
-    {
-	chomp $line;
-	if ( $line =~ /:respawn:/ )
-	{
-	    if ( $line =~ /^1/ )
-	    {
-            # NOP - leave line unchanged.
-	    }
-	    else
-	    {
-            # Otherwise comment out the line, we don't need multiple
-            # terminals since we can only access one.
-		$line = "#" . $line;
-	    }
-	}
-	push @init, $line;
-    }
-    close( INITTAB );
-    
-    
-    open( OUTPUT, ">", "$prefix/etc/inittab" );
-    foreach my $line ( @init )
-    {
-	print OUTPUT $line . "\n";
-    }
-    close( OUTPUT )
-}
