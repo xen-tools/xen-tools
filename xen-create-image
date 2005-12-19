@@ -193,7 +193,7 @@ broadcast = 255.255.255.0
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.31 2005-12-19 20:43:18 steve Exp $
+ $Id: xen-create-image,v 1.32 2005-12-19 20:54:00 steve Exp $
 
 =cut
 
@@ -399,11 +399,18 @@ if ( ! $mount =~ /$image/) {
 #  Copy any local .deb files into the debootstrap archive as a potential
 # speedup.
 #
+print "Copying files from host to image.\n";
 `mkdir -p $dir/var/cache/apt/archives`;
 foreach my $file ( glob( "/var/cache/apt/archives/*.deb" ) )
 {
+    my $t = $file;
+    while( length( $t ) < 80 ) { $t .= " "; }
+    print "\r" . $t;
+
     File::Copy::cp( $file, "$dir/var/cache/apt/archives" );
 }
+print "Done .........                                                         \n";
+
 
 #
 #  Install the base system - with a simple sense of progress.
@@ -416,10 +423,18 @@ print "Done\n";
 #
 #  Copy these files as a speed boost for the next run.
 #
+print "Caching debootstrap files upon the host system\n\n";
 foreach my $file ( glob( "$dir/var/cache/apt/archives/*.deb" ) )
 {
+    my $t = $file;
+    while( length( $t ) < 80 ) { $t .= " "; }
+    print "\r" . $t;
+
     File::Copy::cp( $file, "/var/cache/apt/archives" );
 }
+print "Done .........                                                         \n";
+
+
 
 #
 #  If the debootstrap failed then we'll setup the output directories
