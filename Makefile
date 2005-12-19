@@ -5,7 +5,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.9 2005-12-19 16:38:36 steve Exp $
+# $Id: Makefile,v 1.10 2005-12-19 18:08:45 steve Exp $
 
 
 #
@@ -54,10 +54,12 @@ install:
 	cp xen-create-image /usr/bin
 	cp xen-delete-image /usr/bin
 	cp xen-duplicate-image /usr/bin
+	cp xen-list-images /usr/bin
 	cp xen-update-image /usr/bin
 	chmod 755 /usr/bin/xen-create-image
 	chmod 755 /usr/bin/xen-delete-image
 	chmod 755 /usr/bin/xen-duplicate-image
+	chmod 755 /usr/bin/xen-list-images
 	chmod 755 /usr/bin/xen-update-image
 	-mkdir /etc/xen-tools
 	cp etc/xen-tools.conf /etc/xen-tools
@@ -86,6 +88,7 @@ uninstall:
 	rm /usr/bin/xen-create-image
 	rm /usr/bin/xen-delete-image
 	rm /usr/bin/xen-duplicate-image
+	rm /usr/bin/xen-list-images
 	rm /usr/bin/xen-update-image
 	rm /etc/xen-tools/xen-tools.conf
 	-rmdir /etc/xen-tools/
