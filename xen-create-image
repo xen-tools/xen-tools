@@ -193,7 +193,7 @@ broadcast = 255.255.255.0
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.27 2005-12-19 18:26:48 steve Exp $
+ $Id: xen-create-image,v 1.28 2005-12-19 18:28:05 steve Exp $
 
 =cut
 
@@ -432,13 +432,17 @@ print APT<<E_O_APT;
 #
 
 
-# Stable
-deb $CONFIG{'mirror'}     sarge main contrib non-free
+#
+# $CONFIG{'dist'}
+#
+deb     $CONFIG{'mirror'}     $CONFIG{'dist'} main contrib non-free
+deb-src $CONFIG{'mirror'}     $CONFIG{'dist'} main contrib non-free
 
 # 
 #  Security updates
-#
+# 
 deb     http://security.debian.org/ stable/updates  main contrib non-free
+deb-src http://security.debian.org/ stable/updates  main contrib non-free
 
 
 E_O_APT
