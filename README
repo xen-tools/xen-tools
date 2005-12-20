@@ -3,22 +3,49 @@
 xen-tools v0.4
 --------------
 
-  This archive contains a collection of Perl scripts for working with
- Xen images under Debian GNU/Linux.
+  Xen-Tools is a collection of Perl scripts for working with Xen
+ images under Debian GNU/Linux.
 
-  It is primarily aimed at people who wish to create instances of
- Debian Sarge, however 'Etch', and 'Sid' are also available.
+  It is primarily aimed at people who wish to create virtual instances
+ of Debian systems.  You may easily manipulate instances of Debian
+ Sarge, Etch, or Sid.
 
-  The tools all work in a similar way and each ahve the same assumptions.
+  The tools all work in a similar way and each have the same assumptions.
 
   It is assumed that each virtual image will be comprised of two files
- upon the host system:  One for the primary drive, and one for the swap.
- The images are all assumed to live beneath the same root directory -
- this directory is an argument to all the scripts and may be set with
- '--dir=/path/to/root'.
+ upon the host system:
 
-  (Alternatively the directory may be included in the global configuration
- file.)
+	1.  A disk image to be used by Xen as the primary drive.
+	2.  A disk image to be used by Xen as the swap partition.
+
+  Images are assumed to live beneath a common  root directory,
+ which is specified via the '--dir=' command line argument to all
+ of the scripts. 
+
+  (Alternatively you may include 'dir=/path' inside the global
+ configuration file /etc/xen-tools/xen-tools.conf.)
+
+  Beneath the root directory each virtual instance will have its
+ own subdirectory, named after the hostname of the image.  A 
+ typical layout might look like this:
+
+/home/xen/domains/
+|-- bar               [Virtual machine named 'bar']
+|   |-- disk.img        [Disk image]
+|   `-- swap.img        [Swap image]
+|-- etch              [Virtual machine named 'etch']
+|   |-- disk.img        [Disk image]
+|   `-- swap.img        [Swap image]
+|-- foo               [Virtual machine named 'foo']
+|   |-- disk.img
+|   `-- swap.img
+|-- progress          [Virtual machine named 'progress']
+|   |-- disk.img
+|   `-- swap.img
+|-- sarge             [Virtual machine named 'sarge']
+|   |-- disk.img
+|   `-- swap.img
+
 
   The scripts are now described individually:
 
@@ -27,14 +54,19 @@ xen-tools v0.4
 xen-create-image
 ----------------
 
-  This is a simple script which is designed to create new images of 
- Debian Sarge which may be used with the Xen virtual machine.
+  This is a simple script which is designed to create new images
+ which may be used with the Xen virtual machine.  You may create
+ images of Sarge, Etch, or Sid.
+
+  The machines may have their networking settings created and
+ you can optionally cause the new instance to boot once it has
+ been created.
 
 
 xen-clone-image
 ---------------
 
-  This allows a simple cloning operation to be conducted.  An existing
+  This script allows a cloning operation to be conducted.  An existing
  image will be copied to a new directory and the networking information
  will be updated.  No other changes are applied.
 
@@ -48,8 +80,10 @@ xen-delete-image
 xen-list-images
 ---------------
 
-  List all the created images, along with the network address.
- (Or just 'DHCP' for dynamically configured images.)
+  List all the created images beneath a given root directory along
+ with their network addresses.
+
+  (In the case of images using DHCP an IP address will not be listed.)
 
 
 xen-update-image
@@ -77,4 +111,4 @@ TODO
 
 Steve
 --
-$Id: README,v 1.9 2005-12-20 17:33:58 steve Exp $
+$Id: README,v 1.10 2005-12-20 23:31:29 steve Exp $
