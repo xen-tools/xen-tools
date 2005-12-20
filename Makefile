@@ -5,7 +5,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.17 2005-12-20 23:20:31 steve Exp $
+# $Id: Makefile,v 1.18 2005-12-20 23:21:47 steve Exp $
 
 
 #
@@ -36,9 +36,6 @@ nop:
 	@echo " "
 
 
-.PHONY:
-	@true
-
 
 changelog:
 	-if [ -x /usr/bin/cvs2cl ] ; then cvs2cl; fi
@@ -51,6 +48,7 @@ clean:
 	@find . -name '*~' -exec rm \{\} \;
 	@find . -name '*.bak' -exec rm \{\} \;
 	@find . -name 'tags' -exec rm \{\} \;
+	@find . -name '*.8' -exec rm \{\} \;
 
 
 commit: test
