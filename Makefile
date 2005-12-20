@@ -5,7 +5,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.16 2005-12-20 23:16:41 steve Exp $
+# $Id: Makefile,v 1.17 2005-12-20 23:20:31 steve Exp $
 
 
 #
@@ -82,8 +82,8 @@ install:
 
 
 manpages:
-	for i in xen-*; do pod2man --section=8 $$i man/$$i.8; done
-	for i in man/*.8; do gzip -9 $$i; done
+	for i in xen-*; do pod2man --release=${VERSION} --official --section=8 $$i man/$$i.8; done
+	for i in man/*.8; do gzip --force -9 $$i; done
 
 
 release: clean changelog manpages
