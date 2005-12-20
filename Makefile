@@ -5,7 +5,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.15 2005-12-20 17:33:58 steve Exp $
+# $Id: Makefile,v 1.16 2005-12-20 23:16:41 steve Exp $
 
 
 #
@@ -16,6 +16,10 @@ VERSION     = 0.4
 BASE        = xen-tools
 
 
+#
+#  Installation prefix
+#
+prefix=
 
 
 nop:
@@ -25,6 +29,7 @@ nop:
 	@echo " commit    - Commit changes, after running check."
 	@echo " diff      - Run a 'cvs diff'."
 	@echo " install   - Install the software"
+	@echo " manpages  - Refresh the manpages"
 	@echo " release   - Make a release tarball"
 	@echo " uninstall - Remove the software"
 	@echo " update    - Update from the CVS repository."
@@ -57,22 +62,31 @@ diff:
 
 
 install:
-	cp xen-create-image /usr/bin
-	cp xen-delete-image /usr/bin
-	cp xen-duplicate-image /usr/bin
-	cp xen-list-images /usr/bin
-	cp xen-update-image /usr/bin
-	chmod 755 /usr/bin/xen-create-image
-	chmod 755 /usr/bin/xen-delete-image
-	chmod 755 /usr/bin/xen-duplicate-image
-	chmod 755 /usr/bin/xen-list-images
-	chmod 755 /usr/bin/xen-update-image
-	-mkdir /etc/xen-tools
-	cp etc/xen-tools.conf /etc/xen-tools
-	if [ -d /etc/bash_completion.d/ ]; then cp misc/xen-tools /etc/bash_completion.d; fi
+	mkdir -p ${prefix}/usr/bin
+	cp xen-create-image ${prefix}/usr/bin
+	cp xen-delete-image ${prefix}/usr/bin
+	cp xen-duplicate-image ${prefix}/usr/bin
+	cp xen-list-images ${prefix}/usr/bin
+	cp xen-update-image ${prefix}/usr/bin
+	chmod 755 ${prefix}/usr/bin/xen-create-image
+	chmod 755 ${prefix}/usr/bin/xen-delete-image
+	chmod 755 ${prefix}/usr/bin/xen-duplicate-image
+	chmod 755 ${prefix}/usr/bin/xen-list-images
+	chmod 755 ${prefix}/usr/bin/xen-update-image
+	-mkdir -p ${prefix}/etc/xen-tools
+	-mkdir -p ${prefix}/usr/share/man/man8/
+	cp man/*.8.gz ${prefix}/usr/share/man/man8/
+	cp etc/xen-tools.conf ${prefix}/etc/xen-tools/
+	-mkdir -p ${prefix}/etc/bash_completion.d
+	cp misc/xen-tools ${prefix}/etc/bash_completion.d/
 
 
-release: clean changelog
+manpages:
+	for i in xen-*; do pod2man --section=8 $$i man/$$i.8; done
+	for i in man/*.8; do gzip -9 $$i; done
+
+
+release: clean changelog manpages
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)
 	rm -f $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz
 	cp -R . $(DIST_PREFIX)/$(BASE)-$(VERSION)
@@ -92,14 +106,20 @@ test-verbose:
 
 
 uninstall:
-	rm /usr/bin/xen-create-image
-	rm /usr/bin/xen-delete-image
-	rm /usr/bin/xen-duplicate-image
-	rm /usr/bin/xen-list-images
-	rm /usr/bin/xen-update-image
-	rm /etc/xen-tools/xen-tools.conf
-	-rmdir /etc/xen-tools/
-	-rm -f /etc/bash_completion.d/xen-tools
+	rm -f ${prefix}/usr/bin/xen-create-image
+	rm -f ${prefix}/usr/bin/xen-delete-image
+	rm -f ${prefix}/usr/bin/xen-duplicate-image
+	rm -f ${prefix}/usr/bin/xen-list-images
+	rm -f ${prefix}/usr/bin/xen-update-image
+	rm -f ${prefix}/etc/xen-tools/xen-tools.conf
+	-rmdir ${prefix}/etc/xen-tools/
+	-rm -f ${prefix}/etc/bash_completion.d/xen-tools
+	rm -f ${prefix}/usr/share/man/man8/xen-create-image.8.gz
+	rm -f ${prefix}/usr/share/man/man8/xen-delete-image.8.gz
+	rm -f ${prefix}/usr/share/man/man8/xen-duplicate-image.8.gz
+	rm -f ${prefix}/usr/share/man/man8/xen-list-images.8.gz
+	rm -f ${prefix}/usr/share/man/man8/xen-update-image.8.gz
+
 
 update: 
 	cvs -z3 update -A -d 2>/dev/null
