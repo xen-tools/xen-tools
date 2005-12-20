@@ -1,6 +1,6 @@
 
 
-xen-tools v0.x
+xen-tools v0.4
 --------------
 
   This archive contains a collection of Perl scripts for working with
@@ -77,4 +77,4 @@ TODO
 
 Steve
 --
-$Id: README,v 1.8 2005-12-20 14:40:37 steve Exp $
+$Id: README,v 1.9 2005-12-20 17:33:58 steve Exp $
