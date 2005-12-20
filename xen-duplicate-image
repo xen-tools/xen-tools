@@ -100,7 +100,7 @@ Specify the virtual instance that we should copy.
  --
  http://www.steve.org.uk/
 
- $Id: xen-duplicate-image,v 1.3 2005-12-19 15:04:25 steve Exp $
+ $Id: xen-duplicate-image,v 1.4 2005-12-20 13:27:03 steve Exp $
 
 =cut
 
@@ -137,6 +137,8 @@ use Pod::Usage;
 #  Command line flags *always* take precedence over the configuration files(s).
 #
 my %CONFIG;
+
+$CONFIG{'xm'} 		= '/usr/sbin/xm';
 
 
 #
@@ -326,7 +328,7 @@ if ( $CONFIG{'boot'} )
     }
     else
     {
-	system( "xm create $CONFIG{'hostname'}.cfg" );
+	system( "$CONFIG{'xm'} create $CONFIG{'hostname'}.cfg" );
     }
 }
 
@@ -445,6 +447,18 @@ EOF
 	exit;
     }
 
+    if (!defined ($CONFIG{'from'} ) )
+    {
+        print<<EOF
+
+  You should set a source with '--from=bar'.
+
+  This option is required.
+EOF
+      ;
+        exit;
+
+    }
 
     if (!defined( $CONFIG{'dir'} ) )
     {
@@ -460,6 +474,14 @@ EOF
 	exit;
     }
 
+    #
+    #  Make sure we have every binary we need
+    #
+    if ( ! -x $CONFIG{'xm'} )
+    {
+        print "Could not find " .$CONFIG{'xm'}. ".\n";
+        exit;
+    }
 
 
     #

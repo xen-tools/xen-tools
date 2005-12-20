@@ -203,7 +203,7 @@ broadcast = 255.255.255.0
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.35 2005-12-20 00:35:10 steve Exp $
+ $Id: xen-create-image,v 1.36 2005-12-20 13:27:03 steve Exp $
 
 =cut
 
@@ -249,12 +249,17 @@ my %CONFIG;
 #
 # Constants for filesystem usage.
 #
+my %FILESYSTEM_BINARY;
 my %FILESYSTEM_CREATE;
 my %FILESYSTEM_MOUNT;
 
-$FILESYSTEM_CREATE{'ext3'}     = '/sbin/mkfs.ext3 -F ';
-$FILESYSTEM_CREATE{'xfs'}      = '/sbin/mkfs.xfs -d name=';
-$FILESYSTEM_CREATE{'reiserfs'} = '/sbin/mkfs.reiserfs -f -q ';
+$FILESYSTEM_BINARY{'ext3'}     = '/sbin/mkfs.ext3';
+$FILESYSTEM_BINARY{'xfs'}      = '/sbin/mkfs.xfs';
+$FILESYSTEM_BINARY{'reiserfs'} = '/sbin/mkfs.reiserfs';
+
+$FILESYSTEM_CREATE{'ext3'}     = $FILESYSTEM_BINARY{'ext3'}. ' -F ';
+$FILESYSTEM_CREATE{'xfs'}      = $FILESYSTEM_BINARY{'xfs'}. ' -d name=';
+$FILESYSTEM_CREATE{'reiserfs'} = $FILESYSTEM_BINARY{'reiserfs'}. ' -f -q ';
 
 $FILESYSTEM_MOUNT{'ext3'}      = '-t ext3';
 $FILESYSTEM_MOUNT{'xfs'}       = '-t xfs';
@@ -276,7 +281,7 @@ $CONFIG{'swap'}   = '128M';
 $CONFIG{'fs'}     = 'ext3';
 $CONFIG{'mirror'} = 'http://ftp.us.debian.org/debian';
 $CONFIG{'dist'}   = 'sarge';
-
+$CONFIG{'xm'}	  = '/usr/sbin/xm';
 
 #
 #  Read configuration file(s) if they exist.
@@ -635,7 +640,7 @@ if ( $CONFIG{'boot'} )
     }
     else
     {
-	system( "xm create $CONFIG{'hostname'}.cfg" );
+	system( "$CONFIG{'xm'} create $CONFIG{'hostname'}.cfg" );
     }
 }
 
@@ -796,6 +801,21 @@ EOF
     {
 	print "Output directory '$CONFIG{'dir'}' isn't writable.\n";
 	exit;
+    }
+
+    #
+    #  Make sure we have every binary we need
+    #
+    if ( ! -x $CONFIG{'xm'} )
+    {
+	print "Could not find " .$CONFIG{'xm'}. ".\n";
+	exit;
+    }
+
+    my $binpath = $FILESYSTEM_BINARY{lc( $CONFIG{'fs'} ) };
+    if ( ! -x $binpath ) {
+  	  print "Unable to find required executable ". $binpath. ".\n";
+	  exit;
     }
 
     # 
