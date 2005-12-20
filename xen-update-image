@@ -2,12 +2,17 @@
 
 =head1 NAME
 
-  xen-update-image - Update the software installed upon the given image.
+xen-update-image - Update the software installed upon the given image.
 
 =head1 SYNOPSIS
 
   xen-update-image [options]
 
+  Help Options:
+   --help      Show this scripts help information.
+   --manual    Read this scripts manual.
+
+  General Options:
    --dir       Specify where the output image was saved.
    --hostname  Set the images hostname.
 
@@ -64,7 +69,7 @@ Read the manual
  --
  http://www.steve.org.uk/
 
- $Id: xen-update-image,v 1.2 2005-12-19 11:04:18 steve Exp $
+ $Id: xen-update-image,v 1.3 2005-12-20 14:35:09 steve Exp $
 
 =cut
 

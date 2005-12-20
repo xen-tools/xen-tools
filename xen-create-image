@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-  xen-create-image - Create a new Xen instance of Debian Sarge.
+xen-create-image - Create a new Xen instance of Debian Sarge.
 
 =head1 SYNOPSIS
 
@@ -170,25 +170,25 @@ suffixed with either Mb, or Gb.
 
 =for example begin
 
-#
-# General options.
-#
-dir    = /home/xen   # Ouptut directory
-memory = 128Mb       # 128Mb for each new image.
+ #
+ # General options.
+ #
+ dir    = /home/xen   # Ouptut directory
+ memory = 128Mb       # 128Mb for each new image.
 
-#
-#  Images
-#
-fs   = ext3      # We like EXT3
-swap = 128mb     # 128Mb of swap.
-size = 2Gb       # 2Gb images.
+ #
+ #  Images
+ #
+ fs   = ext3      # We like EXT3
+ swap = 128mb     # 128Mb of swap.
+ size = 2Gb       # 2Gb images.
 
-#
-# Networking options.
-#
-network   = 192.168.1.0
-gateway   = 192.168.1.1
-broadcast = 255.255.255.0
+ #
+ # Networking options.
+ #
+ network   = 192.168.1.0
+ gateway   = 192.168.1.1
+ broadcast = 255.255.255.0
 
 =for example end
 
@@ -204,7 +204,7 @@ broadcast = 255.255.255.0
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.38 2005-12-20 14:27:48 steve Exp $
+ $Id: xen-create-image,v 1.39 2005-12-20 14:35:09 steve Exp $
 
 =cut
 

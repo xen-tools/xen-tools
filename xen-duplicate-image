@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-  xen-duplicate-image - Duplicate an existing Xen instance.
+xen-duplicate-image - Duplicate an existing Xen instance.
 
 =head1 SYNOPSIS
 
@@ -103,7 +103,7 @@ Specify the virtual instance that we should copy.
  --
  http://www.steve.org.uk/
 
- $Id: xen-duplicate-image,v 1.5 2005-12-20 13:32:53 steve Exp $
+ $Id: xen-duplicate-image,v 1.6 2005-12-20 14:35:09 steve Exp $
 
 =cut
 

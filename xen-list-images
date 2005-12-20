@@ -2,16 +2,19 @@
 
 =head1 NAME
 
-  xen-list-images - List all the created and configured Xen images.
+xen-list-images - List all the created and configured Xen images.
 
 =head1 SYNOPSIS
 
   xen-list-image [options]
 
-   --dir       Specify where the output images are located.
 
-=cut
+  Help Options:
+   --help     Show this scripts help information.
+   --manual   Read this scripts manual.
 
+  General Options:
+   --dir      Specify where the output images are located.
 
 
 =head1 OPTIONS
@@ -28,8 +31,6 @@ Show the script help
 Read the manual
 
 =back
-
-=cut
 
 
 =head1 DESCRIPTION
@@ -60,9 +61,6 @@ Read the manual
   If these conditions are met the name will be output, along with
  networking information.
 
-   
-=cut
-
 
 =head1 AUTHOR
 
@@ -71,7 +69,7 @@ Read the manual
  --
  http://www.steve.org.uk/
 
- $Id: xen-list-images,v 1.3 2005-12-19 18:14:47 steve Exp $
+ $Id: xen-list-images,v 1.4 2005-12-20 14:35:09 steve Exp $
 
 =cut
 
