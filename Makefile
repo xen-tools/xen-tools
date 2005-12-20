@@ -5,7 +5,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.13 2005-12-19 22:09:05 steve Exp $
+# $Id: Makefile,v 1.14 2005-12-20 14:27:34 steve Exp $
 
 
 #
@@ -69,6 +69,7 @@ install:
 	chmod 755 /usr/bin/xen-update-image
 	-mkdir /etc/xen-tools
 	cp etc/xen-tools.conf /etc/xen-tools
+	if [ -d /etc/bash_completion.d/ ]; then cp misc/xen-tools /etc/bash_completion.d; fi
 
 
 release: clean changelog
@@ -98,6 +99,7 @@ uninstall:
 	rm /usr/bin/xen-update-image
 	rm /etc/xen-tools/xen-tools.conf
 	-rmdir /etc/xen-tools/
+	-rm -f /etc/bash_completion.d/xen-tools
 
 update: 
 	cvs -z3 update -A -d 2>/dev/null

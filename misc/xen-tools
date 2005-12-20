@@ -1,0 +1,70 @@
+#
+#  /etc/bash_completion.d/xen-tools
+#
+# Completion functions for Bash.
+#
+# Steve
+# --
+# http://www.steve.org.uk
+#
+# $Id :$
+#
+
+
+
+#
+#  Completion for xen-create-image
+#
+#  Completes the command line flags, and will allow tab completion of
+# the supported filesystems
+#
+_xen-create-image()
+{
+	local cur prev i exprfound onlyonce
+
+	COMPREPLY=()
+	cur=${COMP_WORDS[COMP_CWORD]}
+	prev=${COMP_WORDS[COMP_CWORD-1]}
+
+	case "$prev" in
+	--fs)
+		COMPREPLY=( $( compgen -W 'fs ext3 reiserfs'  -- \
+		"${COMP_WORDS[COMP_CWORD]}" ) )
+		return 0
+		;;
+	--dist)
+		COMPREPLY=( $( compgen -W 'sid sarge etch'  -- \
+		"${COMP_WORDS[COMP_CWORD]}" ) )
+		return 0
+		;;
+	esac
+
+	_expand || return 0
+
+	# complete using basic options
+	COMPREPLY=( $( compgen -W '--broadcast --boot --dhcp --dir --dist --fs --gateway --help --hostname --ip --manual --memory --network --netmask --mirror  --size --swap' -- $cur ) )
+
+	COMPREPLY=( $( echo "${COMP_WORDS[@]}" | \
+		       (while read -d ' ' i; do
+			    [ "$i" == "" ]
+			    continue
+			    # flatten array with spaces on either side,
+			    # otherwise we cannot grep on word boundaries of
+			    # first and last word
+			    COMPREPLY=" ${COMPREPLY[@]} "
+			    # remove word from list of completions
+			    COMPREPLY=( ${COMPREPLY/ ${i%% *} / } )
+			done
+			echo ${COMPREPLY[@]})
+		  ) )
+	
+	_filedir 
+	
+	return 0
+}
+complete -F _xen-create-image $filenames xen-create-image
+
+
+
+
+
