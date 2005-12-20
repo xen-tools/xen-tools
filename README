@@ -1,11 +1,34 @@
 
 
+xen-tools v0.x
+--------------
+
+  This archive contains a collection of Perl scripts for working with
+ Xen images under Debian GNU/Linux.
+
+  It is primarily aimed at people who wish to create instances of
+ Debian Sarge, however 'Etch', and 'Sid' are also available.
+
+  The tools all work in a similar way and each ahve the same assumptions.
+
+  It is assumed that each virtual image will be comprised of two files
+ upon the host system:  One for the primary drive, and one for the swap.
+ The images are all assumed to live beneath the same root directory -
+ this directory is an argument to all the scripts and may be set with
+ '--dir=/path/to/root'.
+
+  (Alternatively the directory may be included in the global configuration
+ file.)
+
+  The scripts are now described individually:
+
+
+
 xen-create-image
 ----------------
 
   This is a simple script which is designed to create new images of 
  Debian Sarge which may be used with the Xen virtual machine.
-
 
 
 xen-clone-image
@@ -16,12 +39,10 @@ xen-clone-image
  will be updated.  No other changes are applied.
 
 
-
 xen-delete-image
 ----------------
 
   This script will delete an image by hostname.
-
 
 
 xen-list-images
@@ -29,7 +50,6 @@ xen-list-images
 
   List all the created images, along with the network address.
  (Or just 'DHCP' for dynamically configured images.)
-
 
 
 xen-update-image
@@ -47,12 +67,14 @@ TODO
 ----
 
   1. Test more filesystem types.
-  2. Move each file copying / creation into a seperate routine
+  2. Move each file copying / creation into a seperate routine.
   3. See if there can be simple tests made without splitting things
-     into modules.
+     into modules..
   4. Add --verbose.
+  5. Detect and handle a failure in `debootstrap`.
+  6. domU kernel to be moved to config file.
 
 
 Steve
 --
-$Id: README,v 1.7 2005-12-19 20:45:24 steve Exp $
+$Id: README,v 1.8 2005-12-20 14:40:37 steve Exp $
