@@ -13,6 +13,7 @@
    --manual   Read this scripts manual.
 
   Size / General options:
+   --dist     Specify the distribution you wish to install: Sarge, Etch, Sid.
    --boot     Boot the new instance after creating it.
    --dir      Specify where the output images should go.
    --fs       Specify the filesystem type to use.
@@ -203,7 +204,7 @@ broadcast = 255.255.255.0
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.37 2005-12-20 13:38:41 steve Exp $
+ $Id: xen-create-image,v 1.38 2005-12-20 14:27:48 steve Exp $
 
 =cut
 
