@@ -13,6 +13,7 @@
    --manual   Read this scripts manual.
 
   Size / General options:
+   --boot     Boot the new instance after creating it.
    --dir      Specify where the output images should go.
    --fs       Specify the filesystem type to use.
    --memory   Setup the amount of memory allocated to the instance.
@@ -202,7 +203,7 @@ broadcast = 255.255.255.0
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.34 2005-12-20 00:17:55 steve Exp $
+ $Id: xen-create-image,v 1.35 2005-12-20 00:35:10 steve Exp $
 
 =cut
 
@@ -623,9 +624,13 @@ EOEND
 #
 if ( $CONFIG{'boot'} )
 {
+    print "\n\nBooting new virtual image: $CONFIG{'hostname'}\n";
+    print "\n\n";
+
     my $pid = fork();
     if ( $pid )
     {
+
 	exit;
     }
     else
@@ -633,6 +638,12 @@ if ( $CONFIG{'boot'} )
 	system( "xm create $CONFIG{'hostname'}.cfg" );
     }
 }
+
+
+#
+#  End of script.
+#
+exit;
 
 
 
