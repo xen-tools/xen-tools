@@ -47,6 +47,9 @@ Specify the broadcast address for the virtual image, only useful if DHCP is not 
 =item B<--dhcp>
 Specify that the virtual image should use DHCP to obtain its networking information.
 
+=item B<--dir>
+Specify the root directory beneath which the image should be saved.  Subdirectories will be created for each virtual image.
+
 =item B<--dist>
 Specify the distribution to install, defaults to 'sarge'.
 
@@ -60,6 +63,9 @@ Specify the gateway address for the virtual image, only useful if DHCP is not us
 =item B<--help>
 Show the brief help information.
 
+=item B<--hostname>
+Set the hostname of the new instance.
+
 =item B<--manual>
 Read the manual, with examples.
 
@@ -69,6 +75,9 @@ to 96Mb.
 
 =item B<--mirror>
 Specify the mirror to use to the installation of Sarge, defaults to http://ftp.us.debian.org/debian
+
+=item B<--netmask>
+Set the netmask the virtual image should use.
 
 =item B<--network>
 Specify the network the virtual image is living upon.  Only useful if DHCP is not used.
@@ -193,7 +202,7 @@ broadcast = 255.255.255.0
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.33 2005-12-19 21:00:45 steve Exp $
+ $Id: xen-create-image,v 1.34 2005-12-20 00:17:55 steve Exp $
 
 =cut
 
@@ -702,7 +711,7 @@ sub parseCommandLineArguments
 	       "hostname=s", \$CONFIG{'hostname'},
 	       "ip=s",       \$CONFIG{'ip'},
 	       "gateway=s",  \$CONFIG{'gateway'},
-	       "mask=s",     \$CONFIG{'netmask'},
+	       "netmask=s",  \$CONFIG{'netmask'},
 	       "broadcast=s",\$CONFIG{'broadcast'},
 	       "network=s",  \$CONFIG{'network'},
 	       "dir=s",      \$CONFIG{'dir'},
