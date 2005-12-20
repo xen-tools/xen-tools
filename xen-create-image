@@ -203,7 +203,7 @@ broadcast = 255.255.255.0
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.36 2005-12-20 13:27:03 steve Exp $
+ $Id: xen-create-image,v 1.37 2005-12-20 13:38:41 steve Exp $
 
 =cut
 
@@ -1041,18 +1041,49 @@ sub runCommandWithProgress
     my $output ='';
     while(1)
     {
-	
+	#
+	# Wait for input.
+	#
 	select(undef,undef,undef,.01);
 
+	#
+	# Read output from the command, max 1k.
+	#
 	if( sysread \*READ,$output,1024 )
 	{
-	    while( length( $output ) < 80 ) { $output .= " " ; }
+	    #
+	    #  If there is more than 80 characters truncate it
+	    # to avoid screen wrap.
+	    #
+	    if ( length( $output ) > 80 )
+	    {
+	       $output = substr( $output, 0, 70 );
+	    }
+
+	    #
+	    # Padd to exactly 80 characters.
+	    # TODO: Determine TERM width?
+	    while( length( $output ) < 80 ) 
+	    { 
+		$output .= " " ; 
+	    }
+	    
+	    #
+	    # Remove newlines to avoid weirdness.
 	    $output =~ s/\n//g;
+
+	    #
+	    # Now rewind cursor to start of line and display
+	    # the text.
+	    #
 	    print STDERR "\r";
 	    print STDERR $output;
 	}
 	else
 	{
+	    #
+	    # command finished.
+	    #
 	    print STDERR "\rFinished\n\n";
 	    return;
 	}
