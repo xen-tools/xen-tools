@@ -35,6 +35,9 @@
 
 =over 8
 
+=item B<--boot>
+Boot the new instance immediately after creating it.
+
 =item B<--broadcast>
 Specify the broadcast address for the virtual image, only useful if DHCP is not used.
 
@@ -100,7 +103,7 @@ Specify the virtual instance that we should copy.
  --
  http://www.steve.org.uk/
 
- $Id: xen-duplicate-image,v 1.4 2005-12-20 13:27:03 steve Exp $
+ $Id: xen-duplicate-image,v 1.5 2005-12-20 13:32:53 steve Exp $
 
 =cut
 
@@ -138,6 +141,9 @@ use Pod::Usage;
 #
 my %CONFIG;
 
+#
+#  Defaults
+#
 $CONFIG{'xm'} 		= '/usr/sbin/xm';
 
 
@@ -198,6 +204,8 @@ else
 }
 print "---\n";
 
+
+
 #
 #  If the output directories don't exist then create them.
 #
@@ -225,20 +233,6 @@ my $swap_out = $CONFIG{'dir'} .'/domains/' .$CONFIG{'hostname'} . "/swap.img" ;
 
 
 #
-#  If the output directories don't exist then create them.
-#
-if ( ! -d $CONFIG{'dir'} . "/domains/" )
-{
-    mkdir $CONFIG{'dir'} . '/domains', 0777
-      || die "Cannot create $CONFIG{'dir'}/domains - $!";
-}
-if ( ! -d $CONFIG{'dir'} . "/domains/" . $CONFIG{'hostname'} )
-{
-    mkdir $CONFIG{'dir'}. '/domains/' . $CONFIG{'hostname'}, 0777
-      || die "Cannot create $CONFIG{'dir'}/domains/$CONFIG{'hostname'} - $!" ;
-}
-
-#
 #  Copy the swap file, and disk images.
 #
 print "Copying swapfile ...\n";
@@ -262,7 +256,8 @@ my $mount_cmd = "mount -t auto -o loop $image_out $dir";
 
 my $mount = `/bin/mount`;
 
-if ( ! $mount =~ /$image_out/) {
+if ( ! $mount =~ /$image_out/) 
+{
     print "Something went wrong trying to mount the new filesystem\n";
     exit;
 }
@@ -332,6 +327,11 @@ if ( $CONFIG{'boot'} )
     }
 }
 
+
+#
+#  End of the script.
+#
+exit;
 
 
 =head2 readConfigurationFile
