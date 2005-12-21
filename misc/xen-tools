@@ -1,7 +1,12 @@
 #
 #  /etc/bash_completion.d/xen-tools
 #
-# Completion functions for Bash.
+# Completion functions for Bash.  There is basic support for all the 
+# command line options, along with some specialist support to complete
+# filesystem types, distribution targets and hostnames.
+#
+# Hostname completion will only work if 'dir=xxx' has been filled out
+# within the configuration file /etc/xen-tools/xen-tools.conf
 #
 # Steve
 # --
@@ -68,3 +73,123 @@ complete -F _xen-create-image $filenames xen-create-image
 
 
 
+
+_xen_duplicate_image() 
+{
+    local cur prev opts base
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    opts="--broadcast --dhcp --dir --from --gateway --help --hostname --manual --netmask --network --version"
+
+    if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]] || \
+       [[ ${prev} == @(-q|--quiet) ]] ; then
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+        return 0
+    fi
+ 
+    #
+    # First of all the base directory comes from the configuration file.
+    #
+    base=`grep ^dir /etc/xen-tools/xen-tools.conf | awk -F'= '  '{print $2}'`
+    base=${base}/domains/
+
+    #
+    #
+    #
+
+    case "${prev}" in
+        --from)
+	    if [[ ${base} != '/domains/' ]] ; then
+		local names=$(for x in `ls -1 ${base}`; do echo ${x} ; done )
+		COMPREPLY=( $(compgen -W "${names}" -- ${cur}) )
+	    fi
+            ;;
+        *)
+                COMPREPLY=($(compgen -W "${opts} -- ${cur}"))
+        ;;
+    esac
+}
+complete -F _xen_duplicate_image xen-duplicate-image
+
+
+
+
+_xen_delete_image() 
+{
+    local cur prev opts base
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    opts="--dir --hostname --help --manual --version"
+
+    if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]] || \
+       [[ ${prev} == @(-q|--quiet) ]] ; then
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+        return 0
+    fi
+ 
+    #
+    # First of all the base directory comes from the configuration file.
+    #
+    base=`grep ^dir /etc/xen-tools/xen-tools.conf | awk -F'= '  '{print $2}'`
+    base=${base}/domains/
+
+    #
+    #
+    #
+
+    case "${prev}" in
+        --hostname)
+	    if [[ ${base} != '/domains/' ]] ; then
+		local names=$(for x in `ls -1 ${base}`; do echo ${x} ; done )
+		COMPREPLY=( $(compgen -W "${names}" -- ${cur}) )
+	    fi
+            ;;
+        *)
+                COMPREPLY=($(compgen -W "${opts} -- ${cur}"))
+        ;;
+    esac
+}
+complete -F _xen_delete_image xen-delete-image
+
+
+
+
+_xen_update_image() 
+{
+    local cur prev opts base
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    opts="--dir --hostname --help --manual --version"
+
+    if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]] || \
+       [[ ${prev} == @(-q|--quiet) ]] ; then
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+        return 0
+    fi
+ 
+    #
+    # First of all the base directory comes from the configuration file.
+    #
+    base=`grep ^dir /etc/xen-tools/xen-tools.conf | awk -F'= '  '{print $2}'`
+    base=${base}/domains/
+
+    #
+    #
+    #
+
+    case "${prev}" in
+        --hostname)
+	    if [[ ${base} != '/domains/' ]] ; then
+		local names=$(for x in `ls -1 ${base}`; do echo ${x} ; done )
+		COMPREPLY=( $(compgen -W "${names}" -- ${cur}) )
+	    fi
+            ;;
+        *)
+                COMPREPLY=($(compgen -W "${opts} -- ${cur}"))
+        ;;
+    esac
+}
+complete -F _xen_update_image xen-update-image
