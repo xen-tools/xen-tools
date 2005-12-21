@@ -8,11 +8,12 @@
 # Hostname completion will only work if 'dir=xxx' has been filled out
 # within the configuration file /etc/xen-tools/xen-tools.conf
 #
+#  Reference page: http://dev.gentoo.org/~plasmaroo/devmanual/tasks-reference/completion/
 # Steve
 # --
 # http://www.steve.org.uk
 #
-# $Id :$
+# $Id: xen-tools,v 1.6 2005-12-21 22:53:01 steve Exp $
 #
 
 
