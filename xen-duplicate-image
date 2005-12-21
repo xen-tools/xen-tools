@@ -19,9 +19,9 @@ xen-duplicate-image - Duplicate an existing Xen instance.
   Networking options:
    --dhcp      Setup the image to get an IP address via DHCP
    --network   Setup the network the host is upon.
+   --netmask   Setup the netmask the host should use.
    --gateway   Setup the iamge's network gateway.
    --broadcast Setup the image's network broadcast address.
-   --mirror    Setup the mirror to use when installing Sarge.
 
   Mandatory options:
 
@@ -53,6 +53,9 @@ Show the brief help information.
 
 =item B<--manual>
 Read the manual, with examples.
+
+=item B<--netmask>
+Setup the netmask the host should use.
 
 =item B<--network>
 Specify the network the virtual image is living upon.  Only useful if DHCP is not used.
@@ -107,7 +110,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-duplicate-image,v 1.7 2005-12-21 19:26:05 steve Exp $
+ $Id: xen-duplicate-image,v 1.8 2005-12-21 22:46:36 steve Exp $
 
 =cut
 
@@ -431,7 +434,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-duplicate-image,v 1.7 2005-12-21 19:26:05 steve Exp $';
+	my $REVISION      = '$Id: xen-duplicate-image,v 1.8 2005-12-21 22:46:36 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
