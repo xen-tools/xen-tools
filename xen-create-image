@@ -226,7 +226,7 @@ suffixed with either Mb, or Gb.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.47 2005-12-21 03:15:40 steve Exp $
+ $Id: xen-create-image,v 1.48 2005-12-21 03:31:44 steve Exp $
 
 =cut
 
@@ -981,10 +981,17 @@ sub setupNetworking
 {
     my ( $prefix ) = ( @_ );
 
-    runCommand ("echo '$CONFIG{'hostname'}' > $prefix/etc/hostname" );
+    #
+    #  Set the hostname.
+    #
+    open( HOSTNAME, ">", $prefix . "/etc/hostname" );
+    print HOSTNAME $CONFIG{'hostname'} . "\n";
+    close( HOSTNAME );
 
+    #
+    #  Set the networking optins.
+    #
     open( IP, ">", $prefix . "/etc/network/interfaces" );
-
     if ( $CONFIG{'dhcp'} )
     {
 	print IP<<E_O_DHCP;
