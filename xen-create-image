@@ -226,7 +226,7 @@ suffixed with either Mb, or Gb.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.46 2005-12-21 03:02:31 steve Exp $
+ $Id: xen-create-image,v 1.47 2005-12-21 03:15:40 steve Exp $
 
 =cut
 
@@ -652,6 +652,18 @@ print "Done\n";
 
 
 #
+#  Clear screen before printing success message, unless
+# we're running under '--debug'.
+#
+$TERMINAL_HEIGHT *= 2;
+while( $TERMINAL_HEIGHT )
+{
+    printWideMessage( "\n" ) unless $CONFIG{'debug'};
+    $TERMINAL_HEIGHT -= 1;
+}
+
+
+#
 #  Give status message
 #
 if ( $CONFIG{'boot'} )
@@ -669,21 +681,16 @@ if ( $CONFIG{'boot'} )
     }
     else
     {
-	system( "$CONFIG{'xm'} create $CONFIG{'hostname'}.cfg" );
+	#
+	#  Start Xen instance in our forked process.  Avoid annoying
+	# output.
+	#
+	#
+	system( "$CONFIG{'xm'} create $CONFIG{'hostname'}.cfg >/dev/null 2>/dev/null" );
     }
 }
 else
 {
-    #
-    #  Clear screen before printing success message.
-    #
-    $TERMINAL_HEIGHT *= 2;
-    while( $TERMINAL_HEIGHT )
-    {
-	printWideMessage( "\n" );   
-	$TERMINAL_HEIGHT -= 1;
-    }
-
     print <<EOEND;
 
 New Image Created
@@ -974,7 +981,7 @@ sub setupNetworking
 {
     my ( $prefix ) = ( @_ );
 
-    runCommand ("/bin/echo '$CONFIG{'hostname'}' > $prefix/etc/hostname" );
+    runCommand ("echo '$CONFIG{'hostname'}' > $prefix/etc/hostname" );
 
     open( IP, ">", $prefix . "/etc/network/interfaces" );
 
