@@ -42,7 +42,7 @@ _xen-create-image()
 	_expand || return 0
 
 	# complete using basic options
-	COMPREPLY=( $( compgen -W '--broadcast --boot --debug --dhcp --dir --dist --fs --gateway --help --hostname --ip --manual --memory --network --netmask --mirror  --size --swap --version' -- $cur ) )
+	COMPREPLY=( $( compgen -W '--broadcast --boot --debug --debootstrap --dhcp --dir --dist --fs --gateway --help --hostname --ip --manual --memory --network --netmask --mirror  --size --swap --version' -- $cur ) )
 
 	COMPREPLY=( $( echo "${COMP_WORDS[@]}" | \
 		       (while read -d ' ' i; do
