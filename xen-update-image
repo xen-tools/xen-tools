@@ -72,7 +72,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-update-image,v 1.4 2005-12-21 19:26:05 steve Exp $
+ $Id: xen-update-image,v 1.5 2005-12-21 22:47:52 steve Exp $
 
 =cut
 
@@ -126,6 +126,11 @@ if ( -e $ENV{'HOME'} . ".xen-tools.conf" )
 parseCommandLineArguments();
 
 
+if ( ! $CONFIG{'hostname'} )
+{
+    print "You must specify a hostname with --hostname=xx\n";
+    exit;
+}
 #
 #  Find the disk image.
 #
@@ -256,7 +261,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-update-image,v 1.4 2005-12-21 19:26:05 steve Exp $';
+	my $REVISION      = '$Id: xen-update-image,v 1.5 2005-12-21 22:47:52 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
