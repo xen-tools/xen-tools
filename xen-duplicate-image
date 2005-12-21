@@ -11,6 +11,7 @@ xen-duplicate-image - Duplicate an existing Xen instance.
   Help Options:
    --help     Show this scripts help information.
    --manual   Read this scripts manual.
+   --version  Show the version number and exit.
 
   General options:
    --dir      Specify where the output images should go.
@@ -59,6 +60,9 @@ Specify the network the virtual image is living upon.  Only useful if DHCP is no
 =item B<--from>
 Specify the virtual instance that we should copy.
 
+=item B<--version>
+Show the version number and exit.
+
 =back
 
 =cut
@@ -103,7 +107,7 @@ Specify the virtual instance that we should copy.
  --
  http://www.steve.org.uk/
 
- $Id: xen-duplicate-image,v 1.6 2005-12-20 14:35:09 steve Exp $
+ $Id: xen-duplicate-image,v 1.7 2005-12-21 19:26:05 steve Exp $
 
 =cut
 
@@ -400,8 +404,9 @@ sub readConfigurationFile
 
 sub parseCommandLineArguments
 {
-    my $HELP   = 0;
-    my $MANUAL = 0;
+    my $HELP	= 0;
+    my $MANUAL	= 0;
+    my $VERSION	= 0;
 
     #  Parse options.
     #
@@ -416,11 +421,25 @@ sub parseCommandLineArguments
 	       "dir=s",      \$CONFIG{'dir'},
 	       "dhcp",       \$CONFIG{'dhcp'},
 	       "help",       \$HELP,
-	       "manual",     \$MANUAL
+	       "manual",     \$MANUAL,
+	       "version",    \$VERSION
 	      );
     
     pod2usage(1) if $HELP;
     pod2usage(-verbose => 2 ) if $MANUAL;
+
+
+    if ( $VERSION )
+    {
+	my $REVISION      = '$Id: xen-duplicate-image,v 1.7 2005-12-21 19:26:05 steve Exp $';
+	$VERSION = join (' ', (split (' ', $REVISION))[2]);
+	$VERSION =~ s/,v\b//;
+	$VERSION =~ s/(\S+)$/$1/;
+
+	print "xen-duplicate-image release 0.5 - CVS: $VERSION\n";
+	exit;
+
+    }
 }
 
 
