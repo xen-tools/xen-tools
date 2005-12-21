@@ -208,7 +208,7 @@ suffixed with either Mb, or Gb.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.44 2005-12-21 02:47:41 steve Exp $
+ $Id: xen-create-image,v 1.45 2005-12-21 02:53:49 steve Exp $
 
 =cut
 
@@ -251,7 +251,9 @@ my %CONFIG;
 #
 #  The width of the current terminal, used for line-wrapping.
 #
-my $TERMINAL_WIDTH = getTerminalWidth();
+my ( $TERMINAL_WIDTH, $TERMINAL_HEIGHT ) = getTerminalSize();
+
+
 
 #
 # Constants for filesystem usage.
@@ -634,34 +636,12 @@ print "Done\n";
 #
 #  Give status message
 #
-print <<EOEND;
-
-  To make any manual tweaks to the setup of $CONFIG{'hostname'} please run:
-
-    mkdir /mnt/tmp
-    mount -t $CONFIG{'fs'} -o loop $image /mnt/tmp
-    chroot /mnt/tmp /bin/bash
-
-    exit
-    umount /mnt/tmp
-
- Once completed you may start your new instance of Xen with:
-
-    xm create $CONFIG{'hostname'}.cfg -c
-
-EOEND
-
-
-#
-#  Should we immediately start the new instance?
-#  If so fork() and do it so that we can return to the user, they can
-# attach to the console via the command : 'xm console $name'.
-#
-#
 if ( $CONFIG{'boot'} )
 {
-    print "\n\nBooting new virtual image: $CONFIG{'hostname'}\n";
-    print "\n\n";
+    print "\n\nBooting newly created virtual image: $CONFIG{'hostname'} in the background.\n";
+    print "\nTo attach to the console run (as root):\n\n";
+    print "\t\txm console $CONFIG{'hostname'}\n\n";
+    print "\n";
 
     my $pid = fork();
     if ( $pid )
@@ -674,6 +654,47 @@ if ( $CONFIG{'boot'} )
 	system( "$CONFIG{'xm'} create $CONFIG{'hostname'}.cfg" );
     }
 }
+else
+{
+    #
+    #  Clear screen before printing success message.
+    #
+    while( $TERMINAL_HEIGHT )
+    {
+	printWideMessage( "\n" );   
+	$TERMINAL_HEIGHT -= 1;
+    }
+
+    print <<EOEND;
+
+New Image Created
+-----------------
+
+  To make any manual tweaks to the setup of $CONFIG{'hostname'} please run:
+
+    mkdir /mnt/tmp
+    mount -t $CONFIG{'fs'} -o loop $image /mnt/tmp
+    chroot /mnt/tmp /bin/bash
+
+    # make your changes
+
+    exit
+    umount /mnt/tmp
+
+ Once completed you may start your new instance of Xen with:
+
+    xm create $CONFIG{'hostname'}.cfg -c
+
+EOEND
+}
+
+
+#
+#  Should we immediately start the new instance?
+#  If so fork() and do it so that we can return to the user, they can
+# attach to the console via the command : 'xm console $name'.
+#
+#
 
 
 #
@@ -1197,12 +1218,13 @@ sub runCommandWithProgress
 =cut
 
 
-sub getTerminalWidth
+sub getTerminalSize
 {
 
     my $testModule  = "use Term::Size;";
 
-    my $width = 80;
+    my $width  = 80;
+    my $height = 25;
 
     #
     #  Test loading the Cache module, if it fails then
@@ -1212,13 +1234,12 @@ sub getTerminalWidth
     eval( $testModule );
     if ( $@ )
     {
-	$width = 80;
     }
     else
     {
-	($width, undef ) = Term::Size::chars();
+	($width, $height ) = Term::Size::chars();
     }
 
-    return( $width );
+    return( $width, $height );
 }
 
