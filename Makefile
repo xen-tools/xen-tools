@@ -5,7 +5,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.21 2005-12-21 19:51:38 steve Exp $
+# $Id: Makefile,v 1.22 2005-12-21 19:58:52 steve Exp $
 
 
 #
@@ -51,7 +51,7 @@ clean:
 	@find . -name '*.tmp' -exec rm \{\} \;
 	@find . -name 'tags' -exec rm \{\} \;
 	@find . -name '*.8' -exec rm \{\} \;
-	-rm man/xen-*.html
+	@find man -name '*.html' -exec rm \{\} \;
 
 
 commit: test
