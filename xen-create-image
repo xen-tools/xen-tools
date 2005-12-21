@@ -16,6 +16,7 @@ xen-create-image - Create a new Xen instance of Debian Sarge.
   Size / General options:
    --dist     Specify the distribution you wish to install: Sarge, Etch, Sid.
    --boot     Boot the new instance after creating it.
+   --debootstrap Pass anything named here onto debootstrap.
    --dir      Specify where the output images should go.
    --fs       Specify the filesystem type to use.
    --memory   Setup the amount of memory allocated to the instance.
@@ -49,6 +50,9 @@ Specify the broadcast address for the virtual image, only useful if DHCP is not 
 
 =item B<--debug>
 Show the commands this script executes as an aid to debugging.
+
+=item B<--debootstrap>
+Anything specified after this will be passed onto the debootstrap command executed.
 
 =item B<--dhcp>
 Specify that the virtual image should use DHCP to obtain its networking information.
@@ -226,7 +230,7 @@ suffixed with either Mb, or Gb.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.48 2005-12-21 03:31:44 steve Exp $
+ $Id: xen-create-image,v 1.49 2005-12-21 19:07:35 steve Exp $
 
 =cut
 
@@ -259,10 +263,13 @@ use Pod::Usage;
 
 
 #
-#  Configuration options, initially read from the configuration files
-# but may be overridden by the command line.
+#  Global configuration options.
+#
+#  Initially our options are read from the configuration file into this
+# hash.  Later they may be overridden by the command line.
 #
 #  Command line flags *always* take precedence over the configuration files(s).
+#
 #
 my %CONFIG;
 
@@ -274,20 +281,33 @@ my ( $TERMINAL_WIDTH, $TERMINAL_HEIGHT ) = getTerminalSize();
 
 
 #
-# Constants for filesystem usage.
+#  These hashes contain information used for the creation of different
+# fileystems.
 #
 my %FILESYSTEM_BINARY;
 my %FILESYSTEM_CREATE;
 my %FILESYSTEM_MOUNT;
 
+#
+#  The program to run to create a filesystem - used in the next hash.
+#
 $FILESYSTEM_BINARY{'ext3'}     = '/sbin/mkfs.ext3';
 $FILESYSTEM_BINARY{'xfs'}      = '/sbin/mkfs.xfs';
 $FILESYSTEM_BINARY{'reiserfs'} = '/sbin/mkfs.reiserfs';
 
+#
+#  The command to use to create a filesystem.  The disk image
+# filename is appended to these commands to generate what is
+# ultimately executed.
+#
 $FILESYSTEM_CREATE{'ext3'}     = $FILESYSTEM_BINARY{'ext3'}. ' -F ';
 $FILESYSTEM_CREATE{'xfs'}      = $FILESYSTEM_BINARY{'xfs'}. ' -d name=';
 $FILESYSTEM_CREATE{'reiserfs'} = $FILESYSTEM_BINARY{'reiserfs'}. ' -f -q ';
 
+#
+#  Flags to pass to "mount" to mount our image.  Kinda redundent and may
+# go away - seems to me that just using '-t $CONFIG{'fs'}' is sufficient.
+#
 $FILESYSTEM_MOUNT{'ext3'}      = '-t ext3';
 $FILESYSTEM_MOUNT{'xfs'}       = '-t xfs';
 $FILESYSTEM_MOUNT{'reiserfs'}  = '-t reiserfs';
@@ -351,29 +371,29 @@ E_O_ROOT
 }
 
 
-print "\n";
+print "\nGeneral Infomation\n";
+print "--------------------\n";
 print "Hostname       :  $CONFIG{'hostname'}\n";
 print "Distribution   :  $CONFIG{'dist'}\n";
+print "Fileystem Type :  $CONFIG{'fs'}\n";
+
+print "\nSize Information\n";
+print "----------------\n";
 print "Image size     :  $CONFIG{'size'}\n";
 print "Swap size      :  $CONFIG{'swap'}\n";
 print "Memory size    :  $CONFIG{'memory'}\n";
-print "Fileystem Type :  $CONFIG{'fs'}\n";
 
-if ( $CONFIG{'dhcp'} ) 
-{
-    print "---\n";
-    print "DHCP\n";
-}
-else
-{
-    print "---\n";
-    $CONFIG{'ip'}        && print "IP       : $CONFIG{'ip'}\n";
-    $CONFIG{'network'}   && print "Network  : $CONFIG{'network'}\n";
-    $CONFIG{'netmask'}   && print "Netmask  : $CONFIG{'netmask'}\n";
-    $CONFIG{'broadcast'} && print "Broadcast: $CONFIG{'broadcast'}\n";
-    $CONFIG{'gateway'}   && print "Gateway  : $CONFIG{'gateway'}\n";
-}
-print "---\n";
+print "\nNetworking Information\n";
+print "----------------------\n";
+
+$CONFIG{'ip'}        && print "IP Address     : $CONFIG{'ip'}\n";
+$CONFIG{'dhcp'}      && print "IP Address     : DHCP\n";
+$CONFIG{'network'}   && print "Network        : $CONFIG{'network'}\n";
+$CONFIG{'netmask'}   && print "Netmask        : $CONFIG{'netmask'}\n";
+$CONFIG{'broadcast'} && print "Broadcast      : $CONFIG{'broadcast'}\n";
+$CONFIG{'gateway'}   && print "Gateway        : $CONFIG{'gateway'}\n";
+print "\n\n";
+
 
 #
 #  If the output directories don't exist then create them.
@@ -483,7 +503,7 @@ printWideMessage( "\rDone" );
 #  Install the base system - with a simple sense of progress.
 #
 print "\n\nRunning debootstrap to install the system.   This will take a while!\n";
-my $debootstrap = "debootstrap $CONFIG{'dist'} $dir $CONFIG{'mirror'}";
+my $debootstrap = "debootstrap $CONFIG{'debootstrap'} $CONFIG{'dist'} $dir $CONFIG{'mirror'}";
 runCommandWithProgress( $debootstrap );
 
 #
@@ -668,6 +688,13 @@ while( $TERMINAL_HEIGHT )
 #
 if ( $CONFIG{'boot'} )
 {
+
+    #
+    #  Should we immediately start the new instance?
+    #  If so fork() and do it so that we can return to the user, they can
+    # attach to the console via the command : 'xm console $name'.
+    #
+    #
     print "\n\nBooting newly created virtual image: $CONFIG{'hostname'} in the background.\n";
     print "\nTo attach to the console run (as root):\n\n";
     print "\t\txm console $CONFIG{'hostname'}\n\n";
@@ -713,14 +740,6 @@ New Image Created
 
 EOEND
 }
-
-
-#
-#  Should we immediately start the new instance?
-#  If so fork() and do it so that we can return to the user, they can
-# attach to the console via the command : 'xm console $name'.
-#
-#
 
 
 #
@@ -817,6 +836,7 @@ sub parseCommandLineArguments
 	       "fs=s",       \$CONFIG{'fs'},
 	       "boot",       \$CONFIG{'boot'},
 	       "dist=s",     \$CONFIG{'dist'},
+	       "debootstrap=s",\$CONFIG{'debootstrap'},
 	       "debug" ,     \$CONFIG{'debug'},
 	       "help",       \$HELP,
 	       "manual",     \$MANUAL
@@ -1181,7 +1201,24 @@ sub runCommandWithProgress
 {
     my ( $cmd ) = ( @_ );
 
+    $CONFIG{'debug'} && print "Executing : $cmd\n";
+
     my $pid = open3(undef, \*READ,0, $cmd );
+
+    #
+    #  A failure to run debootstrap is pretty much fatal to us.
+    #
+    #  Since without it there will be no installed filesystem.
+    #
+    #  Abort, after unmounting the directory we're using.
+    #
+    if ( ! $pid )
+    {
+	print "Error executing command : '$cmd' - $!";
+	runCommand( "umount $dir" );
+	exit;
+    }
+
 
     my $output ='';
     while(1)
