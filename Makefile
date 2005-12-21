@@ -5,7 +5,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.19 2005-12-21 19:19:16 steve Exp $
+# $Id: Makefile,v 1.20 2005-12-21 19:37:20 steve Exp $
 
 
 #
@@ -47,6 +47,7 @@ clean:
 	@find . -name '.#*' -exec rm \{\} \;
 	@find . -name '*~' -exec rm \{\} \;
 	@find . -name '*.bak' -exec rm \{\} \;
+	@find . -name '*.tmp' -exec rm \{\} \;
 	@find . -name 'tags' -exec rm \{\} \;
 	@find . -name '*.8' -exec rm \{\} \;
 
@@ -82,6 +83,9 @@ install:
 manpages:
 	for i in xen-*; do pod2man --release=${VERSION} --official --section=8 $$i man/$$i.8; done
 	for i in man/*.8; do gzip --force -9 $$i; done
+
+manpages-html:
+	for i in xen-*; do pod2html $$i > man/$$i.html; done
 
 
 release: clean changelog manpages
