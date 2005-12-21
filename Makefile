@@ -5,7 +5,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.20 2005-12-21 19:37:20 steve Exp $
+# $Id: Makefile,v 1.21 2005-12-21 19:51:38 steve Exp $
 
 
 #
@@ -25,14 +25,15 @@ prefix=
 nop:
 	@echo "Valid targets are (alphabetically) :"
 	@echo " "
-	@echo " clean     - Remove bogus files."
-	@echo " commit    - Commit changes, after running check."
-	@echo " diff      - Run a 'cvs diff'."
-	@echo " install   - Install the software"
-	@echo " manpages  - Refresh the manpages"
-	@echo " release   - Make a release tarball"
-	@echo " uninstall - Remove the software"
-	@echo " update    - Update from the CVS repository."
+	@echo " clean         = Remove bogus files."
+	@echo " commit        = Commit changes, after running check."
+	@echo " diff          = Run a 'cvs diff'."
+	@echo " install       = Install the software"
+	@echo " manpages      = Make manpages beneath man/"
+	@echo " manpages-html = Make HTML manpages beneath man/"
+	@echo " release       = Make a release tarball"
+	@echo " uninstall     = Remove the software"
+	@echo " update        = Update from the CVS repository."
 	@echo " "
 
 
@@ -50,6 +51,7 @@ clean:
 	@find . -name '*.tmp' -exec rm \{\} \;
 	@find . -name 'tags' -exec rm \{\} \;
 	@find . -name '*.8' -exec rm \{\} \;
+	-rm man/xen-*.html
 
 
 commit: test
