@@ -201,6 +201,24 @@ suffixed with either Mb, or Gb.
       xen-create-image --hostname='vm03.my.flat' --ip=192.168.1.201
 
 
+=head1 CACHING
+
+  Because the virtual systems are installed with the debootstrap
+ tool there can be a lot of network overhead.
+
+  To minimize this the .deb files which are downloaded into the
+ new instance are cached upon the host in the directory
+ /var/cache/apt/archives. 
+
+  When a new image is created these packages are copied into the new
+ image - before the debootstrap process runs.  This will avoid a
+ the expensive fetch from the network.
+
+  If you wish to clean the cache run on the host:
+
+  apt-get clean
+
+
 =head1 AUTHOR
 
 
@@ -208,7 +226,7 @@ suffixed with either Mb, or Gb.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.45 2005-12-21 02:53:49 steve Exp $
+ $Id: xen-create-image,v 1.46 2005-12-21 03:02:31 steve Exp $
 
 =cut
 
@@ -659,6 +677,7 @@ else
     #
     #  Clear screen before printing success message.
     #
+    $TERMINAL_HEIGHT *= 2;
     while( $TERMINAL_HEIGHT )
     {
 	printWideMessage( "\n" );   
