@@ -5,14 +5,14 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.18 2005-12-20 23:21:47 steve Exp $
+# $Id: Makefile,v 1.19 2005-12-21 19:19:16 steve Exp $
 
 
 #
 #  Only used to build distribution tarballs.
 #
 DIST_PREFIX = /tmp
-VERSION     = 0.4
+VERSION     = 0.5
 BASE        = xen-tools
 
 
