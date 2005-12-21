@@ -5,7 +5,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.22 2005-12-21 19:58:52 steve Exp $
+# $Id: Makefile,v 1.23 2005-12-21 23:01:44 steve Exp $
 
 
 #
@@ -99,6 +99,8 @@ release: clean changelog manpages
 	gzip $(DIST_PREFIX)/$(BASE)-$(VERSION).tar
 	mv $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz .
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)
+	gpg --armour --detach-sign $(BASE)-$(VERSION).tar.gz
+
 
 
 test:
