@@ -208,7 +208,7 @@ suffixed with either Mb, or Gb.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.41 2005-12-21 02:32:00 steve Exp $
+ $Id: xen-create-image,v 1.42 2005-12-21 02:39:45 steve Exp $
 
 =cut
 
@@ -442,19 +442,21 @@ my $count = 1;
 my $total = $#files+1;
 foreach my $file ( @files )
 {
-    my $t = "[$count/$total] : ";
-
+    my $t = "\r[$count/$total] : ";
     if ( $file =~ /(.*)\/(.*)/ )
     {
 	$t .= $2;
     }
-    while( length( $t ) < $TERMINAL_WIDTH ) { $t .= " "; }
-    print "\r" . $t;
 
+    #
+    # Print the status message and do the copy.
+    #
+    printWideMessage( $t );
     File::Copy::cp( $file, "$dir/var/cache/apt/archives" );
+
     $count += 1;
 }
-print "\rDone .........                                                         \n";
+printWideMessage( "Done" );
 
 
 #
@@ -473,17 +475,21 @@ $count = 1;
 $total = $#files + 1;
 foreach my $file ( @files )
 {
-    my $t = "[$count/$total] : ";
+    my $t = "\r[$count/$total] : ";
     if ( $t =~ /(.*)\/(.*)/ )
     {
 	$t .= $2;
     }
-    while( length( $t ) < $TERMINAL_WIDTH ) { $t .= " "; }
-    print "\r" . $t;
-
+    
+    #
+    # Print the status message and do the copy
+    #
+    printWideMessage( $t );
     File::Copy::cp( $file, "/var/cache/apt/archives" );
+
+    $count += 1;
 }
-print "\rDone .........                                                         \n";
+printWideMessage( "Done" );
 
 
 
@@ -497,7 +503,7 @@ runCommand( "mkdir -p $dir/etc/network" );
 #
 #  OK now we can do the basic setup.
 #
-print "\n\nSetting up APT sources .. ";
+print "\n\nSetting up APT sources\n";
 open( APT, ">", $dir . "/etc/apt/sources.list" );
 print APT<<E_O_APT;
 #
@@ -536,15 +542,13 @@ my @hostFiles = ( "/etc/resolv.conf",
 		  "/etc/shadow",
 		  "/etc/gshadow" );
 
-print "\n\nCopying some files from the host to the guest\n";
+print "\n\nCopying essential files from the host to the guest\n";
 foreach my $file ( @hostFiles )
 {
-    my $t = $file;
-    while( length( $t ) < $TERMINAL_WIDTH ) { $t .= " "; }
-    print "\r" . $t;
+    printWideMessage( "\r" . $file );
     File::Copy::cp( $file, $dir . "/etc" );
 }
-print "\rDone .........                                                         \n";
+printWideMessage( "Done" );
 
 
 
@@ -561,7 +565,7 @@ if ( -d $dir . "/lib/tls" )
 #
 #  Now setup the fstab
 #
-print "\n\nSetting up /etc/fstab .. ";
+print "\n\nSetting up /etc/fstab\n";
 open( TAB, ">", $dir . "/etc/fstab" );
 print TAB<<E_O_TAB;
 /dev/sda1     /     $CONFIG{'fs'}     errors=remount-ro     0     1
@@ -1050,6 +1054,25 @@ sub fixupInittab
 	print OUTPUT $line . "\n";
     }
     close( OUTPUT )
+}
+
+
+
+=head2 printWideMessage
+
+  Print a message, ensuring the width is as wide as the console.
+
+=cut
+
+sub printWideMessage
+{
+    my ( $msg ) = ( @_ );
+
+    while( length( $msg ) < $TERMINAL_WIDTH )
+    {
+	$msg .= " ";
+    }
+    print $msg;
 }
 
 
