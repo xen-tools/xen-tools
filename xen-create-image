@@ -147,7 +147,6 @@ Show the version number and exit.
 =cut
 
 
-
 =head1 DESCRIPTION
 
 
@@ -226,6 +225,22 @@ Show the version number and exit.
   apt-get clean
 
 
+=head1 CUSTOMIZATION
+
+
+  If you wish to add new packages to the image automatically you may
+ take advantage of the '--debootstrap' option which allows you to 
+ pass flags to the debootstrap command.
+
+  For the following command causes three new packages to be added
+ to the base image:
+
+
+      xen-create-image --debootstrap='--include=screen,sudo,less'
+
+
+=cut
+
 =head1 AUTHOR
 
 
@@ -233,7 +248,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.50 2005-12-21 19:26:05 steve Exp $
+ $Id: xen-create-image,v 1.51 2005-12-21 19:30:01 steve Exp $
 
 =cut
 
@@ -853,7 +868,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-create-image,v 1.50 2005-12-21 19:26:05 steve Exp $';
+	my $REVISION      = '$Id: xen-create-image,v 1.51 2005-12-21 19:30:01 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
