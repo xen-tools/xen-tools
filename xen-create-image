@@ -208,7 +208,7 @@ suffixed with either Mb, or Gb.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.42 2005-12-21 02:39:45 steve Exp $
+ $Id: xen-create-image,v 1.43 2005-12-21 02:40:50 steve Exp $
 
 =cut
 
@@ -456,7 +456,7 @@ foreach my $file ( @files )
 
     $count += 1;
 }
-printWideMessage( "Done" );
+printWideMessage( "\rDone" );
 
 
 #
@@ -489,7 +489,7 @@ foreach my $file ( @files )
 
     $count += 1;
 }
-printWideMessage( "Done" );
+printWideMessage( "\rDone" );
 
 
 
@@ -548,7 +548,7 @@ foreach my $file ( @hostFiles )
     printWideMessage( "\r" . $file );
     File::Copy::cp( $file, $dir . "/etc" );
 }
-printWideMessage( "Done" );
+printWideMessage( "\rDone" );
 
 
 
