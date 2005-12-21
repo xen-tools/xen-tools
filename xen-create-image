@@ -208,7 +208,7 @@ suffixed with either Mb, or Gb.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.43 2005-12-21 02:40:50 steve Exp $
+ $Id: xen-create-image,v 1.44 2005-12-21 02:47:41 steve Exp $
 
 =cut
 
@@ -469,14 +469,14 @@ runCommandWithProgress( $debootstrap );
 #
 #  Copy these files as a speed boost for the next run.
 #
-print "\n\nCaching debootstrap files upon the host system\n\n";
+print "\n\nCaching debootstrap files to the host system\n";
 @files =  glob( "$dir/var/cache/apt/archives/*.deb" );
 $count = 1;
 $total = $#files + 1;
 foreach my $file ( @files )
 {
     my $t = "\r[$count/$total] : ";
-    if ( $t =~ /(.*)\/(.*)/ )
+    if ( $file =~ /(.*)\/(.*)/ )
     {
 	$t .= $2;
     }
