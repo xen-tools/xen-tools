@@ -104,11 +104,10 @@ TODO
   2. Move each file copying / creation into a seperate routine.
   3. See if there can be simple tests made without splitting things
      into modules..
-  4. Add --verbose.
-  5. Detect and handle a failure in `debootstrap`.
-  6. domU kernel to be moved to config file.
+  4. Detect and handle a failure in `debootstrap`.
+  5. domU kernel to be moved to config file.
 
 
 Steve
 --
-$Id: README,v 1.10 2005-12-20 23:31:29 steve Exp $
+$Id: README,v 1.11 2005-12-21 02:25:53 steve Exp $
