@@ -19,14 +19,14 @@ xen-tools v0.4
 	2.  A disk image to be used by Xen as the swap partition.
 
   Images are assumed to live beneath a common  root directory,
- which is specified via the '--dir=' command line argument to all
- of the scripts. 
+ which is specified via the common '--dir=' command line argument 
+ to each of the scripts. 
 
   (Alternatively you may include 'dir=/path' inside the global
  configuration file /etc/xen-tools/xen-tools.conf.)
 
-  Beneath the root directory each virtual instance will have its
- own subdirectory, named after the hostname of the image.  A 
+  Beneath the root directory each virtual instance will have a
+ subdirectory, named after the hostname of the image.  A 
  typical layout might look like this:
 
 /home/xen/domains/
@@ -47,8 +47,9 @@ xen-tools v0.4
 |   `-- swap.img
 
 
-  The scripts are now described individually:
-
+  A description of the individual scripts now follows.
+  For more details run the relevent script with the '--manual'
+ argument to read the manual, with examples.
 
 
 xen-create-image
@@ -110,4 +111,4 @@ TODO
 
 Steve
 --
-$Id: README,v 1.11 2005-12-21 02:25:53 steve Exp $
+$Id: README,v 1.12 2005-12-21 03:43:46 steve Exp $
