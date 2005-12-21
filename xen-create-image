@@ -9,6 +9,7 @@ xen-create-image - Create a new Xen instance of Debian Sarge.
   xen-create-image [options]
 
   Help Options:
+   --debug    Show the commandss, and ouptut, which the script creates.
    --help     Show this scripts help information.
    --manual   Read this scripts manual.
 
@@ -45,6 +46,9 @@ Start the new virtual instance as soon as the installation has finished.
 
 =item B<--broadcast>
 Specify the broadcast address for the virtual image, only useful if DHCP is not used.
+
+=item B<--debug>
+Show the commands this script executes as an aid to debugging.
 
 =item B<--dhcp>
 Specify that the virtual image should use DHCP to obtain its networking information.
@@ -204,7 +208,7 @@ suffixed with either Mb, or Gb.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.39 2005-12-20 14:35:09 steve Exp $
+ $Id: xen-create-image,v 1.40 2005-12-21 02:25:18 steve Exp $
 
 =cut
 
@@ -244,8 +248,10 @@ use Pod::Usage;
 #
 my %CONFIG;
 
-
-
+#
+#  The width of the current terminal, used for line-wrapping.
+#
+my $TERMINAL_WIDTH = getTerminalWidth();
 
 #
 # Constants for filesystem usage.
@@ -374,22 +380,35 @@ my $swap  = $CONFIG{'dir'} . '/domains/' . $CONFIG{'hostname'} . "/swap.img" ;
 #
 #  Create swapfile and initialise it.
 #
-print "\n\nCreating and initializaing swapfile : $swap\n";
+print "\n\nCreating swapfile : $swap\n";
+
+#
+# Remove any trailing Mb.
+# 
 $CONFIG{'swap'} =~ s/Mb*$//i;
-`/bin/dd if=/dev/zero of=$swap bs=1024k count=$CONFIG{'swap'} >/dev/null 2>/dev/null`;
-`/sbin/mkswap $swap`;
+
+#
+# Build up the command, and execute it.
+#
+my $swap_cmd = "/bin/dd if=/dev/zero of=$swap bs=1024k count=$CONFIG{'swap'}";
+runCommand( $swap_cmd );
+runCommand( "/sbin/mkswap $swap" );
 print "Done\n";
+
+
 
 #
 #  Create disk file and initialise it.
 #
-print "\n\nCreating disk image: $image\n";
+print "\nCreating disk image: $image\n";
 $CONFIG{'size'} =~ s/Mb*$/k/i;
-`/bin/dd if=/dev/zero of=$image bs=$CONFIG{'size'} count=1 seek=1024 >/dev/null 2>/dev/null`;
-print "Creating $CONFIG{'fs'} filesystem\n";
+my $image_cmd = "/bin/dd if=/dev/zero of=$image bs=$CONFIG{'size'} count=1 seek=1024";
+runCommand( $image_cmd );
+print "Done\n";
 
-my $create = $FILESYSTEM_CREATE{lc( $CONFIG{'fs'} ) } . $image;
-`$create`;
+print "\nCreating $CONFIG{'fs'} filesystem\n";
+my $create = $FILESYSTEM_CREATE{lc( $CONFIG{'fs'} ) } . $image ;
+runCommand( $create );
 print "Done\n";
 
 
@@ -398,14 +417,15 @@ print "Done\n";
 #
 my $dir = tempdir( CLEANUP => 1 );
 my $mount_cmd = "mount " . $FILESYSTEM_MOUNT{lc($CONFIG{'fs'})} . " -o loop $image $dir";
-`$mount_cmd`;
+runCommand( $mount_cmd );
 
 
 # Test that the mount worked
 
-my $mount = `/bin/mount`;
+my $mount = runCommand( "/bin/mount" );
 
-if ( ! $mount =~ /$image/) {
+if ( ! $mount =~ /$image/) 
+{
     print "Something went wrong trying to mount the new filesystem\n";
     exit;
 }
@@ -414,19 +434,25 @@ if ( ! $mount =~ /$image/) {
 #  Copy any local .deb files into the debootstrap archive as a potential
 # speedup.
 #
-print "\n\nCopying files from host to image.\n";
-`mkdir -p $dir/var/cache/apt/archives`;
-foreach my $file ( glob( "/var/cache/apt/archives/*.deb" ) )
+print "\nCopying files from host to image.\n";
+runCommand( "mkdir -p $dir/var/cache/apt/archives" );
+
+my @files =  glob( "/var/cache/apt/archives/*.deb" );
+my $count = 1;
+my $total = $#files+1;
+foreach my $file ( @files )
 {
-    my $t = $file;
-    if ( $t =~ /(.*)\/(.*)/ )
+    my $t = "[$count/$total] : ";
+
+    if ( $file =~ /(.*)\/(.*)/ )
     {
-	$t = $2;
+	$t .= $2;
     }
-    while( length( $t ) < 80 ) { $t .= " "; }
+    while( length( $t ) < $TERMINAL_WIDTH ) { $t .= " "; }
     print "\r" . $t;
 
     File::Copy::cp( $file, "$dir/var/cache/apt/archives" );
+    $count += 1;
 }
 print "\rDone .........                                                         \n";
 
@@ -443,14 +469,17 @@ print "Done\n";
 #  Copy these files as a speed boost for the next run.
 #
 print "\n\nCaching debootstrap files upon the host system\n\n";
-foreach my $file ( glob( "$dir/var/cache/apt/archives/*.deb" ) )
+@files =  glob( "$dir/var/cache/apt/archives/*.deb" );
+$count = 1;
+$total = $#files + 1;
+foreach my $file ( @files )
 {
-    my $t = $file;
+    my $t = "[$count/$total] : ";
     if ( $t =~ /(.*)\/(.*)/ )
     {
-	$t = $2;
+	$t .= $2;
     }
-    while( length( $t ) < 80 ) { $t .= " "; }
+    while( length( $t ) < $TERMINAL_WIDTH ) { $t .= " "; }
     print "\r" . $t;
 
     File::Copy::cp( $file, "/var/cache/apt/archives" );
@@ -463,8 +492,8 @@ print "\rDone .........                                                         
 #  If the debootstrap failed then we'll setup the output directories
 # for the configuration files here.
 #
-`mkdir -p $dir/etc/apt`;
-`mkdir -p $dir/etc/network`;
+runCommand( "mkdir -p $dir/etc/apt" );
+runCommand( "mkdir -p $dir/etc/network" );
 
 #
 #  OK now we can do the basic setup.
@@ -512,7 +541,7 @@ print "\n\nCopying some files from the host to the guest\n";
 foreach my $file ( @hostFiles )
 {
     my $t = $file;
-    while( length( $t ) < 80 ) { $t .= " "; }
+    while( length( $t ) < $TERMINAL_WIDTH ) { $t .= " "; }
     print "\r" . $t;
     File::Copy::cp( $file, $dir . "/etc" );
 }
@@ -525,7 +554,7 @@ print "\rDone .........                                                         
 #
 if ( -d $dir . "/lib/tls" ) 
 {
-    `mv $dir/lib/tls $dir/lib/tls.disabled`;
+    runCommand( "mv $dir/lib/tls $dir/lib/tls.disabled" );
 }
 
 
@@ -556,9 +585,7 @@ print "Done\n";
 #
 #  Install OpenSSH
 #
-print "\n\nInstalling OpenSSH\n";
 installOpenSSH( $dir );
-print "done\n";
 
 
 #
@@ -574,7 +601,7 @@ print "done\n";
 #
 #  Now unmount the image.
 #
-`umount $dir`;
+runCommand( "umount $dir" );
 
 
 #
@@ -740,6 +767,7 @@ sub parseCommandLineArguments
 	       "fs=s",       \$CONFIG{'fs'},
 	       "boot",       \$CONFIG{'boot'},
 	       "dist=s",     \$CONFIG{'dist'},
+	       "debug" ,     \$CONFIG{'debug'},
 	       "help",       \$HELP,
 	       "manual",     \$MANUAL
 	      );
@@ -903,7 +931,7 @@ sub setupNetworking
 {
     my ( $prefix ) = ( @_ );
 
-    `echo '$CONFIG{'hostname'}' > $prefix/etc/hostname`;
+    runCommand ("/bin/echo '$CONFIG{'hostname'}' > $prefix/etc/hostname" );
 
     open( IP, ">", $prefix . "/etc/network/interfaces" );
 
@@ -960,9 +988,11 @@ sub installOpenSSH
 {
     my ( $prefix ) = ( @_ );
 
-    `chroot $prefix /usr/bin/apt-get update`;
-    `DEBIAN_FRONTEND=noninteractive chroot $prefix /usr/bin/apt-get --yes --force-yes install ssh`;
-    `chroot $prefix /etc/init.d/ssh stop`;
+    print "\n\nInstalling OpenSSH\n";
+    runCommand( "chroot $prefix /usr/bin/apt-get update" );
+    runCommand( "DEBIAN_FRONTEND=noninteractive chroot $prefix /usr/bin/apt-get --yes --force-yes install ssh" );
+    runCommand( "chroot $prefix /etc/init.d/ssh stop" );
+    print "Done\n";
 }
 
 
@@ -1025,6 +1055,44 @@ sub fixupInittab
 
 
 
+=head2 runCommand
+
+  Run a command, and if debugging is turned on then display it
+ to the user along with output.
+
+  Otherwise hide all output.
+
+=cut
+
+sub runCommand
+{
+    my ( $cmd ) = ( @_ );
+
+    #
+    #  Header.
+    #
+    $CONFIG{'debug'} && print "Executing : $cmd\n";
+
+    #
+    #  Hide output unless running with --debug.
+    #
+    $cmd .= " >/dev/null 2>/dev/null" unless $CONFIG{'debug'};
+
+    #
+    #  Run it.
+    #
+    my $output = `$cmd`;
+
+    #
+    # All done.
+    #
+    $CONFIG{'debug'} && print "Finished : $cmd\n";
+
+    return( $output );
+}
+
+
+
 =head2 runCommandWithProgress
 
   Run a command whilst immediately writing the output to the console.
@@ -1053,25 +1121,25 @@ sub runCommandWithProgress
 	if( sysread \*READ,$output,1024 )
 	{
 	    #
-	    #  If there is more than 80 characters truncate it
-	    # to avoid screen wrap.
+	    # Remove newlines to avoid weirdness.
+	    $output =~ s/\n//g;
+
 	    #
-	    if ( length( $output ) > 80 )
+	    #  If there is more output than our terminal width then
+	    # truncate it.
+	    #
+	    if ( length( $output ) > $TERMINAL_WIDTH )
 	    {
-	       $output = substr( $output, 0, 70 );
+	       $output = substr( $output, 0, ( $TERMINAL_WIDTH - 5 ) );
 	    }
 
 	    #
-	    # Padd to exactly 80 characters.
-	    # TODO: Determine TERM width?
-	    while( length( $output ) < 80 ) 
+	    # Pad to exactly terminal width.
+	    while( length( $output ) < $TERMINAL_WIDTH ) 
 	    { 
 		$output .= " " ; 
 	    }
 	    
-	    #
-	    # Remove newlines to avoid weirdness.
-	    $output =~ s/\n//g;
 
 	    #
 	    # Now rewind cursor to start of line and display
@@ -1085,8 +1153,50 @@ sub runCommandWithProgress
 	    #
 	    # command finished.
 	    #
-	    print STDERR "\rFinished\n\n";
+	    my $over = "\rFinished";
+	    while( length( $over ) < $TERMINAL_WIDTH )
+	    {
+		$over .= " ";
+	    }
+	    print STDERR $over . "\n";
 	    return;
 	}
     }
 }
+
+
+
+=head2 getTerminalWidth
+
+  Find and return the width of the current terminal.  This makes 
+ use of the optional Term::Size module.  If it isn't installed then
+ we fall back to using 80.
+
+=cut
+
+
+sub getTerminalWidth
+{
+
+    my $testModule  = "use Term::Size;";
+
+    my $width = 80;
+
+    #
+    #  Test loading the Cache module, if it fails then
+    # the cache isn't enabled regardless of what the
+    # configuration file says.
+    #
+    eval( $testModule );
+    if ( $@ )
+    {
+	$width = 80;
+    }
+    else
+    {
+	($width, undef ) = Term::Size::chars();
+    }
+
+    return( $width );
+}
+
