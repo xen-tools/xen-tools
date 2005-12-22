@@ -249,7 +249,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.53 2005-12-22 23:39:48 steve Exp $
+ $Id: xen-create-image,v 1.54 2005-12-22 23:44:10 steve Exp $
 
 =cut
 
@@ -662,9 +662,15 @@ print "Done\n";
 
 
 #
-#  Install OpenSSH
+#  Install OpenSSH + any other required programs.
 #
 installImagePackages( $dir );
+
+
+#
+#  Cleanup the new image to make more space available to it.
+#
+cleanupNewImage( $dir );
 
 
 #
@@ -885,7 +891,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-create-image,v 1.53 2005-12-22 23:39:48 steve Exp $';
+	my $REVISION      = '$Id: xen-create-image,v 1.54 2005-12-22 23:44:10 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
@@ -1145,6 +1151,26 @@ sub installImagePackages
     runCommand( "DEBIAN_FRONTEND=noninteractive chroot $prefix /usr/bin/apt-get --yes --force-yes install $extra" );
 	print "Done\n";
     }
+
+}
+
+
+
+
+=head2 cleanupNewImage
+
+  Remove the cached files downloaded via apt-get on the new image,
+ to make more space available to the fresh image.
+
+=cut
+
+sub cleanupNewImage
+{
+    my ( $prefix ) = ( @_ );
+
+    print "\n\nCleaning downloaded files on new system\n";
+    runCommand( "chroot $prefix /usr/bin/apt-get clean" );
+    print "Done\n";
 
 }
 
