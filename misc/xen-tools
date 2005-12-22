@@ -13,7 +13,7 @@
 # --
 # http://www.steve.org.uk
 #
-# $Id: xen-tools,v 1.7 2005-12-22 23:36:47 steve Exp $
+# $Id: xen-tools,v 1.8 2005-12-22 23:48:16 steve Exp $
 #
 
 
@@ -34,7 +34,7 @@ _xen-create-image()
 
 	case "$prev" in
 	--fs)
-		COMPREPLY=( $( compgen -W 'fs ext3 reiserfs'  -- \
+		COMPREPLY=( $( compgen -W 'xfs ext3 reiserfs'  -- \
 		"${COMP_WORDS[COMP_CWORD]}" ) )
 		return 0
 		;;
