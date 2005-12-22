@@ -17,11 +17,11 @@ xen-duplicate-image - Duplicate an existing Xen instance.
    --dir      Specify where the output images should go.
 
   Networking options:
-   --dhcp      Setup the image to get an IP address via DHCP
-   --network   Setup the network the host is upon.
+   --dhcp      Setup the image to get its networking details via DHCP
+   --gateway   Setup the gateway for the image.
+   --ip        Setup the IP address for the image.
    --netmask   Setup the netmask the host should use.
-   --gateway   Setup the iamge's network gateway.
-   --broadcast Setup the image's network broadcast address.
+
 
   Mandatory options:
 
@@ -39,11 +39,8 @@ xen-duplicate-image - Duplicate an existing Xen instance.
 =item B<--boot>
 Boot the new instance immediately after creating it.
 
-=item B<--broadcast>
-Specify the broadcast address for the virtual image, only useful if DHCP is not used.
-
 =item B<--dhcp>
-Specify that the virtual image should use DHCP to obtain its networking information.
+Specify that the virtual image should use DHCP to obtain its networking information.  Conflicts with B<--ip>.
 
 =item B<--gateway>
 Specify the gateway address for the virtual image, only useful if DHCP is not used.
@@ -51,14 +48,14 @@ Specify the gateway address for the virtual image, only useful if DHCP is not us
 =item B<--help>
 Show the brief help information.
 
+=item B<--ip>
+Specify the IP address for the virtual image.  Conflicts with B<--dhcp>.
+
 =item B<--manual>
 Read the manual, with examples.
 
 =item B<--netmask>
 Setup the netmask the host should use.
-
-=item B<--network>
-Specify the network the virtual image is living upon.  Only useful if DHCP is not used.
 
 =item B<--from>
 Specify the virtual instance that we should copy.
@@ -110,7 +107,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-duplicate-image,v 1.8 2005-12-21 22:46:36 steve Exp $
+ $Id: xen-duplicate-image,v 1.9 2005-12-22 23:32:52 steve Exp $
 
 =cut
 
@@ -205,9 +202,8 @@ if ( $CONFIG{'dhcp'} )
 else
 {
    $CONFIG{'ip'}        && print "IP       : $CONFIG{'ip'}\n";
-   $CONFIG{'network'}   && print "Network  : $CONFIG{'network'}\n";
-   $CONFIG{'broadcast'} && print "Broadcast: $CONFIG{'broadcast'}\n";
    $CONFIG{'gateway'}   && print "Gateway  : $CONFIG{'gateway'}\n";
+   $CONFIG{'netmask'}   && print "Gateway  : $CONFIG{'netmask'}\n";
 }
 print "---\n";
 
@@ -295,7 +291,7 @@ setupNetworking( $dir );
 print "Setting up Xen configuration file .. ";
 open( XEN, ">", "/etc/xen/$CONFIG{'hostname'}.cfg" );
 print XEN<<E_O_XEN;
-kernel = "/boot/vmlinuz-2.6.12-xenU"
+kernel = "$CONFIG{'kernel'}"
 memory = $CONFIG{'memory'}
 name   = "$CONFIG{'hostname'}"
 disk   = [ 'file:$image_out,sda1,w','file:$swap_out,sda2,w' ]
@@ -418,10 +414,9 @@ sub parseCommandLineArguments
 	       "from=s",     \$CONFIG{'from'},
 	       "ip=s",       \$CONFIG{'ip'},
 	       "gateway=s",  \$CONFIG{'gateway'},
-	       "mask=s",     \$CONFIG{'netmask'},
-	       "broadcast=s",\$CONFIG{'broadcast'},
-	       "network=s",  \$CONFIG{'network'},
+	       "netmask=s",  \$CONFIG{'netmask'},
 	       "dir=s",      \$CONFIG{'dir'},
+	       "kernel=s",   \$CONFIG{'kernel'},
 	       "dhcp",       \$CONFIG{'dhcp'},
 	       "help",       \$HELP,
 	       "manual",     \$MANUAL,
@@ -434,7 +429,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-duplicate-image,v 1.8 2005-12-21 22:46:36 steve Exp $';
+	my $REVISION      = '$Id: xen-duplicate-image,v 1.9 2005-12-22 23:32:52 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
@@ -556,7 +551,6 @@ EOF
     {
 	$CONFIG{'gateway'}   = '';
 	$CONFIG{'netmask'}   = '';
-	$CONFIG{'broadcast'} = '';
 	$CONFIG{'ip'}	     = '';
     }
 }
@@ -610,8 +604,6 @@ iface eth0 inet static
  address $CONFIG{'ip'}
  gateway $CONFIG{'gateway'}
  netmask $CONFIG{'netmask'}
- network $CONFIG{'network'}
- broadcast $CONFIG{'broadcast'}
 
 E_O_STATIC_IP
     }
