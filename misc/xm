@@ -7,7 +7,7 @@
 # --
 # http://www.steve.org.uk
 #
-# $Id: xm,v 1.1 2005-12-23 01:06:00 steve Exp $
+# $Id: xm,v 1.2 2005-12-23 01:21:22 steve Exp $
 #
 
 
@@ -21,16 +21,36 @@ _xm()
     #
     #  The basic options we'll complete.
     #
-    opts="console create list shutdown"
+    opts="console create destroy help list pause reboot shutdown top unpause"
 
 
     #
     #  Complete the arguments to some of the basic commands.
     #
     case "${prev}" in
+	console)
+	    local running=$(for x in `xm list --long | grep \(name | grep -v Domain-0 | awk '{ print $2 }' | tr -d \)`; do echo ${x} ; done )
+	    COMPREPLY=( $(compgen -W "${running}" -- ${cur}) )
+            return 0
+            ;;
         create)
 	    local names=$(for x in `ls -1 /etc/xen/*.cfg`; do echo ${x/\/etc\/xen\//} ; done )
 	    COMPREPLY=( $(compgen -W "${names}" -- ${cur}) )
+            return 0
+            ;;
+        destroy)
+	    local running=$(for x in `xm list --long | grep \(name | grep -v Domain-0 | awk '{ print $2 }' | tr -d \)`; do echo ${x} ; done )
+	    COMPREPLY=( $(compgen -W "${running}" -- ${cur}) )
+            return 0
+            ;;
+        pause)
+	    local running=$(for x in `xm list --long | grep \(name | grep -v Domain-0 | awk '{ print $2 }' | tr -d \)`; do echo ${x} ; done )
+	    COMPREPLY=( $(compgen -W "${running}" -- ${cur}) )
+            return 0
+            ;;
+        reboot)
+	    local running=$(for x in `xm list --long | grep \(name | grep -v Domain-0 | awk '{ print $2 }' | tr -d \)`; do echo ${x} ; done )
+	    COMPREPLY=( $(compgen -W "${running}" -- ${cur}) )
             return 0
             ;;
         shutdown)
@@ -38,7 +58,7 @@ _xm()
 	    COMPREPLY=( $(compgen -W "${running}" -- ${cur}) )
             return 0
             ;;
-	console)
+        unpause)
 	    local running=$(for x in `xm list --long | grep \(name | grep -v Domain-0 | awk '{ print $2 }' | tr -d \)`; do echo ${x} ; done )
 	    COMPREPLY=( $(compgen -W "${running}" -- ${cur}) )
             return 0
