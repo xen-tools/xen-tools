@@ -13,7 +13,7 @@
 # --
 # http://www.steve.org.uk
 #
-# $Id: xen-tools,v 1.8 2005-12-22 23:48:16 steve Exp $
+# $Id: xen-tools,v 1.9 2005-12-23 00:30:37 steve Exp $
 #
 
 
@@ -32,6 +32,12 @@ _xen-create-image()
 	cur=${COMP_WORDS[COMP_CWORD]}
 	prev=${COMP_WORDS[COMP_CWORD-1]}
 
+
+	#
+        # Complete the initial part of the IP in the configuration file.
+        ip=`grep ^gateway /etc/xen-tools/xen-tools.conf | awk -F'= '  '{print $2}'`
+ 
+
 	case "$prev" in
 	--fs)
 		COMPREPLY=( $( compgen -W 'xfs ext3 reiserfs'  -- \
@@ -43,6 +49,11 @@ _xen-create-image()
 		"${COMP_WORDS[COMP_CWORD]}" ) )
 		return 0
 		;;
+	--ip)
+	        ip=`echo ${ip} | sed -e 's/[.][^.]*$/./'`
+	        COMPREPLY=( $(compgen -W "${ip}" -- ${cur}) )
+	        return 0
+	        ;;
 	esac
 
 	_expand || return 0
@@ -81,13 +92,18 @@ _xen_duplicate_image()
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
-    opts="--broadcast --dhcp --dir --from --gateway --help --hostname --manual --version"
+    opts="--broadcast --dhcp --dir --from --gateway --help --hostname --ip --manual --version"
 
     if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]] || \
        [[ ${prev} == @(-q|--quiet) ]] ; then
         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
         return 0
     fi
+
+
+    #
+    # Complete the initial part of the IP in the configuration file.
+    ip=`grep ^gateway /etc/xen-tools/xen-tools.conf | awk -F'= '  '{print $2}'`
  
     #
     # First of all the base directory comes from the configuration file.
@@ -105,9 +121,16 @@ _xen_duplicate_image()
 		local names=$(for x in `ls -1 ${base}`; do echo ${x} ; done )
 		COMPREPLY=( $(compgen -W "${names}" -- ${cur}) )
 	    fi
+            return 0
             ;;
+	--ip)
+	    ip=`echo ${ip} | sed -e 's/[.][^.]*$/./'`
+	    COMPREPLY=( $(compgen -W "${ip}" -- ${cur}) )
+	    return 0
+	    ;;
         *)
-                COMPREPLY=($(compgen -W "${opts} -- ${cur}"))
+            COMPREPLY=($(compgen -W "${opts} -- ${cur}"))  
+            return 0
         ;;
     esac
 }
