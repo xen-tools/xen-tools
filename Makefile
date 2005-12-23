@@ -5,7 +5,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.23 2005-12-21 23:01:44 steve Exp $
+# $Id: Makefile,v 1.24 2005-12-23 01:15:07 steve Exp $
 
 
 #
@@ -80,6 +80,7 @@ install:
 	cp etc/xen-tools.conf ${prefix}/etc/xen-tools/
 	-mkdir -p ${prefix}/etc/bash_completion.d
 	cp misc/xen-tools ${prefix}/etc/bash_completion.d/
+	cp misc/xm ${prefix}/etc/bash_completion.d/
 
 
 manpages:
@@ -120,6 +121,7 @@ uninstall:
 	rm -f ${prefix}/etc/xen-tools/xen-tools.conf
 	-rmdir ${prefix}/etc/xen-tools/
 	-rm -f ${prefix}/etc/bash_completion.d/xen-tools
+	-rm -f ${prefix}/etc/bash_completion.d/xm
 	rm -f ${prefix}/usr/share/man/man8/xen-create-image.8.gz
 	rm -f ${prefix}/usr/share/man/man8/xen-delete-image.8.gz
 	rm -f ${prefix}/usr/share/man/man8/xen-duplicate-image.8.gz
