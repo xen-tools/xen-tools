@@ -1,0 +1,53 @@
+#
+#  /etc/bash_completion.d/xm
+#
+# Completion functions for Bash.
+#
+# Steve
+# --
+# http://www.steve.org.uk
+#
+# $Id: xm,v 1.1 2005-12-23 01:06:00 steve Exp $
+#
+
+
+_xm() 
+{
+    local cur prev opts base
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+
+    #
+    #  The basic options we'll complete.
+    #
+    opts="console create list shutdown"
+
+
+    #
+    #  Complete the arguments to some of the basic commands.
+    #
+    case "${prev}" in
+        create)
+	    local names=$(for x in `ls -1 /etc/xen/*.cfg`; do echo ${x/\/etc\/xen\//} ; done )
+	    COMPREPLY=( $(compgen -W "${names}" -- ${cur}) )
+            return 0
+            ;;
+        shutdown)
+	    local running=$(for x in `xm list --long | grep \(name | grep -v Domain-0 | awk '{ print $2 }' | tr -d \)`; do echo ${x} ; done )
+	    COMPREPLY=( $(compgen -W "${running}" -- ${cur}) )
+            return 0
+            ;;
+	console)
+	    local running=$(for x in `xm list --long | grep \(name | grep -v Domain-0 | awk '{ print $2 }' | tr -d \)`; do echo ${x} ; done )
+	    COMPREPLY=( $(compgen -W "${running}" -- ${cur}) )
+            return 0
+            ;;
+        *)
+        ;;
+    esac
+
+   COMPREPLY=($(compgen -W "${opts}" -- ${cur}))  
+   return 0
+}
+complete -F _xm xm
