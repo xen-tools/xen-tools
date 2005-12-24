@@ -168,15 +168,15 @@ Show the version number and exit.
   To reduce the length of the command line each of the options may
  be specified inside a configuration file.
 
-  The script will check a global configuration file for options:
+  The script will check a global configuration file for options, the
+ file is:
 
      /etc/xen-tools/xen-tools.conf
 
-  The files may contain comments, which begin with the hash '#' character
- and are otherwise of the format 'key = value.
+  The configuration file may contain comments which begin with the
+ hash '#' character.  Otherwise the format is 'key = value'.
 
   A sample configuration file would look like this:
-
 
 =for example begin
 
@@ -208,7 +208,8 @@ Show the version number and exit.
 
 =for example end
 
-  This allows a new image to be created with only two command line flags:
+  Using this configuration file a new image may be created with the
+ command:
 
       xen-create-image --hostname='vm03.my.flat' --ip=192.168.1.201
 
@@ -223,8 +224,8 @@ Show the version number and exit.
  /var/cache/apt/archives. 
 
   When a new image is created these packages are copied into the new
- image - before the debootstrap process runs.  This will avoid a
- the expensive fetch from the network.
+ image - before the debootstrap process runs.  This should help avoid
+ expensive network reading.
 
   If you wish to clean the cache run on the host:
 
@@ -241,7 +242,6 @@ Show the version number and exit.
   For the following command causes three new packages to be added
  to the base image:
 
-
       xen-create-image --debootstrap='--include=screen,sudo,less'
 
   An alternative is to use the hook directory, described below, to
@@ -251,7 +251,8 @@ Show the version number and exit.
 =head1 HOOKS
 
   After the image has been installed using debootstrap there is
- the chance for you to run some scripts before the image is unmounted.
+ the chance for you to run arbitary scripts upon the new host
+ before it is unmounted.
 
   To do this place executable scripts inside the "hook directory"
  /etc/xen-tools/xen-create-image.d/.
@@ -260,6 +261,9 @@ Show the version number and exit.
  the first is the name of the mount point the image is available at,
  and the second is the hostname of the new image.
 
+  The scripts will also have a complete copy of the configuration
+ options set in its environment.  For example the IP address would
+ be set in $ip, the mirror in $mirror, etc.
 
   A script could copy some the kernel modules to the new system, and
  install a package, for example:
@@ -278,8 +282,12 @@ Show the version number and exit.
  # Install the package 'module-init-tools'
  DEBIAN_FRONTEND=noninteractive chroot $prefix /usr/bin/apt-get --yes --force-yes install module-init-tools
 
-
 =for example cut
+
+  The hook scripts are used extensively in this script, and provide
+ several of the base features.  If you're looking at extending the
+ processing of the images it is recommended you examine the default
+ hooks.
 
 =cut
 
@@ -291,7 +299,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.64 2005-12-24 12:42:44 steve Exp $
+ $Id: xen-create-image,v 1.65 2005-12-24 12:56:07 steve Exp $
 
 =cut
 
@@ -624,7 +632,7 @@ print "Done\n";
 
 
 #
-#  Install OpenSSH + any other required programs.
+#  Install any required packages for mounting the root filesystem.
 #
 installImagePackages( $dir );
 
@@ -852,7 +860,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-create-image,v 1.64 2005-12-24 12:42:44 steve Exp $';
+	my $REVISION      = '$Id: xen-create-image,v 1.65 2005-12-24 12:56:07 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
@@ -1244,8 +1252,13 @@ sub getTerminalSize
   Every script inside the directory /etc/xen-tools/xen-create-image.d/
  which is executable will be run in order.
 
-  The scripts will be given a single argument which is the directory
- of the mounted disk image.
+  The scripts will be given a pair of arguments:
+
+  1.  The directory name upon which the image is currently mounted.
+  2.  The hostname of the new image.
+
+  The rest of the configuration variables will be passed via the
+ environment.
 
 =cut
 
@@ -1277,7 +1290,7 @@ sub runHooks
 	if ( ( -x $file ) && ( -f $file ) )
 	{
 	    #
-	    # Just display the name.
+	    # Just display the name - no need to see the full path.
 	    #
 	    my $name = $file;
 	    if ( $file =~ /(.*)\/(.*)/ )
@@ -1285,9 +1298,9 @@ sub runHooks
 		$name = $2;
 	    }
 
-	    print "Running hook: $name\n";
+	    print " Running hook: $name";
 	    runCommand( $file . " " . $prefix . " " . $CONFIG{'hostname'} );
-	    print "Hook finished: $name\n";
+	    print " - done.\n";
 	}
     }
 }
