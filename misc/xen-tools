@@ -1,19 +1,26 @@
 #
 #  /etc/bash_completion.d/xen-tools
 #
-# Completion functions for Bash.  There is basic support for all the 
-# command line options, along with some specialist support to complete
-# filesystem types, distribution targets and hostnames.
+# Completion functions for Bash.  
+#
+# This file offers basic support for all the command line options, along with
+# some specialist support to complete filesystem types, distribution targets,
+# virtual images and hostnames.
 #
 # Hostname completion will only work if 'dir=xxx' has been filled out
 # within the configuration file /etc/xen-tools/xen-tools.conf
 #
-#  Reference page: http://dev.gentoo.org/~plasmaroo/devmanual/tasks-reference/completion/
+#  References on command line completion:
+#
+#    http://www.debian-administration.org/articles/316
+#    http://www.debian-administration.org/articles/317
+#    http://dev.gentoo.org/~plasmaroo/devmanual/tasks-reference/completion/
+#
 # Steve
 # --
 # http://www.steve.org.uk
 #
-# $Id: xen-tools,v 1.10 2005-12-24 03:10:04 steve Exp $
+# $Id: xen-tools,v 1.11 2005-12-24 03:15:13 steve Exp $
 #
 
 
@@ -84,8 +91,9 @@ complete -F _xen-create-image $filenames xen-create-image
 
 
 
-
-
+#
+#  Completion for xen-duplicate-image
+#
 _xen_duplicate_image() 
 {
     local cur prev opts base
@@ -138,7 +146,9 @@ complete -F _xen_duplicate_image xen-duplicate-image
 
 
 
-
+#
+#  Completion for xen-delete-image
+#
 _xen_delete_image() 
 {
     local cur prev opts base
@@ -179,7 +189,9 @@ complete -F _xen_delete_image xen-delete-image
 
 
 
-
+#
+#  Completion for xen-update-image
+#
 _xen_update_image() 
 {
     local cur prev opts base
@@ -217,3 +229,24 @@ _xen_update_image()
     esac
 }
 complete -F _xen_update_image xen-update-image
+
+
+
+#
+#  Completion for xen-list-images
+#
+_xen_list_images() 
+{
+    local cur prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    opts="--dir --help --manual --version"
+
+    if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]]; then
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+        return 0
+    fi
+ 
+}
+complete -F _xen_list_images xen-list-images
