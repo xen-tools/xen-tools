@@ -14,19 +14,20 @@ xen-duplicate-image - Duplicate an existing Xen instance.
    --version  Show the version number and exit.
 
   General options:
+   --boot     Boot the cloned image after creating it.
    --dir      Specify where the output images should go.
 
   Networking options:
-   --dhcp      Setup the image to get its networking details via DHCP
-   --gateway   Setup the gateway for the image.
-   --ip        Setup the IP address for the image.
-   --netmask   Setup the netmask the host should use.
+   --dhcp     Setup the image to get its networking details via DHCP
+   --gateway  Setup the gateway for the image.
+   --ip       Setup the IP address for the image.
+   --netmask  Setup the netmask the host should use.
 
 
   Mandatory options:
 
-   --hostname  Set the images hostname.
-   --from      The image name we should copy
+   --hostname Set the images hostname.
+   --from     The image name we should copy
 
 =cut
 
@@ -107,7 +108,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-duplicate-image,v 1.10 2005-12-24 10:34:14 steve Exp $
+ $Id: xen-duplicate-image,v 1.11 2005-12-24 10:36:30 steve Exp $
 
 =cut
 
@@ -323,7 +324,7 @@ if ( $CONFIG{'boot'} )
     }
     else
     {
-	system( "$CONFIG{'xm'} create $CONFIG{'hostname'}.cfg" );
+	system( "$CONFIG{'xm'} create $CONFIG{'hostname'}.cfg >/dev/null 2>/dev/null" );
     }
 }
 
@@ -426,7 +427,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-duplicate-image,v 1.10 2005-12-24 10:34:14 steve Exp $';
+	my $REVISION      = '$Id: xen-duplicate-image,v 1.11 2005-12-24 10:36:30 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
