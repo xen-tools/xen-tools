@@ -72,7 +72,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-update-image,v 1.5 2005-12-21 22:47:52 steve Exp $
+ $Id: xen-update-image,v 1.6 2005-12-24 10:34:14 steve Exp $
 
 =cut
 
@@ -112,10 +112,6 @@ my %CONFIG;
 if ( -e "/etc/xen-tools/xen-tools.conf" )
 {
     readConfigurationFile( "/etc/xen-tools/xen-tools.conf" );
-}
-if ( -e $ENV{'HOME'} . ".xen-tools.conf" )
-{
-    readConfigurationFile( $ENV{'HOME'} . ".xen-tools.conf" );
 }
 
 
@@ -261,7 +257,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-update-image,v 1.5 2005-12-21 22:47:52 steve Exp $';
+	my $REVISION      = '$Id: xen-update-image,v 1.6 2005-12-24 10:34:14 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;

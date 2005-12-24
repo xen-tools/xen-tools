@@ -168,10 +168,9 @@ Show the version number and exit.
   To reduce the length of the command line each of the options may
  be specified inside a configuration file.
 
-  The script will check two files for options:
+  The script will check a global configuration file for options:
 
-   1. /etc/xen-tools/xen-tools.conf
-   2. ~/.xen-tools.conf
+     /etc/xen-tools/xen-tools.conf
 
   The files may contain comments, which begin with the hash '#' character
  and are otherwise of the format 'key = value.
@@ -292,7 +291,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.61 2005-12-24 07:34:06 steve Exp $
+ $Id: xen-create-image,v 1.62 2005-12-24 10:34:14 steve Exp $
 
 =cut
 
@@ -401,10 +400,6 @@ $CONFIG{'hook_dir'}    = '/etc/xen-tools/xen-create-image.d/';
 if ( -e "/etc/xen-tools/xen-tools.conf" )
 {
     readConfigurationFile( "/etc/xen-tools/xen-tools.conf" );
-}
-if ( -e $ENV{'HOME'} . ".xen-tools.conf" )
-{
-    readConfigurationFile( $ENV{'HOME'} . ".xen-tools.conf" );
 }
 
 
@@ -947,7 +942,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-create-image,v 1.61 2005-12-24 07:34:06 steve Exp $';
+	my $REVISION      = '$Id: xen-create-image,v 1.62 2005-12-24 10:34:14 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
