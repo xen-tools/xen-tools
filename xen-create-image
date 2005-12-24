@@ -277,7 +277,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.59 2005-12-24 07:19:41 steve Exp $
+ $Id: xen-create-image,v 1.60 2005-12-24 07:29:10 steve Exp $
 
 =cut
 
@@ -932,7 +932,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-create-image,v 1.59 2005-12-24 07:19:41 steve Exp $';
+	my $REVISION      = '$Id: xen-create-image,v 1.60 2005-12-24 07:29:10 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
@@ -1471,6 +1471,7 @@ sub getTerminalSize
  of the mounted disk image.
 
 =cut
+
 sub runHooks
 {
     my ( $HOOK_DIR, $prefix ) = ( @_ );
