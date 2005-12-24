@@ -49,11 +49,11 @@ Show the version number and exit.
 
 
   xen-delete-image is a simple script which allows you to delete
- a Xen instances which has previously been created with xen-create-image.
+ a Xen instance which has previously been created with the
+ xen-create-image script.
 
   You must be root to run this script as it removes the Xen configuration
  file from /etc/xen.
-
 
 =cut
 
@@ -65,7 +65,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-delete-image,v 1.5 2005-12-24 06:45:13 steve Exp $
+ $Id: xen-delete-image,v 1.6 2005-12-24 09:22:23 steve Exp $
 
 =cut
 
@@ -300,7 +300,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-delete-image,v 1.5 2005-12-24 06:45:13 steve Exp $';
+	my $REVISION      = '$Id: xen-delete-image,v 1.6 2005-12-24 09:22:23 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
