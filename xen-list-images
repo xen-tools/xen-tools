@@ -39,7 +39,6 @@ Show the version number and exit.
 
 =head1 DESCRIPTION
 
-
   xen-list-images is a simple script which will display all the
  images which have been created in a given directory.
 
@@ -66,6 +65,19 @@ Show the version number and exit.
  networking information.
 
 
+=head2 NOTES
+
+  If the script is run by a non-root user the networking information
+ will not be displayed.  This is because a non-user may not mount
+ the disk images to read the configuration.
+
+  If you wish to see the networking details you must execute this
+ script as root.
+
+=cut
+
+
+
 =head1 AUTHOR
 
 
@@ -73,7 +85,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-list-images,v 1.5 2005-12-21 19:26:05 steve Exp $
+ $Id: xen-list-images,v 1.6 2005-12-24 09:28:53 steve Exp $
 
 =cut
 
@@ -128,26 +140,16 @@ if ( -e $ENV{'HOME'} . ".xen-tools.conf" )
 parseCommandLineArguments();
 
 
+
 #
-#  If we're not root stop here - root can't do the mounting which
-# is required to find the networking details.
+#  Get the directory which holds the images.
 #
-if ( $EFFECTIVE_USER_ID != 0 )
-{
-    print <<E_O_ROOT;
-
-  In order to use this script you must be running with root privileges.
-
-  (This is necessary to mount the disk images to determine networking info.)
-
-E_O_ROOT
-
-    exit;
-}
-
-
 my $dir = $CONFIG{'dir'}  . "/domains/";
 
+
+#
+# Get the name of the image.
+#
 foreach my $entry ( glob( $dir . "*" ) )
 {
    if ( $entry =~ /(.*)\/domains\/(.*)/ )
@@ -170,45 +172,20 @@ foreach my $entry ( glob( $dir . "*" ) )
 	    ( -e $swap ) )
        {
 
-	   print "Image: $entry ";
-	   #
-	   # Mount the image securely
-	   #
-	   my $dir = tempdir( CLEANUP => 1 );
-	   my $mount_cmd = "mount -t auto -o loop $image $dir";
-	   `$mount_cmd`;
-
-
-	   #
-	   #  Read /etc/network/interfaces
-	   #
-	   my $found = 0;
-	   open( IN, "<", $dir . "/etc/network/interfaces" );
-	   foreach my $line ( <IN> )
+	   if ( $EFFECTIVE_USER_ID != 0 )
 	   {
-	       if ( ( $line =~ /dhcp/ ) &&
-		    ( $line =~ /eth/ ) )
-	       {
-		   print " DHCP\n";
-		   $found = 1;
-	       }
-	       if ( $line =~ /address ([0-9\.]+)/ )
-	       {
-		   print $1 . "\n";
-		   $found = 1;
-	       }
+	       print "Image: $entry\n";
 	   }
-	   close( IN );
-	   if ( ! $found ) { print "Unknown IP address\n"; }
+	   else
+	   {
+	       print "Image: $entry ";
 
-	   #
-	   # Unmount the image.
-	   #
-	   `umount $dir`;
-
+	       showNetworkingDetails( $image );
+	   }
        }
    }
 }
+
 
 
 #
@@ -303,7 +280,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-list-images,v 1.5 2005-12-21 19:26:05 steve Exp $';
+	my $REVISION      = '$Id: xen-list-images,v 1.6 2005-12-24 09:28:53 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
@@ -315,3 +292,49 @@ sub parseCommandLineArguments
 }
 
 
+=head2 showNetworkingDetails
+
+  Mount the given disk image and read the networking details from it.
+
+=cut
+
+sub showNetworkingDetails
+{
+    my ( $image ) = ( @_ );
+
+
+    #
+    # Mount the image securely
+    #
+    my $dir = tempdir( CLEANUP => 1 );
+    my $mount_cmd = "mount -t auto -o loop $image $dir";
+    `$mount_cmd`;
+    
+    
+    #
+    #  Read /etc/network/interfaces
+    #
+    my $found = 0;
+    open( IN, "<", $dir . "/etc/network/interfaces" );
+    foreach my $line ( <IN> )
+    {
+	if ( ( $line =~ /dhcp/ ) &&
+	     ( $line =~ /eth/ ) )
+	{
+	    print " DHCP\n";
+	    $found = 1;
+	}
+	if ( $line =~ /address ([0-9\.]+)/ )
+	{
+	    print $1 . "\n";
+	    $found = 1;
+	}
+    }
+    close( IN );
+    if ( ! $found ) { print "Unknown IP address\n"; }
+
+    #
+    # Unmount the image.
+    #
+    `umount $dir`;
+}
