@@ -7,7 +7,7 @@
 # --
 # http://www.steve.org.uk
 #
-# $Id: xm,v 1.3 2005-12-24 05:34:32 steve Exp $
+# $Id: xm,v 1.4 2005-12-24 05:37:31 steve Exp $
 #
 
 
@@ -21,7 +21,7 @@ _xm()
     #
     #  The basic options we'll complete.
     #
-    opts="console create destroy help list pause reboot shutdown top unpause"
+    opts="console create destroy help info list pause reboot shutdown top unpause"
 
 
     #
@@ -49,6 +49,14 @@ _xm()
             ;;
         destroy)
 	    COMPREPLY=( $(compgen -W "${running}" -- ${cur}) )
+            return 0
+            ;;
+        help)
+	    COMPREPLY=( $(compgen -W "--long" -- ${cur}) )
+            return 0
+            ;;
+        list)
+	    COMPREPLY=( $(compgen -W "--long" -- ${cur}) )
             return 0
             ;;
         pause)

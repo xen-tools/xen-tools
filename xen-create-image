@@ -15,22 +15,23 @@ xen-create-image - Create a new Xen instance of Debian Sarge.
    --version  Show the version number and exit.
 
   Size / General options:
-   --dist     Specify the distribution you wish to install: Sarge, Etch, Sid.
-   --boot     Boot the new instance after creating it.
+   --boot        Boot the new instance after creating it.
    --debootstrap Pass anything named here onto debootstrap.
-   --dir      Specify where the output images should go.
-   --fs       Specify the filesystem type to use.
-   --memory   Setup the amount of memory allocated to the instance.
-   --size     Set the size of the primary disk image.
-   --swap     Set the size of the swap partition.   
-   --kernel   Set the path to the kernel to use for domU
+   --dir         Specify where the output images should go.
+   --dist        Specify the distribution you wish to install: Sarge/Etch/Sid.
+   --fs          Specify the filesystem type to use.
+   --kernel      Set the path to the kernel to use for dom U
+   --memory      Setup the amount of memory allocated to the instance.
+   --mirror      Setup the mirror to use when installing Sarge.
+   --size        Set the size of the primary disk image.
+   --swap        Set the size of the swap partition.   
+
 
   Networking options:
    --dhcp      Setup the image to get an IP address via DHCP
    --gateway   Setup the iamge's network gateway.
    --ip	       Setup the ip 
    --netmask   Setup the netmask
-   --mirror    Setup the mirror to use when installing Sarge.
 
   Mandatory options:
 
@@ -95,11 +96,10 @@ Specify the mirror to use to the installation of Sarge, defaults to http://ftp.u
 Set the netmask the virtual image should use.
 
 =item B<--size>  
-Specify the size of the virtual images primary drive.  The size may be
-suffixed with either Mb, or Gb.
+Specify the size of the primary drive to give the virtual image.  The size may be suffixed with either Mb, or Gb.
 
 =item B<--swap>
-Specify the size of the virtual images swap partition.  The size may be
+Specify the size of the virtual swap partition to create.  The size may be
 suffixed with either Mb, or Gb.
 
 =item B<--version>
@@ -249,7 +249,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.54 2005-12-22 23:44:10 steve Exp $
+ $Id: xen-create-image,v 1.55 2005-12-24 05:37:31 steve Exp $
 
 =cut
 
@@ -891,7 +891,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-create-image,v 1.54 2005-12-22 23:44:10 steve Exp $';
+	my $REVISION      = '$Id: xen-create-image,v 1.55 2005-12-24 05:37:31 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
