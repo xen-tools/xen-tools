@@ -3,11 +3,12 @@ misc/
 ----
 
 
-  Miscallaneous items that don't have anywhere else to live.
+  Miscellaneous items that don't have anywhere else to live.
 
   Contents:
 
-        xen-tools   - Completions for the GNU Bash shell.
+        xen-tools   - Bash completion code for our commands.
+        xm          - Bash completion code for the Xen 'xm' command.
 
 Steve
 --
