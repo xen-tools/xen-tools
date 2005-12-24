@@ -9,11 +9,10 @@
 #
 # Steve
 # --
-# $Id: 90-make-fstab,v 1.1 2005-12-24 20:05:46 steve Exp $
+# $Id: 90-make-fstab,v 1.2 2005-12-24 20:34:44 steve Exp $
 
 
 prefix=$1
-hostname=$2
 
 
 #

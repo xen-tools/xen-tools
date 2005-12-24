@@ -6,8 +6,6 @@
 
 
 prefix=$1
-hostname=$2
-
 
 echo ${hostname} > ${prefix}/etc/hostname
 echo ${hostname} > ${prefix}/etc/mailname

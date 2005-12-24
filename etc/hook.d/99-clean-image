@@ -6,7 +6,6 @@
 
 
 prefix=$1
-hostname=$2
 
 chroot $prefix /usr/bin/apt-get clean
 

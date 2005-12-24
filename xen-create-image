@@ -258,9 +258,9 @@ Show the version number and exit.
   To do this place executable scripts inside the "hook directory"
  /etc/xen-tools/xen-create-image.d/.
 
-  Each script will be executed in turn and given two parameters,
- the first is the name of the mount point the image is available at,
- and the second is the hostname of the new image.
+  Each executable script in this directory will be executed in turn
+ and given the name of the mount point the image is available at as
+ its single argument.
 
   The scripts will also have a complete copy of the configuration
  options set in its environment.  For example the IP address would
@@ -274,7 +274,6 @@ Show the version number and exit.
  #!/bin/sh
 
  prefix=$1
- hostname=$2
 
  # Copy modules
  mkdir -p ${prefix}/lib/modules
@@ -300,7 +299,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.66 2005-12-24 20:05:46 steve Exp $
+ $Id: xen-create-image,v 1.67 2005-12-24 20:34:44 steve Exp $
 
 =cut
 
@@ -835,7 +834,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-create-image,v 1.66 2005-12-24 20:05:46 steve Exp $';
+	my $REVISION      = '$Id: xen-create-image,v 1.67 2005-12-24 20:34:44 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
@@ -1177,19 +1176,16 @@ sub getTerminalSize
 =head2 runHooks
 
   When the image has been created, but before the temporary image
- is unmounted there is the opportunity for a number of hooks to be
- run.
+ is unmounted each executable script inside the hook directory will
+ be executed.  (The scripts are executed "in order" which might
+ be useful for users who wish to ensure some actions occur before
+ others.)
 
-  Every script inside the directory /etc/xen-tools/xen-create-image.d/
- which is executable will be run in order.
+  The scripts will be given single argument: the name of the directory
+ within which the image is mounted.
 
-  The scripts will be given a pair of arguments:
-
-  1.  The directory name upon which the image is currently mounted.
-  2.  The hostname of the new image.
-
-  The rest of the configuration variables will be passed via the
- environment.
+  (The rest of the configuration variables will be passed via 
+ environmental variables.)
 
 =cut
 
@@ -1230,7 +1226,7 @@ sub runHooks
 	    }
 
 	    print " Running hook: $name";
-	    runCommand( $file . " " . $prefix . " " . $CONFIG{'hostname'} );
+	    runCommand( $file . " " . $prefix );
 	    print " - done.\n";
 	}
     }
