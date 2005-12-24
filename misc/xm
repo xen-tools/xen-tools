@@ -7,13 +7,13 @@
 # --
 # http://www.steve.org.uk
 #
-# $Id: xm,v 1.2 2005-12-23 01:21:22 steve Exp $
+# $Id: xm,v 1.3 2005-12-24 05:34:32 steve Exp $
 #
 
 
 _xm() 
 {
-    local cur prev opts base
+    local cur prev opts base running
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
@@ -25,13 +25,22 @@ _xm()
 
 
     #
+    #  If we're called by root then we can see which instances
+    # are running.
+    #
+    if [ $UID == 0 ]; then
+	 running=$(for x in `xm list --long | grep \(name | grep -v Domain-0 | awk '{ print $2 }' | tr -d \)`; do echo ${x} ; done )
+    fi
+
+
+
+    #
     #  Complete the arguments to some of the basic commands.
     #
     case "${prev}" in
 	console)
-	    local running=$(for x in `xm list --long | grep \(name | grep -v Domain-0 | awk '{ print $2 }' | tr -d \)`; do echo ${x} ; done )
 	    COMPREPLY=( $(compgen -W "${running}" -- ${cur}) )
-            return 0
+	    return 0
             ;;
         create)
 	    local names=$(for x in `ls -1 /etc/xen/*.cfg`; do echo ${x/\/etc\/xen\//} ; done )
@@ -39,27 +48,22 @@ _xm()
             return 0
             ;;
         destroy)
-	    local running=$(for x in `xm list --long | grep \(name | grep -v Domain-0 | awk '{ print $2 }' | tr -d \)`; do echo ${x} ; done )
 	    COMPREPLY=( $(compgen -W "${running}" -- ${cur}) )
             return 0
             ;;
         pause)
-	    local running=$(for x in `xm list --long | grep \(name | grep -v Domain-0 | awk '{ print $2 }' | tr -d \)`; do echo ${x} ; done )
 	    COMPREPLY=( $(compgen -W "${running}" -- ${cur}) )
             return 0
             ;;
         reboot)
-	    local running=$(for x in `xm list --long | grep \(name | grep -v Domain-0 | awk '{ print $2 }' | tr -d \)`; do echo ${x} ; done )
 	    COMPREPLY=( $(compgen -W "${running}" -- ${cur}) )
             return 0
             ;;
         shutdown)
-	    local running=$(for x in `xm list --long | grep \(name | grep -v Domain-0 | awk '{ print $2 }' | tr -d \)`; do echo ${x} ; done )
 	    COMPREPLY=( $(compgen -W "${running}" -- ${cur}) )
             return 0
             ;;
         unpause)
-	    local running=$(for x in `xm list --long | grep \(name | grep -v Domain-0 | awk '{ print $2 }' | tr -d \)`; do echo ${x} ; done )
 	    COMPREPLY=( $(compgen -W "${running}" -- ${cur}) )
             return 0
             ;;
