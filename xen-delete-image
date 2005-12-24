@@ -65,7 +65,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-delete-image,v 1.4 2005-12-21 19:26:05 steve Exp $
+ $Id: xen-delete-image,v 1.5 2005-12-24 06:45:13 steve Exp $
 
 =cut
 
@@ -135,6 +135,17 @@ E_O_ROOT
     exit;
 }
 
+
+#
+#  Make sure we have a hostname
+#
+if ( ( !defined( $CONFIG{'hostname'} ) ) ||
+     ( ! length( $CONFIG{'hostname'} ) ) )
+{
+    print "Please supply a hostname with : \n";
+    print "  xen-delete-image --hostname=foo\n";
+    exit;
+}
 
 
 #
@@ -289,7 +300,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-delete-image,v 1.4 2005-12-21 19:26:05 steve Exp $';
+	my $REVISION      = '$Id: xen-delete-image,v 1.5 2005-12-24 06:45:13 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
