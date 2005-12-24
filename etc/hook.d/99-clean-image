@@ -1,0 +1,12 @@
+#!/bin/sh
+#
+#  This script runs 'apt-get clean' on the freshly created image,
+# to make sure it has the maximum available amount of free space.
+#
+
+
+prefix=$1
+hostname=$2
+
+chroot $prefix /usr/bin/apt-get clean
+

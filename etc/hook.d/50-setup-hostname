@@ -1,0 +1,13 @@
+#!/bin/sh
+#
+#  This script copies some files and values to the new image so
+# that it knows its own name.
+#
+
+
+prefix=$1
+hostname=$2
+
+
+echo ${hostname} > ${prefix}/etc/hostname
+echo ${hostname} > ${prefix}/etc/mailname

@@ -1,0 +1,17 @@
+#!/bin/sh
+#
+#  This script copies essential files from the host to the new
+# system.
+#
+
+
+prefix=$1
+hostname=$2
+
+cp /etc/resolv.conf ${prefix}/etc/
+cp /etc/hosts       ${prefix}/etc/
+cp /etc/passwd      ${prefix}/etc/
+cp /etc/shadow      ${prefix}/etc/
+cp /etc/group       ${prefix}/etc/
+cp /etc/gshadow     ${prefix}/etc/
+

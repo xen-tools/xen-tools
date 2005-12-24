@@ -1,0 +1,35 @@
+#!/bin/sh
+#
+#  This script sets up the /etc/apt/sources.list for APT.
+#
+
+prefix=$1
+hostname=$2
+
+cat <<E_O_APT > ${prefix}/etc/apt/sources.list
+#
+#  /etc/apt/sources.list
+#
+
+
+#
+# ${dist}
+#
+deb     ${mirror}     ${dist} main contrib non-free
+deb-src ${mirror}     ${dist} main contrib non-free
+
+# 
+#  Security updates
+# 
+deb     http://security.debian.org/ stable/updates  main contrib non-free
+deb-src http://security.debian.org/ stable/updates  main contrib non-free
+
+
+E_O_APT
+
+
+
+#
+#  Now that the sources have been setup make sure the system is up to date.
+#
+chroot ${prefix} /usr/bin/apt-get update

@@ -291,7 +291,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.63 2005-12-24 12:10:20 steve Exp $
+ $Id: xen-create-image,v 1.64 2005-12-24 12:42:44 steve Exp $
 
 =cut
 
@@ -592,74 +592,6 @@ printWideMessage( "\rDone" );
 
 
 
-#
-#  If the debootstrap failed then we'll setup the output directories
-# for the configuration files here.
-#
-runCommand( "mkdir -p $dir/etc/apt" );
-runCommand( "mkdir -p $dir/etc/network" );
-
-#
-#  OK now we can do the basic setup.
-#
-print "\n\nSetting up APT sources\n";
-open( APT, ">", $dir . "/etc/apt/sources.list" );
-print APT<<E_O_APT;
-#
-#  /etc/apt/sources.list
-#
-
-
-#
-# $CONFIG{'dist'}
-#
-deb     $CONFIG{'mirror'}     $CONFIG{'dist'} main contrib non-free
-deb-src $CONFIG{'mirror'}     $CONFIG{'dist'} main contrib non-free
-
-# 
-#  Security updates
-# 
-deb     http://security.debian.org/ stable/updates  main contrib non-free
-deb-src http://security.debian.org/ stable/updates  main contrib non-free
-
-
-E_O_APT
-close( APT );
-
-print "Done\n";
-
-
-
-#
-#  Copy some files from the host system, after setting up the hostname.
-#
-#
-my @hostFiles = ( "/etc/resolv.conf",
-		  "/etc/hosts",
-		  "/etc/passwd",
-		  "/etc/group",
-		  "/etc/shadow",
-		  "/etc/gshadow" );
-
-print "\n\nCopying essential files from the host to the guest\n";
-foreach my $file ( @hostFiles )
-{
-    printWideMessage( "\r" . $file );
-    File::Copy::cp( $file, $dir . "/etc" );
-}
-printWideMessage( "\rDone" );
-
-
-
-#
-#  Disable TLS
-#
-if ( -d $dir . "/lib/tls" ) 
-{
-    runCommand( "mv $dir/lib/tls $dir/lib/tls.disabled" );
-}
-
-
 
 #
 #  Now setup the fstab
@@ -692,31 +624,9 @@ print "Done\n";
 
 
 #
-#  Setup the /etc/network/interfaces file upon the guest image
-#
-print "\n\nSetting up networking\n";
-setupNetworking( $dir );
-print "Done\n";
-
-
-#
 #  Install OpenSSH + any other required programs.
 #
 installImagePackages( $dir );
-
-
-#
-#  Cleanup the new image to make more space available to it.
-#
-cleanupNewImage( $dir );
-
-
-#
-#  Fixup Inittab file
-#
-print "\n\nSetting up initial console\n";
-fixupInittab( $dir );
-print "done\n";
 
 
 
@@ -942,7 +852,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-create-image,v 1.63 2005-12-24 12:10:20 steve Exp $';
+	my $REVISION      = '$Id: xen-create-image,v 1.64 2005-12-24 12:42:44 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
@@ -1095,74 +1005,11 @@ EOF
 
 
 
-=head2 setupNetworking
-
-  Setup the /etc/network/interfaces file, and the hostname 
- upon the virtual instance.
-
-=cut
-
-sub setupNetworking
-{
-    my ( $prefix ) = ( @_ );
-
-    #
-    #  Set the hostname.
-    #
-    open( HOSTNAME, ">", $prefix . "/etc/hostname" );
-    print HOSTNAME $CONFIG{'hostname'} . "\n";
-    close( HOSTNAME );
-
-    #
-    #  Set the networking optins.
-    #
-    open( IP, ">", $prefix . "/etc/network/interfaces" );
-    if ( $CONFIG{'dhcp'} )
-    {
-	print IP<<E_O_DHCP;
-# This file describes the network interfaces available on your system
-# and how to activate them. For more information, see interfaces(5).
-
-# The loopback network interface
-auto lo
-iface lo inet loopback
-	    
-# The primary network interface
-auto eth0
-iface eth0 inet dhcp
-
-E_O_DHCP
-    }
-    else
-    {
-	print IP<<E_O_STATIC_IP;
-# This file describes the network interfaces available on your system
-# and how to activate them. For more information, see interfaces(5).
-
-# The loopback network interface
-auto lo
-iface lo inet loopback
-	    
-# The primary network interface
-auto eth0
-iface eth0 inet static
- address $CONFIG{'ip'}
- gateway $CONFIG{'gateway'}
- netmask $CONFIG{'netmask'}
-
-E_O_STATIC_IP
-    }
-
-    close( IP );
-}
-
-
 
 =head2 installImagePackages
 
-  Install some basic packages upon the new image.  This will always
- include OpenSSH.  For specific filesystem images we will install
- different packages:
+  Install any required base packages upon the new image, these will
+ be the packages we need depending upon our filesystem.
 
     xfs filesystem    -> Install xfsprogs
     reiser filesystem -> Install reiserfsprogs
@@ -1172,12 +1019,6 @@ E_O_STATIC_IP
 sub installImagePackages
 {
     my ( $prefix ) = ( @_ );
-
-    print "\n\nInstalling OpenSSH into new system\n";
-    runCommand( "chroot $prefix /usr/bin/apt-get update" );
-    runCommand( "DEBIAN_FRONTEND=noninteractive chroot $prefix /usr/bin/apt-get --yes --force-yes install ssh" );
-    runCommand( "chroot $prefix /etc/init.d/ssh stop" );
-    print "Done\n";
 
     #
     #  Extra packages to install.
@@ -1208,80 +1049,6 @@ sub installImagePackages
 
 
 
-=head2 cleanupNewImage
-
-  Remove the cached files downloaded via apt-get on the new image,
- to make more space available to the fresh image.
-
-=cut
-
-sub cleanupNewImage
-{
-    my ( $prefix ) = ( @_ );
-
-    print "\n\nCleaning downloaded files on new system\n";
-    runCommand( "chroot $prefix /usr/bin/apt-get clean" );
-    print "Done\n";
-
-}
-
-
-
-=head2 fixupInittab
-
-  Copy the host systems /etc/inittab to the virtual installation 
- making a couple of minor changes:
-
-  1. Setup the first console to be "Linux".
-  2. Disable all virtual consoles.
-
-=cut 
-
-sub fixupInittab
-{
-    my ( $prefix ) = ( @_ );
-
-
-    my @init;
-    open( INITTAB, "<", "/etc/inittab" );
-    foreach my $line ( <INITTAB> )
-    {
-	chomp $line;
-	if ( $line =~ /:respawn:/ )
-	{
-	    if ( $line =~ /^1/ )
-	    {
-		#
-		# Leave line unchanged - but change 'tty1' to 'console'.
-		#
-		$line = '1:2345:respawn:/sbin/getty 38400 console';
-
-		#
-		# Reference:  
-		#   http://wiki.xensource.com/xenwiki/DebianSarge
-		#
-	    }
-	    else
-	    {
-		#
-		# Otherwise comment out the line, we don't need multiple
-		# terminals since we can only access one.
-		#
-		$line = "#" . $line;
-	    }
-	}
-	push @init, $line;
-    }
-    close( INITTAB );
-    
-    
-    open( OUTPUT, ">", "$prefix/etc/inittab" );
-    foreach my $line ( @init )
-    {
-	print OUTPUT $line . "\n";
-    }
-    close( OUTPUT )
-}
 
 
 
@@ -1491,7 +1258,10 @@ sub runHooks
     #
     foreach my $key ( keys %CONFIG )
     {
-	$ENV{$key} = $CONFIG{$key};
+	if ( defined( $CONFIG{$key} ) )
+	{
+	    $ENV{$key} = $CONFIG{$key};
+	}
     }
 
 

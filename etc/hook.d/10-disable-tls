@@ -1,0 +1,9 @@
+#!/bin/sh
+#
+#  This script disables TLS on the new image.
+#
+
+prefix=$1
+hostname=$2
+
+mv ${prefix}/lib/tls ${prefix}/lib/tls.disabled

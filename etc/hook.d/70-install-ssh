@@ -1,0 +1,11 @@
+#!/bin/sh
+#
+#  This script installs OpenSSH upon the new system.
+#
+
+prefix=$1
+hostname=$2
+
+chroot ${prefix} /usr/bin/apt-get update
+DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes --force-yes install ssh
+chroot ${prefix} /etc/init.d/ssh stop

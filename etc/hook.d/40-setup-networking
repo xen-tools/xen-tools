@@ -1,0 +1,47 @@
+#!/bin/sh
+#
+#  This script sets up the /etc/network/interface file for the new
+# image.
+#
+
+prefix=$1
+hostname=$2
+
+if [[ -z "${dhcp}" ]]; then
+
+   cat <<E_O_STATIC >${prefix}/etc/network/interfaces
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+	    
+# The primary network interface
+auto eth0
+iface eth0 inet static
+ address ${ip}
+ gateway ${gateway}
+ netmask ${netmask}
+
+E_O_STATIC
+
+else
+
+  #
+  # The host is using DHCP.
+  #
+  cat <<E_O_DHCP > ${prefix}/etc/network/interfaces
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+	    
+# The primary network interface
+auto eth0
+iface eth0 inet dhcp
+E_O_DHCP
+
+fi
