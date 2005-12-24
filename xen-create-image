@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-xen-create-image - Create a new Xen instance of Debian Sarge.
+xen-create-image - Create a new virtual Debian installation for Xen.
 
 =head1 SYNOPSIS
 
@@ -274,7 +274,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.57 2005-12-24 07:07:22 steve Exp $
+ $Id: xen-create-image,v 1.58 2005-12-24 07:16:04 steve Exp $
 
 =cut
 
@@ -375,7 +375,7 @@ $CONFIG{'dist'}	       = 'sarge';
 $CONFIG{'xm'}	       = '/usr/sbin/xm';
 $CONFIG{'kernel'}      = '/boot/vmlinuz-2.6.12-xenU';
 $CONFIG{'debootstrap'} = '';
-
+$CONFIG{'hook_dir'}    = '/etc/xen-tools/xen-create-image.d/';
 
 #
 #  Read configuration file(s) if they exist.
@@ -711,11 +711,10 @@ print "done\n";
 #  Allow the sysadmin to create scripts to be executed
 # post-install.
 #
-my $HOOK_DIR="/etc/xen-tools/xen-create-image.d/";
-if ( -d $HOOK_DIR )
+if ( -d $CONFIG{'hook_dir'} )
 {
-    print "Running hooks from : $HOOK_DIR\n";
-    runHooks( $HOOK_DIR, $dir );
+    print "Running hooks from : $CONFIG{'hook_dir'}\n";
+    runHooks( $CONFIG{'hook_dir'}, $dir );
     print "Done\n";
 }
 
@@ -930,7 +929,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-create-image,v 1.57 2005-12-24 07:07:22 steve Exp $';
+	my $REVISION      = '$Id: xen-create-image,v 1.58 2005-12-24 07:16:04 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
@@ -1473,9 +1472,16 @@ sub runHooks
 {
     my ( $HOOK_DIR, $prefix ) = ( @_ );
 
+    #
+    # Make sure that our scripts run in sorted order, as
+    # the user would expect.
+    #
     foreach my $file ( sort( glob( $HOOK_DIR . "*" ) ) )
     {
-	if ( -x $file )
+	#
+	# Only run executable files.
+	#
+	if ( ( -x $file ) && ( -f $file ) )
 	{
 	    print "Running hook: $file\n";
 	    runCommand( $file . " " . $prefix );
