@@ -13,7 +13,7 @@
 # --
 # http://www.steve.org.uk
 #
-# $Id: xen-tools,v 1.9 2005-12-23 00:30:37 steve Exp $
+# $Id: xen-tools,v 1.10 2005-12-24 03:10:04 steve Exp $
 #
 
 
@@ -92,7 +92,7 @@ _xen_duplicate_image()
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
-    opts="--broadcast --dhcp --dir --from --gateway --help --hostname --ip --manual --version"
+    opts="--broadcast --dhcp --dir --from --gateway --help --hostname --ip --manual --netmask --version"
 
     if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]] || \
        [[ ${prev} == @(-q|--quiet) ]] ; then
