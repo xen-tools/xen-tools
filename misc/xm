@@ -1,13 +1,13 @@
 #
 #  /etc/bash_completion.d/xm
 #
-# Completion functions for Bash.
+# Bash completion function for the 'xm' binary supplied with Xen.
 #
 # Steve
 # --
 # http://www.steve.org.uk
 #
-# $Id: xm,v 1.4 2005-12-24 05:37:31 steve Exp $
+# $Id: xm,v 1.5 2005-12-24 05:38:09 steve Exp $
 #
 
 
