@@ -5,7 +5,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.26 2005-12-24 12:42:44 steve Exp $
+# $Id: Makefile,v 1.27 2005-12-24 20:05:46 steve Exp $
 
 
 #
@@ -62,7 +62,7 @@ diff:
 	cvs diff --unified 2>/dev/null
 
 
-install:
+install: manpages
 	mkdir -p ${prefix}/usr/bin
 	cp xen-create-image ${prefix}/usr/bin
 	cp xen-delete-image ${prefix}/usr/bin

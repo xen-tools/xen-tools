@@ -1,0 +1,53 @@
+#!/bin/sh
+#
+#  This script is responsible for setting up /etc/fstab upon the
+# new instance.
+#
+#  This should be a simple job, but it is complicated by some of the
+# differences between filesystems - some root filesystems will require
+# the installation of new packages, and we have to handle that here.
+#
+# Steve
+# --
+# $Id: 90-make-fstab,v 1.1 2005-12-24 20:05:46 steve Exp $
+
+
+prefix=$1
+hostname=$2
+
+
+#
+#  Options to mount the root filesystem with, we need to have
+# different options for xfs.  The default option works for ext2,
+# ext3, and reiserfs.
+#
+options="errors=remount-ro"
+
+case "${fs}" in
+    xfs)
+	options="defaults"
+	;;
+esac
+
+#
+#  Now we have the options we can create the fstab.
+#
+cat <<E_O_FSTAB > ${prefix}/etc/fstab
+/dev/sda1     /     $CONFIG{'fs'}     ${options}   0     1
+/dev/sda2     none  swap     sw                    0     0
+proc          /proc proc     defaults              0     0
+E_O_FSTAB
+
+
+#
+#  Finally we can install any required packages for the given root
+# filesystem
+#
+case "${fs}" in
+    xfs)
+	DEBIAN_FRONTEND=noninteractive chroot $prefix /usr/bin/apt-get --yes --force-yes install xfsprogs
+	;;
+    reiserfs)
+	DEBIAN_FRONTEND=noninteractive chroot $prefix /usr/bin/apt-get --yes --force-yes install reiserfsprogs
+	;;
+esac

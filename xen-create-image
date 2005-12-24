@@ -245,7 +245,8 @@ Show the version number and exit.
       xen-create-image --debootstrap='--include=screen,sudo,less'
 
   An alternative is to use the hook directory, described below, to
- run a script which will install a package.
+ run a script which will install new packages upon the system for
+ you.
 
 
 =head1 HOOKS
@@ -284,8 +285,8 @@ Show the version number and exit.
 
 =for example cut
 
-  The hook scripts are used extensively in this script, and provide
- several of the base features.  If you're looking at extending the
+  The hook scripts are used extensively by the xen-create-image
+ tool to setup the base system.  If you're looking at extending the
  processing of the images it is recommended you examine the default
  hooks.
 
@@ -299,7 +300,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.65 2005-12-24 12:56:07 steve Exp $
+ $Id: xen-create-image,v 1.66 2005-12-24 20:05:46 steve Exp $
 
 =cut
 
@@ -549,11 +550,13 @@ my $count = 1;
 my $total = $#files+1;
 foreach my $file ( @files )
 {
-    my $t = "\r[$count/$total] : ";
-    if ( $file =~ /(.*)\/(.*)/ )
+    my $name = $file;
+    if ( $name =~ /(.*)\/(.*)/ )
     {
-	$t .= $2;
+	$name = $2;
+
     }
+    my $t = "\r[$count/$total] : $name";
 
     #
     # Print the status message and do the copy.
@@ -582,59 +585,31 @@ $count = 1;
 $total = $#files + 1;
 foreach my $file ( @files )
 {
-    my $t = "\r[$count/$total] : ";
-    if ( $file =~ /(.*)\/(.*)/ )
+    my $name = $file;
+    if ( $name =~ /(.*)\/(.*)/ )
     {
-	$t .= $2;
+	$name = $2;
+
     }
-    
+    my $t = "\r[$count/$total] : $name";
+
     #
     # Print the status message and do the copy
     #
     printWideMessage( $t );
-    File::Copy::cp( $file, "/var/cache/apt/archives" );
+    
+    #
+    # But only copy if the image is new.
+    #
+    if ( ! -e "/var/cache/apt/archives/$name" )
+    {
+	File::Copy::cp( $file, "/var/cache/apt/archives" );
+    }
 
     $count += 1;
 }
 printWideMessage( "\rDone" );
 
-
-
-
-#
-#  Now setup the fstab
-#
-print "\n\nSetting up /etc/fstab\n";
-
-#
-#  XFS requires different options for the fstab file.  *sigh*.
-#
-my $options;
-if ( $CONFIG{'fs'} eq "xfs" ) 
-{
-    $options = "defaults";
-} 
-else
-{
-    $options = "errors=remount-ro";
-}
-
-
-open( TAB, ">", $dir . "/etc/fstab" );
-print TAB<<E_O_TAB;
-/dev/sda1     /     $CONFIG{'fs'}     $options     0     1
-/dev/sda2     none  swap     sw                    0     0
-proc          /proc proc     defaults              0     0
-E_O_TAB
-close( TAB );
-
-print "Done\n";
-
-
-#
-#  Install any required packages for mounting the root filesystem.
-#
-installImagePackages( $dir );
 
 
 
@@ -860,7 +835,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-create-image,v 1.65 2005-12-24 12:56:07 steve Exp $';
+	my $REVISION      = '$Id: xen-create-image,v 1.66 2005-12-24 20:05:46 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
@@ -888,7 +863,9 @@ sub checkArguments
 
   You should set a hostname with '--hostname=foo'.
 
-  This option is required.
+  This option is mandatory.  See the manual by running:
+
+xen-create-image --manual
 EOF
       ;
 	exit;
@@ -1010,52 +987,6 @@ EOF
 	exit;
     }
 }
-
-
-
-
-=head2 installImagePackages
-
-  Install any required base packages upon the new image, these will
- be the packages we need depending upon our filesystem.
-
-    xfs filesystem    -> Install xfsprogs
-    reiser filesystem -> Install reiserfsprogs
-
-=cut
-
-sub installImagePackages
-{
-    my ( $prefix ) = ( @_ );
-
-    #
-    #  Extra packages to install.
-    #
-    my $extra = "";
-
-    if ( $CONFIG{'fs'} eq "xfs" ) 
-    {
-	$extra = "xfsprogs";
-    } 
-    elsif ( $CONFIG{'fs'} eq "reiserfs" ) 
-    {
-	$extra = "reiserfsprogs";
-    }
- 
-    #
-    # Install whatever we're supposed to.
-    #
-    if ( length( $extra ) )
-    {
-	print "\n\nInstalling package into new system: $extra\n";
-    runCommand( "DEBIAN_FRONTEND=noninteractive chroot $prefix /usr/bin/apt-get --yes --force-yes install $extra" );
-	print "Done\n";
-    }
-
-}
-
-
-
 
 
 
