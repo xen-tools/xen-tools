@@ -5,7 +5,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.24 2005-12-23 01:15:07 steve Exp $
+# $Id: Makefile,v 1.25 2005-12-24 06:58:45 steve Exp $
 
 
 #
@@ -75,6 +75,7 @@ install:
 	chmod 755 ${prefix}/usr/bin/xen-list-images
 	chmod 755 ${prefix}/usr/bin/xen-update-image
 	-mkdir -p ${prefix}/etc/xen-tools
+	-mkdir -p ${prefix}/etc/xen-tools/xen-create-image.d/
 	-mkdir -p ${prefix}/usr/share/man/man8/
 	cp man/*.8.gz ${prefix}/usr/share/man/man8/
 	cp etc/xen-tools.conf ${prefix}/etc/xen-tools/
@@ -119,6 +120,7 @@ uninstall:
 	rm -f ${prefix}/usr/bin/xen-list-images
 	rm -f ${prefix}/usr/bin/xen-update-image
 	rm -f ${prefix}/etc/xen-tools/xen-tools.conf
+	-rmdir ${prefix}/etc/xen-tools/xen-create-image.d/
 	-rmdir ${prefix}/etc/xen-tools/
 	-rm -f ${prefix}/etc/bash_completion.d/xen-tools
 	-rm -f ${prefix}/etc/bash_completion.d/xm

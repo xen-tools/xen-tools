@@ -249,7 +249,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.55 2005-12-24 05:37:31 steve Exp $
+ $Id: xen-create-image,v 1.56 2005-12-24 06:58:45 steve Exp $
 
 =cut
 
@@ -714,6 +714,20 @@ print "Done\n";
 
 
 #
+#  Allow the sysadmin to create scripts to be executed
+# post-install.
+#
+my $HOOK_DIR="/etc/xen-tools/xen-create-image.d/";
+if ( -d $HOOK_DIR )
+{
+    print "Running hooks from : $HOOK_DIR\n";
+    runHooks( $HOOK_DIR, $dir );
+    print "Done\n";
+}
+
+
+
+#
 #  Clear screen before printing success message, unless
 # we're running under '--debug'.
 #
@@ -891,7 +905,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-create-image,v 1.55 2005-12-24 05:37:31 steve Exp $';
+	my $REVISION      = '$Id: xen-create-image,v 1.56 2005-12-24 06:58:45 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
@@ -1415,3 +1429,32 @@ sub getTerminalSize
     return( $width, $height );
 }
 
+
+
+=head2 runHooks
+
+  When the image has been created, but before the temporary image
+ is unmounted there is the opportunity for a number of hooks to be
+ run.
+
+  Every script inside the directory /etc/xen-tools/xen-create-image.d/
+ which is executable will be run in order.
+
+  The scripts will be given a single argument which is the directory
+ of the mounted disk image.
+
+=cut
+sub runHooks
+{
+    my ( $HOOK_DIR, $prefix ) = ( @_ );
+
+    foreach my $file ( sort( glob( $HOOK_DIR . "*" ) ) )
+    {
+	if ( -x $file )
+	{
+	    print "Running hook: $file\n";
+	    runCommand( $file . " " . $prefix );
+	    print "Done\n";
+	}
+    }
+}
