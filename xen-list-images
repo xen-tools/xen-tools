@@ -85,7 +85,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-list-images,v 1.7 2005-12-24 10:34:14 steve Exp $
+ $Id: xen-list-images,v 1.8 2005-12-24 20:38:52 steve Exp $
 
 =cut
 
@@ -276,12 +276,12 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-list-images,v 1.7 2005-12-24 10:34:14 steve Exp $';
+	my $REVISION      = '$Id: xen-list-images,v 1.8 2005-12-24 20:38:52 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
 
-	print "xen-list-images release 0.5 - CVS: $VERSION\n";
+	print "xen-list-images release 0.6 - CVS: $VERSION\n";
 	exit;
 
     }
