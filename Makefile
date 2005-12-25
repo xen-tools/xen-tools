@@ -5,7 +5,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.28 2005-12-24 20:38:52 steve Exp $
+# $Id: Makefile,v 1.29 2005-12-25 20:15:47 steve Exp $
 
 
 #
@@ -94,7 +94,7 @@ manpages-html:
 	for i in xen-*; do pod2html $$i > man/$$i.html; done
 
 
-release: clean changelog manpages
+release: update-version clean changelog manpages
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)
 	rm -f $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz
 	cp -R . $(DIST_PREFIX)/$(BASE)-$(VERSION)
@@ -135,3 +135,7 @@ uninstall:
 
 update: 
 	cvs -z3 update -A -d 2>/dev/null
+
+
+update-version:
+	perl -pi.bak -e "s/VERSION = '[0-9]\.[0-9]';/VERSION = '${VERSION}';/g" xen-*
