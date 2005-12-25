@@ -20,9 +20,10 @@ xen-create-image - Create a new virtual Debian installation for Xen.
    --dir         Specify where the output images should go.
    --dist        Specify the distribution you wish to install: Sarge/Etch/Sid.
    --fs          Specify the filesystem type to use.
-   --kernel      Set the path to the kernel to use for dom U
+   --kernel      Set the path to the kernel to use for dom U.
    --memory      Setup the amount of memory allocated to the instance.
    --mirror      Setup the mirror to use when installing Sarge.
+   --passwd      Ask for a root password during setup.
    --size        Set the size of the primary disk image.
    --swap        Set the size of the swap partition.   
 
@@ -94,6 +95,9 @@ Specify the mirror to use to the installation of Sarge, defaults to http://ftp.u
 
 =item B<--netmask>
 Set the netmask the virtual image should use.
+
+=item B<--passwd>
+Setup a password for the root account of the virtual machine.
 
 =item B<--size>  
 Specify the size of the primary drive to give the virtual image.  The size may be suffixed with either Mb, or Gb.
@@ -299,7 +303,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.68 2005-12-24 20:38:52 steve Exp $
+ $Id: xen-create-image,v 1.69 2005-12-25 15:27:18 steve Exp $
 
 =cut
 
@@ -618,11 +622,21 @@ printWideMessage( "\rDone" );
 #
 if ( -d $CONFIG{'hook_dir'} )
 {
-    print "Running hooks from : $CONFIG{'hook_dir'}\n";
+    print "\n\nRunning hooks from : $CONFIG{'hook_dir'}\n";
     runHooks( $CONFIG{'hook_dir'}, $dir );
     print "Done\n";
 }
 
+#
+#  We can not run this through hooks since it's interactive
+#
+
+if ( $CONFIG{'passwd'} ) 
+{
+    print "\nSetting root passwd:\n";
+    my $passwd_cmd = `chroot $dir /usr/bin/passwd`;
+}
+ 
 
 
 #
@@ -823,6 +837,7 @@ sub parseCommandLineArguments
 	       "debootstrap=s",\$CONFIG{'debootstrap'},
 	       "debug" ,       \$CONFIG{'debug'},
 	       "kernel=s",     \$CONFIG{'kernel'},
+	       "passwd",       \$CONFIG{'passwd'},
 	       "help",         \$HELP,
 	       "manual",       \$MANUAL,
 	       "version",      \$VERSION
@@ -834,7 +849,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-create-image,v 1.68 2005-12-24 20:38:52 steve Exp $';
+	my $REVISION      = '$Id: xen-create-image,v 1.69 2005-12-25 15:27:18 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
