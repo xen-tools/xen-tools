@@ -2,6 +2,10 @@
 #
 #  This script installs OpenSSH upon the new system.
 #
+# Steve
+# --
+# $Id: 70-install-ssh,v 1.3 2005-12-25 02:16:00 steve Exp $
+
 
 prefix=$1
 

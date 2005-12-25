@@ -3,7 +3,14 @@
 #  Install modules from the host system into the new image, and
 # ensure that 'module-init-tools' is setup.
 #
+#  This is most likely required if you're using a custom kernel
+# for your Xen system.  But even if it isn't required it can't
+# really do anything bad; just waste a bit of space.
 #
+# Steve
+# --
+# $Id: 80-install-modules,v 1.3 2005-12-25 02:16:00 steve Exp $
+
 
 
 #

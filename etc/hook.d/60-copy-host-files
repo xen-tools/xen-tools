@@ -1,8 +1,12 @@
 #!/bin/sh
 #
-#  This script copies essential files from the host to the new
+#  This script copies "essential" files from the host to the new
 # system.
 #
+# Steve
+# --
+# $Id: 60-copy-host-files,v 1.3 2005-12-25 02:16:00 steve Exp $
+
 
 
 prefix=$1
@@ -13,4 +17,12 @@ cp /etc/passwd      ${prefix}/etc/
 cp /etc/shadow      ${prefix}/etc/
 cp /etc/group       ${prefix}/etc/
 cp /etc/gshadow     ${prefix}/etc/
+
+#
+# Copy the sudoers file.  Install the package too ?
+#
+if [ -e /etc/sudoers ]; then
+    cp /etc/sudoers ${prefix}/etc/
+    chmod 440 ${prefix}/etc/sudoers
+fi
 

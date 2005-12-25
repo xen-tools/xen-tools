@@ -1,8 +1,12 @@
 #!/bin/sh
 #
-#  This script copies some files and values to the new image so
-# that it knows its own name.
+#  This script places the new systems hostname into a couple of files within
+# the new image.
 #
+# Steve
+# --
+# $Id: 50-setup-hostname,v 1.3 2005-12-25 02:16:00 steve Exp $
+
 
 
 prefix=$1

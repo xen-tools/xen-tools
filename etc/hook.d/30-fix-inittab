@@ -2,9 +2,13 @@
 #
 #  This script does two things:
 #
-#  Comments out all virtual terminals which aren't on the first console.
-#  Sets the console type for the first terminal to 'console'.
+#  1. Sets the console type for the first terminal to 'console'.
+#  2. Comments out all virtual terminals which aren't on the first console.
 #
+# Steve
+# --
+# $Id: 30-fix-inittab,v 1.3 2005-12-25 02:16:00 steve Exp $
+
 
 prefix=$1
 

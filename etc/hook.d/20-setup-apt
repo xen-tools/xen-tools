@@ -2,6 +2,10 @@
 #
 #  This script sets up the /etc/apt/sources.list for APT.
 #
+# Steve
+# --
+# $Id: 20-setup-apt,v 1.3 2005-12-25 02:16:00 steve Exp $
+
 
 prefix=$1
 
