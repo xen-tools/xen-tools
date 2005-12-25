@@ -5,7 +5,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.29 2005-12-25 20:15:47 steve Exp $
+# $Id: Makefile,v 1.30 2005-12-25 20:20:06 steve Exp $
 
 
 #
@@ -138,4 +138,4 @@ update:
 
 
 update-version:
-	perl -pi.bak -e "s/VERSION = '[0-9]\.[0-9]';/VERSION = '${VERSION}';/g" xen-*
+	perl -pi.bak -e "s/RELEASE = '[0-9]\.[0-9]';/RELEASE = '${VERSION}';/g" xen-*
