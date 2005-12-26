@@ -108,14 +108,22 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-duplicate-image,v 1.14 2005-12-25 20:20:06 steve Exp $
+ $Id: xen-duplicate-image,v 1.15 2005-12-26 15:21:53 steve Exp $
 
 =cut
 
 
 =head1 CONTRIBUTORS
 
-  Radu Spineanu
+  Contributors to this code:
+
+=over 8
+
+=item  Radu Spineanu
+
+=back
+
+
 
 =head1 LICENSE
 
@@ -433,7 +441,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-duplicate-image,v 1.14 2005-12-25 20:20:06 steve Exp $';
+	my $REVISION      = '$Id: xen-duplicate-image,v 1.15 2005-12-26 15:21:53 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
