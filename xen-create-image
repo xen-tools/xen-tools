@@ -303,7 +303,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.72 2005-12-26 15:21:53 steve Exp $
+ $Id: xen-create-image,v 1.73 2005-12-26 15:26:30 steve Exp $
 
 =cut
 
@@ -863,7 +863,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-create-image,v 1.72 2005-12-26 15:21:53 steve Exp $';
+	my $REVISION      = '$Id: xen-create-image,v 1.73 2005-12-26 15:26:30 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
@@ -940,6 +940,23 @@ EOF
 	exit;
     }
 
+    #
+    #  Make sure the filesystem the user selects is valid.
+    #
+    if ( !defined( $FILESYSTEM_CREATE{lc( $CONFIG{'fs'} ) } ) ||
+	 !defined( $FILESYSTEM_MOUNT{lc( $CONFIG{'fs'} ) } ) )
+    {
+	print "Unknown filesystem '$CONFIG{'fs'}'.  Valid choices are:\n";
+	foreach my $key (sort keys %FILESYSTEM_MOUNT ) 
+	{
+	    print "\t" . $key . "\n";
+	}
+	exit;
+    }
+
+    #
+    #  Now ensure we have the binary to create the image
+    #
     my $binpath = $FILESYSTEM_BINARY{lc( $CONFIG{'fs'} ) };
     if ( ! -x $binpath ) {
   	  print "Unable to find required executable ". $binpath. ".\n";
@@ -1001,19 +1018,6 @@ EOF
 	$CONFIG{'ip'}	     = '';
     }
 
-    #
-    #  Ensure we know how to create *and* mount the given filesystem.
-    #
-    if ( !defined( $FILESYSTEM_CREATE{lc( $CONFIG{'fs'} ) } ) ||
-	 !defined( $FILESYSTEM_MOUNT{lc( $CONFIG{'fs'} ) } ) )
-    {
-	print "Unknown filesystem.  Valid choices are:\n";
-	foreach my $key (sort keys %FILESYSTEM_MOUNT ) 
-	{
-	    print "\t" . $key . "\n";
-	}
-	exit;
-    }
 }
 
 
