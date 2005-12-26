@@ -5,7 +5,7 @@
 #
 # Steve
 # --
-# $Id: 50-setup-hostname,v 1.3 2005-12-25 02:16:00 steve Exp $
+# $Id: 50-setup-hostname,v 1.4 2005-12-26 18:33:01 steve Exp $
 
 
 
@@ -13,3 +13,20 @@ prefix=$1
 
 echo ${hostname} > ${prefix}/etc/hostname
 echo ${hostname} > ${prefix}/etc/mailname
+
+#
+#  Fixup the /etc/hosts file upon the new image for
+# machines with static IPs
+#
+if [[ -z "${dhcp}" ]]; then
+
+    # Non-IPv6 stuff.
+    grep -v '\(::\|IPv6\)' /etc/hosts > ${prefix}/etc/hosts
+
+    # New entry.
+    echo "${ip}     ${hostname}" >> ${prefix}/etc/hosts
+    echo " " >> ${prefix}/etc/hosts
+
+    # IPv6 stuff.
+    grep '\(::\|IPv6\)' /etc/hosts >> ${prefix}/etc/hosts
+fi
