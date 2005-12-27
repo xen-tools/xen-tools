@@ -20,7 +20,7 @@
 # --
 # http://www.steve.org.uk
 #
-# $Id: xen-tools,v 1.12 2005-12-25 15:29:14 steve Exp $
+# $Id: xen-tools,v 1.13 2005-12-27 16:01:58 steve Exp $
 #
 
 
@@ -33,58 +33,42 @@
 #
 _xen-create-image()
 {
-	local cur prev i exprfound onlyonce
+    local cur prev i exprfound onlyonce
 
-	COMPREPLY=()
-	cur=${COMP_WORDS[COMP_CWORD]}
-	prev=${COMP_WORDS[COMP_CWORD-1]}
+    COMPREPLY=()
+    cur=${COMP_WORDS[COMP_CWORD]}
+    prev=${COMP_WORDS[COMP_CWORD-1]}
+    opts='--broadcast --boot --debug --debootstrap --dhcp --dir --dist --fs --gateway --help --hostname --ip --manual --memory --mirror --passwd --size --swap --version'
+    
+    
+    #
+    # Complete the initial part of the IP in the configuration file.
+    ip=`grep ^gateway /etc/xen-tools/xen-tools.conf | awk -F'= '  '{print $2}'`
 
-
-	#
-        # Complete the initial part of the IP in the configuration file.
-        ip=`grep ^gateway /etc/xen-tools/xen-tools.conf | awk -F'= '  '{print $2}'`
- 
-
-	case "$prev" in
-	--fs)
-		COMPREPLY=( $( compgen -W 'xfs ext3 reiserfs'  -- \
-		"${COMP_WORDS[COMP_CWORD]}" ) )
-		return 0
-		;;
+    case "$prev" in
+	--dir)
+	    _filedir -d
+	    return 0
+	    ;;
 	--dist)
-		COMPREPLY=( $( compgen -W 'sid sarge etch'  -- \
-		"${COMP_WORDS[COMP_CWORD]}" ) )
-		return 0
-		;;
+	    COMPREPLY=( $( compgen -W 'sid sarge etch'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+	    return 0
+	    ;;
+	--fs)
+	    COMPREPLY=( $( compgen -W 'xfs ext3 reiserfs'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+	    return 0
+	    ;;
 	--ip)
-	        ip=`echo ${ip} | sed -e 's/[.][^.]*$/./'`
-	        COMPREPLY=( $(compgen -W "${ip}" -- ${cur}) )
-	        return 0
-	        ;;
-	esac
-
-	_expand || return 0
-
-	# complete using basic options
-	COMPREPLY=( $( compgen -W '--broadcast --boot --debug --debootstrap --dhcp --dir --dist --fs --gateway --help --hostname --ip --manual --memory --mirror --passwd --size --swap --version' -- $cur ) )
-
-	COMPREPLY=( $( echo "${COMP_WORDS[@]}" | \
-		       (while read -d ' ' i; do
-			    [ "$i" == "" ]
-			    continue
-			    # flatten array with spaces on either side,
-			    # otherwise we cannot grep on word boundaries of
-			    # first and last word
-			    COMPREPLY=" ${COMPREPLY[@]} "
-			    # remove word from list of completions
-			    COMPREPLY=( ${COMPREPLY/ ${i%% *} / } )
-			done
-			echo ${COMPREPLY[@]})
-		  ) )
-	
-	_filedir 
-	
-	return 0
+	    ip=`echo ${ip} | sed -e 's/[.][^.]*$/./'`
+	    COMPREPLY=( $(compgen -W "${ip}" -- ${cur}) )
+	    return 0
+	    ;;
+    esac
+    
+    if [[ ${cur} == -* ]]; then
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+        return 0
+    fi
 }
 complete -F _xen-create-image $filenames xen-create-image
 
@@ -102,13 +86,6 @@ _xen_duplicate_image()
     prev="${COMP_WORDS[COMP_CWORD-1]}"
     opts="--broadcast --dhcp --dir --from --gateway --help --hostname --ip --manual --netmask --version"
 
-    if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]] || \
-       [[ ${prev} == @(-q|--quiet) ]] ; then
-        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-        return 0
-    fi
-
-
     #
     # Complete the initial part of the IP in the configuration file.
     ip=`grep ^gateway /etc/xen-tools/xen-tools.conf | awk -F'= '  '{print $2}'`
@@ -119,11 +96,11 @@ _xen_duplicate_image()
     base=`grep ^dir /etc/xen-tools/xen-tools.conf | awk -F'= '  '{print $2}'`
     base=${base}/domains/
 
-    #
-    #
-    #
-
     case "${prev}" in
+        --dir)
+	    _filedir -d
+            return 0
+            ;;
         --from)
 	    if [[ ${base} != '/domains/' ]] ; then
 		local names=$(for x in `ls -1 ${base}`; do echo ${x} ; done )
@@ -136,11 +113,12 @@ _xen_duplicate_image()
 	    COMPREPLY=( $(compgen -W "${ip}" -- ${cur}) )
 	    return 0
 	    ;;
-        *)
-            COMPREPLY=($(compgen -W "${opts} -- ${cur}"))  
-            return 0
-        ;;
     esac
+
+    if [[ ${cur} == -* ]]; then
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+        return 0
+    fi
 }
 complete -F _xen_duplicate_image xen-duplicate-image
 
@@ -157,33 +135,29 @@ _xen_delete_image()
     prev="${COMP_WORDS[COMP_CWORD-1]}"
     opts="--dir --hostname --help --manual --version"
 
-    if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]] || \
-       [[ ${prev} == @(-q|--quiet) ]] ; then
-        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-        return 0
-    fi
- 
     #
     # First of all the base directory comes from the configuration file.
     #
     base=`grep ^dir /etc/xen-tools/xen-tools.conf | awk -F'= '  '{print $2}'`
     base=${base}/domains/
 
-    #
-    #
-    #
-
     case "${prev}" in
+        --dir)
+	    _filedir -d
+	    return 0
+            ;;
         --hostname)
 	    if [[ ${base} != '/domains/' ]] ; then
 		local names=$(for x in `ls -1 ${base}`; do echo ${x} ; done )
 		COMPREPLY=( $(compgen -W "${names}" -- ${cur}) )
 	    fi
             ;;
-        *)
-                COMPREPLY=($(compgen -W "${opts} -- ${cur}"))
-        ;;
     esac
+
+    if [[ ${cur} == -* ]]; then
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+        return 0
+    fi
 }
 complete -F _xen_delete_image xen-delete-image
 
@@ -200,33 +174,31 @@ _xen_update_image()
     prev="${COMP_WORDS[COMP_CWORD-1]}"
     opts="--dir --hostname --help --manual --version"
 
-    if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]] || \
-       [[ ${prev} == @(-q|--quiet) ]] ; then
-        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-        return 0
-    fi
- 
     #
     # First of all the base directory comes from the configuration file.
     #
     base=`grep ^dir /etc/xen-tools/xen-tools.conf | awk -F'= '  '{print $2}'`
     base=${base}/domains/
 
-    #
-    #
-    #
-
     case "${prev}" in
+        --dir)
+	    _filedir -d
+	    return 0
+            ;;
         --hostname)
 	    if [[ ${base} != '/domains/' ]] ; then
 		local names=$(for x in `ls -1 ${base}`; do echo ${x} ; done )
 		COMPREPLY=( $(compgen -W "${names}" -- ${cur}) )
+                return 0
 	    fi
             ;;
-        *)
-                COMPREPLY=($(compgen -W "${opts} -- ${cur}"))
-        ;;
     esac
+
+    if [[ ${cur} == -* ]]; then
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+        return 0
+    fi
+
 }
 complete -F _xen_update_image xen-update-image
 
@@ -243,10 +215,16 @@ _xen_list_images()
     prev="${COMP_WORDS[COMP_CWORD-1]}"
     opts="--dir --help --manual --version"
 
-    if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]]; then
+    case "${prev}" in
+        --dir)
+	    _filedir -d
+	    return 0
+            ;;
+    esac
+
+    if [[ ${cur} == -* ]]; then
         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
         return 0
     fi
- 
 }
 complete -F _xen_list_images xen-list-images
