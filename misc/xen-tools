@@ -20,7 +20,7 @@
 # --
 # http://www.steve.org.uk
 #
-# $Id: xen-tools,v 1.14 2005-12-27 16:05:55 steve Exp $
+# $Id: xen-tools,v 1.15 2005-12-27 16:07:17 steve Exp $
 #
 
 
@@ -70,7 +70,7 @@ _xen_create_image()
         return 0
     fi
 }
-complete -F _xen-create-image xen_create_image
+complete -F _xen_create_image xen_create_image
 
 
 
