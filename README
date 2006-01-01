@@ -1,14 +1,14 @@
 
 
-xen-tools v0.6
---------------
+xen-tools
+---------
 
   Xen-Tools is a collection of Perl scripts for working with Xen
  images under Debian GNU/Linux.
 
-  It is primarily aimed at people who wish to create virtual instances
- of Debian systems.  You may easily manipulate instances of Debian
- Sarge, Etch, or Sid.
+  It is aimed at users who wish to create virtual instances of Debian
+ systems.  You may easily manipulate instances of Debian Sarge, Etch,
+ or Sid.
 
   The tools all work in a similar way and each have the same assumptions.
 
@@ -26,8 +26,9 @@ xen-tools v0.6
  configuration file /etc/xen-tools/xen-tools.conf.)
 
   Beneath the root directory each virtual instance will have a
- subdirectory, named after the hostname of the image.  A 
- typical layout might look like this:
+ subdirectory, named after the hostname of the image.  
+
+  A typical layout would look like this:
 
 /home/xen/domains/
 |-- bar               [Virtual machine named 'bar']
@@ -55,12 +56,12 @@ xen-tools v0.6
 xen-create-image
 ----------------
 
-  This is a simple script which is designed to create new images
- which may be used with the Xen virtual machine.  You may create
- images of Sarge, Etch, or Sid.
+  This script is designed to create new images which may be used
+ with the Xen virtual machine.  You may create images of Sarge, 
+ Etch, or Sid.
 
-  The machines may have their networking settings created and
- you can optionally cause the new instance to boot once it has
+  The virtual images will have their networking settings created and,
+ you may optionally cause the new instance to boot once it has
  been created.
 
 
@@ -106,6 +107,7 @@ TODO
      into modules..
   3. If the new hostname is unqualified qualify it identically to the host?
 
+
 Steve
 --
-$Id: README,v 1.16 2005-12-25 02:17:02 steve Exp $
+$Id: README,v 1.17 2006-01-01 14:18:46 steve Exp $
