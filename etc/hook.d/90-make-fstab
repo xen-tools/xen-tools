@@ -9,7 +9,7 @@
 #
 # Steve
 # --
-# $Id: 90-make-fstab,v 1.2 2005-12-24 20:34:44 steve Exp $
+# $Id: 90-make-fstab,v 1.3 2006-01-01 13:49:08 steve Exp $
 
 
 prefix=$1
@@ -32,7 +32,7 @@ esac
 #  Now we have the options we can create the fstab.
 #
 cat <<E_O_FSTAB > ${prefix}/etc/fstab
-/dev/sda1     /     $CONFIG{'fs'}     ${options}   0     1
+/dev/sda1     /     ${fs}     ${options}   0     1
 /dev/sda2     none  swap     sw                    0     0
 proc          /proc proc     defaults              0     0
 E_O_FSTAB
