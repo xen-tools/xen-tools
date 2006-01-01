@@ -5,7 +5,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.30 2005-12-25 20:20:06 steve Exp $
+# $Id: Makefile,v 1.31 2006-01-01 14:16:55 steve Exp $
 
 
 #
@@ -90,6 +90,7 @@ manpages:
 	for i in xen-*; do pod2man --release=${VERSION} --official --section=8 $$i man/$$i.8; done
 	for i in man/*.8; do gzip --force -9 $$i; done
 
+
 manpages-html:
 	for i in xen-*; do pod2html $$i > man/$$i.html; done
 
@@ -104,7 +105,6 @@ release: update-version clean changelog manpages
 	mv $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz .
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)
 	gpg --armour --detach-sign $(BASE)-$(VERSION).tar.gz
-
 
 
 test:
