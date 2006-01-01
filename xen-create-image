@@ -249,8 +249,8 @@ Show the version number and exit.
       xen-create-image --debootstrap='--include=screen,sudo,less'
 
   An alternative is to use the hook directory, described below, to
- run a script which will install new packages upon the system for
- you.
+ run a script which will install new packages upon each virtual
+ image you create.
 
 
 =head1 HOOKS
@@ -288,10 +288,9 @@ Show the version number and exit.
 
 =for example cut
 
-  The hook scripts are used extensively by the xen-create-image
- tool to setup the base system.  If you're looking at extending the
- processing of the images it is recommended you examine the default
- hooks.
+  The hook scripts are used extensively by this script to setup the
+ base system.  If you're looking at extending the processing of new
+ images it is recommended you examine the default hooks.
 
 =cut
 
@@ -303,7 +302,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.74 2005-12-26 15:27:59 steve Exp $
+ $Id: xen-create-image,v 1.75 2006-01-01 14:28:32 steve Exp $
 
 =cut
 
@@ -420,8 +419,12 @@ $CONFIG{'kernel'}      = '/boot/vmlinuz-2.6.12-xenU';
 $CONFIG{'debootstrap'} = '';
 $CONFIG{'hook_dir'}    = '/etc/xen-tools/xen-create-image.d/';
 
+
+
+
+
 #
-#  Read configuration file(s) if they exist.
+#  Read the global configuration file if it exists.
 #
 if ( -e "/etc/xen-tools/xen-tools.conf" )
 {
@@ -430,7 +433,7 @@ if ( -e "/etc/xen-tools/xen-tools.conf" )
 
 
 #
-#  Parse command line arguments, these override the values from the
+#  Parse command line arguments.  These override the values from the
 # configuration file.
 #
 parseCommandLineArguments();
@@ -443,13 +446,17 @@ parseCommandLineArguments();
 checkArguments();
 
 
+#
+#  Avoid non-root users after this point.  We allowed them up till
+# now so they could read the manual, see help/version info, etc.
+#
 if ( $EFFECTIVE_USER_ID != 0 )
 {
     print <<E_O_ROOT;
 
   In order to use this script you must be running with root privileges.
 
-  (This is necessary to mount the disk images.)
+  (This is necessary to mount the disk images which are created)
 
 E_O_ROOT
 
@@ -457,6 +464,9 @@ E_O_ROOT
 }
 
 
+#
+# Show the user what to expect.
+#
 print "\nGeneral Infomation\n";
 print "--------------------\n";
 print "Hostname       :  $CONFIG{'hostname'}\n";
@@ -506,15 +516,6 @@ my $swap  = $CONFIG{'dir'} . '/domains/' . $CONFIG{'hostname'} . "/swap.img" ;
 #  Create swapfile and initialise it.
 #
 print "\n\nCreating swapfile : $swap\n";
-
-#
-# Remove any trailing Mb.
-# 
-$CONFIG{'swap'} =~ s/Mb*$//i;
-
-#
-# Build up the command, and execute it.
-#
 my $swap_cmd = "/bin/dd if=/dev/zero of=$swap bs=1024k count=$CONFIG{'swap'}";
 runCommand( $swap_cmd );
 runCommand( "/sbin/mkswap $swap" );
@@ -526,11 +527,13 @@ print "Done\n";
 #  Create disk file and initialise it.
 #
 print "\nCreating disk image: $image\n";
-$CONFIG{'size'} =~ s/Mb*$/k/i;
 my $image_cmd = "/bin/dd if=/dev/zero of=$image bs=$CONFIG{'size'} count=1 seek=1024";
 runCommand( $image_cmd );
 print "Done\n";
 
+#
+#  Make the correct filesystem.
+#
 print "\nCreating $CONFIG{'fs'} filesystem\n";
 my $create = $FILESYSTEM_CREATE{lc( $CONFIG{'fs'} ) } . $image ;
 runCommand( $create );
@@ -548,7 +551,6 @@ runCommand( $mount_cmd );
 # Test that the mount worked
 
 my $mount = runCommand( "/bin/mount" );
-
 if ( ! $mount =~ /$image/) 
 {
     print "Something went wrong trying to mount the new filesystem\n";
@@ -863,7 +865,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-create-image,v 1.74 2005-12-26 15:27:59 steve Exp $';
+	my $REVISION      = '$Id: xen-create-image,v 1.75 2006-01-01 14:28:32 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
@@ -975,7 +977,9 @@ EOF
     }
 
 
-    # Convert Gb -> Mb
+    #
+    # Convert Gb -> Mb for the disk image size, and swap size.
+    #
     if ( $CONFIG{'size'} =~ /^(\d+)Gb*$/i )
     {
 	$CONFIG{'size'} = $1 * 1024 . "M";
@@ -985,10 +989,25 @@ EOF
 	$CONFIG{'swap'} = $1 * 1024 . "M";
     }
 
+    #
     # Strip trailing Mb from the memory size.
+    #
     if ( $CONFIG{'memory'} =~ /^(\d+)Mb*$/i )
     {
 	$CONFIG{'memory'} = $1;
+    }
+
+    #
+    #  Convert the image size to k.
+    #
+    $CONFIG{'size'} =~ s/Mb*$/k/i;
+
+    #
+    # Now strip the trailing 'Mb' from the swap size.
+    #
+    if ( $CONFIG{'swap'} =~ /^(\d+)Mb*$/i )
+    {
+	$CONFIG{'swap'} = $1;
     }
 
 
@@ -1174,7 +1193,7 @@ sub runCommandWithProgress
 
   Find and return the width of the current terminal.  This makes 
  use of the optional Term::Size module.  If it isn't installed then
- we fall back to using 80.
+ we fall back to the standard size of 80x25.
 
 =cut
 
@@ -1188,9 +1207,8 @@ sub getTerminalSize
     my $height = 25;
 
     #
-    #  Test loading the Cache module, if it fails then
-    # the cache isn't enabled regardless of what the
-    # configuration file says.
+    #  Test loading the size module.  If this fails 
+    # then we will use the defaults sizes.
     #
     eval( $testModule );
     if ( $@ )
@@ -1198,6 +1216,10 @@ sub getTerminalSize
     }
     else
     {
+	#
+	# Term::Size is available, so use it to find
+	# the current terminal size.
+	#
 	($width, $height ) = Term::Size::chars();
     }
 
@@ -1209,16 +1231,17 @@ sub getTerminalSize
 =head2 runHooks
 
   When the image has been created, but before the temporary image
- is unmounted each executable script inside the hook directory will
- be executed.  (The scripts are executed "in order" which might
- be useful for users who wish to ensure some actions occur before
- others.)
+ is unmounted, each executable script inside the hook directory will
+ be executed.  
+
+  (The scripts are executed "in order" which might be useful for users
+ who wish to ensure some actions occur before others.)
 
   The scripts will be given single argument: the name of the directory
  within which the image is mounted.
 
-  (The rest of the configuration variables will be passed via 
- environmental variables.)
+  The rest of the configuration variables will be passed via 
+ environmental variables.
 
 =cut
 
