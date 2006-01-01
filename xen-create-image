@@ -302,7 +302,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.75 2006-01-01 14:28:32 steve Exp $
+ $Id: xen-create-image,v 1.76 2006-01-01 14:38:26 steve Exp $
 
 =cut
 
@@ -363,7 +363,6 @@ my $RELEASE = '0.7';
 #  The width of the current terminal, used for line-wrapping.
 #
 my ( $TERMINAL_WIDTH, $TERMINAL_HEIGHT ) = getTerminalSize();
-
 
 
 #
@@ -512,6 +511,7 @@ if ( ! -d $CONFIG{'dir'} . "/domains/" . $CONFIG{'hostname'} )
 my $image = $CONFIG{'dir'} . '/domains/' . $CONFIG{'hostname'} . "/disk.img" ;
 my $swap  = $CONFIG{'dir'} . '/domains/' . $CONFIG{'hostname'} . "/swap.img" ;
 
+
 #
 #  Create swapfile and initialise it.
 #
@@ -548,8 +548,9 @@ my $mount_cmd = "mount " . $FILESYSTEM_MOUNT{lc($CONFIG{'fs'})} . " -o loop $ima
 runCommand( $mount_cmd );
 
 
+#
 # Test that the mount worked
-
+#
 my $mount = runCommand( "/bin/mount" );
 if ( ! $mount =~ /$image/) 
 {
@@ -558,33 +559,14 @@ if ( ! $mount =~ /$image/)
 }
 
 #
-#  Copy any local .deb files into the debootstrap archive as a potential
-# speedup.
+#  Copy any local .deb files into the right location on the virtual image
+# so that "debootstrap" will use them - rather than fetching from the network.
+#
+#  This is a big caching speedup.
 #
 print "\nCopying files from host to image.\n";
 runCommand( "mkdir -p $dir/var/cache/apt/archives" );
-
-my @files =  glob( "/var/cache/apt/archives/*.deb" );
-my $count = 1;
-my $total = $#files+1;
-foreach my $file ( @files )
-{
-    my $name = $file;
-    if ( $name =~ /(.*)\/(.*)/ )
-    {
-	$name = $2;
-
-    }
-    my $t = "\r[$count/$total] : $name";
-
-    #
-    # Print the status message and do the copy.
-    #
-    printWideMessage( $t );
-    File::Copy::cp( $file, "$dir/var/cache/apt/archives" );
-
-    $count += 1;
-}
+copyDebFiles( "/var/cache/apt/archives", "$dir/var/cache/apt/archives" );
 printWideMessage( "\rDone" );
 
 
@@ -596,45 +578,20 @@ my $debootstrap = "debootstrap $CONFIG{'debootstrap'} $CONFIG{'dist'} $dir $CONF
 runCommandWithProgress( $debootstrap );
 
 #
-#  Copy these files as a speed boost for the next run.
+#  Copy the newly installed files from the virtual image to the host,
+# these will then be copied back the next time an image is created.
+# 
+#  Big win.
 #
 print "\n\nCaching debootstrap files to the host system\n";
-@files =  glob( "$dir/var/cache/apt/archives/*.deb" );
-$count = 1;
-$total = $#files + 1;
-foreach my $file ( @files )
-{
-    my $name = $file;
-    if ( $name =~ /(.*)\/(.*)/ )
-    {
-	$name = $2;
-
-    }
-    my $t = "\r[$count/$total] : $name";
-
-    #
-    # Print the status message and do the copy
-    #
-    printWideMessage( $t );
-    
-    #
-    # But only copy if the image is new.
-    #
-    if ( ! -e "/var/cache/apt/archives/$name" )
-    {
-	File::Copy::cp( $file, "/var/cache/apt/archives" );
-    }
-
-    $count += 1;
-}
+copyDebFiles( "$dir/var/cache/apt/archives", "/var/cache/apt/archives/" );
 printWideMessage( "\rDone" );
 
 
 
-
 #
-#  Allow the sysadmin to create scripts to be executed
-# post-install.
+#  Now run any hook scripts post-install.  These will be the ones
+# we ship to setup the new image, or any local additions.
 #
 if ( -d $CONFIG{'hook_dir'} )
 {
@@ -654,9 +611,8 @@ if ( $CONFIG{'passwd'} )
 }
  
 
-
 #
-#  Now unmount the image.
+#  Unmount the image; we're done.
 #
 runCommand( "umount $dir" );
 
@@ -865,7 +821,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-create-image,v 1.75 2006-01-01 14:28:32 steve Exp $';
+	my $REVISION      = '$Id: xen-create-image,v 1.76 2006-01-01 14:38:26 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
@@ -1285,5 +1241,47 @@ sub runHooks
 	    runCommand( $file . " " . $prefix );
 	    print " - done.\n";
 	}
+    }
+}
+
+
+=head2 copyDebFiles
+
+  This function will copy all the .deb files from one directory
+ to another, giving a "progress indicator" of sorts.
+
+=cut
+
+sub copyDebFiles
+{
+    my ( $source, $dest ) = ( @_ );
+
+    my @files =  glob( $source . "/*.deb" );
+    my $count = 1;
+    my $total = $#files+1;
+
+    foreach my $file ( sort @files )
+    {
+	my $name = $file;
+	if ( $name =~ /(.*)\/(.*)/ )
+	{
+	    $name = $2;
+	}
+	my $t = "\r[$count/$total] : $name";
+
+	#
+	# Print the status message and do the copy.
+	#
+	printWideMessage( $t );
+
+	#
+	#  Only copy if the file doesn't exist.
+	#
+	if ( ! ( -e $dest . "/" . $name ) )
+	{
+	    File::Copy::cp( $file, $dest );
+	}
+	
+	$count += 1;
     }
 }
