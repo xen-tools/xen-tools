@@ -2,6 +2,9 @@
 #
 #  Test that all the hook files we install are executable.
 #
+# Steve
+# --
+# $Id: hooks.t,v 1.2 2006-01-02 13:59:13 steve Exp $
 #
 
 use strict;
