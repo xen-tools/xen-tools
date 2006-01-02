@@ -6,7 +6,6 @@
 #
 # Steve
 # --
-# $Id: modules.t,v 1.6 2006-01-02 14:05:58 steve Exp $
 #
 
 use Test::More qw( no_plan );
