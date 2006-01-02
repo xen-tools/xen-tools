@@ -7,7 +7,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: modules.sh,v 1.3 2006-01-02 13:59:13 steve Exp $
+# $Id: modules.sh,v 1.4 2006-01-02 14:05:58 steve Exp $
 #
 
 cat <<EOF
@@ -19,7 +19,6 @@ cat <<EOF
 #
 # Steve
 # --
-# $Id: modules.sh,v 1.3 2006-01-02 13:59:13 steve Exp $
 #
 
 use Test::More qw( no_plan );

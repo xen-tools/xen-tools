@@ -1,9 +1,11 @@
 #!/usr/bin/perl -w
 #
-#  Test that all the Perl modules we require are available.
+#  Test that the POD we include in our scripts is valid, via the external
+# podcheck command.
 #
 # Steve
-# 
+# --
+# $Id: pod-check.t,v 1.3 2006-01-02 14:05:58 steve Exp $
 #
 
 use strict;
