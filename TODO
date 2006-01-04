@@ -7,3 +7,8 @@ TODO
   2. See if there can be simple tests made without splitting things
      into modules..
   3. If the new hostname is unqualified qualify it identically to the host?
+  4. Support LVM.
+
+Steve
+--
+$Id: TODO,v 1.2 2006-01-04 08:38:42 steve Exp $
