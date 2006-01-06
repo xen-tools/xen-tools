@@ -302,7 +302,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.76 2006-01-01 14:38:26 steve Exp $
+ $Id: xen-create-image,v 1.77 2006-01-06 16:04:53 steve Exp $
 
 =cut
 
@@ -360,7 +360,7 @@ my $RELEASE = '0.7';
 
 
 #
-#  The width of the current terminal, used for line-wrapping.
+#  The dimensions of the current terminal, used for line-wrapping.
 #
 my ( $TERMINAL_WIDTH, $TERMINAL_HEIGHT ) = getTerminalSize();
 
@@ -821,7 +821,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-create-image,v 1.76 2006-01-01 14:38:26 steve Exp $';
+	my $REVISION      = '$Id: xen-create-image,v 1.77 2006-01-06 16:04:53 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
@@ -1145,11 +1145,12 @@ sub runCommandWithProgress
 
 
 
-=head2 getTerminalWidth
+=head2 getTerminalSize
 
-  Find and return the width of the current terminal.  This makes 
- use of the optional Term::Size module.  If it isn't installed then
- we fall back to the standard size of 80x25.
+  Find and return the size and width of the current terminal.
+
+  This function makes use of the Term::Size module if available, if
+ it is not installed then we return the standard size of 80x25.
 
 =cut
 
