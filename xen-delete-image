@@ -6,7 +6,7 @@ xen-delete-image - Delete a previously created Xen instance.
 
 =head1 SYNOPSIS
 
-  xen-delete-image [options]
+  xen-delete-image [options] imageName1 imageName2 ... imageNameN  
 
   Help Options:
    --help     Show help information.
@@ -15,10 +15,8 @@ xen-delete-image - Delete a previously created Xen instance.
 
   General options:
    --dir       Specify where the output image was saved.
-   --hostname  Set the images hostname.
 
 =cut
-
 
 
 =head1 OPTIONS
@@ -26,13 +24,10 @@ xen-delete-image - Delete a previously created Xen instance.
 =over 8
 
 =item B<--dir>
-Specify the output directory image was saved.
+Specify the output directory where image were previously saved.
 
 =item B<--help>
 Show help information.
-
-=item B<--hostname>
-Specify the name of the image to remove.
 
 =item B<--manual>
 Read the manual for this script.
@@ -49,7 +44,7 @@ Show the version number and exit.
 
 
   xen-delete-image is a simple script which allows you to delete
- a Xen instance which has previously been created with the
+ Xen instances which have previously been created with the
  xen-create-image script.
 
   You must be root to run this script as it removes the Xen configuration
@@ -60,12 +55,11 @@ Show the version number and exit.
 
 =head1 AUTHOR
 
-
  Steve
  --
  http://www.steve.org.uk/
 
- $Id: xen-delete-image,v 1.10 2005-12-25 20:20:06 steve Exp $
+ $Id: xen-delete-image,v 1.11 2006-01-06 14:44:54 steve Exp $
 
 =cut
 
@@ -105,7 +99,7 @@ my $RELEASE = '0.7';
 
 
 #
-#  Read configuration file(s) if they exist.
+# Read the global configuration file if it exists.
 #
 if ( -e "/etc/xen-tools/xen-tools.conf" )
 {
@@ -138,73 +132,12 @@ E_O_ROOT
 
 
 #
-#  Make sure we have a hostname
+#  Loop over the supplied arguments, and attempt to delete each
+# image.
 #
-if ( ( !defined( $CONFIG{'hostname'} ) ) ||
-     ( ! length( $CONFIG{'hostname'} ) ) )
+while( my $name = shift )
 {
-    print "Please supply a hostname with : \n";
-    print "  xen-delete-image --hostname=foo\n";
-    exit;
-}
-
-
-#
-#  Delete the configuration file.
-#
-if ( -e "/etc/xen/" . $CONFIG{'hostname'} . ".cfg" )
-{
-    unlink( "/etc/xen/" . $CONFIG{'hostname'} . ".cfg" );
-}
-else
-{
-    print "Xen configuration file not found ";
-    print "/etc/xen/" . $CONFIG{'hostname'} . ".cfg" . "\n";
-}
-
-
-#
-#  Now the swap
-#
-if ( -e $CONFIG{'dir'} . "/domains/" . $CONFIG{'hostname'} . "/swap.img" )
-{ 
-    unlink( $CONFIG{'dir'} . "/domains/" . $CONFIG{'hostname'} . "/swap.img" );
-}
-else
-{
-    print "Swap file not found : ";
-    print  $CONFIG{'dir'} . "/domains/" . $CONFIG{'hostname'} . "/swap.img\n";
-
-}
-
-
-
-#
-#  Now the disk image
-#
-if ( -e $CONFIG{'dir'} . "/domains/" . $CONFIG{'hostname'} . "/disk.img" )
-{ 
-    unlink( $CONFIG{'dir'} . "/domains/" . $CONFIG{'hostname'} . "/disk.img" );
-}
-else
-{
-    print "Disk image file not found : ";
-    print  $CONFIG{'dir'} . "/domains/" . $CONFIG{'hostname'} . "/disk.img\n";
-
-}
-
-
-#
-#  Now remove the directory.
-#
-if ( -d $CONFIG{'dir'} . "/domains/" . $CONFIG{'hostname'} )
-{
-    rmdir ( $CONFIG{'dir'} . "/domains/" . $CONFIG{'hostname'} );
-}
-else
-{
-    print "Domain directory not found : ";
-    print $CONFIG{'dir'} . "/domains/" . $CONFIG{'hostname'} . "\n";
+    deleteXenImage( $name );
 }
 
 
@@ -212,6 +145,7 @@ else
 #  All done.
 #
 exit;
+
 
 
 
@@ -288,7 +222,6 @@ sub parseCommandLineArguments
     #  Parse options.
     #
     GetOptions(
-	       "hostname=s", \$CONFIG{'hostname'},
 	       "dir=s",      \$CONFIG{'dir'},
 	       "help",       \$HELP,
 	       "manual",     \$MANUAL,
@@ -301,7 +234,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-delete-image,v 1.10 2005-12-25 20:20:06 steve Exp $';
+	my $REVISION      = '$Id: xen-delete-image,v 1.11 2006-01-06 14:44:54 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
@@ -312,4 +245,52 @@ sub parseCommandLineArguments
     }
 }
 
+
+
+=head2 deleteXenImage
+
+  Delete the named image, and the corresponding configuration file
+ from /etc/xen.
+
+=cut
+
+sub deleteXenImage
+{
+    my ($hostname) = ( @_ );
+
+    #
+    #  Delete the configuration file.
+    #
+    if ( -e "/etc/xen/" . $hostname . ".cfg" )
+    {
+	unlink( "/etc/xen/" . $hostname . ".cfg" );
+    }
+
+
+    #
+    #  Now the swap image
+    #
+    if ( -e $CONFIG{'dir'} . "/domains/" . $hostname . "/swap.img" )
+    { 
+	unlink( $CONFIG{'dir'} . "/domains/" . $hostname . "/swap.img" );
+    }
+
+
+    #
+    #  Now the disk image
+    #
+    if ( -e $CONFIG{'dir'} . "/domains/" . $hostname . "/disk.img" )
+    { 
+	unlink( $CONFIG{'dir'} . "/domains/" . $hostname . "/disk.img" );
+    }
+
+
+    #
+    #  Now remove the directory.
+    #
+    if ( -d $CONFIG{'dir'} . "/domains/" . $hostname )
+    {
+	rmdir ( $CONFIG{'dir'} . "/domains/" . $hostname );
+    }
+}
 
