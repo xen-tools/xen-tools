@@ -17,6 +17,8 @@ xen-list-images - List all the created and configured Xen images.
   General Options:
    --dir      Specify where the output images are located.
 
+  Testing options:
+   --test     List an image even if there is no configuration file in /etc/xen
 
 =head1 OPTIONS
 
@@ -30,6 +32,9 @@ Show the scripts help information.
 
 =item B<--manual>
 Read the manual.
+
+=item B<--test>
+This flag causes an image to be listed even if the configuration file in /etc/xen doesn't exist.  It is soley used for the test script.
 
 =item B<--version>
 Show the version number and exit.
@@ -85,7 +90,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-list-images,v 1.11 2006-01-07 17:25:27 steve Exp $
+ $Id: xen-list-images,v 1.12 2006-01-07 17:38:27 steve Exp $
 
 =cut
 
@@ -125,7 +130,7 @@ my $RELEASE = '0.7';
 
 
 #
-#  Read configuration file(s) if they exist.
+#  Read the global configuration file if it exists.
 #
 if ( -e "/etc/xen-tools/xen-tools.conf" )
 {
@@ -160,7 +165,7 @@ foreach my $entry ( glob( $dir . "*" ) )
    #
    # Xen configuration file.
    #
-#   if ( -e "/etc/xen/" . $entry . ".cfg" )
+   if ( $CONFIG{'test'} or ( -e "/etc/xen/" . $entry . ".cfg" ) )
    {
        my $image = $CONFIG{'dir'} . "/domains/$entry/disk.img";
        my $swap  = $CONFIG{'dir'} . "/domains/$entry/swap.img";
@@ -269,6 +274,7 @@ sub parseCommandLineArguments
     #
     GetOptions(
 	       "dir=s",      \$CONFIG{'dir'},
+	       "test",       \$CONFIG{'test'},
 	       "help",       \$HELP,
 	       "manual",     \$MANUAL,
 	       "version",    \$VERSION
@@ -280,7 +286,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-list-images,v 1.11 2006-01-07 17:25:27 steve Exp $';
+	my $REVISION      = '$Id: xen-list-images,v 1.12 2006-01-07 17:38:27 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
