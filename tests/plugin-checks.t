@@ -5,7 +5,7 @@
 #
 # Steve
 # --
-# $Id: plugin-checks.t,v 1.1 2006-01-02 14:04:14 steve Exp $
+# $Id: plugin-checks.t,v 1.2 2006-01-07 23:23:12 steve Exp $
 #
 
 
@@ -13,7 +13,7 @@ use strict;
 use Test::More qw( no_plan );
 
 
-foreach my $file ( glob( "etc/xen-create-image.d/*" ) )
+foreach my $file ( glob( "etc/hook.d/*" ) )
 {
     ok( -e $file, "$file" );
 

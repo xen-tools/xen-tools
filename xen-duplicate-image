@@ -108,7 +108,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-duplicate-image,v 1.15 2005-12-26 15:21:53 steve Exp $
+ $Id: xen-duplicate-image,v 1.16 2006-01-07 23:23:12 steve Exp $
 
 =cut
 
@@ -157,7 +157,7 @@ my %CONFIG;
 #
 # Release number.
 #
-my $RELEASE = '0.7';
+my $RELEASE = '0.8';
 
 
 #
@@ -441,7 +441,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-duplicate-image,v 1.15 2005-12-26 15:21:53 steve Exp $';
+	my $REVISION      = '$Id: xen-duplicate-image,v 1.16 2006-01-07 23:23:12 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;

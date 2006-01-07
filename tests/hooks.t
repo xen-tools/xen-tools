@@ -4,13 +4,13 @@
 #
 # Steve
 # --
-# $Id: hooks.t,v 1.2 2006-01-02 13:59:13 steve Exp $
+# $Id: hooks.t,v 1.3 2006-01-07 23:23:12 steve Exp $
 #
 
 use strict;
 use Test::More qw( no_plan );
 
-foreach my $file ( glob( "etc/xen-create-image.d/*" ) )
+foreach my $file ( glob( "etc/hook.d/*" ) )
 {
     if ( ! -d $file )
     {
