@@ -85,7 +85,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-list-images,v 1.10 2005-12-25 20:20:06 steve Exp $
+ $Id: xen-list-images,v 1.11 2006-01-07 17:25:27 steve Exp $
 
 =cut
 
@@ -160,7 +160,7 @@ foreach my $entry ( glob( $dir . "*" ) )
    #
    # Xen configuration file.
    #
-   if ( -e "/etc/xen/" . $entry . ".cfg" )
+#   if ( -e "/etc/xen/" . $entry . ".cfg" )
    {
        my $image = $CONFIG{'dir'} . "/domains/$entry/disk.img";
        my $swap  = $CONFIG{'dir'} . "/domains/$entry/swap.img";
@@ -280,7 +280,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-list-images,v 1.10 2005-12-25 20:20:06 steve Exp $';
+	my $REVISION      = '$Id: xen-list-images,v 1.11 2006-01-07 17:25:27 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
