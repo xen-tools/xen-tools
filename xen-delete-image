@@ -59,7 +59,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-delete-image,v 1.11 2006-01-06 14:44:54 steve Exp $
+ $Id: xen-delete-image,v 1.12 2006-01-07 17:12:57 steve Exp $
 
 =cut
 
@@ -121,13 +121,11 @@ if ( $EFFECTIVE_USER_ID != 0 )
 {
     print <<E_O_ROOT;
 
-  In order to use this script you must be running with root privileges.
-
-  (This is necessary to remove the Xen configuration file beneath /etc/xen.)
+  This script is not running with root privileges, so the configuration
+ file(s) beneath /etc/xen will not be removed.
 
 E_O_ROOT
 
-    exit;
 }
 
 
@@ -234,7 +232,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-delete-image,v 1.11 2006-01-06 14:44:54 steve Exp $';
+	my $REVISION      = '$Id: xen-delete-image,v 1.12 2006-01-07 17:12:57 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
@@ -274,7 +272,6 @@ sub deleteXenImage
     { 
 	unlink( $CONFIG{'dir'} . "/domains/" . $hostname . "/swap.img" );
     }
-
 
     #
     #  Now the disk image
