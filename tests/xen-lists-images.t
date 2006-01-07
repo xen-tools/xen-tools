@@ -6,7 +6,7 @@
 #
 # Steve
 # --
-# $Id: xen-lists-images.t,v 1.1 2006-01-07 17:25:40 steve Exp $
+# $Id: xen-lists-images.t,v 1.2 2006-01-07 17:39:34 steve Exp $
 #
 
 
@@ -72,7 +72,7 @@ createImage( $domains . "/" . $two );
 #
 #
 
-my $output = `./xen-list-images --dir=$dir`;
+my $output = `./xen-list-images --dir=$dir --test`;
 
 foreach my $line ( split( /\n/, $output ) )
 {
