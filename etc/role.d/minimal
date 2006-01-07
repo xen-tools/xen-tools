@@ -7,7 +7,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: minimal,v 1.1 2006-01-07 21:54:44 steve Exp $
+# $Id: minimal,v 1.2 2006-01-07 23:21:14 steve Exp $
 
 
 prefix=$1
@@ -42,5 +42,5 @@ install_package vim
 #
 #  Remove some standard packages.
 #
-chroot ${prefix} /usr/bin/dpkg --purge ppp pppconf pppoe pppoeconf 
+chroot ${prefix} /usr/bin/dpkg --purge ppp pppconfig pppoe pppoeconf 
 chroot ${prefix} /usr/bin/dpkg --purge nano ed nvi klogd sysklogd info
