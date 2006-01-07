@@ -5,7 +5,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.32 2006-01-01 15:08:43 steve Exp $
+# $Id: Makefile,v 1.33 2006-01-07 21:54:44 steve Exp $
 
 
 #
@@ -75,9 +75,14 @@ install: manpages
 	chmod 755 ${prefix}/usr/bin/xen-list-images
 	chmod 755 ${prefix}/usr/bin/xen-update-image
 	-mkdir -p ${prefix}/etc/xen-tools
-	-mkdir -p ${prefix}/etc/xen-tools/xen-create-image.d/
-	cp etc/xen-create-image.d/[0-9]* ${prefix}/etc/xen-tools/xen-create-image.d/
-	chmod 755 ${prefix}/etc/xen-tools/xen-create-image.d/[0-9]*
+	-mkdir -p ${prefix}/etc/xen-tools/hook.d/
+	-mkdir -p ${prefix}/etc/xen-tools/role.d/
+	cp etc/hook.d/[0-9]* ${prefix}/etc/xen-tools/hook.d/
+	cp etc/role.d/gdm ${prefix}/etc/xen-tools/role.d/
+	cp etc/role.d/minimal ${prefix}/etc/xen-tools/role.d/
+	cp etc/role.d/xdm ${prefix}/etc/xen-tools/role.d/
+	chmod 755 ${prefix}/etc/xen-tools/role.d/*
+	chmod 755 ${prefix}/etc/xen-tools/hook.d/[0-9]*
 	-mkdir -p ${prefix}/usr/share/man/man8/
 	cp man/*.8.gz ${prefix}/usr/share/man/man8/
 	cp etc/xen-tools.conf ${prefix}/etc/xen-tools/

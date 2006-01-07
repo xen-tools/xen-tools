@@ -3,14 +3,13 @@
 xen-tools
 ---------
 
-  Xen-Tools is a collection of Perl scripts for working with Xen
- images under Debian GNU/Linux.
+  The xen-tools package contains a collection of Perl scripts for
+ working with Xen images under Debian GNU/Linux.
 
-  It is aimed at users who wish to create virtual instances of Debian
- systems.  You may easily manipulate instances of Debian Sarge, Etch,
- or Sid.
+  It is aimed at users who wish to create virtual instances of Debian.
+ You may easily manipulate instances of Debian Sarge, Etch, or Sid.
 
-  The tools all work in a similar way and each have the same assumptions.
+  The tools each work in a similar way and have the same assumptions.
 
   It is assumed that each virtual image will be comprised of two files
  upon the host system:
@@ -18,7 +17,7 @@ xen-tools
 	1.  A disk image to be used by Xen as the primary drive.
 	2.  A disk image to be used by Xen as the swap partition.
 
-  Images are assumed to live beneath a common  root directory,
+  Images are assumed to live beneath a single root directory,
  which is specified via the common '--dir=' command line argument 
  to each of the scripts. 
 
@@ -64,6 +63,8 @@ xen-create-image
  you may optionally cause the new instance to boot once it has
  been created.
 
+  The image may be customised by either hook scripts or a single
+ role script - see the manpage for more details.
 
 xen-clone-image
 ---------------
@@ -100,4 +101,4 @@ xen-update-image
 
 Steve
 --
-$Id: README,v 1.18 2006-01-04 08:38:06 steve Exp $
+$Id: README,v 1.19 2006-01-07 21:54:44 steve Exp $

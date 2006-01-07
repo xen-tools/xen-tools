@@ -24,6 +24,7 @@ xen-create-image - Create a new virtual Debian installation for Xen.
    --memory      Setup the amount of memory allocated to the instance.
    --mirror      Setup the mirror to use when installing Sarge.
    --passwd      Ask for a root password during setup.
+   --role        Run a role-specific script, post-install.
    --size        Set the size of the primary disk image.
    --swap        Set the size of the swap partition.   
 
@@ -98,6 +99,9 @@ Set the netmask the virtual image should use.
 
 =item B<--passwd>
 Setup a password for the root account of the virtual machine.
+
+=item B<--role>
+Run a single, specific, role-script once the image has been setup.
 
 =item B<--size>  
 Specify the size of the primary drive to give the virtual image.  The size may be suffixed with either Mb, or Gb.
@@ -248,9 +252,11 @@ Show the version number and exit.
 
       xen-create-image --debootstrap='--include=screen,sudo,less'
 
-  An alternative is to use the hook directory, described below, to
- run a script which will install new packages upon each virtual
- image you create.
+  An alternative is to use the hook directory to run a script
+ for each new image you create.
+
+  Alternatively you make take advantage of the role support - to
+ easily create different types of images for different roles.
 
 
 =head1 HOOKS
@@ -260,7 +266,7 @@ Show the version number and exit.
  before it is unmounted.
 
   To do this place executable scripts inside the "hook directory"
- /etc/xen-tools/xen-create-image.d/.
+ /etc/xen-tools/hook.d/.
 
   Each executable script in this directory will be executed in turn
  and given the name of the mount point the image is available at as
@@ -295,6 +301,37 @@ Show the version number and exit.
 =cut
 
 
+
+=head1 ROLES
+
+  The scripts which are included in the hook directory are executed
+ for every single image you create.  This can allow you to make global
+ changes to the generated image very easily, however it doesn't allow
+ you to do different thigns for different types of images.
+
+  Instead the "role" scripts are used for that purpose.  If you
+ give an argument "--role=foo" then the script /etc/xen-tools/role.d/foo
+ will be executed once the image has been created, after the hooks
+ have run.
+
+  This allows you to create different customizations for particular
+ image types.  Several role scripts have been included to provide
+ examples of different customizations:
+
+=over 8
+
+=item gdm
+Install an X11 server, using VNC and GDM
+
+=item minimal
+Customise the generated images to remove some packages.
+
+=item xdm
+Install an X11 server, using VNC and XDM
+
+=back
+
+
 =head1 AUTHOR
 
 
@@ -302,7 +339,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.77 2006-01-06 16:04:53 steve Exp $
+ $Id: xen-create-image,v 1.78 2006-01-07 21:54:44 steve Exp $
 
 =cut
 
@@ -416,7 +453,8 @@ $CONFIG{'dist'}	       = 'sarge';
 $CONFIG{'xm'}	       = '/usr/sbin/xm';
 $CONFIG{'kernel'}      = '/boot/vmlinuz-2.6.12-xenU';
 $CONFIG{'debootstrap'} = '';
-$CONFIG{'hook_dir'}    = '/etc/xen-tools/xen-create-image.d/';
+$CONFIG{'hook_dir'}    = '/etc/xen-tools/hook.d/';
+$CONFIG{'role_dir'}    = '/etc/xen-tools/role.d/';
 
 
 
@@ -471,6 +509,7 @@ print "--------------------\n";
 print "Hostname       :  $CONFIG{'hostname'}\n";
 print "Distribution   :  $CONFIG{'dist'}\n";
 print "Fileystem Type :  $CONFIG{'fs'}\n";
+$CONFIG{'role'} && print "Role           :  $CONFIG{'role'}\n";
 
 print "\nSize Information\n";
 print "----------------\n";
@@ -486,7 +525,7 @@ $CONFIG{'ip'}        && print "IP Address     : $CONFIG{'ip'}\n";
 $CONFIG{'dhcp'}      && print "IP Address     : DHCP\n";
 $CONFIG{'netmask'}   && print "Netmask        : $CONFIG{'netmask'}\n";
 $CONFIG{'gateway'}   && print "Gateway        : $CONFIG{'gateway'}\n";
-print "\n\n";
+print "\n";
 
 
 #
@@ -577,17 +616,6 @@ print "\n\nRunning debootstrap to install the system.   This will take a while!\
 my $debootstrap = "debootstrap $CONFIG{'debootstrap'} $CONFIG{'dist'} $dir $CONFIG{'mirror'}";
 runCommandWithProgress( $debootstrap );
 
-#
-#  Copy the newly installed files from the virtual image to the host,
-# these will then be copied back the next time an image is created.
-# 
-#  Big win.
-#
-print "\n\nCaching debootstrap files to the host system\n";
-copyDebFiles( "$dir/var/cache/apt/archives", "/var/cache/apt/archives/" );
-printWideMessage( "\rDone" );
-
-
 
 #
 #  Now run any hook scripts post-install.  These will be the ones
@@ -599,6 +627,35 @@ if ( -d $CONFIG{'hook_dir'} )
     runHooks( $CONFIG{'hook_dir'}, $dir );
     print "Done\n";
 }
+
+#
+#  If we have a role to execute then do that now, after the hooks
+# have finished.
+#
+if ( $CONFIG{'role'} )
+{
+    print "\n\nRunning role command : $CONFIG{'role'}\n";
+    my $role_cmd = $CONFIG{'role_dir'} . "/" . $CONFIG{'role'};
+    runCommand( $role_cmd . " " . $dir );
+    print "Done\n";
+}
+
+
+
+#
+#  Copy the newly installed files from the virtual image to the host,
+# these will then be copied back the next time an image is created.
+# 
+#  Big win.
+#
+#  NOTE: We do this after running any hook or role scripts, to ensure
+# that any packages installed by either may be cached successfully.
+#
+print "\n\nCaching debootstrap files to the host system\n";
+copyDebFiles( "$dir/var/cache/apt/archives", "/var/cache/apt/archives/" );
+printWideMessage( "\rDone" );
+
+
 
 #
 #  We can not run this through hooks since it's interactive
@@ -810,6 +867,7 @@ sub parseCommandLineArguments
 	       "debug" ,       \$CONFIG{'debug'},
 	       "kernel=s",     \$CONFIG{'kernel'},
 	       "passwd",       \$CONFIG{'passwd'},
+	       "role=s",       \$CONFIG{'role'},
 	       "help",         \$HELP,
 	       "manual",       \$MANUAL,
 	       "version",      \$VERSION
@@ -821,7 +879,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-create-image,v 1.77 2006-01-06 16:04:53 steve Exp $';
+	my $REVISION      = '$Id: xen-create-image,v 1.78 2006-01-07 21:54:44 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
@@ -993,6 +1051,25 @@ EOF
 	$CONFIG{'ip'}	     = '';
     }
 
+    
+    #
+    #  If the user is executing a role-script make sure it exists.
+    #
+    if ( $CONFIG{'role'} )
+    {
+	if ( ! -e $CONFIG{'role_dir'} . "/" . $CONFIG{'role'} )
+	{
+	    print "The role you've chosen '$CONFIG{'role'}' doesn't have a script.\n";
+	    print "Available roles are:\n\n";
+	    foreach my $file ( glob $CONFIG{'role_dir'} . "/*" )
+	    {
+		if ( $file =~ /(.*)\/(.*)/ ) { $file = $2; }
+
+		print "\t" . $file . "\n";
+	    }
+	    exit;
+	}
+    }
 }
 
 

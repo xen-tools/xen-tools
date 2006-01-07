@@ -1,0 +1,49 @@
+#!/bin/sh
+#
+#  Configure the new image to be a GDM VNC server.
+#
+# Steve
+# --
+# http://www.steve.org.uk/
+#
+# $Id: xdm,v 1.1 2006-01-07 21:54:44 steve Exp $
+
+
+prefix=$1
+
+
+
+#
+#  This function installs a single package into the chroot, forcing
+# the installation to be non-interactive.
+#
+function install_package
+{
+    package=$1
+    
+    DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes --force-yes install $package
+
+}
+
+
+
+
+#
+#  Update APT lists.
+#
+chroot ${prefix} /usr/bin/apt-get update
+
+#
+#  Install the packages
+#
+install_package xserver-xfree86
+install_package vncserver
+install_package xfonts-100dpi
+install_package xfonts-75dpi
+install_package xfonts-base
+install_package rxvt
+install_package xdm
+install_package icewm-experimental
+
+
+echo ':0 /usr/bin/Xvnc /usr/bin/Xvnc -geometry 1024x768 -depth 24' >  ${prefix}/usr/X11R6/lib/X11/xdm/Xservers
