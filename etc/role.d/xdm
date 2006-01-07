@@ -6,7 +6,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: xdm,v 1.1 2006-01-07 21:54:44 steve Exp $
+# $Id: xdm,v 1.2 2006-01-07 22:36:24 steve Exp $
 
 
 prefix=$1
@@ -46,4 +46,14 @@ install_package xdm
 install_package icewm-experimental
 
 
-echo ':0 /usr/bin/Xvnc /usr/bin/Xvnc -geometry 1024x768 -depth 24' >  ${prefix}/usr/X11R6/lib/X11/xdm/Xservers
+#
+#  Remove the default settings.
+#
+rm ${prefix}/etc/X11/xdm/Xserver
+rm ${prefix}/etc/X11/xdm/Xservers
+
+#
+#  Setup XDM to use the VNC server we installed.
+#
+/bin/echo ':0 /usr/bin/Xvnc /usr/bin/Xvnc -geometry 1024x768 -depth 24' > \
+  ${prefix}/usr/X11R6/lib/X11/xdm/Xservers
