@@ -20,7 +20,7 @@
 # --
 # http://www.steve.org.uk
 #
-# $Id: xen-tools,v 1.16 2006-01-06 14:44:54 steve Exp $
+# $Id: xen-tools,v 1.17 2006-01-07 21:41:16 steve Exp $
 #
 
 
@@ -33,12 +33,12 @@
 #
 _xen_create_image()
 {
-    local cur prev ip
+    local cur prev ip roles
 
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
     prev=${COMP_WORDS[COMP_CWORD-1]}
-    opts='--broadcast --boot --debug --debootstrap --dhcp --dir --dist --fs --gateway --help --hostname --ip --manual --memory --mirror --passwd --size --swap --version'
+    opts='--broadcast --boot --debug --debootstrap --dhcp --dir --dist --fs --gateway --help --hostname --ip --manual --memory --mirror --passwd --role --size --swap --version'
     
     
     #
@@ -63,6 +63,11 @@ _xen_create_image()
 	    COMPREPLY=( $(compgen -W "${ip}" -- ${cur}) )
 	    return 0
 	    ;;
+	--role)
+	    roles=$(for x in `ls -1 /etc/xen-tools/role.d`; do echo ${x} ; done )
+	    COMPREPLY=( $( compgen -W '${roles}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+	    return 0
+	    ;;
     esac
     
     if [[ ${cur} == -* ]]; then
@@ -70,7 +75,7 @@ _xen_create_image()
         return 0
     fi
 }
-complete -F _xen_create_image xen_create_image
+complete -F _xen_create_image xen-create-image
 
 
 
@@ -150,7 +155,7 @@ _xen_delete_image()
     #
     # Complete the options + all available hostnames.
     #
-    opts="--dir --help --manual --version ${names}"
+    opts="--dir --help --manual --test --version ${names}"
 
     case "${prev}" in
         --dir)
@@ -222,7 +227,7 @@ _xen_list_images()
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
-    opts="--dir --help --manual --version"
+    opts="--dir --help --manual --test --version"
 
     case "${prev}" in
         --dir)
