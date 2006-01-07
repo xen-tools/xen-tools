@@ -5,7 +5,7 @@
 #
 # Steve
 # --
-# $Id: xen-delete-image.t,v 1.1 2006-01-07 17:12:57 steve Exp $
+# $Id: xen-delete-image.t,v 1.2 2006-01-07 17:41:58 steve Exp $
 #
 
 
@@ -76,7 +76,7 @@ close( IMAGE );
 #  So we need to run the deletion script and verify the images
 # are removed correctly.
 #
-`./xen-delete-image --dir=$dir $hostname`;
+`./xen-delete-image --test --dir=$dir $hostname`;
 
 
 #
