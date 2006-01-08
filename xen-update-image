@@ -14,7 +14,7 @@ xen-update-image - Update the software installed upon offline Xen images.
    --version   Show the version number and exit.
 
   General Options:
-   --dir       Specify where the output image was saved.
+   --dir       Specify the directory which contains the image(s).
 
 =cut
 
@@ -25,7 +25,7 @@ xen-update-image - Update the software installed upon offline Xen images.
 =over 8
 
 =item B<--dir>
-Specify the output directory image was saved.
+Specify the directory which contains the image(s).
 
 =item B<--help>
 Show the script help
@@ -60,6 +60,19 @@ Show the version number and exit.
 =cut
 
 
+=head1 EXAMPLES
+
+  The following assumes there are two images which are not currently
+ running.  The images are called 'test.my.flat', and 'x11.my.flat'.
+
+  Updating both images can be accomplished by executing:
+
+
+     xen-update-images --dir=/home/xen test.my.flat x11.my.flat
+
+=cut
+
+
 =head1 AUTHOR
 
 
@@ -67,7 +80,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-update-image,v 1.13 2006-01-08 02:13:31 steve Exp $
+ $Id: xen-update-image,v 1.14 2006-01-08 23:42:45 steve Exp $
 
 =cut
 
@@ -128,8 +141,9 @@ if ( $EFFECTIVE_USER_ID != 0 )
 {
     print <<E_O_ROOT;
 
-  This script is not running with root privileges, so the configuration
- which means that the images may not be mounted, or upgraded.
+  This script is not running with root privileges.
+
+  root privileges are required to successfully mount the disk images.
 
 E_O_ROOT
 
@@ -288,7 +302,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-update-image,v 1.13 2006-01-08 02:13:31 steve Exp $';
+	my $REVISION      = '$Id: xen-update-image,v 1.14 2006-01-08 23:42:45 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
