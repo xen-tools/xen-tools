@@ -75,7 +75,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-delete-image,v 1.16 2006-01-08 02:01:36 steve Exp $
+ $Id: xen-delete-image,v 1.17 2006-01-08 02:12:47 steve Exp $
 
 =cut
 
@@ -88,6 +88,7 @@ This module is free software;
 you can redistribute it and/or modify it under
 the same terms as Perl itself.
 The LICENSE file contains the full text of the license.
+
 
 =cut
 
@@ -250,7 +251,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-delete-image,v 1.16 2006-01-08 02:01:36 steve Exp $';
+	my $REVISION      = '$Id: xen-delete-image,v 1.17 2006-01-08 02:12:47 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
