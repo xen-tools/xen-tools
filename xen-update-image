@@ -67,7 +67,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-update-image,v 1.11 2006-01-08 02:07:51 steve Exp $
+ $Id: xen-update-image,v 1.12 2006-01-08 02:10:52 steve Exp $
 
 =cut
 
@@ -276,7 +276,6 @@ sub parseCommandLineArguments
     #  Parse options.
     #
     GetOptions(
-	       "hostname=s", \$CONFIG{'hostname'},
 	       "dir=s",      \$CONFIG{'dir'},
 	       "help",       \$HELP,
 	       "manual",     \$MANUAL,
@@ -288,7 +287,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-update-image,v 1.11 2006-01-08 02:07:51 steve Exp $';
+	my $REVISION      = '$Id: xen-update-image,v 1.12 2006-01-08 02:10:52 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
