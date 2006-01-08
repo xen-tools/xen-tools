@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-xen-delete-image - Delete a previously created Xen instance.
+xen-delete-image - Delete previously created Xen instances.
 
 =head1 SYNOPSIS
 
@@ -36,7 +36,7 @@ Show help information.
 Read the manual for this script.
 
 =item B<--test>
-Don not complain, or exit, if the script is not executed by root.
+Don not complain, or exit, if the script is not executed by the root user.
 
 =item B<--version>
 Show the version number and exit.
@@ -50,11 +50,20 @@ Show the version number and exit.
 
 
   xen-delete-image is a simple script which allows you to delete
- Xen instances which have previously been created with the
- xen-create-image script.
+ Xen instances which have previously been created.
 
   You must be root to run this script as it removes the Xen configuration
- file from /etc/xen.
+ file from /etc/xen.  (When invoked with the '--test' flag the script will
+ continue running, but will fail to remove anything which the user does
+ not have permission to delete.)
+
+
+=head1 EXAMPLE
+
+  Assuming that you have three images 'foo', 'bar', and 'baz', stored
+ beneath /home/xen the first two may be deleted via:
+
+    xen-delete-image --dir=/home/xen foo bar
 
 =cut
 
@@ -65,7 +74,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-delete-image,v 1.14 2006-01-07 23:23:12 steve Exp $
+ $Id: xen-delete-image,v 1.15 2006-01-08 01:57:43 steve Exp $
 
 =cut
 
@@ -240,7 +249,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-delete-image,v 1.14 2006-01-07 23:23:12 steve Exp $';
+	my $REVISION      = '$Id: xen-delete-image,v 1.15 2006-01-08 01:57:43 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
