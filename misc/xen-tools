@@ -20,7 +20,7 @@
 # --
 # http://www.steve.org.uk
 #
-# $Id: xen-tools,v 1.17 2006-01-07 21:41:16 steve Exp $
+# $Id: xen-tools,v 1.18 2006-01-08 02:10:00 steve Exp $
 #
 
 
@@ -182,11 +182,10 @@ complete -F _xen_delete_image xen-delete-image
 #
 _xen_update_image() 
 {
-    local cur prev opts base
+    local cur prev opts base names
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
-    opts="--dir --hostname --help --manual --version"
 
     #
     # First of all the base directory comes from the configuration file.
@@ -194,25 +193,24 @@ _xen_update_image()
     base=`grep ^dir /etc/xen-tools/xen-tools.conf | awk -F'= '  '{print $2}'`
     base=${base}/domains/
 
+    #
+    # If we have a base which isn't empty then find all the hosts
+    #
+    if [[ ${base} != '/domains/' ]]; then
+	names=$(for x in `ls -1 ${base}`; do echo -n "${x} " ; done )
+    fi
+
+    opts="--dir --help --manual --version ${names}"
+
     case "${prev}" in
         --dir)
 	    _filedir -d
 	    return 0
             ;;
-        --hostname)
-	    if [[ ${base} != '/domains/' ]] ; then
-		local names=$(for x in `ls -1 ${base}`; do echo ${x} ; done )
-		COMPREPLY=( $(compgen -W "${names}" -- ${cur}) )
-                return 0
-	    fi
-            ;;
     esac
 
-    if [[ ${cur} == -* ]]; then
-        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-        return 0
-    fi
-
+    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+    return 0
 }
 complete -F _xen_update_image xen-update-image
 
