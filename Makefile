@@ -5,7 +5,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.34 2006-01-07 23:23:12 steve Exp $
+# $Id: Makefile,v 1.35 2006-01-08 21:37:05 steve Exp $
 
 
 #
@@ -50,7 +50,7 @@ clean:
 	@find . -name '*.bak' -exec rm \{\} \;
 	@find . -name '*.tmp' -exec rm \{\} \;
 	@find . -name 'tags' -exec rm \{\} \;
-	@find . -name '*.8' -exec rm \{\} \;
+	@find . -name '*.8.gz' -exec rm \{\} \;
 	@find man -name '*.html' -exec rm \{\} \;
 
 
