@@ -2,11 +2,11 @@
 
 =head1 NAME
 
-xen-update-image - Update the software installed upon the given image.
+xen-update-image - Update the software installed upon offline Xen images.
 
 =head1 SYNOPSIS
 
-  xen-update-image [options]
+  xen-update-image [options] imageName1 imageName2 .. imageNameN
 
   Help Options:
    --help      Show this scripts help information.
@@ -15,7 +15,6 @@ xen-update-image - Update the software installed upon the given image.
 
   General Options:
    --dir       Specify where the output image was saved.
-   --hostname  Set the images hostname.
 
 =cut
 
@@ -31,9 +30,6 @@ Specify the output directory image was saved.
 =item B<--help>
 Show the script help
 
-=item B<--hostname>
-Specify the name of the image to remove.
-
 =item B<--manual>
 Read the manual
 
@@ -48,11 +44,8 @@ Show the version number and exit.
 
 =head1 DESCRIPTION
 
-
   xen-update-image is a simple script which allows you to update
- a Xen instances of Debian Sarge which has been created with
- xen-create-image.
-
+ a Xen image of Debian which has been created with xen-create-image.
 
   It does this by mounting the image inside a temporary directory
  then running:
@@ -61,6 +54,8 @@ Show the version number and exit.
 
       apt-get upgrade
 
+  If the image is already running within Xen this will cause corruption
+ otherwise it will allow you to update your image without booting it.
 
 =cut
 
@@ -72,7 +67,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-update-image,v 1.10 2006-01-07 23:23:12 steve Exp $
+ $Id: xen-update-image,v 1.11 2006-01-08 02:07:51 steve Exp $
 
 =cut
 
@@ -90,13 +85,14 @@ The LICENSE file contains the full text of the license.
 
 
 use strict;
+use English;
 use File::Temp qw/ tempdir /;
 use Getopt::Long;
 use Pod::Usage;
 
 
 #
-#  Configuration options, initially read from the configuration files
+#  Configuration options, initially read from the configuration file
 # but may be overridden by the command line.
 #
 #  Command line flags *always* take precedence over the configuration files(s).
@@ -110,7 +106,7 @@ my $RELEASE = '0.8';
 
 
 #
-#  Read configuration file(s) if they exist.
+#  Read configuration file if it exists.
 #
 if ( -e "/etc/xen-tools/xen-tools.conf" )
 {
@@ -125,47 +121,30 @@ if ( -e "/etc/xen-tools/xen-tools.conf" )
 parseCommandLineArguments();
 
 
-if ( ! $CONFIG{'hostname'} )
+#
+#  Abort if non-root user.
+#
+if ( $EFFECTIVE_USER_ID != 0 )
 {
-    print "You must specify a hostname with --hostname=xx\n";
+    print <<E_O_ROOT;
+
+  This script is not running with root privileges, so the configuration
+ which means that the images may not be mounted, or upgraded.
+
+E_O_ROOT
+
     exit;
 }
-#
-#  Find the disk image.
-#
-my $image =  $CONFIG{'dir'} . "/domains/" . $CONFIG{'hostname'} . "/disk.img";
 
-if ( ! -e $image )
+
+
+#
+#  Loop over the supplied arguments, and attempt to update each image.
+#
+while( my $name = shift )
 {
-    print "Disk image '$image' for host '$CONFIG{'hostname'}' not found\n";
-    exit;
+    updateXenImage( $name );
 }
-
-
-#
-#  Create a temporary directory to mount the image upon securely.
-#
-my $tmp = tempdir( CLEANUP => 1 );
-my $mount_cmd = "mount -t auto -o loop $image $tmp";
-`$mount_cmd`;
-
-#
-#  Now run the update command.
-#
-system( "chroot $tmp /usr/bin/apt-get update" );
-
-
-#
-#  Now upgrade
-#
-system( "DEBIAN_FRONTEND=noninteractive  chroot $tmp /usr/bin/apt-get upgrade --yes --force-yes" );
-
-
-#
-#  Unmount
-#
-`umount $tmp`;
-
 
 
 #
@@ -173,6 +152,55 @@ system( "DEBIAN_FRONTEND=noninteractive  chroot $tmp /usr/bin/apt-get upgrade --
 #
 exit;
 
+
+
+=head2 updateXenImage
+
+  Actually perform the updates of the relevant image.
+
+=cut 
+sub updateXenImage
+{
+    my ( $name ) = ( @_ );
+
+
+    #
+    #  Find the disk image.
+    #
+    my $image =  $CONFIG{'dir'} . "/domains/" . $name . "/disk.img";
+    
+    if ( ! -e $image )
+    {
+	print "Disk image '$image' for host '$name' not found\n";
+	exit;
+    }
+
+
+    #
+    #  Create a temporary directory to mount the image upon securely.
+    #
+    my $tmp = tempdir( CLEANUP => 1 );
+    my $mount_cmd = "mount -t auto -o loop $image $tmp";
+    `$mount_cmd`;
+
+    #
+    #  Now run the update command.
+    #
+    system( "chroot $tmp /usr/bin/apt-get update" );
+
+
+    #
+    #  Now upgrade
+    #
+    system( "DEBIAN_FRONTEND=noninteractive  chroot $tmp /usr/bin/apt-get upgrade --yes --force-yes" );
+    
+
+    #
+    #  Unmount
+    #
+    `umount $tmp`;
+
+}
 
 
 =head2 readConfigurationFile
@@ -260,7 +288,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-update-image,v 1.10 2006-01-07 23:23:12 steve Exp $';
+	my $REVISION      = '$Id: xen-update-image,v 1.11 2006-01-08 02:07:51 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
