@@ -14,7 +14,7 @@ xen-delete-image - Delete previously created Xen instances.
    --version  Show the version information and exit.
 
   General options:
-   --dir      Specify where the output image was saved.
+   --dir      Specify the output directory where images were previously saved.
 
   Testing options:
    --test     Don't complain if we're not invoked by root.
@@ -27,7 +27,7 @@ xen-delete-image - Delete previously created Xen instances.
 =over 8
 
 =item B<--dir>
-Specify the output directory where image were previously saved.
+Specify the output directory where images were previously saved.
 
 =item B<--help>
 Show help information.
@@ -75,7 +75,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-delete-image,v 1.17 2006-01-08 02:12:47 steve Exp $
+ $Id: xen-delete-image,v 1.18 2006-01-08 23:43:21 steve Exp $
 
 =cut
 
@@ -251,7 +251,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-delete-image,v 1.17 2006-01-08 02:12:47 steve Exp $';
+	my $REVISION      = '$Id: xen-delete-image,v 1.18 2006-01-08 23:43:21 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
