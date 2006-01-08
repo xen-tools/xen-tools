@@ -42,6 +42,9 @@ Boot the new instance immediately after creating it.
 =item B<--dhcp>
 Specify that the virtual image should use DHCP to obtain its networking information.  Conflicts with B<--ip>.
 
+=item B<--dir>
+Specify where the output images should go.
+
 =item B<--gateway>
 Specify the gateway address for the virtual image, only useful if DHCP is not used.
 
@@ -111,7 +114,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-duplicate-image,v 1.17 2006-01-08 02:01:36 steve Exp $
+ $Id: xen-duplicate-image,v 1.18 2006-01-08 23:43:55 steve Exp $
 
 =cut
 
@@ -444,7 +447,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-duplicate-image,v 1.17 2006-01-08 02:01:36 steve Exp $';
+	my $REVISION      = '$Id: xen-duplicate-image,v 1.18 2006-01-08 23:43:55 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
