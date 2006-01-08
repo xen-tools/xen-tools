@@ -48,7 +48,6 @@ Show the version number and exit.
 
 =head1 DESCRIPTION
 
-
   xen-delete-image is a simple script which allows you to delete
  Xen instances which have previously been created.
 
@@ -57,8 +56,10 @@ Show the version number and exit.
  continue running, but will fail to remove anything which the user does
  not have permission to delete.)
 
+=cut
 
-=head1 EXAMPLE
+
+=head1 EXAMPLES
 
   Assuming that you have three images 'foo', 'bar', and 'baz', stored
  beneath /home/xen the first two may be deleted via:
@@ -74,7 +75,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-delete-image,v 1.15 2006-01-08 01:57:43 steve Exp $
+ $Id: xen-delete-image,v 1.16 2006-01-08 02:01:36 steve Exp $
 
 =cut
 
@@ -249,7 +250,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-delete-image,v 1.15 2006-01-08 01:57:43 steve Exp $';
+	my $REVISION      = '$Id: xen-delete-image,v 1.16 2006-01-08 02:01:36 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;

@@ -23,7 +23,6 @@ xen-duplicate-image - Duplicate an existing Xen instance.
    --ip       Setup the IP address for the image.
    --netmask  Setup the netmask the host should use.
 
-
   Mandatory options:
 
    --hostname Set the images hostname.
@@ -72,13 +71,13 @@ Show the version number and exit.
 =head1 EXAMPLES
 
   The following will copy the existing image vm01, and
- save it as vm02 - with DHCP enabled.
+ save it as vm02, updating the networking details of the new
+ image so that DHCP is enabled for network configuraion.
 
      xen-duplicate-image --dir=/home/xen \
         --from=vm01  --hostname=vm02.my.flat --dhcp
 
 =cut
-
 
 
 =head1 DESCRIPTION
@@ -87,19 +86,23 @@ Show the version number and exit.
  Xen instances of Debian Sarge.  The new image will be an identical
  copy of an existing image.
 
+=cut
+
 
 =head1 CONFIGURATION
 
   To reduce the length of the command line each of the options may
  be specified inside a configuration file.
 
-  The script will check two files for options:
-
-   1. /etc/xen-tools/xen-tools.conf
-   2. ~/.xen-tools.conf
+  The script will check the configuratione file /etc/xen-tools/xen-tools.conf
+ for options.
 
   The files may contain comments, which begin with the hash '#' character
- and are otherwise of the format 'key = value.
+ and are otherwise of the format 'key = value.  A more detailed description
+ may be found in the manpage for the script 'xen-create-image'.
+
+=cut
+
 
 =head1 AUTHOR
 
@@ -108,7 +111,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-duplicate-image,v 1.16 2006-01-07 23:23:12 steve Exp $
+ $Id: xen-duplicate-image,v 1.17 2006-01-08 02:01:36 steve Exp $
 
 =cut
 
@@ -167,7 +170,7 @@ $CONFIG{'xm'} 		= '/usr/sbin/xm';
 
 
 #
-#  Read configuration file(s) if they exist.
+#  Read the global configuration file if it exists.
 #
 if ( -e "/etc/xen-tools/xen-tools.conf" )
 {
@@ -441,7 +444,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-duplicate-image,v 1.16 2006-01-07 23:23:12 steve Exp $';
+	my $REVISION      = '$Id: xen-duplicate-image,v 1.17 2006-01-08 02:01:36 steve Exp $';
 	$VERSION = join (' ', (split (' ', $REVISION))[2]);
 	$VERSION =~ s/,v\b//;
 	$VERSION =~ s/(\S+)$/$1/;
