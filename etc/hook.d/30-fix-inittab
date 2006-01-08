@@ -7,7 +7,7 @@
 #
 # Steve
 # --
-# $Id: 30-fix-inittab,v 1.3 2005-12-25 02:16:00 steve Exp $
+# $Id: 30-fix-inittab,v 1.4 2006-01-08 01:53:33 steve Exp $
 
 
 prefix=$1
