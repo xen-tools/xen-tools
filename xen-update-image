@@ -80,7 +80,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-update-image,v 1.15 2006-01-10 23:06:00 steve Exp $
+ $Id: xen-update-image,v 1.16 2006-01-10 23:09:28 steve Exp $
 
 =cut
 
@@ -302,9 +302,9 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.15 $';
+	my $REVISION      = '$Revision: 1.16 $';
 
-	if ( $REVISION =~ / ([0-9.]+) / )
+	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
 	    $REVISION = $1;
 	}

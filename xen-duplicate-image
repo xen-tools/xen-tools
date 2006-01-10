@@ -114,7 +114,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-duplicate-image,v 1.18 2006-01-08 23:43:55 steve Exp $
+ $Id: xen-duplicate-image,v 1.19 2006-01-10 23:09:28 steve Exp $
 
 =cut
 
@@ -447,12 +447,14 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-duplicate-image,v 1.18 2006-01-08 23:43:55 steve Exp $';
-	$VERSION = join (' ', (split (' ', $REVISION))[2]);
-	$VERSION =~ s/,v\b//;
-	$VERSION =~ s/(\S+)$/$1/;
+	my $REVISION      = '$Revision: 1.19 $';
 
-	print "xen-duplicate-image release $RELEASE - CVS: $VERSION\n";
+	if ( $REVISION =~ /1.([0-9.]+) / )
+	{
+	    $REVISION = $1;
+	}
+
+	print "xen-duplicate-image release $RELEASE - CVS: $REVISION\n";
 	exit;
 
     }
