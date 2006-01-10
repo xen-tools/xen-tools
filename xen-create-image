@@ -339,7 +339,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.80 2006-01-08 23:46:01 steve Exp $
+ $Id: xen-create-image,v 1.81 2006-01-10 23:06:00 steve Exp $
 
 =cut
 
@@ -879,10 +879,12 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Id: xen-create-image,v 1.80 2006-01-08 23:46:01 steve Exp $';
-	$VERSION = join (' ', (split (' ', $REVISION))[2]);
-	$VERSION =~ s/,v\b//;
-	$VERSION =~ s/(\S+)$/$1/;
+	my $REVISION      = '$Revision: 1.81 $';
+
+	if ( $REVISION =~ / ([0-9.]+) / )
+	{
+	    $REVISION = $1;
+	}
 
 	print "xen-create-image release $RELEASE - CVS: $VERSION\n";
 	exit;
