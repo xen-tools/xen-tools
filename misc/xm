@@ -7,7 +7,7 @@
 # --
 # http://www.steve.org.uk
 #
-# $Id: xm,v 1.5 2005-12-24 05:38:09 steve Exp $
+# $Id: xm,v 1.6 2006-01-11 01:06:56 steve Exp $
 #
 
 
@@ -43,7 +43,7 @@ _xm()
 	    return 0
             ;;
         create)
-	    local names=$(for x in `ls -1 /etc/xen/*.cfg`; do echo ${x/\/etc\/xen\//} ; done )
+	    local names=$(for x in `ls -1 /etc/xen/*.cfg 2>/dev/null`; do echo ${x/\/etc\/xen\//} ; done )
 	    COMPREPLY=( $(compgen -W "${names}" -- ${cur}) )
             return 0
             ;;
