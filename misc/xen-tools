@@ -20,7 +20,7 @@
 # --
 # http://www.steve.org.uk
 #
-# $Id: xen-tools,v 1.18 2006-01-08 02:10:00 steve Exp $
+# $Id: xen-tools,v 1.19 2006-01-11 01:07:56 steve Exp $
 #
 
 
@@ -64,7 +64,7 @@ _xen_create_image()
 	    return 0
 	    ;;
 	--role)
-	    roles=$(for x in `ls -1 /etc/xen-tools/role.d`; do echo ${x} ; done )
+	    roles=$(for x in `ls -1 /etc/xen-tools/role.d 2>/dev/null`; do echo ${x} ; done )
 	    COMPREPLY=( $( compgen -W '${roles}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
 	    return 0
 	    ;;
@@ -108,7 +108,7 @@ _xen_duplicate_image()
             ;;
         --from)
 	    if [[ ${base} != '/domains/' ]] ; then
-		local names=$(for x in `ls -1 ${base}`; do echo ${x} ; done )
+		local names=$(for x in `ls -1 ${base} 2>/dev/null`; do echo ${x} ; done )
 		COMPREPLY=( $(compgen -W "${names}" -- ${cur}) )
 	    fi
             return 0
@@ -149,7 +149,7 @@ _xen_delete_image()
     # If we have a base which isn't empty then find all the hosts
     #
     if [[ ${base} != '/domains/' ]]; then
-	names=$(for x in `ls -1 ${base}`; do echo -n "${x} " ; done )
+	names=$(for x in `ls -1 ${base} 2>/dev/null`; do echo -n "${x} " ; done )
     fi
 
     #
@@ -197,7 +197,7 @@ _xen_update_image()
     # If we have a base which isn't empty then find all the hosts
     #
     if [[ ${base} != '/domains/' ]]; then
-	names=$(for x in `ls -1 ${base}`; do echo -n "${x} " ; done )
+	names=$(for x in `ls -1 ${base} 2>/dev/null`; do echo -n "${x} " ; done )
     fi
 
     opts="--dir --help --manual --version ${names}"
