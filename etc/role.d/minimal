@@ -7,7 +7,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: minimal,v 1.2 2006-01-07 23:21:14 steve Exp $
+# $Id: minimal,v 1.3 2006-01-16 13:19:46 steve Exp $
 
 
 prefix=$1
@@ -27,6 +27,16 @@ function install_package
 }
 
 
+#
+#  This function removes the given package.
+#
+function remove_package
+{
+    package=$1
+
+    chroot ${prefix} /usr/bin/dpkg --purge ${package}
+}
+
 
 #
 #  Install some new packages - do this first to avoid dependency errors.
@@ -42,5 +52,30 @@ install_package vim
 #
 #  Remove some standard packages.
 #
-chroot ${prefix} /usr/bin/dpkg --purge ppp pppconfig pppoe pppoeconf 
-chroot ${prefix} /usr/bin/dpkg --purge nano ed nvi klogd sysklogd info
+
+# PPP stuff.
+remove_package pppconfig
+remove_package pppoeconf
+remove_package pppoe
+remove_package ppp
+remove_package libpcap0.7
+
+# Editors
+remove_package nano
+remove_package ed
+remove_package nvi
+
+# Syslog
+remove_package klogd
+remove_package sysklogd
+
+# manpages
+remove_package manpages  
+remove_package man-db 
+remove_package info
+
+# misc
+remove_package tasksel
+remove_package pciutils
+remove_package fdutils
+remove_package cpio
