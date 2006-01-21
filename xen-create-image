@@ -16,6 +16,7 @@ xen-create-image - Create a new virtual Debian installation for Xen.
 
   Size / General options:
    --boot        Boot the new instance after creating it.
+   --cache       Cache .deb upon the host for speed improvement.
    --debootstrap Pass anything named here onto debootstrap.
    --dist        Specify the distribution you wish to install: Sarge/Etch/Sid.
    --fs          Specify the filesystem type to use.
@@ -49,6 +50,9 @@ xen-create-image - Create a new virtual Debian installation for Xen.
 
 =item B<--boot>
 Start the new virtual instance as soon as the installation has finished.
+
+=item B<--cache>
+Cache the .deb files in /var/cache/apt/archives upon the host system for a large speed improvement. [Defaults to yes.]
 
 =item B<--debug>
 Show the commands this script executes as an aid to debugging.
@@ -239,6 +243,7 @@ Show the version number and exit.
 
   apt-get clean
 
+  This feature can be disabled with --cache=no.
 
 =head1 CUSTOMIZATION
 
@@ -339,7 +344,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.82 2006-01-10 23:09:28 steve Exp $
+ $Id: xen-create-image,v 1.83 2006-01-21 22:22:44 steve Exp $
 
 =cut
 
@@ -455,7 +460,7 @@ $CONFIG{'kernel'}      = '/boot/vmlinuz-2.6.12-xenU';
 $CONFIG{'debootstrap'} = '';
 $CONFIG{'hook_dir'}    = '/etc/xen-tools/hook.d/';
 $CONFIG{'role_dir'}    = '/etc/xen-tools/role.d/';
-
+$CONFIG{'cache'}       = 'yes';
 
 
 
@@ -603,11 +608,13 @@ if ( ! $mount =~ /$image/)
 #
 #  This is a big caching speedup.
 #
-print "\nCopying files from host to image.\n";
-runCommand( "mkdir -p $dir/var/cache/apt/archives" );
-copyDebFiles( "/var/cache/apt/archives", "$dir/var/cache/apt/archives" );
-printWideMessage( "\rDone" );
-
+if ( $CONFIG{'cache'} eq "yes" ) 
+{
+    print "\nCopying files from host to image.\n";
+    runCommand( "mkdir -p $dir/var/cache/apt/archives" );
+    copyDebFiles( "/var/cache/apt/archives", "$dir/var/cache/apt/archives" );
+    printWideMessage( "\rDone" );
+}
 
 #
 #  Install the base system - with a simple sense of progress.
@@ -651,10 +658,12 @@ if ( $CONFIG{'role'} )
 #  NOTE: We do this after running any hook or role scripts, to ensure
 # that any packages installed by either may be cached successfully.
 #
-print "\n\nCaching debootstrap files to the host system\n";
-copyDebFiles( "$dir/var/cache/apt/archives", "/var/cache/apt/archives/" );
-printWideMessage( "\rDone" );
-
+if ( $CONFIG{'cache'} eq "yes" ) 
+{
+    print "\n\nCaching debootstrap files to the host system\n";
+    copyDebFiles( "$dir/var/cache/apt/archives", "/var/cache/apt/archives/" );
+    printWideMessage( "\rDone" );
+}
 
 
 #
@@ -868,6 +877,7 @@ sub parseCommandLineArguments
 	       "kernel=s",     \$CONFIG{'kernel'},
 	       "passwd",       \$CONFIG{'passwd'},
 	       "role=s",       \$CONFIG{'role'},
+	       "cache=s",      \$CONFIG{'cache'},
 	       "help",         \$HELP,
 	       "manual",       \$MANUAL,
 	       "version",      \$VERSION
@@ -879,7 +889,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.82 $';
+	my $REVISION      = '$Revision: 1.83 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -1053,6 +1063,14 @@ EOF
 	$CONFIG{'ip'}	     = '';
     }
 
+    # 
+    #  Check --cache option
+    #
+    if ( ($CONFIG{'cache'} ne 'yes') && ($CONFIG{'cache'} ne 'no') ) {
+	print "Valid options for --cache are yes/no.\n";
+	exit;
+    }
+   
     
     #
     #  If the user is executing a role-script make sure it exists.
