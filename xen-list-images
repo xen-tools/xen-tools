@@ -90,7 +90,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-list-images,v 1.15 2006-01-10 23:09:28 steve Exp $
+ $Id: xen-list-images,v 1.16 2006-01-21 22:23:10 steve Exp $
 
 =cut
 
@@ -125,7 +125,7 @@ my %CONFIG;
 #
 # Release number.
 #
-my $RELEASE = '0.8';
+my $RELEASE = '0.9';
 
 
 
@@ -286,7 +286,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.15 $';
+	my $REVISION      = '$Revision: 1.16 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
