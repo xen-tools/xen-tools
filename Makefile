@@ -5,7 +5,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.36 2006-01-21 22:23:10 steve Exp $
+# $Id: Makefile,v 1.37 2006-02-05 18:10:34 steve Exp $
 
 
 #
@@ -78,6 +78,7 @@ install: manpages
 	-mkdir -p ${prefix}/etc/xen-tools/hook.d/
 	-mkdir -p ${prefix}/etc/xen-tools/role.d/
 	cp etc/hook.d/[0-9]* ${prefix}/etc/xen-tools/hook.d/
+	cp etc/role.d/builder ${prefix}/etc/xen-tools/role.d/
 	cp etc/role.d/gdm ${prefix}/etc/xen-tools/role.d/
 	cp etc/role.d/minimal ${prefix}/etc/xen-tools/role.d/
 	cp etc/role.d/xdm ${prefix}/etc/xen-tools/role.d/
