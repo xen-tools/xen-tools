@@ -90,7 +90,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-list-images,v 1.16 2006-01-21 22:23:10 steve Exp $
+ $Id: xen-list-images,v 1.17 2006-02-05 13:16:56 steve Exp $
 
 =cut
 
@@ -185,7 +185,17 @@ foreach my $entry ( glob( $dir . "*" ) )
 	   {
 	       print "Image: $entry ";
 
-	       showNetworkingDetails( $image );
+	       #
+	       # Don't show the networking details if running with '--test'
+	       #
+	       if ( $CONFIG{'test'} ) 
+	       {
+		   print "\n";
+	       }
+	       else
+	       {
+		   showNetworkingDetails( $image );
+	       }
 	   }
        }
    }
@@ -286,7 +296,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.16 $';
+	my $REVISION      = '$Revision: 1.17 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
