@@ -54,7 +54,7 @@ xen-tools
 
 
   A description of the individual scripts now follows.
-  For more details run the relevent script with the '--manual'
+  For more details run the relevant script with the '--manual'
  argument to read the manual, with examples.
 
 
@@ -107,4 +107,4 @@ xen-update-image
 
 Steve
 --
-$Id: README,v 1.20 2006-01-17 15:23:19 steve Exp $
+$Id: README,v 1.21 2006-02-05 13:18:53 steve Exp $
