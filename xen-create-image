@@ -232,11 +232,11 @@ Show the version number and exit.
  tool there can be a lot of network overhead.
 
   To minimize this the .deb files which are downloaded into the
- new instance are cached upon the host in the directory
- /var/cache/apt/archives. 
+ new instance are cached by default upon the host, in the directory
+ /var/cache/apt/archives.
 
   When a new image is created these packages are copied into the new
- image - before the debootstrap process runs.  This should help avoid
+ image - before the debootstrap process runs - this should help avoid
  expensive network reading.
 
   If you wish to clean the cache run on the host:
@@ -275,11 +275,11 @@ Show the version number and exit.
 
   Each executable script in this directory will be executed in turn
  and given the name of the mount point the image is available at as
- its single argument.
+ a single command line argument.
 
   The scripts will also have a complete copy of the configuration
  options set in its environment.  For example the IP address would
- be set in $ip, the mirror in $mirror, etc.
+ be set in ${ip}, the mirror in ${mirror}, etc.
 
   A script could copy some the kernel modules to the new system, and
  install a package, for example:
@@ -344,7 +344,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.85 2006-02-05 13:12:58 steve Exp $
+ $Id: xen-create-image,v 1.86 2006-02-05 13:38:34 steve Exp $
 
 =cut
 
@@ -389,7 +389,7 @@ use Pod::Usage;
 #  Initially our options are read from the configuration file into this
 # hash.  Later they may be overridden by the command line.
 #
-#  Command line flags *always* take precedence over the configuration files(s).
+#  Command line flags *always* take precedence over the configuration files.
 #
 #
 my %CONFIG;
@@ -446,7 +446,7 @@ $FILESYSTEM_MOUNT{'reiserfs'}  = '-t reiserfs';
 #
 #  Memory = 96M, Image = 2000Mb, Swap = 128Mb, and filesystem is ext3.
 #
-#  These may be overriden by one of the configuration files, or by the
+#  These may be overriden by settings in the configuration file or by
 # command line arguments.
 #
 $CONFIG{'memory'}      = '96Mb';
@@ -498,7 +498,7 @@ if ( $EFFECTIVE_USER_ID != 0 )
 
   In order to use this script you must be running with root privileges.
 
-  (This is necessary to mount the disk images which are created)
+  (This is necessary to mount the disk images which are created.)
 
 E_O_ROOT
 
@@ -890,7 +890,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.85 $';
+	my $REVISION      = '$Revision: 1.86 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
