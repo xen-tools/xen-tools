@@ -114,7 +114,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-duplicate-image,v 1.20 2006-01-21 22:23:10 steve Exp $
+ $Id: xen-duplicate-image,v 1.21 2006-02-05 13:38:49 steve Exp $
 
 =cut
 
@@ -156,7 +156,7 @@ use Pod::Usage;
 #  Configuration options, initially read from the configuration files
 # but may be overridden by the command line.
 #
-#  Command line flags *always* take precedence over the configuration files(s).
+#  Command line flags *always* take precedence over the configuration file.
 #
 my %CONFIG;
 
@@ -447,7 +447,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.20 $';
+	my $REVISION      = '$Revision: 1.21 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{

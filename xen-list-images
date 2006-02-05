@@ -90,7 +90,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-list-images,v 1.17 2006-02-05 13:16:56 steve Exp $
+ $Id: xen-list-images,v 1.18 2006-02-05 13:38:49 steve Exp $
 
 =cut
 
@@ -118,7 +118,7 @@ use Pod::Usage;
 #  Configuration options, initially read from the configuration files
 # but may be overridden by the command line.
 #
-#  Command line flags *always* take precedence over the configuration files(s).
+#  Command line flags *always* take precedence over the configuration file.
 #
 my %CONFIG;
 
@@ -296,7 +296,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.17 $';
+	my $REVISION      = '$Revision: 1.18 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
