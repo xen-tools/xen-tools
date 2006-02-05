@@ -9,16 +9,31 @@
 #
 # Steve
 # --
-# $Id: 90-make-fstab,v 1.4 2006-01-08 01:53:33 steve Exp $
+# $Id: 90-make-fstab,v 1.5 2006-02-05 14:53:35 steve Exp $
 
 
 prefix=$1
 
 
 #
+#  This function installs a package upon the guest image.
+#
+function install_package
+{
+    package=$1
+    
+    DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes --force-yes install $package
+
+}
+
+
+
+
+#
 #  Options to mount the root filesystem with, we need to have
-# different options for xfs.  The default option works for ext2,
-# ext3, and reiserfs.
+# different options for xfs.
+#
+#  The default option works for ext2, ext3, and reiserfs.
 #
 options="errors=remount-ro"
 
@@ -44,9 +59,9 @@ E_O_FSTAB
 #
 case "${fs}" in
     xfs)
-	DEBIAN_FRONTEND=noninteractive chroot $prefix /usr/bin/apt-get --yes --force-yes install xfsprogs
+	install_package xfsprogs
 	;;
     reiserfs)
-	DEBIAN_FRONTEND=noninteractive chroot $prefix /usr/bin/apt-get --yes --force-yes install reiserfsprogs
+	install_package reiserfsprogs
 	;;
 esac

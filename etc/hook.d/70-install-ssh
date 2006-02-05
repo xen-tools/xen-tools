@@ -4,11 +4,31 @@
 #
 # Steve
 # --
-# $Id: 70-install-ssh,v 1.4 2006-01-08 01:53:33 steve Exp $
+# $Id: 70-install-ssh,v 1.5 2006-02-05 14:53:35 steve Exp $
 
 
 prefix=$1
 
-chroot ${prefix} /usr/bin/apt-get update
-DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes --force-yes install ssh
+#
+#  This function installs a package upon the guest image.
+#
+function install_package
+{
+    package=$1
+    
+    DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes --force-yes install $package
+
+}
+
+
+
+#
+# Install the package.
+#
+install_package ssh
+
+#
+#  Make sure sshd isn't running, this will cause our unmounting of the
+# disk image to fail..
+#
 chroot ${prefix} /etc/init.d/ssh stop
