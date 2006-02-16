@@ -15,6 +15,7 @@ xen-update-image - Update the software installed upon offline Xen images.
 
   General Options:
    --dir       Specify the directory which contains the image(s).
+   --volume    Specify the LVM volume which contains the image(s).
 
 =cut
 
@@ -36,6 +37,8 @@ Read the manual
 =item B<--version>
 Show the version number and exit.
 
+=item B<--volume>
+Specify the LVM volume where images are located.
 
 =back
 
@@ -80,7 +83,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-update-image,v 1.19 2006-02-06 12:44:19 steve Exp $
+ $Id: xen-update-image,v 1.20 2006-02-16 18:05:09 steve Exp $
 
 =cut
 
@@ -132,6 +135,26 @@ if ( -e "/etc/xen-tools/xen-tools.conf" )
 # configuration file.
 #
 parseCommandLineArguments();
+
+
+#
+#  Make sure we have either a volume, or a root.
+#
+if ( $CONFIG{'volume'} && $CONFIG{'dir'} )
+{
+    print "Please only use a volume or a directory name - not both\n";
+    exit;
+}
+
+
+#
+# Volumes are not supported yet :(
+#
+if ( $CONFIG{'volume'} )
+{
+    print "LVM Volumes are not supported yet\n";
+    exit;
+}
 
 
 #
@@ -292,6 +315,7 @@ sub parseCommandLineArguments
     #
     GetOptions(
 	       "dir=s",      \$CONFIG{'dir'},
+	       "volume=s",   \$CONFIG{'volume'},
 	       "help",       \$HELP,
 	       "manual",     \$MANUAL,
 	       "version",    \$VERSION
@@ -302,7 +326,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.19 $';
+	my $REVISION      = '$Revision: 1.20 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
