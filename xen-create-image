@@ -351,7 +351,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.89 2006-02-16 18:12:17 steve Exp $
+ $Id: xen-create-image,v 1.90 2006-02-16 18:14:01 steve Exp $
 
 =cut
 
@@ -363,6 +363,8 @@ Install an X11 server, using VNC and XDM
 =over 8
 
 =item  Radu Spineanu
+
+=item  Justin Azoff
 
 =back
 
@@ -955,7 +957,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.89 $';
+	my $REVISION      = '$Revision: 1.90 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
