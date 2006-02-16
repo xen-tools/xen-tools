@@ -38,6 +38,7 @@ xen-create-image - Create a new virtual Debian installation for Xen.
   Mandatory options:
 
    --dir       Specify where the output images should go.
+   --volume    Specify which LVM volume to save images within.
    --hostname  Set the images hostname.
 
 =cut
@@ -116,6 +117,9 @@ suffixed with either Mb, or Gb.
 
 =item B<--version>
 Show the version number and exit.
+
+=item B<--volume>
+Show the LVM volume to store images within.
 
 =back
 
@@ -347,7 +351,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.88 2006-02-06 12:44:19 steve Exp $
+ $Id: xen-create-image,v 1.89 2006-02-16 18:12:17 steve Exp $
 
 =cut
 
@@ -539,31 +543,61 @@ print "\n";
 #
 #  If the output directories don't exist then create them.
 #
-if ( ! -d $CONFIG{'dir'} . "/domains/" )
-{
-    mkdir $CONFIG{'dir'} . '/domains', 0777
-      || die "Cannot create $CONFIG{'dir'}/domains - $!";
-}
-if ( ! -d $CONFIG{'dir'} . "/domains/" . $CONFIG{'hostname'} )
-{
-    mkdir $CONFIG{'dir'}. '/domains/' . $CONFIG{'hostname'}, 0777
-      || die "Cannot create $CONFIG{'dir'}/domains/$CONFIG{'hostname'} - $!" ;
-}
+#if ( ! -d $CONFIG{'dir'} . "/domains/" )
+#{
+#    mkdir $CONFIG{'dir'} . '/domains', 0777
+#      || die "Cannot create $CONFIG{'dir'}/domains - $!";
+#}
+#if ( ! -d $CONFIG{'dir'} . "/domains/" . $CONFIG{'hostname'} )
+#{
+#    mkdir $CONFIG{'dir'}. '/domains/' . $CONFIG{'hostname'}, 0777
+#      || die "Cannot create $CONFIG{'dir'}/domains/$CONFIG{'hostname'} - $!" ;
+#}
 
 
 
 #
 # The two images we'll use, one for the disk image, one for swap.
 #
-my $image = $CONFIG{'dir'} . '/domains/' . $CONFIG{'hostname'} . "/disk.img" ;
-my $swap  = $CONFIG{'dir'} . '/domains/' . $CONFIG{'hostname'} . "/swap.img" ;
+my $image;
+my $swap;
+
+
+if ( $CONFIG{'volume'} )
+{
+    $image = "/dev/" . $CONFIG{'volume'} . "/" . $CONFIG{'hostname'} . '-root';
+    $swap  = "/dev/" . $CONFIG{'volume'} . "/" . $CONFIG{'hostname'} . '-swap';
+}
+elsif ( $CONFIG{'dir'} )
+{
+    $image = $CONFIG{'dir'} . '/domains/' . $CONFIG{'hostname'} . "/disk.img" ;
+    $swap  = $CONFIG{'dir'} . '/domains/' . $CONFIG{'hostname'} . "/swap.img" ;
+}
+else
+{
+    print "ERROR: Cant find the image / swap to use\n";
+    exit;
+}
 
 
 #
 #  Create swapfile and initialise it.
 #
 print "\n\nCreating swapfile : $swap\n";
-my $swap_cmd = "/bin/dd if=/dev/zero of=$swap bs=1024k count=$CONFIG{'swap'}";
+
+#
+#  Create either a swap image, or a swap volume
+#
+my $swap_cmd;
+if ( $CONFIG{'volume'} )
+{
+    $swap_cmd = "/sbin/lvcreate $CONFIG{'volume'} -L $CONFIG{'swap'}M -n $CONFIG{'hostname'}-swap";
+}
+else
+{
+    $swap_cmd = "/bin/dd if=/dev/zero of=$swap bs=1024k count=$CONFIG{'swap'}";
+}
+
 runCommand( $swap_cmd );
 runCommand( "/sbin/mkswap $swap" );
 print "Done\n";
@@ -574,7 +608,25 @@ print "Done\n";
 #  Create disk file and initialise it.
 #
 print "\nCreating disk image: $image\n";
-my $image_cmd = "/bin/dd if=/dev/zero of=$image bs=$CONFIG{'size'} count=1 seek=1024";
+
+#
+#  Create either a swap image, or a swap volume
+#
+my $image_cmd;
+
+if ( $CONFIG{'volume'} )
+{
+    #
+    # LVM
+    $image_cmd = "/sbin/lvcreate $CONFIG{'volume'} -L $CONFIG{'size'} -n $CONFIG{'hostname'}-root";
+}
+else
+{
+    #
+    # Loopback
+    $image_cmd = "/bin/dd if=/dev/zero of=$image bs=$CONFIG{'size'} count=1 seek=1024";
+}
+
 runCommand( $image_cmd );
 print "Done\n";
 
@@ -591,7 +643,16 @@ print "Done\n";
 #  Now mount the image, in a secure temporary location.
 #
 my $dir = tempdir( CLEANUP => 1 );
-my $mount_cmd = "mount " . $FILESYSTEM_MOUNT{lc($CONFIG{'fs'})} . " -o loop $image $dir";
+
+my $mount_cmd;
+if ( $CONFIG{'volume'} )
+{
+    $mount_cmd = "mount " . $FILESYSTEM_MOUNT{lc($CONFIG{'fs'})} . " $image $dir";
+}
+else
+{
+    $mount_cmd = "mount " . $FILESYSTEM_MOUNT{lc($CONFIG{'fs'})} . " -o loop $image $dir";
+}
 runCommand( $mount_cmd );
 
 
@@ -868,6 +929,7 @@ sub parseCommandLineArguments
 	       "gateway=s",    \$CONFIG{'gateway'},
 	       "netmask=s",    \$CONFIG{'netmask'},
 	       "dir=s",        \$CONFIG{'dir'},
+	       "volume=s",     \$CONFIG{'volume'},
 	       "dhcp",         \$CONFIG{'dhcp'},
 	       "mirror=s",     \$CONFIG{'mirror'},
 	       "size=s",       \$CONFIG{'size'},
@@ -893,7 +955,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.88 $';
+	my $REVISION      = '$Revision: 1.89 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -951,16 +1013,34 @@ EOF
     #
     #  Make sure the directory exists.
     #
-    if ( ! -d $CONFIG{'dir'} )
+    if ( $CONFIG{'volume' } )
     {
-	print "Output directory '$CONFIG{'dir'}' doesn't exist\n";
-	exit;
-    }
+	#
+	#  Test the volume?
+	#
 
-    if ( ! -w $CONFIG{'dir'} )
+	#
+	#  Make sure we don't have both lvm + loopback.
+	#
+	if ( $CONFIG{'dir'} )
+	{
+	    print "Please choose either LVM or loopback, not both\n";
+	    exit;
+	}
+    }
+    else
     {
-	print "Output directory '$CONFIG{'dir'}' isn't writable.\n";
-	exit;
+	if ( ! -d $CONFIG{'dir'} )
+	{
+	    print "Output directory '$CONFIG{'dir'}' doesn't exist\n";
+	    exit;
+	}
+
+	if ( ! -w $CONFIG{'dir'} )
+	{
+	    print "Output directory '$CONFIG{'dir'}' isn't writable.\n";
+	    exit;
+	}
     }
 
     #
@@ -1030,7 +1110,13 @@ EOF
     #
     #  Convert the image size to k.
     #
-    $CONFIG{'size'} =~ s/Mb*$/k/i;
+    # Fails for LVM ?
+    #
+    if ( $CONFIG{'dir'} )
+    {
+	$CONFIG{'size'} =~ s/Mb*$/k/i;
+    }
+    
 
     #
     # Now strip the trailing 'Mb' from the swap size.
