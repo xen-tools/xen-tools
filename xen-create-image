@@ -351,7 +351,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.90 2006-02-16 18:14:01 steve Exp $
+ $Id: xen-create-image,v 1.91 2006-02-16 19:22:21 steve Exp $
 
 =cut
 
@@ -957,7 +957,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.90 $';
+	my $REVISION      = '$Revision: 1.91 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -995,21 +995,21 @@ EOF
 	exit;
     }
 
-
-    if (!defined( $CONFIG{'dir'} ) )
+    #
+    #  Make sure we have either --dir or --volume
+    #
+    if ( ( ! $CONFIG{'dir'} ) &&
+	 ( ! $CONFIG{'volume'} ) )
     {
 	print<<EOF
 
-  You should set an output directory with '--dir=/my/path'.
-
-  This option is required.  Subdirectories will be created
- beneath the directory you name.
+  You should set an output directory with '--dir=/my/path', or
+ specify an LVM volume with '--volume=foo'.
 
 EOF
 	  ;
 	exit;
     }
-
 
 
     #
@@ -1044,6 +1044,8 @@ EOF
 	    exit;
 	}
     }
+
+
 
     #
     #  Make sure we have every binary we need
