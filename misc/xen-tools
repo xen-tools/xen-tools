@@ -20,7 +20,7 @@
 # --
 # http://www.steve.org.uk
 #
-# $Id: xen-tools,v 1.19 2006-01-11 01:07:56 steve Exp $
+# $Id: xen-tools,v 1.20 2006-02-16 18:06:03 steve Exp $
 #
 
 
@@ -38,7 +38,7 @@ _xen_create_image()
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
     prev=${COMP_WORDS[COMP_CWORD-1]}
-    opts='--broadcast --boot --debug --debootstrap --dhcp --dir --dist --fs --gateway --help --hostname --ip --manual --memory --mirror --passwd --role --size --swap --version'
+    opts='--broadcast --boot --debug --debootstrap --dhcp --dir --dist --fs --gateway --help --hostname --ip --manual --memory --mirror --passwd --role --size --swap --volume --version'
     
     
     #
@@ -89,7 +89,7 @@ _xen_duplicate_image()
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
-    opts="--broadcast --dhcp --dir --from --gateway --help --hostname --ip --manual --netmask --version"
+    opts="--broadcast --dhcp --dir --from --gateway --help --hostname --ip --manual --netmask --version --volume"
 
     #
     # Complete the initial part of the IP in the configuration file.
@@ -155,7 +155,7 @@ _xen_delete_image()
     #
     # Complete the options + all available hostnames.
     #
-    opts="--dir --help --manual --test --version ${names}"
+    opts="--dir --help --manual --test --version --volume ${names}"
 
     case "${prev}" in
         --dir)
@@ -200,7 +200,7 @@ _xen_update_image()
 	names=$(for x in `ls -1 ${base} 2>/dev/null`; do echo -n "${x} " ; done )
     fi
 
-    opts="--dir --help --manual --version ${names}"
+    opts="--dir --help --manual --version --volume ${names}"
 
     case "${prev}" in
         --dir)
@@ -225,7 +225,7 @@ _xen_list_images()
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
-    opts="--dir --help --manual --test --version"
+    opts="--dir --help --manual --test --version --volume"
 
     case "${prev}" in
         --dir)
