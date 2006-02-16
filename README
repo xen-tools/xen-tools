@@ -15,20 +15,24 @@ xen-tools
   It is aimed at users who wish to create virtual instances of Debian.
  You may easily manipulate instances of Debian Sarge, Etch, or Sid.
 
-  The tools each work in a similar way and have the same assumptions.
+  There are two ways to use the scripts:
 
-  It is assumed that each virtual image will be comprised of two files
- upon the host system:
+  1.  With loopback files (simplest but slower).
+  2.  With LVM.
+
+
+Loopback Files
+--------------
+
+  If you use the default setup with loopback files then each virtaul
+ image will use two files on your host system:
 
 	1.  A disk image to be used by Xen as the primary drive.
 	2.  A disk image to be used by Xen as the swap partition.
 
-  Images are assumed to live beneath a single root directory,
- which is specified via the common '--dir=' command line argument 
- to each of the scripts. 
-
-  (Alternatively you may include 'dir=/path' inside the global
- configuration file /etc/xen-tools/xen-tools.conf.)
+  These images will be kept beneath whichever directory you specify 
+ as your root directory (via the command line flag "--dir=.." or a 
+ configuration file entry "dir = ..")
 
   Beneath the root directory each virtual instance will have a
  subdirectory, named after the hostname of the image.  
@@ -42,20 +46,18 @@ xen-tools
 |-- etch              [Virtual machine named 'etch']
 |   |-- disk.img        [Disk image]
 |   `-- swap.img        [Swap image]
-|-- foo               [Virtual machine named 'foo']
-|   |-- disk.img
-|   `-- swap.img
-|-- progress          [Virtual machine named 'progress']
-|   |-- disk.img
-|   `-- swap.img
-|-- sarge             [Virtual machine named 'sarge']
-|   |-- disk.img
-|   `-- swap.img
 
 
-  A description of the individual scripts now follows.
-  For more details run the relevant script with the '--manual'
- argument to read the manual, with examples.
+
+LVM Support
+-----------
+
+  If you wish to use the LVM support then you will give the 
+ scripts an LVM device to store the images upon.
+
+  In this case you'll have two new volumes created, one for
+ the swap image and one for the disk storage.
+
 
 
 xen-create-image
@@ -107,4 +109,4 @@ xen-update-image
 
 Steve
 --
-$Id: README,v 1.21 2006-02-05 13:18:53 steve Exp $
+$Id: README,v 1.22 2006-02-16 18:05:16 steve Exp $
