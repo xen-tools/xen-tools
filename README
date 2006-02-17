@@ -27,8 +27,8 @@ Loopback Files
   If you use the default setup with loopback files then each virtaul
  image will use two files on your host system:
 
-	1.  A disk image to be used by Xen as the primary drive.
-	2.  A disk image to be used by Xen as the swap partition.
+	1. A disk image to be used by Xen as the primary drive.
+	2. A disk image to be used by Xen as the swap partition.
 
   These images will be kept beneath whichever directory you specify 
  as your root directory (via the command line flag "--dir=.." or a 
@@ -109,4 +109,4 @@ xen-update-image
 
 Steve
 --
-$Id: README,v 1.23 2006-02-17 09:18:13 radu Exp $
+$Id: README,v 1.24 2006-02-17 09:19:35 radu Exp $
