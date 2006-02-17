@@ -7,7 +7,9 @@ TODO
 
   3. If the new hostname is unqualified qualify it identically to the host?
 
+  4. Update other scripts to use LVM properly.
+
 Steve
 --
-$Id: TODO,v 1.8 2006-02-17 10:17:11 steve Exp $
+$Id: TODO,v 1.9 2006-02-17 10:19:07 steve Exp $
 
