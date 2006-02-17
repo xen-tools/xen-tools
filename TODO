@@ -9,7 +9,11 @@ TODO
 
   4. Update other scripts to use LVM properly.
 
+  5. Test for valid LVM devices.
+
+  6. Look at moving the xen.cfg files into a hook.
+
 Steve
 --
-$Id: TODO,v 1.9 2006-02-17 10:19:07 steve Exp $
+$Id: TODO,v 1.11 2006-02-17 10:22:22 steve Exp $
 
