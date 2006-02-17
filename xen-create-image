@@ -351,7 +351,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.93 2006-02-17 07:30:27 steve Exp $
+ $Id: xen-create-image,v 1.94 2006-02-17 07:32:06 steve Exp $
 
 =cut
 
@@ -382,6 +382,7 @@ The LICENSE file contains the full text of the license.
 
 
 use strict;
+use diagnostics;
 use English;
 use File::Copy;
 use File::Temp qw/ tempdir /;
@@ -780,9 +781,8 @@ memory = $CONFIG{'memory'}
 name   = "$CONFIG{'hostname'}"
 root   = "/dev/sda1 ro"
 vif    = ['']
-disk   = [ '${image_vbd},sda1,w', '${swap_vbd},sda2,w' ]
+disk   = [ '$image_vbd,sda1,w', '$swap_vbd,sda2,w' ]
 E_O_XEN
-}
 if ( $CONFIG{'dhcp'} )
 {
     print XEN "dhcp=\"dhcp\"\n";
@@ -974,7 +974,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.93 $';
+	my $REVISION      = '$Revision: 1.94 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
