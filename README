@@ -17,8 +17,8 @@ xen-tools
 
   There are two ways to use the scripts:
 
-  1.  With loopback files (simplest but slower).
-  2.  With LVM.
+  1. With loopback files (simplest but slower).
+  2. With LVM.
 
 
 Loopback Files
@@ -109,4 +109,4 @@ xen-update-image
 
 Steve
 --
-$Id: README,v 1.22 2006-02-16 18:05:16 steve Exp $
+$Id: README,v 1.23 2006-02-17 09:18:13 radu Exp $
