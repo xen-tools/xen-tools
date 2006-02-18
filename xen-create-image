@@ -66,7 +66,7 @@ Anything specified after this will be passed onto the debootstrap command execut
 Specify that the virtual image should use DHCP to obtain its networking information.  Conflicts with B<--ip>.
 
 =item B<--dir>
-Specify the root directory beneath which the image should be saved.  Subdirectories will be created for each virtual image.
+Specify the root directory beneath which the image should be saved.  Subdirectories will be created for each virtual image.  If you do not wish to use loopback files instead specify an LVM volume with B<--volume>.
 
 =item B<--dist>
 Specify the distribution to install, defaults to 'sarge'.
@@ -123,14 +123,14 @@ Use ide style device names for the virtual devices.
 Show the version number and exit.
 
 =item B<--volume>
-Show the LVM volume to store images within.
+Show the LVM volume to store images within.  If you wish to use loopback files please specify an output directory with B<--dir>.
 
 =back
 
 =cut
 
 
-=head1 EXAMPLES
+=head1 LOOPBACK EXAMPLES
 
   The following will create a 2Gb disk image, along with a 128Mb 
  swap file with Debian Sarge setup and running via DHCP.
@@ -146,7 +146,7 @@ Show the LVM volume to store images within.
           --gateway=192.168.1.1 \
           --dir=/home/xen --hostname=vm02
 
-  To save time these command line options may be specified in the
+  To save typing these command line options may be specified in the
  configuration file discussed later.
 
   The directory specified for the output will be used to store the files
@@ -168,19 +168,39 @@ Show the LVM volume to store images within.
 =cut
 
 
+=head1 LVM EXAMPLES
+
+  If you wish to use an LVM volume instead of a pair of loopback images
+ as shown above you can instead use the B<--volume> argument to specify
+ the volume to create the image within.
+
+     xen-create-image --size=2Gb --swap=128Mb --dhcp \
+          --volume=myvolume --hostname=vm01.my.flat
+
+  The given volume will have two new entries created within it:
+
+   ${hostname}-swap
+   ${hostname}-root
+
+=cut
+
+
 =head1 DESCRIPTION
 
 
   xen-create-image is a simple script which allows you to create new
- Xen instances of Debian Sarge.  The new image will be comprised of
- two seperate files:
+ Xen instances of Debian GNU/Linux.  The new image will be comprised 
+ of two seperate images:
 
-   1.  One disk image which will be treated as the primary disk drive.
-   2.  One swap image.
+   1.  An image for the systems root disk.
+   2.  An image for the systems swap device.
 
-  The image will have OpenSSH installed upon it, and an appropriate
- /etc/inittab file created, along with copies of the hosts password
- and shadow files.
+  These images will either be created as new LVM volumes, or as local
+ loopback files.
+
+  The new virtual Debian image will be configured with networking,
+ have OpenSSH installed upon it, and have most of its basic files
+ setup correctly.
 
 
 =head1 CONFIGURATION
@@ -206,6 +226,13 @@ Show the LVM volume to store images within.
  #
  dir = /home/xen
 
+ #
+ #  LVM users should disable the 'dir' setting above, and instead 
+ # specify the name of the volume to use.
+ #
+ # volume = myvolume
+ 
+ #
  #
  #  Disk and Sizing options.
  #
@@ -247,30 +274,46 @@ Show the LVM volume to store images within.
  image - before the debootstrap process runs - this should help avoid
  expensive network reading.
 
-  If you wish to clean the cache run on the host:
+  If you wish to clean the cache upon the host you may do so with
+ apt-get, as you'd expect:
 
   apt-get clean
 
-  This feature can be disabled with --cache=no.
+  (This feature can be disabled with the command line flag --cache=no,
+ or the configuration file setting 'cache = no'.)
+
 
 =head1 CUSTOMIZATION
 
+  There are three different types of customization which are available
+ to you.  These allow you to change the generated images in several
+ ways.
+
+  The available options are:
+
+=item debootstrap customization
+This allows you to make additions to the debootstrap command which is executed to create the image.
+
+=item the hook directory
+The hook scripts allow you to run customization scripts for each generated image.
+
+=item the role directory
+The role directory allows you to customise a group of images in a special manner.
+
+
+=head1 DEBOOTSTRAP CUSTOMIZATION
 
   If you wish to add new packages to the image automatically you may
  take advantage of the '--debootstrap' option which allows you to 
  pass flags to the debootstrap command.
 
-  For the following command causes three new packages to be added
- to the base image:
+  For example the following command causes three new packages to be 
+ added to the base image:
 
       xen-create-image --debootstrap='--include=screen,sudo,less'
 
-  An alternative is to use the hook directory to run a script
- for each new image you create.
-
-  Alternatively you make take advantage of the role support - to
- easily create different types of images for different roles.
-
+  For more details of available options to use with debootstrap please
+ see its manpage.
 
 =head1 HOOKS
 
@@ -320,7 +363,7 @@ Show the LVM volume to store images within.
   The scripts which are included in the hook directory are executed
  for every single image you create.  This can allow you to make global
  changes to the generated image very easily, however it doesn't allow
- you to do different thigns for different types of images.
+ you to do different things for different types of images.
 
   Instead the "role" scripts are used for that purpose.  If you
  give an argument "--role=foo" then the script /etc/xen-tools/role.d/foo
@@ -355,7 +398,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.97 2006-02-18 00:29:12 steve Exp $
+ $Id: xen-create-image,v 1.98 2006-02-18 12:39:32 steve Exp $
 
 =cut
 
@@ -991,7 +1034,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.97 $';
+	my $REVISION      = '$Revision: 1.98 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
