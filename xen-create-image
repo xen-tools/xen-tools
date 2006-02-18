@@ -355,7 +355,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.96 2006-02-18 00:04:44 radu Exp $
+ $Id: xen-create-image,v 1.97 2006-02-18 00:29:12 steve Exp $
 
 =cut
 
@@ -550,7 +550,8 @@ print "\n";
 #
 #  If the output directories don't exist then create them.
 #
-if ( ! $CONFIG{'volume'} ) {
+if ( ! $CONFIG{'volume'} ) 
+{
     if (  ! -d $CONFIG{'dir'} . "/domains/" )
     {
         mkdir $CONFIG{'dir'} . '/domains', 0777
@@ -785,7 +786,7 @@ my $device = "sda";
 
 if ( $CONFIG{'use-ide'} )
 {
-	$device = "hda";
+    $device = "hda";
 }
 
 print "\n\nCreating Xen configuration file in /etc/xen .. ";
@@ -990,7 +991,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.96 $';
+	my $REVISION      = '$Revision: 1.97 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
