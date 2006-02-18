@@ -5,7 +5,7 @@
 #
 # Steve
 # --
-# $Id: 60-copy-host-files,v 1.6 2006-02-05 14:53:27 steve Exp $
+# $Id: 60-copy-host-files,v 1.7 2006-02-18 12:23:24 steve Exp $
 
 
 
@@ -18,7 +18,8 @@ cp /etc/group       ${prefix}/etc/
 cp /etc/gshadow     ${prefix}/etc/
 
 #
-# If sudo is installed upon the host then install it upon the guest.
+# If sudo is installed upon the host then install it upon the guest,
+# with the same setup.
 #
 if [ -e /etc/sudoers ]; then
     cp /etc/sudoers ${prefix}/etc/
