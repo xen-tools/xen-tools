@@ -5,7 +5,7 @@
 #
 # Steve
 # --
-# $Id: argument-check.t,v 1.1 2006-01-09 21:56:04 steve Exp $
+# $Id: argument-check.t,v 1.2 2006-02-18 12:28:37 steve Exp $
 #
 
 use strict;
@@ -46,7 +46,7 @@ foreach my $key ( sort keys %OPTIONS )
 	}
     }
 
-    is( $found, 1 , " Found documentation for $key" );
+    is( $found, 1 , " Found documentation for '$key'" );
 }
 
 
