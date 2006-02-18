@@ -27,6 +27,7 @@ xen-create-image - Create a new virtual Debian installation for Xen.
    --role        Run a role-specific script, post-install.
    --size        Set the size of the primary disk image.
    --swap        Set the size of the swap partition.   
+   --use-ide     Use ide names for virtual devices (hda vs sda)
 
 
   Networking options:
@@ -114,6 +115,9 @@ Specify the size of the primary drive to give the virtual image.  The size may b
 =item B<--swap>
 Specify the size of the virtual swap partition to create.  The size may be
 suffixed with either Mb, or Gb.
+
+=item B<--use-ide>
+Use ide style device names for the virtual devices. 
 
 =item B<--version>
 Show the version number and exit.
@@ -351,7 +355,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.95 2006-02-17 07:57:54 steve Exp $
+ $Id: xen-create-image,v 1.96 2006-02-18 00:04:44 radu Exp $
 
 =cut
 
@@ -546,17 +550,18 @@ print "\n";
 #
 #  If the output directories don't exist then create them.
 #
-#if ( ! -d $CONFIG{'dir'} . "/domains/" )
-#{
-#    mkdir $CONFIG{'dir'} . '/domains', 0777
-#      || die "Cannot create $CONFIG{'dir'}/domains - $!";
-#}
-#if ( ! -d $CONFIG{'dir'} . "/domains/" . $CONFIG{'hostname'} )
-#{
-#    mkdir $CONFIG{'dir'}. '/domains/' . $CONFIG{'hostname'}, 0777
-#      || die "Cannot create $CONFIG{'dir'}/domains/$CONFIG{'hostname'} - $!" ;
-#}
-
+if ( ! $CONFIG{'volume'} ) {
+    if (  ! -d $CONFIG{'dir'} . "/domains/" )
+    {
+        mkdir $CONFIG{'dir'} . '/domains', 0777
+          || die "Cannot create $CONFIG{'dir'}/domains - $!";
+    }    
+    if ( ! -d $CONFIG{'dir'} . "/domains/" . $CONFIG{'hostname'} )
+    {
+        mkdir $CONFIG{'dir'}. '/domains/' . $CONFIG{'hostname'}, 0777
+          || die "Cannot create $CONFIG{'dir'}/domains/$CONFIG{'hostname'} - $!" ;
+    }
+}
 
 
 #
@@ -769,19 +774,29 @@ if ( $CONFIG{'passwd'} )
 #
 runCommand( "umount $dir" );
 
-
 #
 # Finally setup Xen to allow us to create the image.
 #
+
+#
+# Make sure we use ide style device names if required
+#
+my $device = "sda";
+
+if ( $CONFIG{'use-ide'} )
+{
+	$device = "hda";
+}
+
 print "\n\nCreating Xen configuration file in /etc/xen .. ";
 open( XEN, ">", "/etc/xen/$CONFIG{'hostname'}.cfg" );
 print XEN<<E_O_XEN;
 kernel = "$CONFIG{'kernel'}"
 memory = $CONFIG{'memory'}
 name   = "$CONFIG{'hostname'}"
-root   = "/dev/sda1 ro"
+root   = "/dev/${device}1 ro"
 vif    = ['']
-disk   = [ '$image_vbd,sda1,w', '$swap_vbd,sda2,w' ]
+disk   = [ '$image_vbd,${device}1,w', '$swap_vbd,${device}2,w' ]
 E_O_XEN
 if ( $CONFIG{'dhcp'} )
 {
@@ -963,6 +978,7 @@ sub parseCommandLineArguments
 	       "passwd",       \$CONFIG{'passwd'},
 	       "role=s",       \$CONFIG{'role'},
 	       "cache=s",      \$CONFIG{'cache'},
+               "use-ide",      \$CONFIG{'use-ide'},
 	       "help",         \$HELP,
 	       "manual",       \$MANUAL,
 	       "version",      \$VERSION
@@ -974,7 +990,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.95 $';
+	my $REVISION      = '$Revision: 1.96 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{

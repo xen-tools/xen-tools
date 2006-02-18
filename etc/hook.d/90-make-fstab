@@ -9,7 +9,7 @@
 #
 # Steve
 # --
-# $Id: 90-make-fstab,v 1.5 2006-02-05 14:53:35 steve Exp $
+# $Id: 90-make-fstab,v 1.6 2006-02-18 00:04:45 radu Exp $
 
 
 prefix=$1
@@ -43,12 +43,21 @@ case "${fs}" in
 	;;
 esac
 
+
+#
+# Make sure we use ide style device names if required
+#
+device=sda
+if [ "${use-ide}" ]; then
+	device=hda
+fi
+
 #
 #  Now we have the options we can create the fstab.
 #
 cat <<E_O_FSTAB > ${prefix}/etc/fstab
-/dev/sda1     /     ${fs}     ${options}   0     1
-/dev/sda2     none  swap     sw                    0     0
+/dev/${device}1     /     ${fs}     ${options}   0     1
+/dev/${device}2     none  swap     sw                    0     0
 proc          /proc proc     defaults              0     0
 E_O_FSTAB
 
