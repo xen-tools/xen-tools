@@ -5,13 +5,16 @@
 #
 # Steve
 # --
-# $Id: 40-setup-networking,v 1.4 2006-01-08 01:53:33 steve Exp $
+# $Id: 40-setup-networking,v 1.5 2006-02-18 12:24:05 steve Exp $
 
 
 prefix=$1
 
 if [[ -z "${dhcp}" ]]; then
 
+    #
+    # We have a static IP address
+    #
    cat <<E_O_STATIC >${prefix}/etc/network/interfaces
 # This file describes the network interfaces available on your system
 # and how to activate them. For more information, see interfaces(5).
