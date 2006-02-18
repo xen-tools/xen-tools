@@ -4,9 +4,17 @@
 #
 # Steve
 # --
-# $Id: 10-disable-tls,v 1.4 2006-01-08 01:53:33 steve Exp $
+# $Id: 10-disable-tls,v 1.5 2006-02-18 12:24:23 steve Exp $
 
 
 prefix=$1
 
 mv ${prefix}/lib/tls ${prefix}/lib/tls.disabled
+
+#
+#  Make a new /lib/tls directory in the guest, and make sure
+# it cannot be modified.
+#
+mkdir     ${prefix}/lib/tls
+chmod 0   ${prefix}/lib/tls
+chattr +i ${prefix}/lib/tls
