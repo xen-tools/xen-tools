@@ -1,0 +1,22 @@
+#!/bin/sh
+#
+#  This script ensures that the new guest images have a nicely
+# populated /dev directory.
+#
+# Steve
+# --
+# $Id: 55-create-dev,v 1.1 2006-02-18 12:23:01 steve Exp $
+
+
+prefix=$1
+
+#
+#  Make sure we have a /dev directory and change into it.
+#
+mkdir -p ${prefix}/dev
+cd ${prefix}/dev
+
+#
+# Make the devices.
+#
+./MAKEDEV generic
