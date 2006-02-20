@@ -5,7 +5,7 @@
 #
 # Steve
 # --
-# $Id: 50-setup-hostname,v 1.5 2006-01-08 01:53:33 steve Exp $
+# $Id: 50-setup-hostname,v 1.6 2006-02-20 00:45:16 steve Exp $
 
 
 
@@ -29,4 +29,12 @@ if [[ -z "${dhcp}" ]]; then
 
     # IPv6 stuff.
     grep '\(::\|IPv6\)' /etc/hosts >> ${prefix}/etc/hosts
+fi
+
+
+#
+#  Allow the host system to know the IP address of our new guest.
+#
+if [[ -z "${dhcp}" ]]; then
+    echo "${ip}    ${hostname}" >> /etc/hosts
 fi
