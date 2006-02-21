@@ -5,7 +5,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.39 2006-02-18 20:11:00 steve Exp $
+# $Id: Makefile,v 1.40 2006-02-21 00:17:25 steve Exp $
 
 
 #
@@ -101,7 +101,7 @@ manpages-html:
 	for i in xen-*; do pod2html $$i > man/$$i.html; done
 
 
-release: update-version clean changelog manpages
+release: update-version clean changelog
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)
 	rm -f $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz
 	cp -R . $(DIST_PREFIX)/$(BASE)-$(VERSION)
