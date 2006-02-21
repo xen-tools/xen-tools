@@ -220,38 +220,37 @@ Show the LVM volume to store images within.  If you wish to use loopback files p
 
 =for example begin
 
- #
- #  Output directory.  Images are stored beneath this directory, one
- # subdirectory per hostname.
- #
- dir = /home/xen
+  #
+  #  Output directory.  Images are stored beneath this directory, one
+  # subdirectory per hostname.
+  #
+  dir = /home/xen
 
- #
- #  LVM users should disable the 'dir' setting above, and instead 
- # specify the name of the volume to use.
- #
- # volume = myvolume
- 
- #
- #
- #  Disk and Sizing options.
- #
- size       = 2Gb      # Disk image size.
- memory     = 128Mb    # Memory size
- swap       = 128Mb    # Swap size
- fs         = ext3     # use EXT3 filesystems
- dist       = sarge    # Default distribution to install.
+  #
+  #  LVM users should disable the 'dir' setting above, and instead 
+  # specify the name of the volume to use.
+  #
+  # volume = myvolume
 
- #
- # Kernel options.
- #
- kernel     = /boot/vmlinuz-2.6.12-xenU
+  #
+  #  Disk and Sizing options.
+  #
+  size       = 2Gb      # Disk image size.
+  memory     = 128Mb    # Memory size
+  swap       = 128Mb    # Swap size
+  fs         = ext3     # use EXT3 filesystems
+  dist       = sarge    # Default distribution to install.
 
- #
- # Networking options.
- #
- gateway   = 192.168.1.1
- netmask   = 255.255.255.0
+  #
+  # Kernel options.
+  #
+  kernel     = /boot/vmlinuz-2.6.12-xenU 
+
+  #
+  # Networking options.
+  #
+  gateway   = 192.168.1.1
+  netmask   = 255.255.255.0 
 
 =for example end
 
@@ -291,6 +290,8 @@ Show the LVM volume to store images within.  If you wish to use loopback files p
 
   The available options are:
 
+=over 8
+
 =item debootstrap customization
 This allows you to make additions to the debootstrap command which is executed to create the image.
 
@@ -300,6 +301,9 @@ The hook scripts allow you to run customization scripts for each generated image
 =item the role directory
 The role directory allows you to customise a group of images in a special manner.
 
+=back
+
+=cut
 
 =head1 DEBOOTSTRAP CUSTOMIZATION
 
@@ -398,7 +402,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.99 2006-02-18 20:11:00 steve Exp $
+ $Id: xen-create-image,v 1.100 2006-02-21 00:16:30 steve Exp $
 
 =cut
 
@@ -1034,7 +1038,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.99 $';
+	my $REVISION      = '$Revision: 1.100 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
