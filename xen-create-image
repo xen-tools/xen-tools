@@ -27,7 +27,7 @@ xen-create-image - Create a new virtual Debian installation for Xen.
    --role        Run a role-specific script, post-install.
    --size        Set the size of the primary disk image.
    --swap        Set the size of the swap partition.   
-   --use-ide     Use ide names for virtual devices (hda vs sda)
+   --ide         Use IDE names for virtual devices (hda not sda)
 
 
   Networking options:
@@ -116,8 +116,8 @@ Specify the size of the primary drive to give the virtual image.  The size may b
 Specify the size of the virtual swap partition to create.  The size may be
 suffixed with either Mb, or Gb.
 
-=item B<--use-ide>
-Use ide style device names for the virtual devices. 
+=item B<--ide>
+Use IDE style device names for the virtual devices. 
 
 =item B<--version>
 Show the version number and exit.
@@ -402,7 +402,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.100 2006-02-21 00:16:30 steve Exp $
+ $Id: xen-create-image,v 1.101 2006-02-22 19:24:40 steve Exp $
 
 =cut
 
@@ -831,7 +831,7 @@ runCommand( "umount $dir" );
 #
 my $device = "sda";
 
-if ( $CONFIG{'use-ide'} )
+if ( $CONFIG{'ide'} )
 {
     $device = "hda";
 }
@@ -1026,7 +1026,7 @@ sub parseCommandLineArguments
 	       "passwd",       \$CONFIG{'passwd'},
 	       "role=s",       \$CONFIG{'role'},
 	       "cache=s",      \$CONFIG{'cache'},
-               "use-ide",      \$CONFIG{'use-ide'},
+               "ide",          \$CONFIG{'ide'},
 	       "help",         \$HELP,
 	       "manual",       \$MANUAL,
 	       "version",      \$VERSION
@@ -1038,7 +1038,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.100 $';
+	my $REVISION      = '$Revision: 1.101 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{

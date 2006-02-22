@@ -9,7 +9,7 @@
 #
 # Steve
 # --
-# $Id: 90-make-fstab,v 1.7 2006-02-18 12:23:12 steve Exp $
+# $Id: 90-make-fstab,v 1.8 2006-02-22 19:24:41 steve Exp $
 
 
 prefix=$1
@@ -48,7 +48,7 @@ esac
 # Make sure we use ide style device names if required
 #
 device=sda
-if [ "${use-ide}" ]; then
+if [ "${ide}" ]; then
     device=hda
 fi
 
