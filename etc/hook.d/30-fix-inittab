@@ -7,13 +7,13 @@
 #
 # Steve
 # --
-# $Id: 30-fix-inittab,v 1.4 2006-01-08 01:53:33 steve Exp $
+# $Id: 30-fix-inittab,v 1.5 2006-02-24 23:00:31 steve Exp $
 
 
 prefix=$1
 
 cat /etc/inittab | \
-  sed "s/tty1$/console/g" | \
+  sed "s/tty[0-9]$/console/g" | \
   sed "s/^\([2-6].*:respawn*\)/#\1/" \
   > ${prefix}/etc/inittab
 
