@@ -2,11 +2,7 @@
 #
 #  This script is responsible for setting up the Xen Configuration file
 
-#prefix=$1
-
-kernel="kern"
-memory=512
-hostname="aiurea"
+prefix=$1
 
 #
 # Make sure we use ide style device names if required
