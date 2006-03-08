@@ -5,13 +5,15 @@
 #
 # Steve
 # --
-# $Id: 60-copy-host-files,v 1.7 2006-02-18 12:23:24 steve Exp $
+# $Id: 60-copy-host-files,v 1.8 2006-03-08 18:10:07 radu Exp $
 
 
 
 prefix=$1
 
-cp /etc/resolv.conf ${prefix}/etc/
+# Compatibility with resolvconf (#355910)
+cat /etc/resolv.conf > ${prefix}/etc/resolv.conf
+
 cp /etc/passwd      ${prefix}/etc/
 cp /etc/shadow      ${prefix}/etc/
 cp /etc/group       ${prefix}/etc/
