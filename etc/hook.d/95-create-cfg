@@ -1,0 +1,34 @@
+#!/bin/sh -x
+#
+#  This script is responsible for setting up the Xen Configuration file
+
+#prefix=$1
+
+kernel="kern"
+memory=512
+hostname="aiurea"
+
+#
+# Make sure we use ide style device names if required
+#
+device=sda
+if [ "${use-ide}" ]; then
+    device=hda
+fi
+
+if [ "${dhcp}" ]; then
+	dyn='dhcp = "dhcp"'
+fi
+
+echo "Creating Xen configuration file in /etc/xen .. "
+
+cat <<E_O_CFG > /etc/xen/${hostname}.cfg
+kernel = '${kernel}'
+memory = ${memory}
+name   = '${hostname}'
+root   = '/dev/${device}1 ro'
+vif    = ['']
+disk   = [ '$image_vbd,${device}1,w', '$swap_vbd,${device}2,w' ]
+${dyn}
+
+E_O_CFG

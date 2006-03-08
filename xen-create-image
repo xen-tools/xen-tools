@@ -402,7 +402,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.101 2006-02-22 19:24:40 steve Exp $
+ $Id: xen-create-image,v 1.102 2006-03-08 18:37:01 radu Exp $
 
 =cut
 
@@ -823,39 +823,6 @@ if ( $CONFIG{'passwd'} )
 runCommand( "umount $dir" );
 
 #
-# Finally setup Xen to allow us to create the image.
-#
-
-#
-# Make sure we use ide style device names if required
-#
-my $device = "sda";
-
-if ( $CONFIG{'ide'} )
-{
-    $device = "hda";
-}
-
-print "\n\nCreating Xen configuration file in /etc/xen .. ";
-open( XEN, ">", "/etc/xen/$CONFIG{'hostname'}.cfg" );
-print XEN<<E_O_XEN;
-kernel = "$CONFIG{'kernel'}"
-memory = $CONFIG{'memory'}
-name   = "$CONFIG{'hostname'}"
-root   = "/dev/${device}1 ro"
-vif    = ['']
-disk   = [ '$image_vbd,${device}1,w', '$swap_vbd,${device}2,w' ]
-E_O_XEN
-if ( $CONFIG{'dhcp'} )
-{
-    print XEN "dhcp=\"dhcp\"\n";
-}
-close( XEN );
-print "Done\n";
-
-
-
-#
 #  Clear screen before printing success message, unless
 # we're running under '--debug'.
 #
@@ -1038,7 +1005,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.101 $';
+	my $REVISION      = '$Revision: 1.102 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -1489,6 +1456,8 @@ sub runHooks
 	}
     }
 
+    $ENV{'image_vdb'} = $image_vbd;
+    $ENV{'swap_vdb'}  = $swap_vbd;
 
     #
     # Make sure that our scripts run in sorted order, as
