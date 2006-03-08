@@ -4,7 +4,7 @@
 #
 # Steve
 # --
-# $Id: 10-disable-tls,v 1.6 2006-03-08 20:01:58 steve Exp $
+# $Id: 10-disable-tls,v 1.7 2006-03-08 20:08:28 steve Exp $
 
 
 prefix=$1
@@ -16,4 +16,3 @@ mv ${prefix}/lib/tls ${prefix}/lib/tls.disabled
 # it cannot be modified.
 #
 mkdir     ${prefix}/lib/tls
-chmod 0   ${prefix}/lib/tls
