@@ -118,7 +118,7 @@ Specify the LVM volume where images are to go
  --
  http://www.steve.org.uk/
 
- $Id: xen-duplicate-image,v 1.24 2006-02-18 20:11:00 steve Exp $
+ $Id: xen-duplicate-image,v 1.25 2006-03-10 18:18:59 radu Exp $
 
 =cut
 
@@ -318,6 +318,8 @@ memory = $CONFIG{'memory'}
 name   = "$CONFIG{'hostname'}"
 disk   = [ 'file:$image_out,sda1,w','file:$swap_out,sda2,w' ]
 root   = "/dev/sda1 ro"
+vif    = ['']
+
 E_O_XEN
 if ( $CONFIG{'dhcp'} )
 {
@@ -452,7 +454,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.24 $';
+	my $REVISION      = '$Revision: 1.25 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
