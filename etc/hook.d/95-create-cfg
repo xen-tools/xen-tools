@@ -1,8 +1,20 @@
-#!/bin/sh -x
+#!/bin/sh 
 #
 #  This script is responsible for setting up the Xen Configuration file
 
 prefix=$1
+
+#
+#  Useful hook for testing.
+#
+output_dir=/etc/xen
+
+if [ "${testing}" ]; then
+    if [ -d ${testing_dir} ]; then
+	output_dir=${testing_dir}
+    fi
+fi
+
 
 #
 # Make sure we use ide style device names if required
@@ -13,17 +25,18 @@ if [ "${use-ide}" ]; then
 fi
 
 if [ "${dhcp}" ]; then
-	dyn='dhcp = "dhcp"'
+    dyn='dhcp = "dhcp"'
+else
+    dyn="vif = ['ip=${ip}']"
 fi
 
 echo "Creating Xen configuration file in /etc/xen .. "
 
-cat <<E_O_CFG > /etc/xen/${hostname}.cfg
+cat <<E_O_CFG > ${output_dir}/${hostname}.cfg
 kernel = '${kernel}'
 memory = ${memory}
 name   = '${hostname}'
 root   = '/dev/${device}1 ro'
-vif    = ['']
 disk   = [ '$image_vbd,${device}1,w', '$swap_vbd,${device}2,w' ]
 ${dyn}
 
