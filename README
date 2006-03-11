@@ -74,6 +74,7 @@ xen-create-image
   The image may be customised by either hook scripts or a single
  role script - see the manpage for more details.
 
+
 xen-clone-image
 ---------------
 
@@ -109,5 +110,5 @@ xen-update-image
 
 Steve
 --
-$Id: README,v 1.26 2006-02-17 10:01:11 steve Exp $
+$Id: README,v 1.27 2006-03-11 19:50:40 steve Exp $
 
