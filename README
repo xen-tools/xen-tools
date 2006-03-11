@@ -75,7 +75,7 @@ xen-create-image
  role script - see the manpage for more details.
 
 
-xen-clone-image
+xen-duplicate-image
 ---------------
 
   This script allows a cloning operation to be conducted.  An existing
@@ -110,5 +110,5 @@ xen-update-image
 
 Steve
 --
-$Id: README,v 1.27 2006-03-11 19:50:40 steve Exp $
+$Id: README,v 1.28 2006-03-11 21:02:43 steve Exp $
 
