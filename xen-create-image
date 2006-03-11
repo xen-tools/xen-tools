@@ -402,7 +402,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.103 2006-03-11 19:55:44 steve Exp $
+ $Id: xen-create-image,v 1.104 2006-03-11 20:15:57 steve Exp $
 
 =cut
 
@@ -1005,7 +1005,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.103 $';
+	my $REVISION      = '$Revision: 1.104 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -1456,8 +1456,8 @@ sub runHooks
 	}
     }
 
-    $ENV{'image_vdb'} = $image_vbd;
-    $ENV{'swap_vdb'}  = $swap_vbd;
+    $ENV{'imagevdb'} = $image_vbd;
+    $ENV{'swapvdb'}  = $swap_vbd;
 
     #
     # Make sure that our scripts run in sorted order, as
