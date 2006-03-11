@@ -402,7 +402,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.105 2006-03-11 20:57:12 steve Exp $
+ $Id: xen-create-image,v 1.106 2006-03-11 21:37:04 steve Exp $
 
 =cut
 
@@ -765,6 +765,24 @@ runCommandWithProgress( $debootstrap );
 
 
 #
+#  Copy the newly installed files from the virtual image to the host,
+# these will then be copied back the next time an image is created.
+# 
+#  Big win.
+#
+#  NOTE: We do before running any hook or role scripts.  This might
+# not be ideal, but it avoids problems if any of those scripts run
+# "apt-get clean" inside the new instance.
+#
+if ( $CONFIG{'cache'} eq "yes" ) 
+{
+    print "\n\nCaching debootstrap files to the host system\n";
+    copyDebFiles( "$dir/var/cache/apt/archives", "/var/cache/apt/archives/" );
+    printWideMessage( "\rDone" );
+}
+
+
+#
 #  Now run any hook scripts post-install.  These will be the ones
 # we ship to setup the new image, or any local additions.
 #
@@ -788,22 +806,6 @@ if ( $CONFIG{'role'} )
 }
 
 
-
-#
-#  Copy the newly installed files from the virtual image to the host,
-# these will then be copied back the next time an image is created.
-# 
-#  Big win.
-#
-#  NOTE: We do this after running any hook or role scripts, to ensure
-# that any packages installed by either may be cached successfully.
-#
-if ( $CONFIG{'cache'} eq "yes" ) 
-{
-    print "\n\nCaching debootstrap files to the host system\n";
-    copyDebFiles( "$dir/var/cache/apt/archives", "/var/cache/apt/archives/" );
-    printWideMessage( "\rDone" );
-}
 
 
 #
@@ -1005,7 +1007,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.105 $';
+	my $REVISION      = '$Revision: 1.106 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
