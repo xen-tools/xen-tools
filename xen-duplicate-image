@@ -122,7 +122,7 @@ Specify the LVM volume where images are to go
  --
  http://www.steve.org.uk/
 
- $Id: xen-duplicate-image,v 1.27 2006-03-11 19:56:56 steve Exp $
+ $Id: xen-duplicate-image,v 1.28 2006-03-11 21:39:52 steve Exp $
 
 =cut
 
@@ -319,6 +319,10 @@ if ( -x "/etc/xen-tools/hook.d/95-create-cfg" )
     print "Setting up Xen configuration file .. ";
     `/etc/xen-tools/hook.d/95-create-cfg`;
 }
+else
+{
+    print "Failed to setup Xen configuration file .. ";
+}
 print "Done\n";
 
 
@@ -443,7 +447,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.27 $';
+	my $REVISION      = '$Revision: 1.28 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
