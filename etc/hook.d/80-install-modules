@@ -9,7 +9,7 @@
 #
 # Steve
 # --
-# $Id: 80-install-modules,v 1.4 2006-01-08 01:53:33 steve Exp $
+# $Id: 80-install-modules,v 1.5 2006-03-11 21:11:56 steve Exp $
 
 
 
@@ -28,4 +28,4 @@ cp -R /lib/modules/*/ ${prefix}/lib/modules
 #
 #  Now install the 'module-init-tools'.
 #
-DEBIAN_FRONTEND=noninteractive chroot $prefix /usr/bin/apt-get --yes --force-yes install module-init-tools
+DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes --force-yes install module-init-tools

@@ -5,10 +5,10 @@
 #
 # Steve
 # --
-# $Id: 99-clean-image,v 1.4 2006-01-08 01:53:33 steve Exp $
+# $Id: 99-clean-image,v 1.5 2006-03-11 21:11:56 steve Exp $
 
 
 prefix=$1
 
-chroot $prefix /usr/bin/apt-get clean
+chroot ${prefix} /usr/bin/apt-get clean
 
