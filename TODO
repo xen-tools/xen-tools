@@ -11,9 +11,7 @@ TODO
 
   5. Test for valid LVM devices.
 
-  6. Look at moving the xen.cfg file creation into a hook.
-
 Steve
 --
-$Id: TODO,v 1.12 2006-02-17 23:04:29 steve Exp $
+$Id: TODO,v 1.13 2006-03-11 19:50:09 steve Exp $
 
