@@ -1,12 +1,11 @@
 #!/bin/sh
 #
-#  Configure the new image to be a GDM VNC server.
+#  Configure the new image to be a XDM VNC server.
 #
 # Steve
 # --
 # http://www.steve.org.uk/
 #
-# $Id: xdm,v 1.3 2006-01-07 22:57:02 steve Exp $
 
 
 prefix=$1

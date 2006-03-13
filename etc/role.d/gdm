@@ -6,7 +6,6 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: gdm,v 1.1 2006-01-07 21:54:44 steve Exp $
 
 
 prefix=$1
