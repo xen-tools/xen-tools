@@ -5,7 +5,7 @@
 #
 # Steve
 # --
-# $Id: 40-setup-networking,v 1.5 2006-02-18 12:24:05 steve Exp $
+# http://www.steve.org.uk/
 
 
 prefix=$1

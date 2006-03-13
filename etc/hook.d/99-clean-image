@@ -5,8 +5,7 @@
 #
 # Steve
 # --
-# $Id: 99-clean-image,v 1.5 2006-03-11 21:11:56 steve Exp $
-
+# http://www.steve.org.uk/
 
 prefix=$1
 

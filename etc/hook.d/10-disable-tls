@@ -4,7 +4,7 @@
 #
 # Steve
 # --
-# $Id: 10-disable-tls,v 1.7 2006-03-08 20:08:28 steve Exp $
+# http://www.steve.org.uk/
 
 
 prefix=$1

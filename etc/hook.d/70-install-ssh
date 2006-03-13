@@ -1,10 +1,12 @@
 #!/bin/sh
 #
-#  This script installs OpenSSH upon the new system.
+#  This script installs OpenSSH upon the new system.  It must make sure
+# that the server is not running before it exits - otherwise the temporary
+# mounted directory will not be unmountable.
 #
 # Steve
 # --
-# $Id: 70-install-ssh,v 1.5 2006-02-05 14:53:35 steve Exp $
+# http://www.steve.org.uk/
 
 
 prefix=$1

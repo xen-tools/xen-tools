@@ -4,7 +4,7 @@
 #
 # Steve
 # --
-# $Id: 20-setup-apt,v 1.4 2006-01-08 01:53:33 steve Exp $
+# http://www.steve.org.uk/
 
 
 prefix=$1

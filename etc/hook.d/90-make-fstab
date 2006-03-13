@@ -9,7 +9,7 @@
 #
 # Steve
 # --
-# $Id: 90-make-fstab,v 1.8 2006-02-22 19:24:41 steve Exp $
+# http://www.steve.org.uk/
 
 
 prefix=$1

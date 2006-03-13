@@ -1,6 +1,11 @@
 #!/bin/sh 
 #
 #  This script is responsible for setting up the Xen Configuration file
+# 
+# Steve
+# --
+# http://www.steve.org.uk/
+
 
 prefix=$1
 
