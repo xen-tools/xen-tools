@@ -38,7 +38,6 @@ my @files = ( "/etc/hosts",
 foreach my $file ( @files )
 {
     File::Copy::copy( $file, $prefix . "/etc/" );
-    File::Copy::copy( $file, $prefix . "/etc/" );
 }
 
 
