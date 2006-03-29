@@ -1,30 +1,84 @@
-#!/bin/sh
+#!/usr/bin/perl -w
 #
 #  This script copies "essential" files from the host to the new
 # system.
+#
+#  At the same time it tries to copy all non-system accounts from
+# the host system into the new guest.
 #
 # Steve
 # --
 # http://www.steve.org.uk/
 
 
-prefix=$1
+use strict;
+use File::Copy;
 
-# Compatibility with resolvconf (#355910)
-cat /etc/resolv.conf > ${prefix}/etc/resolv.conf
 
-cp /etc/passwd      ${prefix}/etc/
-cp /etc/shadow      ${prefix}/etc/
-cp /etc/group       ${prefix}/etc/
-cp /etc/gshadow     ${prefix}/etc/
+my $prefix = shift;
+
+die "Prefix must be given" unless defined( $prefix );
+die "Prefix must be a directory" unless ( -d $prefix );
+
+
+#
+#  Make sure we have $prefix/etc
+#
+die "Prefix is missing /etc : $prefix" unless ( -d $prefix . "/etc" );
+
+
+#
+#  Copy some files literally.
+#
+my @files = ( "/etc/hosts",
+	      "/etc/shadow",
+	      "/etc/resolv.conf"
+	    );
+               
+foreach my $file ( @files )
+{
+    File::Copy::copy( $file, $prefix . "/etc/" );
+    File::Copy::copy( $file, $prefix . "/etc/" );
+}
+
+
 
 #
 # If sudo is installed upon the host then install it upon the guest,
 # with the same setup.
 #
-if [ -e /etc/sudoers ]; then
-    cp /etc/sudoers ${prefix}/etc/
-    chmod 440 ${prefix}/etc/sudoers
-    DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes --force-yes install sudo
-fi
+if ( ( -e "/etc/sudoers" ) && ( -x $prefix . "/usr/bin/apt-get" ) )
+{
+    File::Copy::copy( "/etc/sudoers", $prefix . "/etc" );
+    chmod( 0440, $prefix. "/etc/sudoers" );
 
+    `DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes --force-yes install sudo`;
+}
+
+
+
+#
+#  Now modify the password file.
+#
+#
+open( ORIG, "<", "/etc/passwd" ) or die "Failed to open /etc/passwd - $!";
+open( NEW,  ">>", $prefix . "/etc/passwd" ) or die "Failed to open $prefix/etc/passwd - $!";
+foreach my $line ( <ORIG> )
+{
+    chomp( $line );
+    if ( $line =~ /^([^:]+):([^:]+):([^:]+)/ )
+    {
+	my $user = $1;
+	my $pass = $2;
+	my $uid  = $3;
+
+	if ( ( $uid >= 1000 ) &&
+	     ( $user ne "nobody" ) )
+	{
+	    print NEW $line . "\n";
+	}
+    }
+
+}
+close( NEW );
+close( ORIG );
