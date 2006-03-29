@@ -4,7 +4,8 @@
 # system.
 #
 #  At the same time it tries to copy all non-system accounts from
-# the host system into the new guest.
+# the host system into the new guest unless the root password is
+# being setup with --passwd.
 #
 # Steve
 # --
@@ -31,13 +32,21 @@ die "Prefix is missing /etc : $prefix" unless ( -d $prefix . "/etc" );
 #  Copy some files literally.
 #
 my @files = ( "/etc/hosts",
-	      "/etc/shadow",
 	      "/etc/resolv.conf"
 	    );
                
 foreach my $file ( @files )
 {
     File::Copy::copy( $file, $prefix . "/etc/" );
+}
+
+
+#
+#  Only copy the /etc/shadow file if --passwd is *not* specified.
+#
+if ( !$ENV{'passwd'} ) 
+{
+    File::Copy::copy( "/etc/shadow", $prefix . "/etc/" );
 }
 
 
@@ -57,27 +66,33 @@ if ( ( -e "/etc/sudoers" ) && ( -x $prefix . "/usr/bin/apt-get" ) )
 
 
 #
-#  Now modify the password file.
+#  Now modify the password file *unless* the "--passwd" option
+# was given.
 #
-#
-open( ORIG, "<", "/etc/passwd" ) or die "Failed to open /etc/passwd - $!";
-open( NEW,  ">>", $prefix . "/etc/passwd" ) or die "Failed to open $prefix/etc/passwd - $!";
-foreach my $line ( <ORIG> )
+if ( ! ENV{'passwd'} )
 {
-    chomp( $line );
-    if ( $line =~ /^([^:]+):([^:]+):([^:]+)/ )
+    open( ORIG, "<", "/etc/passwd" ) 
+      or die "Failed to open /etc/passwd - $!";
+    open( NEW,  ">>", $prefix . "/etc/passwd" ) 
+      or die "Failed to open $prefix/etc/passwd - $!";
+    
+    foreach my $line ( <ORIG> )
     {
-	my $user = $1;
-	my $pass = $2;
-	my $uid  = $3;
-
-	if ( ( $uid >= 1000 ) &&
-	     ( $user ne "nobody" ) )
+	chomp( $line );
+	if ( $line =~ /^([^:]+):([^:]+):([^:]+)/ )
 	{
-	    print NEW $line . "\n";
+	    my $user = $1;
+	    my $pass = $2;
+	    my $uid  = $3;
+	    
+	    if ( ( $uid >= 1000 ) &&
+		 ( $user ne "nobody" ) )
+	    {
+		print NEW $line . "\n";
+	    }
 	}
     }
 
+    close( NEW );
+    close( ORIG );
 }
-close( NEW );
-close( ORIG );
