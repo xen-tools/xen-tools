@@ -402,7 +402,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.108 2006-03-28 07:19:42 steve Exp $
+ $Id: xen-create-image,v 1.109 2006-04-15 02:32:40 steve Exp $
 
 =cut
 
@@ -458,7 +458,7 @@ my %CONFIG;
 #
 # Release number.
 #
-my $RELEASE = '1.2';
+my $RELEASE = '1.3';
 
 
 
@@ -1020,7 +1020,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.108 $';
+	my $REVISION      = '$Revision: 1.109 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{

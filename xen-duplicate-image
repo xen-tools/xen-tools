@@ -122,7 +122,7 @@ Specify the LVM volume where images are to go
  --
  http://www.steve.org.uk/
 
- $Id: xen-duplicate-image,v 1.29 2006-03-11 21:43:52 steve Exp $
+ $Id: xen-duplicate-image,v 1.30 2006-04-15 02:32:40 steve Exp $
 
 =cut
 
@@ -171,7 +171,7 @@ my %CONFIG;
 #
 # Release number.
 #
-my $RELEASE = '1.2';
+my $RELEASE = '1.3';
 
 
 #
@@ -461,7 +461,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.29 $';
+	my $REVISION      = '$Revision: 1.30 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
