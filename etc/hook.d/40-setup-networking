@@ -29,7 +29,12 @@ iface eth0 inet static
  address ${ip}
  gateway ${gateway}
  netmask ${netmask}
+ # post-up  ethtool -K eth0 tx off
 
+#
+# The commented out line above will disable TCP checksumming which
+# might resolve problems for some users.  It is disabled by default
+#
 E_O_STATIC
 
 else
@@ -48,6 +53,12 @@ iface lo inet loopback
 # The primary network interface
 auto eth0
 iface eth0 inet dhcp
+# post-up ethtool -K eth0 tx off
+
+#
+# The commented out line above will disable TCP checksumming which
+# might resolve problems for some users.  It is disabled by default
+#
 E_O_DHCP
 
 fi
