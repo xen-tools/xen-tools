@@ -72,7 +72,7 @@ if ( ( -e "/etc/sudoers" ) && ( -x $prefix . "/usr/bin/apt-get" ) )
 #  Now modify the password file *unless* the "--passwd" option
 # was given.
 #
-if ( ! ENV{'passwd'} )
+if ( ! $ENV{'passwd'} )
 {
     open( ORIG, "<", "/etc/passwd" ) 
       or die "Failed to open /etc/passwd - $!";
