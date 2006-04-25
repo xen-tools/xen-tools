@@ -79,7 +79,7 @@ Specify the LVM volume where images were previously saved.
  --
  http://www.steve.org.uk/
 
- $Id: xen-delete-image,v 1.27 2006-04-15 02:32:40 steve Exp $
+ $Id: xen-delete-image,v 1.28 2006-04-25 18:27:38 steve Exp $
 
 =cut
 
@@ -143,6 +143,20 @@ if ( $CONFIG{'volume'} && $CONFIG{'dir'} )
     exit;
 }
 
+
+if ( ! defined( $CONFIG{'dir'} ) )
+{
+    print "The xen domain directory has not been specified\n";
+    exit;
+}
+else
+{
+    if ( ! -d $CONFIG{'dir'} )
+    {
+	print "The Xen domain directory '$CONFIG{'dir'}' doesn't exist\n";
+	exit;
+    }
+}
 
 #
 # Volumes are not supported yet :(
@@ -276,7 +290,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.27 $';
+	my $REVISION      = '$Revision: 1.28 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
