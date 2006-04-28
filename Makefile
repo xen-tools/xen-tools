@@ -5,7 +5,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.42 2006-04-15 02:32:40 steve Exp $
+# $Id: Makefile,v 1.43 2006-04-28 12:05:36 steve Exp $
 
 
 #
@@ -76,6 +76,7 @@ install: manpages
 	chmod 755 ${prefix}/usr/bin/xen-update-image
 	-mkdir -p ${prefix}/etc/xen-tools
 	-mkdir -p ${prefix}/etc/xen-tools/hook.d/
+	-mkdir -p ${prefix}/etc/xen-tools/skel/
 	-mkdir -p ${prefix}/etc/xen-tools/role.d/
 	cp etc/hook.d/[0-9]* ${prefix}/etc/xen-tools/hook.d/
 	cp etc/role.d/builder ${prefix}/etc/xen-tools/role.d/
