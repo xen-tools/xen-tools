@@ -14,6 +14,10 @@ BEGIN{ use_ok( 'English' ); }
 require_ok( 'English' );
 
 
+BEGIN{ use_ok( 'Env' ); }
+require_ok( 'Env' );
+
+
 BEGIN{ use_ok( 'File::Copy' ); }
 require_ok( 'File::Copy' );
 
@@ -34,11 +38,15 @@ BEGIN{ use_ok( 'Pod::Usage' ); }
 require_ok( 'Pod::Usage' );
 
 
-BEGIN{ use_ok( 'strict' ); }
-require_ok( 'strict' );
-
-
 BEGIN{ use_ok( 'Test::More' ); }
 require_ok( 'Test::More' );
+
+
+BEGIN{ use_ok( 'diagnostics' ); }
+require_ok( 'diagnostics' );
+
+
+BEGIN{ use_ok( 'strict' ); }
+require_ok( 'strict' );
 
 
