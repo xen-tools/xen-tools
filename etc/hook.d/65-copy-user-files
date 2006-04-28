@@ -1,0 +1,14 @@
+#!/bin/sh
+#
+#  Copy files from a 'skel' directory, if present, into the
+# new images
+#
+
+
+prefix=$1
+
+if [ -d /etc/xen-tools/skel ]; then
+   cp -RL /etc/xen-tools/skel/* ${prefix}/
+else
+   echo "skel directory not present, ignoring."
+fi
