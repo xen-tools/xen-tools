@@ -9,10 +9,4 @@
 # --
 # http://www.steve.org.uk/
 
-prefix=$1
-
-cat /etc/inittab | \
-  sed "s/tty[0-9]$/console/g" | \
-  sed "s/^\([2-6].*:respawn*\)/#\1/" \
-  > ${prefix}/etc/inittab
-
+sed -i -e 's/tty[0-9]$/console/g' -e 's/^\([2-6].*:respawn*\)/#\1/' $1/etc/inittab
