@@ -20,6 +20,7 @@ xen-create-image - Create a new virtual Debian installation for Xen.
    --debootstrap Pass anything named here onto debootstrap.
    --dist        Specify the distribution you wish to install: Sarge/Etch/Sid.
    --fs          Specify the filesystem type to use.
+   --initrd      Specify the initial ramdisk
    --kernel      Set the path to the kernel to use for dom U.
    --memory      Setup the amount of memory allocated to the instance.
    --mirror      Setup the mirror to use when installing Sarge.
@@ -83,6 +84,9 @@ Show the brief help information.
 
 =item B<--hostname>
 Set the hostname of the new instance.
+
+=item B<--initrd>
+Specify the initial ramdisk.
 
 =item B<--ip>
 Set the IP address for the virtual image.  Conflicts with B<--dhcp>
@@ -244,7 +248,8 @@ Show the LVM volume to store images within.  If you wish to use loopback files p
   #
   # Kernel options.
   #
-  kernel     = /boot/vmlinuz-2.6.12-xenU 
+  initrd     = /boot/initrd.img-2.6.16-1-xen-686
+  kernel     = /boot/vmlinuz-2.6.16-1-xen-686
 
   #
   # Networking options.
@@ -402,7 +407,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.109 2006-04-15 02:32:40 steve Exp $
+ $Id: xen-create-image,v 1.110 2006-05-07 14:36:04 steve Exp $
 
 =cut
 
@@ -517,7 +522,8 @@ $CONFIG{'fs'}	       = 'ext3';
 $CONFIG{'mirror'}      = 'http://ftp.us.debian.org/debian';
 $CONFIG{'dist'}	       = 'sarge';
 $CONFIG{'xm'}	       = '/usr/sbin/xm';
-$CONFIG{'kernel'}      = '/boot/vmlinuz-2.6.12-xenU';
+$CONFIG{'kernel'}      = '/boot/vmlinuz-2.6.16-1-xen-686';
+$CONFIG{'initrd'}      = '/boot/initrd.img-2.6.16-1-xen-686';
 $CONFIG{'debootstrap'} = '';
 $CONFIG{'hook_dir'}    = '/etc/xen-tools/hook.d/';
 $CONFIG{'role_dir'}    = '/etc/xen-tools/role.d/';
@@ -582,7 +588,8 @@ print "----------------\n";
 print "Image size     :  $CONFIG{'size'}\n";
 print "Swap size      :  $CONFIG{'swap'}\n";
 print "Memory size    :  $CONFIG{'memory'}\n";
-print "Kernel Path    :  $CONFIG{'kernel'}\n";
+print "Kernel path    :  $CONFIG{'kernel'}\n";
+print "initrd path    :  $CONFIG{'initrd'}\n";
 
 print "\nNetworking Information\n";
 print "----------------------\n";
@@ -1005,6 +1012,7 @@ sub parseCommandLineArguments
 	       "debootstrap=s",\$CONFIG{'debootstrap'},
 	       "debug" ,       \$CONFIG{'debug'},
 	       "kernel=s",     \$CONFIG{'kernel'},
+	       "initrd=s",     \$CONFIG{'initrd'},
 	       "passwd",       \$CONFIG{'passwd'},
 	       "role=s",       \$CONFIG{'role'},
 	       "cache=s",      \$CONFIG{'cache'},
@@ -1020,7 +1028,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.109 $';
+	my $REVISION      = '$Revision: 1.110 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
