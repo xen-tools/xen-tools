@@ -19,6 +19,7 @@ xen-create-image - Create a new virtual Debian installation for Xen.
    --cache       Cache .deb upon the host for speed improvement.
    --debootstrap Pass anything named here onto debootstrap.
    --dist        Specify the distribution you wish to install: Sarge/Etch/Sid.
+   --force       Force overwriting existing images.
    --fs          Specify the filesystem type to use.
    --initrd      Specify the initial ramdisk
    --kernel      Set the path to the kernel to use for dom U.
@@ -27,14 +28,14 @@ xen-create-image - Create a new virtual Debian installation for Xen.
    --passwd      Ask for a root password during setup.
    --role        Run a role-specific script, post-install.
    --size        Set the size of the primary disk image.
-   --swap        Set the size of the swap partition.   
+   --swap        Set the size of the swap partition.
    --ide         Use IDE names for virtual devices (hda not sda)
 
 
   Networking options:
    --dhcp      Setup the image to get an IP address via DHCP
    --gateway   Setup the iamge's network gateway.
-   --ip	       Setup the ip 
+   --ip	       Setup the ip
    --netmask   Setup the netmask
 
   Mandatory options:
@@ -71,6 +72,9 @@ Specify the root directory beneath which the image should be saved.  Subdirector
 
 =item B<--dist>
 Specify the distribution to install, defaults to 'sarge'.
+
+=item B<--force>
+Force the script to overwrite any existing swap or disk images - usually existing images will cause the script to abort.
 
 =item B<--fs>
 Specify the filesystem the image should be given.  Valid options are 'ext3',
@@ -113,7 +117,7 @@ Setup a password for the root account of the virtual machine.
 =item B<--role>
 Run a single, specific, role-script once the image has been setup.
 
-=item B<--size>  
+=item B<--size>
 Specify the size of the primary drive to give the virtual image.  The size may be suffixed with either Mb, or Gb.
 
 =item B<--swap>
@@ -121,7 +125,7 @@ Specify the size of the virtual swap partition to create.  The size may be
 suffixed with either Mb, or Gb.
 
 =item B<--ide>
-Use IDE style device names for the virtual devices. 
+Use IDE style device names for the virtual devices.
 
 =item B<--version>
 Show the version number and exit.
@@ -136,7 +140,7 @@ Show the LVM volume to store images within.  If you wish to use loopback files p
 
 =head1 LOOPBACK EXAMPLES
 
-  The following will create a 2Gb disk image, along with a 128Mb 
+  The following will create a 2Gb disk image, along with a 128Mb
  swap file with Debian Sarge setup and running via DHCP.
 
      xen-create-image --size=2Gb --swap=128Mb --dhcp \
@@ -154,7 +158,7 @@ Show the LVM volume to store images within.  If you wish to use loopback files p
  configuration file discussed later.
 
   The directory specified for the output will be used to store the files
- which are produced.  To avoid clutter each host will have its images 
+ which are produced.  To avoid clutter each host will have its images
  stored beneath the specified directory, named after the hostname.
 
   For example the images created above will be stored as:
@@ -193,7 +197,7 @@ Show the LVM volume to store images within.  If you wish to use loopback files p
 
 
   xen-create-image is a simple script which allows you to create new
- Xen instances of Debian GNU/Linux.  The new image will be comprised 
+ Xen instances of Debian GNU/Linux.  The new image will be comprised
  of two seperate images:
 
    1.  An image for the systems root disk.
@@ -231,7 +235,7 @@ Show the LVM volume to store images within.  If you wish to use loopback files p
   dir = /home/xen
 
   #
-  #  LVM users should disable the 'dir' setting above, and instead 
+  #  LVM users should disable the 'dir' setting above, and instead
   # specify the name of the volume to use.
   #
   # volume = myvolume
@@ -255,7 +259,7 @@ Show the LVM volume to store images within.  If you wish to use loopback files p
   # Networking options.
   #
   gateway   = 192.168.1.1
-  netmask   = 255.255.255.0 
+  netmask   = 255.255.255.0
 
 =for example end
 
@@ -313,10 +317,10 @@ The role directory allows you to customise a group of images in a special manner
 =head1 DEBOOTSTRAP CUSTOMIZATION
 
   If you wish to add new packages to the image automatically you may
- take advantage of the '--debootstrap' option which allows you to 
+ take advantage of the '--debootstrap' option which allows you to
  pass flags to the debootstrap command.
 
-  For example the following command causes three new packages to be 
+  For example the following command causes three new packages to be
  added to the base image:
 
       xen-create-image --debootstrap='--include=screen,sudo,less'
@@ -407,7 +411,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.111 2006-05-07 14:36:40 steve Exp $
+ $Id: xen-create-image,v 1.112 2006-05-08 20:47:14 steve Exp $
 
 =cut
 
@@ -528,7 +532,7 @@ $CONFIG{'debootstrap'} = '';
 $CONFIG{'hook_dir'}    = '/etc/xen-tools/hook.d/';
 $CONFIG{'role_dir'}    = '/etc/xen-tools/role.d/';
 $CONFIG{'cache'}       = 'yes';
-
+$CONFIG{'force'}       = 0;
 
 
 
@@ -549,7 +553,7 @@ parseCommandLineArguments();
 
 
 #
-#  Check that the arguments the user has supplied are both 
+#  Check that the arguments the user has supplied are both
 # valid, and complete.
 #
 checkArguments();
@@ -604,13 +608,13 @@ print "\n";
 #
 #  If the output directories don't exist then create them.
 #
-if ( ! $CONFIG{'volume'} ) 
+if ( ! $CONFIG{'volume'} )
 {
     if (  ! -d $CONFIG{'dir'} . "/domains/" )
     {
         mkdir $CONFIG{'dir'} . '/domains', 0777
           || die "Cannot create $CONFIG{'dir'}/domains - $!";
-    }    
+    }
     if ( ! -d $CONFIG{'dir'} . "/domains/" . $CONFIG{'hostname'} )
     {
         mkdir $CONFIG{'dir'}. '/domains/' . $CONFIG{'hostname'}, 0777
@@ -678,6 +682,12 @@ if ( $CONFIG{'volume'} )
 }
 else
 {
+    if ( ( -e $swap ) && ( !$CONFIG{'force'} ) )
+    {
+	print "\nERROR: The swap file we're trying to create already exists: $swap\n";
+	print "Add --force to create the file anyway\n";
+	exit;
+    }
     $swap_cmd = "/bin/dd if=/dev/zero of=$swap bs=1024k count=$CONFIG{'swap'}";
 }
 
@@ -707,6 +717,13 @@ else
 {
     #
     # Loopback
+    if ( ( -e $image ) && ( !$CONFIG{'force'} ) )
+    {
+	print "\nERROR: The image file we're trying to create already exists: $image\n";
+	print "Add --force to create the file anyway\n";
+	exit;
+    }
+
     $image_cmd = "/bin/dd if=/dev/zero of=$image bs=$CONFIG{'size'} count=0 seek=1024";
 }
 
@@ -743,7 +760,7 @@ runCommand( $mount_cmd );
 # Test that the mount worked
 #
 my $mount = runCommand( "/bin/mount" );
-if ( ! $mount =~ /$image/) 
+if ( ! $mount =~ /$image/)
 {
     print "Something went wrong trying to mount the new filesystem\n";
     exit;
@@ -755,7 +772,7 @@ if ( ! $mount =~ /$image/)
 #
 #  This is a big caching speedup.
 #
-if ( $CONFIG{'cache'} eq "yes" ) 
+if ( $CONFIG{'cache'} eq "yes" )
 {
     print "\nCopying files from host to image.\n";
     runCommand( "mkdir -p $dir/var/cache/apt/archives" );
@@ -777,7 +794,7 @@ if ( ! -x $dir . "/usr/bin/apt-get" )
 {
     print "Something went wrong with the debootstrap installation\n";
     print "Aborting\n";
-    
+
     runCommand( "umount $dir" );
     exit;
 }
@@ -787,14 +804,14 @@ if ( ! -x $dir . "/usr/bin/apt-get" )
 #
 #  Copy the newly installed files from the virtual image to the host,
 # these will then be copied back the next time an image is created.
-# 
+#
 #  Big win.
 #
 #  NOTE: We do before running any hook or role scripts.  This might
 # not be ideal, but it avoids problems if any of those scripts run
 # "apt-get clean" inside the new instance.
 #
-if ( $CONFIG{'cache'} eq "yes" ) 
+if ( $CONFIG{'cache'} eq "yes" )
 {
     print "\n\nCaching debootstrap files to the host system\n";
     copyDebFiles( "$dir/var/cache/apt/archives", "/var/cache/apt/archives/" );
@@ -832,12 +849,12 @@ if ( $CONFIG{'role'} )
 #  We can not run this through hooks since it's interactive
 #
 
-if ( $CONFIG{'passwd'} ) 
+if ( $CONFIG{'passwd'} )
 {
     print "\nSetting root passwd:\n";
     my $passwd_cmd = `chroot $dir /usr/bin/passwd`;
 }
- 
+
 
 #
 #  Unmount the image; we're done.
@@ -934,17 +951,17 @@ sub readConfigurationFile
 
     open( FILE, "<", $file ) or die "Cannot read file '$file' - $!";
 
-    my $line       = ""; 
+    my $line       = "";
 
-    while (defined($line = <FILE>) ) 
+    while (defined($line = <FILE>) )
     {
         chomp $line;
-	if ($line =~ s/\\$//) 
+	if ($line =~ s/\\$//)
 	{
 	    $line .= <FILE>;
 	    redo unless eof(FILE);
 	}
-      
+
 	# Skip lines beginning with comments
 	next if ( $line =~ /^([ \t]*)\#/ );
 
@@ -968,7 +985,7 @@ sub readConfigurationFile
 	    $key =~ s/\s+$//;
 	    $val =~ s/^\s+//;
 	    $val =~ s/\s+$//;
-	    
+
 	    # Store value.
 	    $CONFIG{ $key } = $val;
 	}
@@ -1017,18 +1034,19 @@ sub parseCommandLineArguments
 	       "role=s",       \$CONFIG{'role'},
 	       "cache=s",      \$CONFIG{'cache'},
                "ide",          \$CONFIG{'ide'},
+               "force",        \$CONFIG{'force'},
 	       "help",         \$HELP,
 	       "manual",       \$MANUAL,
 	       "version",      \$VERSION
 	      );
-    
+
     pod2usage(1) if $HELP;
     pod2usage(-verbose => 2 ) if $MANUAL;
 
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.111 $';
+	my $REVISION      = '$Revision: 1.112 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -1134,7 +1152,7 @@ EOF
 	 !defined( $FILESYSTEM_MOUNT{lc( $CONFIG{'fs'} ) } ) )
     {
 	print "Unknown filesystem '$CONFIG{'fs'}'.  Valid choices are:\n";
-	foreach my $key (sort keys %FILESYSTEM_MOUNT ) 
+	foreach my $key (sort keys %FILESYSTEM_MOUNT )
 	{
 	    print "\t" . $key . "\n";
 	}
@@ -1150,7 +1168,7 @@ EOF
 	  exit;
     }
 
-    # 
+    #
     #  Make sure we have a valid size
     #
     if ( !(($CONFIG{'size'} =~ /^\d+[GM]b*$/i) && ($CONFIG{'swap'} =~ /^\d+[GM]b*$/i)) )
@@ -1191,7 +1209,7 @@ EOF
     {
 	$CONFIG{'size'} =~ s/Mb*$/k/i;
     }
-    
+
 
     #
     # Now strip the trailing 'Mb' from the swap size.
@@ -1202,10 +1220,10 @@ EOF
     }
 
 
-    #    
+    #
     #  Check mirror format
     #
-    if (!($CONFIG{'mirror'} =~ /^http/i)) 
+    if (!($CONFIG{'mirror'} =~ /^http/i))
     {
 	print "Please enter a valid mirror.\n";
 	exit;
@@ -1228,15 +1246,15 @@ EOF
 	$CONFIG{'ip'}	     = '';
     }
 
-    # 
+    #
     #  Check --cache option
     #
     if ( ($CONFIG{'cache'} ne 'yes') && ($CONFIG{'cache'} ne 'no') ) {
 	print "Valid options for --cache are yes/no.\n";
 	exit;
     }
-   
-    
+
+
     #
     #  If the user is executing a role-script make sure it exists.
     #
@@ -1325,7 +1343,7 @@ sub runCommand
 
 =cut
 
-sub runCommandWithProgress 
+sub runCommandWithProgress
 {
     my ( $cmd ) = ( @_ );
 
@@ -1376,11 +1394,11 @@ sub runCommandWithProgress
 
 	    #
 	    # Pad to exactly terminal width.
-	    while( length( $output ) < $TERMINAL_WIDTH ) 
-	    { 
-		$output .= " " ; 
+	    while( length( $output ) < $TERMINAL_WIDTH )
+	    {
+		$output .= " " ;
 	    }
-	    
+
 
 	    #
 	    # Now rewind cursor to start of line and display
@@ -1426,7 +1444,7 @@ sub getTerminalSize
     my $height = 25;
 
     #
-    #  Test loading the size module.  If this fails 
+    #  Test loading the size module.  If this fails
     # then we will use the defaults sizes.
     #
     eval( $testModule );
@@ -1451,7 +1469,7 @@ sub getTerminalSize
 
   When the image has been created, but before the temporary image
  is unmounted, each executable script inside the hook directory will
- be executed.  
+ be executed.
 
   (The scripts are executed "in order" which might be useful for users
  who wish to ensure some actions occur before others.)
@@ -1459,7 +1477,7 @@ sub getTerminalSize
   The scripts will be given single argument: the name of the directory
  within which the image is mounted.
 
-  The rest of the configuration variables will be passed via 
+  The rest of the configuration variables will be passed via
  environmental variables.
 
 =cut
@@ -1550,7 +1568,7 @@ sub copyDebFiles
 	{
 	    File::Copy::cp( $file, $dest );
 	}
-	
+
 	$count += 1;
     }
 }
