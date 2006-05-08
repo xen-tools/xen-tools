@@ -20,7 +20,7 @@
 # --
 # http://www.steve.org.uk
 #
-# $Id: xen-tools,v 1.20 2006-02-16 18:06:03 steve Exp $
+# $Id: xen-tools,v 1.21 2006-05-08 20:55:39 steve Exp $
 #
 
 
@@ -38,7 +38,7 @@ _xen_create_image()
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
     prev=${COMP_WORDS[COMP_CWORD-1]}
-    opts='--broadcast --boot --debug --debootstrap --dhcp --dir --dist --fs --gateway --help --hostname --ip --manual --memory --mirror --passwd --role --size --swap --volume --version'
+    opts='--broadcast --boot --debug --debootstrap --dhcp --dir --dist --force --fs --gateway --help --hostname --ip --initrd --kernel --manual --memory --mirror --passwd --role --size --swap --volume --version'
     
     
     #
