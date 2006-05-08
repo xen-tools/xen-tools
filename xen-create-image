@@ -293,16 +293,16 @@ Show the LVM volume to store images within.  If you wish to use loopback files p
 
 =head1 CUSTOMIZATION
 
-  There are three different types of customization which are available
- to you.  These allow you to change the generated images in several
- ways.
+  There are four different types of customization which may be applied
+ to the Xen domains which are produced by this script.  These different
+ approachs allow you to change the generated images in several ways.
 
   The available options are:
 
 =over 8
 
 =item debootstrap customization
-This allows you to make additions to the debootstrap command which is executed to create the image.
+This allows you to make additions to the debootstrap command which is executed to install Debian within the image.
 
 =item the hook directory
 The hook scripts allow you to run customization scripts for each generated image.
@@ -310,18 +310,25 @@ The hook scripts allow you to run customization scripts for each generated image
 =item the role directory
 The role directory allows you to customise a group of images in a special manner.
 
+=item the skellington directory
+This directory allows you to copy a collection of custom files to each generated image easily.
+
+
 =back
 
 =cut
+
+
 
 =head1 DEBOOTSTRAP CUSTOMIZATION
 
   If you wish to add new packages to the image automatically you may
  take advantage of the '--debootstrap' option which allows you to
- pass flags to the debootstrap command.
+ pass flags to the debootstrap command which is invoked to install
+ a basic Debian setup within the primary disk image of your guest.
 
   For example the following command causes three new packages to be
- added to the base image:
+ added to the installed image:
 
       xen-create-image --debootstrap='--include=screen,sudo,less'
 
@@ -375,13 +382,13 @@ The role directory allows you to customise a group of images in a special manner
 
   The scripts which are included in the hook directory are executed
  for every single image you create.  This can allow you to make global
- changes to the generated image very easily, however it doesn't allow
+ changes to the generated image very easily, however they don't allow
  you to do different things for different types of images.
 
   Instead the "role" scripts are used for that purpose.  If you
  give an argument "--role=foo" then the script /etc/xen-tools/role.d/foo
- will be executed once the image has been created, after the hooks
- have run.
+ will be executed after the image has been created and after any hooks
+ have finished executing.
 
   This allows you to create different customizations for particular
  image types.  Several role scripts have been included to provide
@@ -404,6 +411,27 @@ Install an X11 server, using VNC and XDM
 =back
 
 
+
+=head1 THE SKELLINGTON DIRECTORY
+
+  Any files present in the directory /etc/xen-tools/skel will be copied
+ across to each new guest image.  The role of this directory is analogous
+ to the /etc/skel directory.
+
+  A typical use for this would be to copy a public key across to each
+ new system.  You could do this by running:
+
+=for example start
+
+    mkdir -p /etc/xen-tools/skel/.ssh
+    chmod 700 /etc/xen-tools/skel/.ssh
+    cp /root/.ssh/id_rsa.pub /etc/xen-tools/skel/.ssh/authorized_keys2
+    chmod 644 /etc/xen-tools/skel/.ssh/authorized_keys2
+
+=for example cut
+
+
+
 =head1 AUTHOR
 
 
@@ -411,7 +439,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.112 2006-05-08 20:47:14 steve Exp $
+ $Id: xen-create-image,v 1.113 2006-05-08 20:54:35 steve Exp $
 
 =cut
 
@@ -1046,7 +1074,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.112 $';
+	my $REVISION      = '$Revision: 1.113 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
