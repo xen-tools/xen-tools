@@ -8,7 +8,10 @@
 prefix=$1
 
 if [ -d /etc/xen-tools/skel ]; then
-   cp -RL /etc/xen-tools/skel/* ${prefix}/
+   #
+   #  Copy everything from skel directory, even "dotfiles".
+   #
+   (cd /etc/xen-tools/skel; tar -cf - . ) | (cd ${prefix}/; tar -xpf -)
 else
    echo "skel directory not present, ignoring."
 fi
