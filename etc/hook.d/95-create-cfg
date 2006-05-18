@@ -25,7 +25,7 @@ fi
 # Make sure we use ide style device names if required
 #
 device=sda
-if [ "${use-ide}" ]; then
+if [ "${ide}" ]; then
     device=hda
 fi
 
