@@ -1,7 +1,7 @@
 #!/bin/sh
 #
-#  This script runs 'apt-get clean' on the freshly created image,
-# to make sure it has the maximum available amount of free space.
+#  This script cleans the newly created image appropriately both for
+# RPM based systems and for APT systems.
 #
 # Steve
 # --
@@ -10,11 +10,19 @@
 prefix=$1
 
 
-#
-#  Don't run apt-get if we're running under rpmstrap.
-#
-if [ -z "${rpmstrap}" ]; then
+if [ "${rpmstrap}" ]; then
 
+    #
+    #  Clean the crazy RPM scattered files.
+    #
+    find ${prefix}/etc -name '*.rpmorig' -exec rm -f \{\} \;
+    find ${prefix}/etc -name '*.rpmnew' -exec rm -f \{\} \;
+
+else
+
+    #
+    #  Clean APT cache
+    #
     chroot ${prefix} /usr/bin/apt-get clean
 
 fi
