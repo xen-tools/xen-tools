@@ -12,8 +12,20 @@
 prefix=$1
 
 if [ "${rpmstrap}" ]; then
-    echo "ssh installation for non-Debian distribution ${dist} is not available."
-    exit;
+
+    #
+    # Use yum to install openssh if we can.
+    #
+    if [[ -x ${prefix}/usr/bin/yum ]]; then
+	    chroot ${prefix}/usr/bin/yum -y install openssh-server
+    else
+	echo "I don't know how to install OpenSSH for your distro."
+    fi
+
+    #
+    #  Finished.
+    #
+    exit
 fi
 
 #
