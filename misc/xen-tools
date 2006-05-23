@@ -20,7 +20,7 @@
 # --
 # http://www.steve.org.uk
 #
-# $Id: xen-tools,v 1.21 2006-05-08 20:55:39 steve Exp $
+# $Id: xen-tools,v 1.22 2006-05-23 12:36:46 steve Exp $
 #
 
 
@@ -33,17 +33,24 @@
 #
 _xen_create_image()
 {
-    local cur prev ip roles
+    local cur prev ip roles dists
 
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
     prev=${COMP_WORDS[COMP_CWORD-1]}
-    opts='--broadcast --boot --debug --debootstrap --dhcp --dir --dist --force --fs --gateway --help --hostname --ip --initrd --kernel --manual --memory --mirror --passwd --role --size --swap --volume --version'
+    opts='--broadcast --boot --debug --debootstrap --dhcp --dir --dist --force --fs --gateway --help --hostname --ip --initrd --kernel --manual --memory --mirror --passwd --role --rpmstrap --size --swap --volume --version'
     
     
     #
     # Complete the initial part of the IP in the configuration file.
     ip=`grep ^gateway /etc/xen-tools/xen-tools.conf | awk -F'= '  '{print $2}'`
+
+    #
+    # Available distributions, from rpmstrap
+    #
+    if [ -d /usr/lib/rpmstrap/scripts ]; then
+       dists=`ls -1 /usr/lib/rpmstrap/scripts`
+    fi
 
     case "$prev" in
 	--dir)
@@ -51,7 +58,7 @@ _xen_create_image()
 	    return 0
 	    ;;
 	--dist)
-	    COMPREPLY=( $( compgen -W 'sid sarge etch'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+	    COMPREPLY=( $( compgen -W '${dists} sid sarge etch'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
 	    return 0
 	    ;;
 	--fs)
