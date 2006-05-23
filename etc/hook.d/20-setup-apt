@@ -10,15 +10,6 @@
 prefix=$1
 
 
-#
-#  If we're installing a distribution with rpmstrap then don't
-# touch /etc/apt/sources.list
-#
-if [ "${rpmstrap}" ]; then
-    echo "APT not available for non-Debian distribution ${dist}"
-    exit;
-fi
-
 
 if [[ -d ${prefix}/etc/apt ]]; then
 
