@@ -12,8 +12,16 @@ prefix=$1
 
 
 if [[ "${rpmstrap}" ]]; then
-    echo "TODO : Sort out networking for non-Debian distribution ${dist}."
-    exit;
+
+    if [[ -e ${prefix}/etc/rc.d/rc.local ]]; then
+	echo "ifconfig eth0 ${ip} up"          >> ${prefix}/etc/rc.d/rc.local 
+	echo "route add default gw ${gateway}" >> ${prefix}/etc/rc.d/rc.local 
+	exit
+    else
+	echo "TODO : Sort out networking for non-Debian distribution ${dist}."
+	exit;
+
+    fi
 fi
 
 
