@@ -28,7 +28,7 @@ if [[ "${rpmstrap}" ]]; then
 	    cat <<E_O_STATIC >${prefix}/etc/sysconfig/network-scripts/ifcfg-eth0
 DEVICE=eth0
 ONBOOT=yes
-BOOTPROTO=none
+BOOTPROTO=static
 IPADDR=${ip}
 NETMASK=${netmask}
 GATEWAY=${gateway}
