@@ -40,6 +40,15 @@ BOOTPROTO=dhcp
 ONBOOT=yes
 E_O_DHCP
 	fi
+
+	#
+	#  Don't forget to setup the default route.
+	#
+	cat <<EOF >${prefix}/etc/sysconfig/network
+NETWORKING=yes
+GATEWAY=${gateway}
+HOSTNAME=${hostname}
+EOF
     else
 	echo "TODO : Sort out networking for non-Debian distribution ${dist}."
 	exit;
