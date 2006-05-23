@@ -11,12 +11,35 @@
 prefix=$1
 
 
+
+##
+#                           ##
+#  RPMStrap installation.    #
+#                           ##
+##
 if [[ "${rpmstrap}" ]]; then
 
-    if [[ -e ${prefix}/etc/rc.d/rc.local ]]; then
-	echo "ifconfig eth0 ${ip} up"          >> ${prefix}/etc/rc.d/rc.local 
-	echo "route add default gw ${gateway}" >> ${prefix}/etc/rc.d/rc.local 
-	exit
+    if [ -d ${prefix}/etc/sysconfig/network-scripts ]; then
+
+	#
+	#  Test for static vs. DHCP
+	#
+	if [[ -z "${dhcp}" ]]; then
+	    cat <<E_O_STATIC >${prefix}/etc/sysconfig/network-scripts/ifcfg-eth0
+DEVICE=eth0
+ONBOOT=yes
+BOOTPROTO=none
+IPADDR=${ip}
+NETMASK=${netmask}
+GATEWAY=${gateway}
+E_O_STATIC
+	else
+	    cat <<E_O_DHCP >${prefix}/etc/sysconfig/network-scripts/ifcfg-eth0
+DEVICE=eth0
+BOOTPROTO=dhcp
+ONBOOT=yes
+E_O_DHCP
+	fi
     else
 	echo "TODO : Sort out networking for non-Debian distribution ${dist}."
 	exit;
@@ -25,9 +48,13 @@ if [[ "${rpmstrap}" ]]; then
 fi
 
 
-#
-#  OK now we're in Debian-only land.
-#
+
+
+##
+#                         ##
+#  Debian installation.    #
+#                         ##
+##
 
 if [[ -z "${dhcp}" ]]; then
 
