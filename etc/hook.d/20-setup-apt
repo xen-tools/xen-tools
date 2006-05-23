@@ -44,15 +44,15 @@ else
 
     #
     #  Setup yum if we've got it installed.
-    if [[ -e ${prefix}/etc/yum.repos.d/ ]]; then
+    if [ -d ${prefix}/etc/yum.repos.d/ ]; then
 
 	#
 	# This works for centos4 - dunno about the rest yet.
 	#
-	perl -pi.bak -e 's/enabled=0/enabled=1/g'     *.repo
-	perl -pi.bak -e 's/gpgcheck=1/gpgcheck=0/g'   *.repo
-	perl -pi.bak -e 's/^\#baseurl/baseurl/g'      *.repo
-	perl -pi.bak -e 's/^mirrorlist/#mirrorlist/g' *.repo
+	perl -pi.bak -e 's/enabled=0/enabled=1/g'     /etc/yum.repos.d/*.repo
+	perl -pi.bak -e 's/gpgcheck=1/gpgcheck=0/g'   /etc/yum.repos.d/*.repo
+	perl -pi.bak -e 's/^\#baseurl/baseurl/g'      /etc/yum.repos.d/*.repo
+	perl -pi.bak -e 's/^mirrorlist/#mirrorlist/g' /etc/yum.repos.d/*.repo
 
 	#
         # Update the package lists that Yum knows about.
