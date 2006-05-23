@@ -448,7 +448,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.115 2006-05-23 12:21:36 steve Exp $
+ $Id: xen-create-image,v 1.116 2006-05-23 12:33:19 steve Exp $
 
 =cut
 
@@ -1041,7 +1041,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.115 $';
+	my $REVISION      = '$Revision: 1.116 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -1352,7 +1352,7 @@ sub installBaseSystem
     #
     if ( $CONFIG{'rpmstrap' } )
     {
-	$command = "rpmstrap $CONFIG{'dist'}' $dir";
+	$command = "rpmstrap $CONFIG{'dist'} $dir";
     }
     else
     {
