@@ -20,9 +20,9 @@ cd ${prefix}/dev
 # Make the devices.
 #
 if [ "${rpmstrap}" ]; then
-    ./MAKEDEV console
-    ./MAKEDEV null
-    ./MAKEDEV zero
+    chroot ${prefix} /bin/sh -c 'cd /dev && ./MAKEDEV console'
+    chroot ${prefix} /bin/sh -c 'cd /dev && ./MAKEDEV null'
+    chroot ${prefix} /bin/sh -c 'cd /dev && ./MAKEDEV zero'
 else
     ./MAKEDEV generic
 fi
