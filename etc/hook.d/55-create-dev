@@ -19,4 +19,10 @@ cd ${prefix}/dev
 #
 # Make the devices.
 #
-./MAKEDEV generic
+if [ "${rpmstrap}" ]; then
+    ./MAKEDEV console
+    ./MAKEDEV null
+    ./MAKEDEV zero
+else
+    ./MAKEDEV generic
+fi

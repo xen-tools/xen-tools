@@ -9,6 +9,17 @@
 
 prefix=$1
 
+
+#
+#  If we're installing a distribution with rpmstrap then don't
+# touch /etc/apt/sources.list
+#
+if [ "${rpmstrap}" ]; then
+    echo "APT not available for non-Debian distribution ${dist}"
+    exit;
+fi
+
+
 cat <<E_O_APT > ${prefix}/etc/apt/sources.list
 #
 #  /etc/apt/sources.list

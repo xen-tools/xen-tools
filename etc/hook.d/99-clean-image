@@ -9,5 +9,12 @@
 
 prefix=$1
 
-chroot ${prefix} /usr/bin/apt-get clean
 
+#
+#  Don't run apt-get if we're running under rpmstrap.
+#
+if [ -z "${rpmstrap}" ]; then
+
+    chroot ${prefix} /usr/bin/apt-get clean
+
+fi

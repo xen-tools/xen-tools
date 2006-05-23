@@ -10,6 +10,17 @@
 
 prefix=$1
 
+
+if [[ "${rpmstrap}" ]]; then
+    echo "TODO : Sort out networking for non-Debian distribution ${dist}."
+    exit;
+fi
+
+
+#
+#  OK now we're in Debian-only land.
+#
+
 if [[ -z "${dhcp}" ]]; then
 
     #

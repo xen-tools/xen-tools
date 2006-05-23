@@ -11,6 +11,11 @@
 
 prefix=$1
 
+if [ "${rpmstrap}" ]; then
+    echo "ssh installation for non-Debian distribution ${dist} is not available."
+    exit;
+fi
+
 #
 #  This function installs a package upon the guest image.
 #

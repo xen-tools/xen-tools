@@ -25,6 +25,9 @@ mkdir -p ${prefix}/lib/modules
 cp -R /lib/modules/*/ ${prefix}/lib/modules
 
 #
-#  Now install the 'module-init-tools'.
+#  Now install the 'module-init-tools', unless running under rpmstrap.
 #
-DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes --force-yes install module-init-tools
+if [ -z "${rpmstrap}" ]; then
+
+    DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes --force-yes install module-init-tools
+fi

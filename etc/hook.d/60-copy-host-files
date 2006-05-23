@@ -37,7 +37,7 @@ my @files = ( "/etc/hosts",
               "/etc/gshadow",
               "/etc/group"
 	    );
-               
+
 foreach my $file ( @files )
 {
     File::Copy::copy( $file, $prefix . "/etc/" );
@@ -47,7 +47,7 @@ foreach my $file ( @files )
 #
 #  Only copy the /etc/shadow file if --passwd is *not* specified.
 #
-if ( !$ENV{'passwd'} ) 
+if ( !$ENV{'passwd'} )
 {
     File::Copy::copy( "/etc/shadow", $prefix . "/etc/" );
 }
@@ -74,11 +74,11 @@ if ( ( -e "/etc/sudoers" ) && ( -x $prefix . "/usr/bin/apt-get" ) )
 #
 if ( ! $ENV{'passwd'} )
 {
-    open( ORIG, "<", "/etc/passwd" ) 
+    open( ORIG, "<", "/etc/passwd" )
       or die "Failed to open /etc/passwd - $!";
-    open( NEW,  ">>", $prefix . "/etc/passwd" ) 
+    open( NEW,  ">>", $prefix . "/etc/passwd" )
       or die "Failed to open $prefix/etc/passwd - $!";
-    
+
     foreach my $line ( <ORIG> )
     {
 	chomp( $line );
@@ -87,7 +87,7 @@ if ( ! $ENV{'passwd'} )
 	    my $user = $1;
 	    my $pass = $2;
 	    my $uid  = $3;
-	    
+
 	    if ( ( $uid >= 1000 ) &&
 		 ( $user ne "nobody" ) )
 	    {

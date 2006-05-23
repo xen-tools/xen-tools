@@ -22,8 +22,12 @@ function install_package
 {
     package=$1
     
-    DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes --force-yes install $package
-
+    #
+    #  Only install the package if we're not running under rpmstrap
+    #
+    if [ -z "${rpmstrap}" ]; then
+	DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes --force-yes install $package
+    fi
 }
 
 
