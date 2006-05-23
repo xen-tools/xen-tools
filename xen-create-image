@@ -433,7 +433,7 @@ Install an X11 server, using VNC and XDM
 
 =head1 ADVANCED USAGE
 
- With the current release of Xen-tools it is possible to install several
+ With the current release of xen-tools it is possible to install several
  non-Debian distributions of GNU/Linux.
 
  To do so you'll need to run with the '--rpmstrap' argument, as follows:
@@ -448,7 +448,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.116 2006-05-23 12:33:19 steve Exp $
+ $Id: xen-create-image,v 1.117 2006-05-23 13:46:49 steve Exp $
 
 =cut
 
@@ -780,7 +780,15 @@ print "Done\n";
 #
 #  Now mount the image, in a secure temporary location.
 #
-my $dir = tempdir( CLEANUP => 1 );
+my $dir;
+if ( $CONFIG{'rpmstrap'} )
+{
+    $dir = tempdir( CLEANUP => 0 );
+}
+else
+{
+    $dir = tempdir( CLEANUP => 1 );
+}
 
 my $mount_cmd;
 if ( $CONFIG{'volume'} )
@@ -853,7 +861,17 @@ if ( $CONFIG{'passwd'} )
 #
 #  Unmount the image; we're done.
 #
-runCommand( "umount $dir" );
+runCommand( "umount -l $dir" );
+
+#
+#  Make sure the mount succeeded.
+#
+$mount = runCommand( "/bin/mount" );
+if ( ! $mount =~ /$image/)
+{
+    print "Something went wrong trying to unmount the new image\n";
+    die;
+}
 
 #
 #  Clear screen before printing success message, unless
@@ -1041,7 +1059,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.116 $';
+	my $REVISION      = '$Revision: 1.117 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -1352,7 +1370,7 @@ sub installBaseSystem
     #
     if ( $CONFIG{'rpmstrap' } )
     {
-	$command = "rpmstrap $CONFIG{'dist'} $dir";
+	$command = "rpmstrap --verbose $CONFIG{'dist'} $dir";
     }
     else
     {
@@ -1368,7 +1386,7 @@ sub installBaseSystem
     {
 	print "Something went wrong with the debootstrap installation\n";
 	print "Aborting\n";
-	
+
 	runCommand( "umount $dir" );
 	exit;
     }
