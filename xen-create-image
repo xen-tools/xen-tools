@@ -431,6 +431,15 @@ Install an X11 server, using VNC and XDM
 =for example cut
 
 
+=head1 ADVANCED USAGE
+
+ With the current release of Xen-tools it is possible to install several
+ non-Debian distributions of GNU/Linux.
+
+ To do so you'll need to run with the '--rpmstrap' argument, as follows:
+
+    xen-create-image --rpmstrap --dist=centos4 --hostname=test
+
 
 =head1 AUTHOR
 
@@ -439,7 +448,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.114 2006-05-08 21:36:19 steve Exp $
+ $Id: xen-create-image,v 1.115 2006-05-23 12:21:36 steve Exp $
 
 =cut
 
@@ -561,6 +570,7 @@ $CONFIG{'hook_dir'}    = '/etc/xen-tools/hook.d/';
 $CONFIG{'role_dir'}    = '/etc/xen-tools/role.d/';
 $CONFIG{'cache'}       = 'yes';
 $CONFIG{'force'}       = 0;
+$CONFIG{'rpmstrap'}    = 0;
 
 
 
@@ -795,56 +805,9 @@ if ( ! $mount =~ /$image/)
 }
 
 #
-#  Copy any local .deb files into the right location on the virtual image
-# so that "debootstrap" will use them - rather than fetching from the network.
-#
-#  This is a big caching speedup.
-#
-if ( $CONFIG{'cache'} eq "yes" )
-{
-    print "\nCopying files from host to image.\n";
-    runCommand( "mkdir -p $dir/var/cache/apt/archives" );
-    copyDebFiles( "/var/cache/apt/archives", "$dir/var/cache/apt/archives" );
-    printWideMessage( "\rDone" );
-}
-
-#
 #  Install the base system - with a simple sense of progress.
 #
-print "\n\nRunning debootstrap to install the system.   This will take a while!\n";
-my $debootstrap = "debootstrap $CONFIG{'debootstrap'} $CONFIG{'dist'} $dir $CONFIG{'mirror'}";
-runCommandWithProgress( $debootstrap );
-
-#
-#  Ensure the debootstrap command succeeded.
-#
-if ( ! -x $dir . "/usr/bin/apt-get" )
-{
-    print "Something went wrong with the debootstrap installation\n";
-    print "Aborting\n";
-
-    runCommand( "umount $dir" );
-    exit;
-}
-
-
-
-#
-#  Copy the newly installed files from the virtual image to the host,
-# these will then be copied back the next time an image is created.
-#
-#  Big win.
-#
-#  NOTE: We do before running any hook or role scripts.  This might
-# not be ideal, but it avoids problems if any of those scripts run
-# "apt-get clean" inside the new instance.
-#
-if ( $CONFIG{'cache'} eq "yes" )
-{
-    print "\n\nCaching debootstrap files to the host system\n";
-    copyDebFiles( "$dir/var/cache/apt/archives", "/var/cache/apt/archives/" );
-    printWideMessage( "\rDone" );
-}
+installBaseSystem();
 
 
 #
@@ -858,11 +821,14 @@ if ( -d $CONFIG{'hook_dir'} )
     print "Done\n";
 }
 
+
 #
 #  If we have a role to execute then do that now, after the hooks
 # have finished.
 #
-if ( $CONFIG{'role'} )
+#  NOTE:  Roles don't apply to rpmstrap'd systems.
+#
+if ( ( $CONFIG{'role'} ) && ( ! $CONFIG{'rpmstrap'} ) )
 {
     print "\n\nRunning role command : $CONFIG{'role'}\n";
     my $role_cmd = $CONFIG{'role_dir'} . "/" . $CONFIG{'role'};
@@ -1063,6 +1029,7 @@ sub parseCommandLineArguments
 	       "cache=s",      \$CONFIG{'cache'},
                "ide",          \$CONFIG{'ide'},
                "force",        \$CONFIG{'force'},
+               "rpmstrap",     \$CONFIG{'rpmstrap'},
 	       "help",         \$HELP,
 	       "manual",       \$MANUAL,
 	       "version",      \$VERSION
@@ -1074,7 +1041,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.114 $';
+	my $REVISION      = '$Revision: 1.115 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -1301,8 +1268,130 @@ EOF
 	    exit;
 	}
     }
+
+    #
+    #  If the user has chosen to use the rpmstrap tool make sure it is
+    # available.
+    #
+    if ( ( $CONFIG{'rpmstrap'} ) &&
+	 ( ! -x '/usr/bin/rpmstrap' ) )
+    {
+	print "You've chosen to use the rpmstrap program, but it isn't installed.\n";
+	exit;
+    }
+
+    #
+    #  If the user is using rpmstrap then only allow the dist=xxx to be
+    # taken from the supported rpmstrap distributions
+    #
+    if ( $CONFIG{'rpmstrap'} )
+    {
+	my $found = 0;
+	my @avail = ();
+
+	foreach my $file ( glob "/usr/lib/rpmstrap/scripts/*" )
+	{
+	    if ( $file =~ /(.*)\/(.*)/ ) { $file = $2; }
+
+	    if ( lc($CONFIG{'dist'}) eq lc( $file ) )
+	    {
+		$found = 1;
+	    }
+
+	    push @avail, $file;
+	}
+
+	if ( ! $found )
+	{
+	    print " The distribution you've chosen isn't supported by rpmstrap.\n";
+	    print " Please choose one of :\n";
+	    foreach my $a ( sort @avail )
+	    {
+		print "\t$a\n";
+	    }
+	    print "\n";
+	    exit;
+	}
+    }
 }
 
+
+
+
+=head2 installBaseSystem
+
+  Install the base operating system into the specified directory
+ and ensure it succeeded.
+
+=cut
+
+sub installBaseSystem
+{
+
+    print "\n\nInstalling the base system.   This will take a while!\n";
+
+
+    #
+    #  Copy any local .deb files into the right location on the virtual image
+    # so that "debootstrap" will use them - rather than fetching from the network.
+    #
+    #  This is a big caching speedup.
+    #
+    if ( ( $CONFIG{'cache'} eq "yes" ) && ( ! $CONFIG{'rpmstrap'} ) )
+    {
+	print "\nCopying files from host to image.\n";
+	runCommand( "mkdir -p $dir/var/cache/apt/archives" );
+	copyDebFiles( "/var/cache/apt/archives", "$dir/var/cache/apt/archives" );
+	printWideMessage( "\rDone" );
+    }
+
+    my $command = '';
+
+    #
+    #  Install with debootstrap, or rpmstrap.
+    #
+    if ( $CONFIG{'rpmstrap' } )
+    {
+	$command = "rpmstrap $CONFIG{'dist'}' $dir";
+    }
+    else
+    {
+	$command = "debootstrap $CONFIG{'debootstrap'} $CONFIG{'dist'} $dir $CONFIG{'mirror'}";
+    }
+
+    runCommandWithProgress( $command );
+
+    #
+    #  Ensure the debootstrap command succeeded.
+    #
+    if ( ! -x $dir . "/bin/ls" )
+    {
+	print "Something went wrong with the debootstrap installation\n";
+	print "Aborting\n";
+	
+	runCommand( "umount $dir" );
+	exit;
+    }
+
+    
+    #
+    #  Copy the newly installed files from the virtual image to the host,
+    # these will then be copied back the next time an image is created.
+    #
+    #  Big win.
+    #
+    #  NOTE: We do before running any hook or role scripts.  This might
+    # not be ideal, but it avoids problems if any of those scripts run
+    # "apt-get clean" inside the new instance.
+    #
+    if ( ( $CONFIG{'cache'} eq "yes" ) && ( ! $CONFIG{'rpmstrap'} ) )
+    {
+	print "\n\nCaching debootstrap files to the host system\n";
+	copyDebFiles( "$dir/var/cache/apt/archives", "/var/cache/apt/archives/" );
+	printWideMessage( "\rDone" );
+    }
+    
+}
 
 
 
