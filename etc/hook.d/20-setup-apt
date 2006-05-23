@@ -49,10 +49,10 @@ else
 	#
 	# This works for centos4 - dunno about the rest yet.
 	#
-	perl -pi.bak -e 's/enabled=0/enabled=1/g'     /etc/yum.repos.d/*.repo
-	perl -pi.bak -e 's/gpgcheck=1/gpgcheck=0/g'   /etc/yum.repos.d/*.repo
-	perl -pi.bak -e 's/^\#baseurl/baseurl/g'      /etc/yum.repos.d/*.repo
-	perl -pi.bak -e 's/^mirrorlist/#mirrorlist/g' /etc/yum.repos.d/*.repo
+	perl -pi.bak -e 's/enabled=0/enabled=1/g'     ${prefix}/etc/yum.repos.d/*.repo
+	perl -pi.bak -e 's/gpgcheck=1/gpgcheck=0/g'   ${prefix}/etc/yum.repos.d/*.repo
+	perl -pi.bak -e 's/^\#baseurl/baseurl/g'      ${prefix}/etc/yum.repos.d/*.repo
+	perl -pi.bak -e 's/^mirrorlist/#mirrorlist/g' ${prefix}/etc/yum.repos.d/*.repo
 
 	#
         # Update the package lists that Yum knows about.
