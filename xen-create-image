@@ -448,7 +448,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.117 2006-05-23 13:46:49 steve Exp $
+ $Id: xen-create-image,v 1.118 2006-05-23 20:14:09 steve Exp $
 
 =cut
 
@@ -1059,7 +1059,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.117 $';
+	my $REVISION      = '$Revision: 1.118 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -1463,6 +1463,9 @@ sub runCommand
     #
     # All done.
     #
+    $CONFIG{'debug'} && print "Output\n";
+    $CONFIG{'debug'} && print "======\n";
+    $CONFIG{'debug'} && print $output . "\n";
     $CONFIG{'debug'} && print "Finished : $cmd\n";
 
     return( $output );
@@ -1624,13 +1627,20 @@ sub runHooks
     #
     #  Setup the environment for the child processes.
     #
+    $CONFIG{'debug'} && print "Setting environment for hook scripts:\n";
     foreach my $key ( keys %CONFIG )
     {
 	if ( defined( $CONFIG{$key} ) )
 	{
 	    $ENV{$key} = $CONFIG{$key};
+
+	    if ( $CONFIG{'debug'} )
+	    {
+		print "\t" . $ENV{$key} . "=" . $CONFIG{$key} . "\n";
+	    }
 	}
     }
+    $CONFIG{'debug'} && print "=============\n";
 
     $ENV{'imagevbd'} = $image_vbd;
     $ENV{'swapvbd'}  = $swap_vbd;
