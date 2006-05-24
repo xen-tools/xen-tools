@@ -9,7 +9,7 @@
 
 
 prefix=$1
-
+dist=$1
 
 
 ##

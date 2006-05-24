@@ -8,11 +8,8 @@
 
 
 prefix=$1
+dist=$2
+
 
 mv ${prefix}/lib/tls ${prefix}/lib/tls.disabled
-
-#
-#  Make a new /lib/tls directory in the guest, and make sure
-# it cannot be modified.
-#
-mkdir     ${prefix}/lib/tls
+mkdir ${prefix}/lib/tls

@@ -8,11 +8,15 @@
 
 
 prefix=$1
+dist=$2
 
 
-
-if [[ -d ${prefix}/etc/apt ]]; then
-
+#
+#  This function will setup the sources.list file for new installations
+# of Debian GNU/Linux.
+#
+function setupDebianSources
+{
     cat <<E_O_APT > ${prefix}/etc/apt/sources.list
 #
 #  /etc/apt/sources.list
@@ -40,25 +44,49 @@ E_O_APT
     #  Now that the sources have been setup make sure the system is up to date.
     #
     chroot ${prefix} /usr/bin/apt-get update
-else
+}
 
+
+
+
+#
+#  This function sets up Yum on the new CentOS4 installations.
+#
+function setupCentOS4
+{
+    perl -pi.bak -e 's/enabled=0/enabled=1/g'     ${prefix}/etc/yum.repos.d/*.repo
+    perl -pi.bak -e 's/gpgcheck=1/gpgcheck=0/g'   ${prefix}/etc/yum.repos.d/*.repo
+    perl -pi.bak -e 's/^\#baseurl/baseurl/g'      ${prefix}/etc/yum.repos.d/*.repo
+    perl -pi.bak -e 's/^mirrorlist/#mirrorlist/g' ${prefix}/etc/yum.repos.d/*.repo
+    perl -pi.bak -e 's/\$releasever/4/g' ${prefix}/etc/yum.repos.d/*.repo
+    
     #
-    #  Setup yum if we've got it installed.
-    if [ -d ${prefix}/etc/yum.repos.d/ ]; then
-
-	#
-	# This works for centos4 - dunno about the rest yet.
-	#
-	perl -pi.bak -e 's/enabled=0/enabled=1/g'     ${prefix}/etc/yum.repos.d/*.repo
-	perl -pi.bak -e 's/gpgcheck=1/gpgcheck=0/g'   ${prefix}/etc/yum.repos.d/*.repo
-	perl -pi.bak -e 's/^\#baseurl/baseurl/g'      ${prefix}/etc/yum.repos.d/*.repo
-	perl -pi.bak -e 's/^mirrorlist/#mirrorlist/g' ${prefix}/etc/yum.repos.d/*.repo
-
-	#
-        # Update the package lists that Yum knows about.
-        #
-	if [[ -x ${prefix}/usr/bin/yum ]]; then
-	    chroot ${prefix}/usr/bin/yum update
-	fi
+    # Update the package lists that Yum knows about.
+    #
+    if [[ -x ${prefix}/usr/bin/yum ]]; then
+	chroot ${prefix}/usr/bin/yum update
     fi
-fi
+}
+
+
+
+
+#
+#  Entry point to the script.
+#
+case "${dist}" in
+    sarge|etch|sid)
+        setupDebianSources
+        ;;
+    centos4)
+	setupCentOS4
+	;;
+    *)
+	echo "Unknown distribution.  Fixme";
+	exit;
+	;;
+esac
+
+
+
+
