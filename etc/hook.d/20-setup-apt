@@ -82,7 +82,7 @@ case "${dist}" in
 	setupCentOS4
 	;;
     *)
-	echo "Unknown distribution.  Fixme";
+	echo "Unknown distribution '${dist}'.  Fixme";
 	exit;
 	;;
 esac
