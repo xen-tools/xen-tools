@@ -448,7 +448,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.118 2006-05-23 20:14:09 steve Exp $
+ $Id: xen-create-image,v 1.119 2006-05-24 10:57:17 steve Exp $
 
 =cut
 
@@ -1059,7 +1059,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.118 $';
+	my $REVISION      = '$Revision: 1.119 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -1289,14 +1289,22 @@ EOF
 
     #
     #  If the user has chosen to use the rpmstrap tool make sure it is
-    # available.
+    # available and disable caching.
     #
-    if ( ( $CONFIG{'rpmstrap'} ) &&
-	 ( ! -x '/usr/bin/rpmstrap' ) )
+    if ( $CONFIG{'rpmstrap'} )
     {
-	print "You've chosen to use the rpmstrap program, but it isn't installed.\n";
-	exit;
+	if ( ! -x '/usr/bin/rpmstrap' )
+	{
+	    print "You've chosen to use the rpmstrap program, but it isn't installed.\n";
+	    exit;
+	}
+
+	#
+	# RPMStrap implies no caching
+	#
+	$CONFIG{'cache'} = 'no';
     }
+
 
     #
     #  If the user is using rpmstrap then only allow the dist=xxx to be
@@ -1355,7 +1363,7 @@ sub installBaseSystem
     #
     #  This is a big caching speedup.
     #
-    if ( ( $CONFIG{'cache'} eq "yes" ) && ( ! $CONFIG{'rpmstrap'} ) )
+    if ( $CONFIG{'cache'} eq "yes" )
     {
 	print "\nCopying files from host to image.\n";
 	runCommand( "mkdir -p $dir/var/cache/apt/archives" );
@@ -1391,7 +1399,7 @@ sub installBaseSystem
 	exit;
     }
 
-    
+
     #
     #  Copy the newly installed files from the virtual image to the host,
     # these will then be copied back the next time an image is created.
@@ -1402,7 +1410,7 @@ sub installBaseSystem
     # not be ideal, but it avoids problems if any of those scripts run
     # "apt-get clean" inside the new instance.
     #
-    if ( ( $CONFIG{'cache'} eq "yes" ) && ( ! $CONFIG{'rpmstrap'} ) )
+    if ( $CONFIG{'cache'} eq "yes" )
     {
 	print "\n\nCaching debootstrap files to the host system\n";
 	copyDebFiles( "$dir/var/cache/apt/archives", "/var/cache/apt/archives/" );
