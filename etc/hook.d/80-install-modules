@@ -12,22 +12,52 @@
 # http://www.steve.org.uk/
 
 
-#
-#  The virtual image is mounted here.
-#
 prefix=$1
+dist=$2
+
 
 #
 #  Copy the modules from the host to the new system - we should only
 # really copy the *correct* modules, but we don't know what they are.
 #
-mkdir -p ${prefix}/lib/modules
-cp -R /lib/modules/*/ ${prefix}/lib/modules
+function copyModules
+{
+    mkdir -p ${prefix}/lib/modules
+    cp -R /lib/modules/*/ ${prefix}/lib/modules
+}
+
+
 
 #
-#  Now install the 'module-init-tools', unless running under rpmstrap.
+#  Setup the modules on a Debian GNU/Linux system.
 #
-if [ -z "${rpmstrap}" ]; then
-
+function setupDebian
+{
+    copyModules
     DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes --force-yes install module-init-tools
-fi
+}
+
+
+
+function setupCentOS4
+{
+    copyModules
+}
+
+
+
+#
+#  Entry point to the script.
+#
+case "${dist}" in
+    sarge|etch|sid)
+        setupDebian
+        ;;
+    centos4)
+	setupCentOS4
+	;;
+    *)
+	echo "Unknown distribution '${dist}'.  Fixme";
+	exit;
+	;;
+esac

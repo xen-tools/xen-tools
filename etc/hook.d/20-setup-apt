@@ -15,7 +15,7 @@ dist=$2
 #  This function will setup the sources.list file for new installations
 # of Debian GNU/Linux.
 #
-function setupDebianSources
+function setupDebian
 {
     cat <<E_O_APT > ${prefix}/etc/apt/sources.list
 #
@@ -76,7 +76,7 @@ function setupCentOS4
 #
 case "${dist}" in
     sarge|etch|sid)
-        setupDebianSources
+        setupDebian
         ;;
     centos4)
 	setupCentOS4

@@ -8,6 +8,13 @@
 
 
 prefix=$1
+dist=$2
+
+
+#
+#  This script doesn't do anything different on a per-distribution basis
+#
+
 
 #
 #  Useful hook for testing.

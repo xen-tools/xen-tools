@@ -7,22 +7,45 @@
 # --
 # http://www.steve.org.uk/
 
+
 prefix=$1
+dist=$2
 
 
-if [ "${rpmstrap}" ]; then
-
-    #
-    #  Clean the crazy RPM scattered files.
-    #
-    find ${prefix}/etc -name '*.rpmorig' -exec rm -f \{\} \;
-    find ${prefix}/etc -name '*.rpmnew' -exec rm -f \{\} \;
-
-else
-
-    #
-    #  Clean APT cache
-    #
+#
+#  Clean the APT package cache for Debian GNU/Linux.
+#
+function setupDebian
+{
     chroot ${prefix} /usr/bin/apt-get clean
+}
 
-fi
+
+#
+#  Clean a new image of CentOS4.
+#
+function setupCentOS4
+{
+    find ${prefix}/ -name '*.rpmorig' -exec rm -f \{\} \;
+    find ${prefix}/ -name '*.rpmnew' -exec rm -f \{\} \;
+    chroot ${prefix}/usr/bin/yum clean all
+
+}
+
+
+
+#
+#  Entry point to the script.
+#
+case "${dist}" in
+    sarge|etch|sid)
+        setupDebianSources
+        ;;
+    centos4)
+	setupCentOS4
+	;;
+    *)
+	echo "Unknown distribution '${dist}'.  Fixme";
+	exit;
+	;;
+esac

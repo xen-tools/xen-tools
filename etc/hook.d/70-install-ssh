@@ -10,45 +10,52 @@
 
 
 prefix=$1
+dist=$2
 
-if [ "${rpmstrap}" ]; then
 
-    #
-    # Use yum to install openssh if we can.
-    #
-    if [[ -x ${prefix}/usr/bin/yum ]]; then
-	    chroot ${prefix}/usr/bin/yum -y install openssh-server
-	    chroot ${prefix}/usr/bin/yum -y install openssh-server
-    else
-	echo "I don't know how to install OpenSSH for your distro."
-    fi
-
-    #
-    #  Finished.
-    #
-    exit
-fi
 
 #
-#  This function installs a package upon the guest image.
+#  Sets up the installation of OpenSSH on a Debian GNU/Linux system.
 #
-function install_package
+function setupDebian
 {
-    package=$1
-    
-    DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes --force-yes install $package
+    DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes --force-yes install ssh
 
+    #
+    #  Make sure sshd isn't running, this will cause our unmounting of the
+    # disk image to fail..
+    #
+    chroot ${prefix} /etc/init.d/ssh stop
 }
 
 
 
 #
-# Install the package.
+#  Sets up the installation of OpenSSH on a CentOS4 installation.
 #
-install_package ssh
+function setupCentOS4
+{
+    chroot ${prefix}/usr/bin/yum -y install openssh-server
+    chroot ${prefix}/usr/bin/yum -y install openssh-server
+}
+
+
 
 #
-#  Make sure sshd isn't running, this will cause our unmounting of the
-# disk image to fail..
+#  Entry point to the script.
 #
-chroot ${prefix} /etc/init.d/ssh stop
+case "${dist}" in
+    sarge|etch|sid)
+        setupDebianSources
+        ;;
+    centos4)
+	setupCentOS4
+	;;
+    *)
+	echo "Unknown distribution '${dist}'.  Fixme";
+	exit;
+	;;
+esac
+
+
+
