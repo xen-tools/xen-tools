@@ -11,7 +11,9 @@ TODO
 
   5. Test for valid LVM devices.
 
+  6. Test more distributions with RPMStrap, instead of just centos4.
+
 Steve
 --
-$Id: TODO,v 1.13 2006-03-11 19:50:09 steve Exp $
+$Id: TODO,v 1.14 2006-05-24 10:57:26 steve Exp $
 
