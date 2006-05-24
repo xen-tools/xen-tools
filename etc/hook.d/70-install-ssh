@@ -53,8 +53,10 @@ function setupDebian
 #
 function setupCentOS4
 {
+    chroot ${prefix} /bin/mount /proc
     chroot ${prefix} /usr/bin/yum -y install openssh-server
     chroot ${prefix} /usr/bin/yum -y install openssh-server
+    chroot ${prefix} /bin/umount /proc
 }
 
 
