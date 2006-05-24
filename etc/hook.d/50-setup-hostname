@@ -9,6 +9,12 @@
 
 
 prefix=$1
+dist=$2
+
+
+#
+#  This script doesn't do anything different on a per-distribution basis
+#
 
 echo ${hostname} > ${prefix}/etc/hostname
 echo ${hostname} > ${prefix}/etc/mailname

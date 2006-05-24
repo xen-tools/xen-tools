@@ -9,20 +9,46 @@
 
 
 prefix=$1
+dist=$2
+
 
 #
-#  Make sure we have a /dev directory and change into it.
+#  This routine sets up /dev on a Debian GNU/Linux system.
 #
-mkdir -p ${prefix}/dev
-cd ${prefix}/dev
+function setupDebian
+{
+    cd ${prefix}/dev
+    ./MAKEDEV generic
+}
+
 
 #
-# Make the devices.
+#  This routine sets up /dev on a CentOS4 system.
 #
-if [ "${rpmstrap}" ]; then
+function setupCentOS4
+{
     chroot ${prefix} /bin/sh -c 'cd /dev && ./MAKEDEV console'
     chroot ${prefix} /bin/sh -c 'cd /dev && ./MAKEDEV null'
     chroot ${prefix} /bin/sh -c 'cd /dev && ./MAKEDEV zero'
-else
-    ./MAKEDEV generic
-fi
+}
+
+
+
+
+#
+#  Entry point to the script.
+#
+case "${dist}" in
+    sarge|etch|sid)
+        setupDebian
+        ;;
+    centos4)
+	setupCentOS4
+	;;
+    *)
+	echo "Unknown distribution '${dist}'.  Fixme";
+	exit;
+	;;
+esac
+
+
