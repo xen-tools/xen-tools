@@ -13,6 +13,9 @@ prefix=$1
 dist=$2
 
 
+#
+#  Install a Debian package onto the new system.
+#
 function installDebianPackage
 {
     package=$1
