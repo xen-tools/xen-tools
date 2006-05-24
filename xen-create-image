@@ -448,7 +448,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.119 2006-05-24 10:57:17 steve Exp $
+ $Id: xen-create-image,v 1.120 2006-05-24 10:57:48 steve Exp $
 
 =cut
 
@@ -1059,7 +1059,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.119 $';
+	my $REVISION      = '$Revision: 1.120 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -1416,7 +1416,7 @@ sub installBaseSystem
 	copyDebFiles( "$dir/var/cache/apt/archives", "/var/cache/apt/archives/" );
 	printWideMessage( "\rDone" );
     }
-    
+
 }
 
 
