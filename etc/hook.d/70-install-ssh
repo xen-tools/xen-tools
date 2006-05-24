@@ -13,13 +13,28 @@ prefix=$1
 dist=$2
 
 
+function installDebianPackage
+{
+    package=$1
+
+    DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes --force-yes install ${package}
+
+}
 
 #
 #  Sets up the installation of OpenSSH on a Debian GNU/Linux system.
 #
 function setupDebian
 {
-    DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes --force-yes install ssh
+    case "${dist}" in
+	sarge)
+	    installDebianPackage ssh
+	    ;;
+	etch|sid)
+	    installDebianPackage openssh-server
+	    installDebianPackage openssh-client
+	    ;;
+    esac
 
     #
     #  Make sure sshd isn't running, this will cause our unmounting of the
@@ -46,7 +61,7 @@ function setupCentOS4
 #
 case "${dist}" in
     sarge|etch|sid)
-        setupDebianSources
+        setupDebian
         ;;
     centos4)
 	setupCentOS4
