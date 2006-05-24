@@ -337,16 +337,23 @@ This directory allows you to copy a collection of custom files to each generated
 
 =head1 HOOKS
 
-  After the image has been installed using debootstrap there is
- the chance for you to run arbitary scripts upon the new host
+  After the installation of your chosen GNU/Linux distribution
+ there is the chance for you to run arbitary scripts upon the new host
  before it is unmounted.
 
   To do this place executable scripts inside the "hook directory"
  /etc/xen-tools/hook.d/.
 
   Each executable script in this directory will be executed in turn
- and given the name of the mount point the image is available at as
- a single command line argument.
+ and given two arguments:
+
+=over 8
+
+=item The directory where the installed image is currently mounted.
+
+=item The name of the distribution which is being installed.
+
+=back
 
   The scripts will also have a complete copy of the configuration
  options set in its environment.  For example the IP address would
@@ -360,6 +367,7 @@ This directory allows you to copy a collection of custom files to each generated
  #!/bin/sh
 
  prefix=$1
+ dist=$2
 
  # Copy modules
  mkdir -p ${prefix}/lib/modules
@@ -370,9 +378,10 @@ This directory allows you to copy a collection of custom files to each generated
 
 =for example cut
 
-  The hook scripts are used extensively by this script to setup the
- base system.  If you're looking at extending the processing of new
- images it is recommended you examine the default hooks.
+  The hooks are used extensively by the xen-create-image script to
+ setup the environment of the new GNU/Linux system.  If you're looking
+ at modifying the creation of new images it is recommended you examine
+ the default hooks.
 
 =cut
 
@@ -448,7 +457,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.120 2006-05-24 10:57:48 steve Exp $
+ $Id: xen-create-image,v 1.121 2006-05-24 19:15:55 steve Exp $
 
 =cut
 
@@ -1059,7 +1068,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.120 $';
+	my $REVISION      = '$Revision: 1.121 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -1617,11 +1626,13 @@ sub getTerminalSize
  is unmounted, each executable script inside the hook directory will
  be executed.
 
-  (The scripts are executed "in order" which might be useful for users
- who wish to ensure some actions occur before others.)
+  The scripts are executed "in order" which might be useful for users
+ who wish to ensure some actions occur before others.
 
-  The scripts will be given single argument: the name of the directory
- within which the image is mounted.
+  The scripts will each be given two arguments:
+
+  The directory within which the image is currently mounted.
+  The name of the distribution being installed.
 
   The rest of the configuration variables will be passed via
  environmental variables.
@@ -1678,7 +1689,7 @@ sub runHooks
 	    }
 
 	    print " Running hook: $name";
-	    runCommand( $file . " " . $prefix );
+	    runCommand( $file . " " . $prefix . " " . $CONFIG{'dist'} );
 	    print " - done.\n";
 	}
     }
