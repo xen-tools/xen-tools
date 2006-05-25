@@ -36,14 +36,12 @@ if [ "${ide}" ]; then
     device=hda
 fi
 
-if [ "${dhcp}" ]; then
-    dyn='dhcp = "dhcp"'
-else
-    dyn="vif = ['ip=${ip}']"
-fi
 
 echo "Creating Xen configuration file in /etc/xen .. "
 
+#
+#  Default stuff
+#
 cat <<E_O_CFG > ${output_dir}/${hostname}.cfg
 kernel  = '${kernel}'
 ramdisk = '${initrd}'
@@ -51,6 +49,18 @@ memory  = ${memory}
 name    = '${hostname}'
 root    = '/dev/${device}1 ro'
 disk    = [ '${imagevbd},${device}1,w', '${swapvbd},${device}2,w' ]
-${dyn}
-
 E_O_CFG
+
+
+#
+# DHCP vs. Static
+#
+if [ "${dhcp}" ]; then
+    cat <<E_O_CFG >> ${output_dir}/${hostname}.cfg
+dhcp    = "dhcp"
+vif     = [ '' ]
+E_O_CFG
+else
+    echo "vif = ['ip=${ip}']" >> ${output_dir}/${hostname}.cfg
+fi
+
