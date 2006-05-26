@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/sh
 #
 #  This script places the new systems hostname into a couple of files within
 # the new image.
@@ -19,13 +19,6 @@ dist=$2
 echo ${hostname} > ${prefix}/etc/hostname
 echo ${hostname} > ${prefix}/etc/mailname
 
-#
-# Exit if there is a /etc/hosts present
-#
-
-if [[ -f "$prefix/etc/hosts" ]]; then
-	exit 
-fi
 
 #
 #  Fixup the /etc/hosts file upon the new image for
@@ -49,5 +42,12 @@ fi
 #  Allow the host system to know the IP address of our new guest.
 #
 if [[ -z "${dhcp}" ]]; then
-    echo "${ip}    ${hostname}" >> /etc/hosts
+
+    if ( grep ${hostname} /etc/hosts > /dev/null ) ; then
+
+        # Host already has IP address for the given host.
+	:
+    else
+	echo "${ip}    ${hostname}" >> /etc/hosts
+    fi
 fi
