@@ -11,6 +11,14 @@
 prefix=$1
 dist=$2
 
+#
+# Exit if the system uses udev
+#
+
+if [[ -d /dev/.udev ]]; then
+	exit
+fi
+
 
 #
 #  This routine sets up /dev on a Debian GNU/Linux system.
