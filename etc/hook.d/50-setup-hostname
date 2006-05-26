@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -x
 #
 #  This script places the new systems hostname into a couple of files within
 # the new image.
@@ -18,6 +18,14 @@ dist=$2
 
 echo ${hostname} > ${prefix}/etc/hostname
 echo ${hostname} > ${prefix}/etc/mailname
+
+#
+# Exit if there is a /etc/hosts present
+#
+
+if [[ -f "$prefix/etc/hosts" ]]; then
+	exit 
+fi
 
 #
 #  Fixup the /etc/hosts file upon the new image for
