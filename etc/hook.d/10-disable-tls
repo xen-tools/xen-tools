@@ -13,10 +13,74 @@ dist=$2
 
 
 #
-#  This script doesn't do anything different on a per-distribution basis
+# Disable TLS and create an empty directory.
+# 
+function disableTLS
+{
+    mv ${prefix}/lib/tls ${prefix}/lib/tls.disabled
+    mkdir ${prefix}/lib/tls
+}
+
+
 #
+#  Install a Debian package onto the new system.
+#
+function installDebianPackage
+{
+    package=$1
+
+    DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes --force-yes install ${package}
+
+}
 
 
 
-mv ${prefix}/lib/tls ${prefix}/lib/tls.disabled
-mkdir ${prefix}/lib/tls
+
+#
+#  This function will disable TLS and install 'libc6-xen' on sid/etch
+# systems.
+#
+function setupDebian
+{
+    disableTLS
+
+    #
+    # For sid + etch systems install libc6-xen
+    #
+    case "${dist}" in
+	etch|sid)
+	    installDebianPackage libc6-xen
+	    installDebianPackage libc6-xen
+	    ;;
+    esac
+}
+
+
+
+#
+#  Handle CentOS
+#
+function setupCentOS4
+{
+    disableTLS
+}
+
+
+
+
+#
+#  Entry point to the script.
+#
+case "${dist}" in
+    sarge|etch|sid)
+        setupDebian
+        ;;
+    centos4)
+	setupCentOS4
+	;;
+    *)
+	echo "Unknown distribution '${dist}'.  Fixme";
+	exit;
+	;;
+esac
+
