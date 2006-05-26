@@ -94,7 +94,7 @@ Specify the LVM volume where images are located
  --
  http://www.steve.org.uk/
 
- $Id: xen-list-images,v 1.24 2006-05-07 14:36:40 steve Exp $
+ $Id: xen-list-images,v 1.25 2006-05-26 15:02:35 steve Exp $
 
 =cut
 
@@ -129,7 +129,7 @@ my %CONFIG;
 #
 # Release number.
 #
-my $RELEASE = '1.4';
+my $RELEASE = '1.5';
 
 
 
@@ -320,7 +320,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.24 $';
+	my $REVISION      = '$Revision: 1.25 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{

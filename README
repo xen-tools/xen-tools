@@ -14,6 +14,8 @@ xen-tools
 
   It is aimed at users who wish to create virtual instances of Debian.
  You may easily manipulate instances of Debian Sarge, Etch, or Sid.
+ With the latest release you can also create virtual installations of
+ CentOS 4.
 
   There are two ways to use the scripts:
 
@@ -110,5 +112,5 @@ xen-update-image
 
 Steve
 --
-$Id: README,v 1.28 2006-03-11 21:02:43 steve Exp $
+$Id: README,v 1.29 2006-05-26 15:02:35 steve Exp $
 
