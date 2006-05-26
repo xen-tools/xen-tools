@@ -4,7 +4,7 @@
 #
 # Steve
 # --
-# $Id: hook-cfg.t,v 1.1 2006-03-11 19:45:51 steve Exp $
+# $Id: hook-cfg.t,v 1.2 2006-05-26 15:04:15 steve Exp $
 #
 
 use strict;
@@ -94,8 +94,8 @@ sub callHook
     ok( $memory, "Found the memory line" );
 
 
-    my $ip	= grep( /ip=/, @lines );
-    my $dynamic	= grep( /dhcp =/, @lines );
+    my $ip	= grep( /ip[ \t]*=/, @lines );
+    my $dynamic	= grep( /dhcp[ \t]*=/, @lines );
 
     if ( $dhcp )
     {
