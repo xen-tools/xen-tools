@@ -41,7 +41,7 @@ xen-create-image - Create a new virtual Debian installation for Xen.
   Mandatory options:
 
    --dir       Specify where the output images should go.
-   --volume    Specify which LVM volume to save images within.
+   --volume    Specify the LVM volume group to save images within.
    --hostname  Set the images hostname.
 
 =cut
@@ -68,7 +68,7 @@ Anything specified after this will be passed onto the debootstrap command execut
 Specify that the virtual image should use DHCP to obtain its networking information.  Conflicts with B<--ip>.
 
 =item B<--dir>
-Specify the root directory beneath which the image should be saved.  Subdirectories will be created for each virtual image.  If you do not wish to use loopback files instead specify an LVM volume with B<--volume>.
+Specify the root directory beneath which the image should be saved.  Subdirectories will be created for each virtual image.  If you do not wish to use loopback files instead specify an LVM volume group with B<--volume>.
 
 =item B<--dist>
 Specify the distribution to install, defaults to 'sarge'.
@@ -131,7 +131,7 @@ Use IDE style device names for the virtual devices.
 Show the version number and exit.
 
 =item B<--volume>
-Show the LVM volume to store images within.  If you wish to use loopback files please specify an output directory with B<--dir>.
+Specify the LVM volume group to store images within.  If you wish to use loopback files please specify an output directory with B<--dir>.
 
 =back
 
@@ -178,14 +178,14 @@ Show the LVM volume to store images within.  If you wish to use loopback files p
 
 =head1 LVM EXAMPLES
 
-  If you wish to use an LVM volume instead of a pair of loopback images
- as shown above you can instead use the B<--volume> argument to specify
- the volume to create the image within.
+  If you wish to use an LVM volume group instead of a pair of loopback
+ images as shown above you can instead use the B<--volume> argument to
+ specify one.
 
      xen-create-image --size=2Gb --swap=128Mb --dhcp \
-          --volume=myvolume --hostname=vm01.my.flat
+          --volume=myvolumegroup --hostname=vm01.my.flat
 
-  The given volume will have two new entries created within it:
+  The given volume group will have two new logical volumes created within it:
 
    ${hostname}-swap
    ${hostname}-root
@@ -457,7 +457,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.122 2006-05-26 15:02:35 steve Exp $
+ $Id: xen-create-image,v 1.123 2006-05-26 19:07:02 steve Exp $
 
 =cut
 
@@ -895,61 +895,31 @@ while( $TERMINAL_HEIGHT )
 
 
 #
-#  Give status message
+#  Now we've finished.
 #
+
+
 if ( $CONFIG{'boot'} )
 {
-
     #
-    #  Should we immediately start the new instance?
-    #  If so fork() and do it so that we can return to the user, they can
-    # attach to the console via the command : 'xm console $name'.
+    #  Start the new instance if the user specified '--boot'.
     #
-    #
-    print "\n\nBooting newly created virtual image: $CONFIG{'hostname'} in the background.\n";
-    print "\nTo attach to the console run (as root):\n\n";
-    print "\t\txm console $CONFIG{'hostname'}\n\n";
-    print "\n";
-
-    my $pid = fork();
-    if ( $pid )
-    {
-
-	exit;
-    }
-    else
-    {
-	#
-	#  Start Xen instance in our forked process.  Avoid annoying
-	# output.
-	#
-	#
-	system( "$CONFIG{'xm'} create $CONFIG{'hostname'}.cfg >/dev/null 2>/dev/null" );
-    }
+    startNewInstance();
 }
 else
 {
-    print <<EOEND;
-
-New Image Created
------------------
-
-  To make any manual tweaks to the setup of $CONFIG{'hostname'} please run:
-
-    mkdir /mnt/tmp
-    mount -t $CONFIG{'fs'} -o loop $image /mnt/tmp
-    chroot /mnt/tmp /bin/bash
-
-    # make your changes
-
-    exit
-    umount /mnt/tmp
-
- Once completed you may start your new instance of Xen with:
-
-    xm create $CONFIG{'hostname'}.cfg -c
-
-EOEND
+    #
+    # The user didn't specify the new instance should automatically
+    # boot - so we'll show them instructions.
+    #
+    if ( $CONFIG{'dir'} )
+    {
+	showFinishedInstructions( loopback => 1 );
+    }
+    else
+    {
+	showFinishedInstructions( loopback => 0 );
+    }
 }
 
 
@@ -957,6 +927,7 @@ EOEND
 #  End of script.
 #
 exit;
+
 
 
 
@@ -1068,7 +1039,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.122 $';
+	my $REVISION      = '$Revision: 1.123 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -1428,6 +1399,96 @@ sub installBaseSystem
 
 }
 
+
+
+
+=head2 startNewInstance
+
+  Start the recently created Xen instance.
+
+=cut
+
+sub startNewInstance
+{
+    #
+    #  Should we immediately start the new instance?
+    #  If so fork() and do it so that we can return to the user, they can
+    # attach to the console via the command : 'xm console $name'.
+    #
+    #
+    print <<E_OF;
+
+ Booting newly created virtual image: $CONFIG{'hostname'} in the background.
+
+ To attach to the console run (as root):
+
+   xm console $CONFIG{'hostname'}
+
+E_OF
+
+    my $pid = fork();
+    if ( $pid )
+    {
+	exit;
+    }
+    else
+    {
+	#
+	#  Start Xen instance in our forked process.  Avoid annoying
+	# output.
+	#
+	#
+	system( "$CONFIG{'xm'} create $CONFIG{'hostname'}.cfg >/dev/null 2>/dev/null" );
+    }
+}
+
+
+
+=head2 showFinishedInstructions
+
+  Show the user instructions on how to manually tweak their new instance,
+ along with instructions on starting it up under Xen.
+
+=cut
+
+sub showFinishedInstructions
+{
+    my ( %params ) = ( @_ );
+
+    my $mountLine = '';
+
+    if ( defined( param{'loopback'} ) && ( param{'loopback'} ) )
+    {
+	$mountLine = "mount -t $CONFIG{'fs'} -o loop $image /mnt/tmp";
+    }
+    else
+    {
+	$mountLine = "mount -t $CONFIG{'fs'} $CONFIG{'volume'}/$CONFIG{'hostname'}-root /mnt/tmp";
+    }
+
+    print <<EO_MESSAGE;
+
+New Image Created
+-----------------
+
+  To make any manual tweaks to the setup of $CONFIG{'hostname'} please run:
+
+    mkdir /mnt/tmp
+    $mountLine
+    chroot /mnt/tmp /bin/bash
+
+    .. make your changes ..
+
+    exit
+    umount /mnt/tmp
+
+ Once completed you may start your new instance of Xen with:
+
+    xm create $CONFIG{'hostname'}.cfg -c
+
+EO_MESSAGE
+
+}
 
 
 =head2 printWideMessage
