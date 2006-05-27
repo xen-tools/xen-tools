@@ -94,7 +94,7 @@ Specify the LVM volume where images are located
  --
  http://www.steve.org.uk/
 
- $Id: xen-list-images,v 1.25 2006-05-26 15:02:35 steve Exp $
+ $Id: xen-list-images,v 1.26 2006-05-27 12:23:54 steve Exp $
 
 =cut
 
@@ -181,7 +181,7 @@ my $dir = $CONFIG{'dir'}  . "/domains/";
 foreach my $entry ( glob( $dir . "*" ) )
 {
    if ( $entry =~ /(.*)\/domains\/(.*)/ )
-   {	
+   {
        $entry = $2;
    }
 
@@ -211,7 +211,7 @@ foreach my $entry ( glob( $dir . "*" ) )
 	       #
 	       # Don't show the networking details if running with '--test'
 	       #
-	       if ( $CONFIG{'test'} ) 
+	       if ( $CONFIG{'test'} )
 	       {
 		   print "\n";
 	       }
@@ -245,17 +245,17 @@ sub readConfigurationFile
 
     open( FILE, "<", $file ) or die "Cannot read file '$file' - $!";
 
-    my $line       = ""; 
+    my $line       = "";
 
-    while (defined($line = <FILE>) ) 
+    while (defined($line = <FILE>) )
     {
         chomp $line;
-	if ($line =~ s/\\$//) 
+	if ($line =~ s/\\$//)
 	{
 	    $line .= <FILE>;
 	    redo unless eof(FILE);
 	}
-      
+
 	# Skip lines beginning with comments
 	next if ( $line =~ /^([ \t]*)\#/ );
 
@@ -279,7 +279,7 @@ sub readConfigurationFile
 	    $key =~ s/\s+$//;
 	    $val =~ s/^\s+//;
 	    $val =~ s/\s+$//;
-	    
+
 	    # Store value.
 	    $CONFIG{ $key } = $val;
 	}
@@ -313,14 +313,14 @@ sub parseCommandLineArguments
 	       "manual",     \$MANUAL,
 	       "version",    \$VERSION
 	      );
-    
+
     pod2usage(1) if $HELP;
     pod2usage(-verbose => 2 ) if $MANUAL;
 
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.25 $';
+	my $REVISION      = '$Revision: 1.26 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -351,8 +351,8 @@ sub showNetworkingDetails
     my $dir = tempdir( CLEANUP => 1 );
     my $mount_cmd = "mount -t auto -o loop $image $dir";
     `$mount_cmd`;
-    
-    
+
+
     #
     #  Read /etc/network/interfaces
     #
