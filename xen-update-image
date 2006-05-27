@@ -83,7 +83,7 @@ Specify the LVM volume where images are located.
  --
  http://www.steve.org.uk/
 
- $Id: xen-update-image,v 1.26 2006-05-27 12:29:55 steve Exp $
+ $Id: xen-update-image,v 1.27 2006-05-27 12:32:42 steve Exp $
 
 =cut
 
@@ -222,15 +222,26 @@ sub updateXenImage
     `$mount_cmd`;
 
     #
-    #  Now run the update command.
+    #  Make sure this is a Debian image.
     #
-    system( "chroot $tmp /usr/bin/apt-get update" );
+    if ( ( -e $tmp . "/usr/bin/apt-get" ) &&
+	 ( -e $tmp . "/etc/apt/sources.list" ) )
+    {
+	#
+	#  Now run the update command.
+	#
+	system( "chroot $tmp /usr/bin/apt-get update" );
 
 
-    #
-    #  Now upgrade
-    #
-    system( "DEBIAN_FRONTEND=noninteractive  chroot $tmp /usr/bin/apt-get upgrade --yes --force-yes" );
+	#
+	#  Now upgrade
+	#
+	system( "DEBIAN_FRONTEND=noninteractive  chroot $tmp /usr/bin/apt-get upgrade --yes --force-yes" );
+    }
+    else
+    {
+	print "Xen image $name is not a Debian GNU/Linux image.  Skipping\n";
+    }
 
 
     #
@@ -326,7 +337,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.26 $';
+	my $REVISION      = '$Revision: 1.27 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
