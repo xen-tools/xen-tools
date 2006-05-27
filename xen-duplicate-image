@@ -54,7 +54,7 @@ Specify the gateway address for the virtual image, only useful if DHCP is not us
 Show the brief help information.
 
 =item B<--ide>
-Use IDE style device names for the virtual devices. 
+Use IDE style device names for the virtual devices.
 
 =item B<--ip>
 Specify the IP address for the virtual image.  Conflicts with B<--dhcp>.
@@ -122,7 +122,7 @@ Specify the LVM volume where images are to go
  --
  http://www.steve.org.uk/
 
- $Id: xen-duplicate-image,v 1.32 2006-05-26 15:02:35 steve Exp $
+ $Id: xen-duplicate-image,v 1.33 2006-05-27 12:34:07 steve Exp $
 
 =cut
 
@@ -198,7 +198,7 @@ parseCommandLineArguments();
 
 
 #
-#  Check that the arguments the user has supplied are both 
+#  Check that the arguments the user has supplied are both
 # valid, and complete.
 #
 checkArguments();
@@ -221,7 +221,7 @@ print "\n";
 print "Source      :  $CONFIG{'from'}\n";
 print "Destination :  $CONFIG{'hostname'}\n";
 
-if ( $CONFIG{'dhcp'} ) 
+if ( $CONFIG{'dhcp'} )
 {
     print "DHCP\n";
 }
@@ -285,7 +285,7 @@ my $mount_cmd = "mount -t auto -o loop $image_out $dir";
 
 my $mount = `/bin/mount`;
 
-if ( ! $mount =~ /$image_out/) 
+if ( ! $mount =~ /$image_out/)
 {
     print "Something went wrong trying to mount the new filesystem\n";
     exit;
@@ -379,17 +379,17 @@ sub readConfigurationFile
 
     open( FILE, "<", $file ) or die "Cannot read file '$file' - $!";
 
-    my $line       = ""; 
+    my $line       = "";
 
-    while (defined($line = <FILE>) ) 
+    while (defined($line = <FILE>) )
     {
         chomp $line;
-	if ($line =~ s/\\$//) 
+	if ($line =~ s/\\$//)
 	{
 	    $line .= <FILE>;
 	    redo unless eof(FILE);
 	}
-      
+
 	# Skip lines beginning with comments
 	next if ( $line =~ /^([ \t]*)\#/ );
 
@@ -413,7 +413,7 @@ sub readConfigurationFile
 	    $key =~ s/\s+$//;
 	    $val =~ s/^\s+//;
 	    $val =~ s/\s+$//;
-	    
+
 	    # Store value.
 	    $CONFIG{ $key } = $val;
 	}
@@ -454,14 +454,14 @@ sub parseCommandLineArguments
 	       "manual",     \$MANUAL,
 	       "version",    \$VERSION
 	      );
-    
+
     pod2usage(1) if $HELP;
     pod2usage(-verbose => 2 ) if $MANUAL;
 
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.32 $';
+	my $REVISION      = '$Revision: 1.33 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -520,8 +520,8 @@ EOF
 	print "Please only use a volume or a directory name - not both\n";
 	exit;
     }
-    
-    
+
+
     #
     # Volumes are not supported yet :(
     #
@@ -614,7 +614,7 @@ EOF
 
 =head2 setupNetworking
 
-  Setup the /etc/network/interfaces file, and the hostname 
+  Setup the /etc/network/interfaces file, and the hostname
  upon the virtual instance.
 
 =cut
@@ -636,7 +636,7 @@ sub setupNetworking
 # The loopback network interface
 auto lo
 iface lo inet loopback
-	    
+
 # The primary network interface
 auto eth0
 iface eth0 inet dhcp
@@ -652,7 +652,7 @@ E_O_DHCP
 # The loopback network interface
 auto lo
 iface lo inet loopback
-	    
+
 # The primary network interface
 auto eth0
 iface eth0 inet static
