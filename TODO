@@ -13,7 +13,10 @@ TODO
 
   6. Test more distributions with RPMStrap, instead of just centos4.
 
+  7. xen-duplicate-image should check source and destination distros match.
+     It should also handle non-Debian images.
+
 Steve
 --
-$Id: TODO,v 1.14 2006-05-24 10:57:26 steve Exp $
+$Id: TODO,v 1.15 2006-05-27 12:35:47 steve Exp $
 
