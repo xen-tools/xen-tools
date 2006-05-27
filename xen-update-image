@@ -83,7 +83,7 @@ Specify the LVM volume where images are located.
  --
  http://www.steve.org.uk/
 
- $Id: xen-update-image,v 1.25 2006-05-26 15:02:35 steve Exp $
+ $Id: xen-update-image,v 1.26 2006-05-27 12:29:55 steve Exp $
 
 =cut
 
@@ -206,7 +206,7 @@ sub updateXenImage
     #  Find the disk image.
     #
     my $image =  $CONFIG{'dir'} . "/domains/" . $name . "/disk.img";
-    
+
     if ( ! -e $image )
     {
 	print "Disk image '$image' for host '$name' not found\n";
@@ -231,7 +231,7 @@ sub updateXenImage
     #  Now upgrade
     #
     system( "DEBIAN_FRONTEND=noninteractive  chroot $tmp /usr/bin/apt-get upgrade --yes --force-yes" );
-    
+
 
     #
     #  Unmount
@@ -253,17 +253,17 @@ sub readConfigurationFile
 
     open( FILE, "<", $file ) or die "Cannot read file '$file' - $!";
 
-    my $line       = ""; 
+    my $line       = "";
 
-    while (defined($line = <FILE>) ) 
+    while (defined($line = <FILE>) )
     {
         chomp $line;
-	if ($line =~ s/\\$//) 
+	if ($line =~ s/\\$//)
 	{
 	    $line .= <FILE>;
 	    redo unless eof(FILE);
 	}
-      
+
 	# Skip lines beginning with comments
 	next if ( $line =~ /^([ \t]*)\#/ );
 
@@ -287,7 +287,7 @@ sub readConfigurationFile
 	    $key =~ s/\s+$//;
 	    $val =~ s/^\s+//;
 	    $val =~ s/\s+$//;
-	    
+
 	    # Store value.
 	    $CONFIG{ $key } = $val;
 	}
@@ -320,13 +320,13 @@ sub parseCommandLineArguments
 	       "manual",     \$MANUAL,
 	       "version",    \$VERSION
 	      );
-    
+
     pod2usage(1) if $HELP;
     pod2usage(-verbose => 2 ) if $MANUAL;
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.25 $';
+	my $REVISION      = '$Revision: 1.26 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
