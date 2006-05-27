@@ -94,7 +94,7 @@ Specify the LVM volume where images are located
  --
  http://www.steve.org.uk/
 
- $Id: xen-list-images,v 1.26 2006-05-27 12:23:54 steve Exp $
+ $Id: xen-list-images,v 1.27 2006-05-27 12:29:15 steve Exp $
 
 =cut
 
@@ -320,7 +320,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.26 $';
+	my $REVISION      = '$Revision: 1.27 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -338,6 +338,9 @@ sub parseCommandLineArguments
 
   Mount the given disk image and read the networking details from it.
 
+  This will deal with both Debian images and CentOS4 images.  Other
+ distributions are not yet recognised.
+
 =cut
 
 sub showNetworkingDetails
@@ -352,6 +355,73 @@ sub showNetworkingDetails
     my $mount_cmd = "mount -t auto -o loop $image $dir";
     `$mount_cmd`;
 
+
+    if ( -e $dir . "/etc/network/interfaces" )
+    {
+	showDebianNetworkingDetails( $dir );
+    }
+    elsif ( -e $dir . "/etc/sysconfig/network-scripts/ifcfg-eth0" )
+    {
+	showCentosNetworkingDetails( $dir );
+    }
+    else
+    {
+	print "Unknown distribution - No networking details.\n";
+    }
+
+
+    #
+    # Unmount the image.
+    #
+    `umount $dir`;
+}
+
+
+
+=head2 showCentosNetworkingDetails
+
+  Read and display the configured network address of a CentOS4 instance.
+
+=cut
+
+sub showCentosNetworkingDetails
+{
+    my ( $dir ) = ( @_ );
+
+    #
+    #  Read /etc/network/interfaces
+    #
+    my $found = 0;
+    open( IN, "<", $dir . "/etc/sysconfig/network-scripts/ifcfg-eth0" );
+    foreach my $line ( <IN> )
+    {
+	if ( $line =~ /=[ \t]*dhci/i )
+	{
+	    print " DHCP\n";
+	    $found = 1;
+	}
+	if ( $line =~ /IPADDR[ \t]*=[ \t]*([1-9\.]+)/ )
+	{
+	    print $1 . "\n";
+	    $found = 1;
+	}
+    }
+    close( IN );
+    if ( ! $found ) { print "Unknown IP address\n"; }
+
+}
+
+
+
+=head2 showDebianNetworkingDetails
+
+  Read and display the static IP address of a Debian GNU/Linux instance.
+
+=cut
+
+sub showDebianNetworkingDetails
+{
+    my ( $dir ) = ( @_ );
 
     #
     #  Read /etc/network/interfaces
@@ -375,8 +445,4 @@ sub showNetworkingDetails
     close( IN );
     if ( ! $found ) { print "Unknown IP address\n"; }
 
-    #
-    # Unmount the image.
-    #
-    `umount $dir`;
 }
