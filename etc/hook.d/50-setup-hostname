@@ -49,5 +49,18 @@ if [[ -z "${dhcp}" ]]; then
 	:
     else
 	echo "${ip}    ${hostname}" >> /etc/hosts
+
+	#
+	#  If we've updated the /etc/hosts file on the host machine
+	# and there is an installation of dnsmasq installed then
+	# reload it.
+	#
+	#  This will let the local LAN clients lookup the new address.
+	#
+	if [ -x /usr/sbin/dnsmasq ] ;
+	    if [ -e /var/run/dnsmasq.pid ]; then
+		kill -HUP `cat /var/run/dnsmasq.pid`
+	    fi
+	fi
     fi
 fi
