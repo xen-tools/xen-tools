@@ -25,6 +25,7 @@ xen-create-image - Create a new virtual Debian installation for Xen.
    --kernel      Set the path to the kernel to use for dom U.
    --memory      Setup the amount of memory allocated to the instance.
    --mirror      Setup the mirror to use when installing Sarge.
+   --no-swap     Don't create a swap image.
    --passwd      Ask for a root password during setup.
    --role        Run a role-specific script, post-install.
    --size        Set the size of the primary disk image.
@@ -110,6 +111,9 @@ Specify the mirror to use to the installation of Sarge, defaults to http://ftp.u
 
 =item B<--netmask>
 Set the netmask the virtual image should use.
+
+=item B<--no-swap>
+Don't create a swap device.
 
 =item B<--passwd>
 Setup a password for the root account of the virtual machine.
@@ -457,7 +461,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.125 2006-05-26 19:18:06 steve Exp $
+ $Id: xen-create-image,v 1.126 2006-06-06 11:13:46 steve Exp $
 
 =cut
 
@@ -580,6 +584,7 @@ $CONFIG{'role_dir'}    = '/etc/xen-tools/role.d/';
 $CONFIG{'cache'}       = 'yes';
 $CONFIG{'force'}       = 0;
 $CONFIG{'rpmstrap'}    = 0;
+$CONFIG{'no-swap'}     = 0;
 
 
 
@@ -637,7 +642,7 @@ $CONFIG{'role'} && print "Role           :  $CONFIG{'role'}\n";
 print "\nSize Information\n";
 print "----------------\n";
 print "Image size     :  $CONFIG{'size'}\n";
-print "Swap size      :  $CONFIG{'swap'}\n";
+print "Swap size      :  $CONFIG{'swap'}\n" unless ( $CONFIG{'no-swap' } );
 print "Memory size    :  $CONFIG{'memory'}\n";
 print "Kernel path    :  $CONFIG{'kernel'}\n";
 print "initrd path    :  $CONFIG{'initrd'}\n";
@@ -714,10 +719,6 @@ else
 }
 
 
-#
-#  Create swapfile and initialise it.
-#
-print "\n\nCreating swapfile : $swap\n";
 
 #
 #  Create either a swap image, or a swap volume
@@ -738,9 +739,17 @@ else
     $swap_cmd = "/bin/dd if=/dev/zero of=$swap bs=1024k count=$CONFIG{'swap'}";
 }
 
-runCommand( $swap_cmd );
-runCommand( "/sbin/mkswap $swap" );
-print "Done\n";
+
+#
+#  Create swapfile and initialise it.
+#
+if ( ! $CONFIG{'no-swap'} )
+{
+    print "\n\nCreating swapfile : $swap\n";
+    runCommand( $swap_cmd );
+    runCommand( "/sbin/mkswap $swap" );
+    print "Done\n";
+}
 
 
 
@@ -1028,6 +1037,7 @@ sub parseCommandLineArguments
                "ide",          \$CONFIG{'ide'},
                "force",        \$CONFIG{'force'},
                "rpmstrap",     \$CONFIG{'rpmstrap'},
+               "no-swap",      \$CONFIG{'no-swap'},
 	       "help",         \$HELP,
 	       "manual",       \$MANUAL,
 	       "version",      \$VERSION
@@ -1039,7 +1049,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.125 $';
+	my $REVISION      = '$Revision: 1.126 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -1373,6 +1383,8 @@ sub installBaseSystem
     if ( ! -x $dir . "/bin/ls" )
     {
 	print "Something went wrong with the debootstrap installation\n";
+	print "(The generated system is missing '/bin/ls' which is odd!\n";
+	print "If you'd like to investigate try mounting the volume by hand\n";
 	print "Aborting\n";
 
 	runCommand( "umount $dir" );
