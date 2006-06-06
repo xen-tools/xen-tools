@@ -461,7 +461,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.126 2006-06-06 11:13:46 steve Exp $
+ $Id: xen-create-image,v 1.127 2006-06-06 15:17:47 steve Exp $
 
 =cut
 
@@ -1049,7 +1049,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.126 $';
+	my $REVISION      = '$Revision: 1.127 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -1364,15 +1364,20 @@ sub installBaseSystem
     my $command = '';
 
     #
+    # Location of the installation log.
+    #
+    my $logfile = $CONFIG{'dir'} . "/domains/" . $CONFIG{'hostname'} . "/install.log";
+
+    #
     #  Install with debootstrap, or rpmstrap.
     #
     if ( $CONFIG{'rpmstrap' } )
     {
-	$command = "rpmstrap --verbose $CONFIG{'dist'} $dir";
+	$command = "rpmstrap --verbose $CONFIG{'dist'} $dir | tee $logfile";
     }
     else
     {
-	$command = "debootstrap $CONFIG{'debootstrap'} $CONFIG{'dist'} $dir $CONFIG{'mirror'}";
+	$command = "debootstrap $CONFIG{'debootstrap'} $CONFIG{'dist'} $dir $CONFIG{'mirror'} | tee $logfile";
     }
 
     runCommandWithProgress( $command );
@@ -1388,6 +1393,8 @@ sub installBaseSystem
 	print "Aborting\n";
 
 	runCommand( "umount $dir" );
+
+	print "You should examing '$logfile' to see why this failed.\n";
 	exit;
     }
 
