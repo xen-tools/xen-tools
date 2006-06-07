@@ -6,7 +6,7 @@ xen-delete-image - Delete previously created Xen instances.
 
 =head1 SYNOPSIS
 
-  xen-delete-image [options] imageName1 imageName2 ... imageNameN  
+  xen-delete-image [options] imageName1 imageName2 ... imageNameN
 
   Help Options:
    --help     Show help information.
@@ -79,7 +79,7 @@ Specify the LVM volume where images were previously saved.
  --
  http://www.steve.org.uk/
 
- $Id: xen-delete-image,v 1.30 2006-05-26 15:02:35 steve Exp $
+ $Id: xen-delete-image,v 1.31 2006-06-07 09:13:46 steve Exp $
 
 =cut
 
@@ -215,17 +215,17 @@ sub readConfigurationFile
 
     open( FILE, "<", $file ) or die "Cannot read file '$file' - $!";
 
-    my $line       = ""; 
+    my $line       = "";
 
-    while (defined($line = <FILE>) ) 
+    while (defined($line = <FILE>) )
     {
         chomp $line;
-	if ($line =~ s/\\$//) 
+	if ($line =~ s/\\$//)
 	{
 	    $line .= <FILE>;
 	    redo unless eof(FILE);
 	}
-      
+
 	# Skip lines beginning with comments
 	next if ( $line =~ /^([ \t]*)\#/ );
 
@@ -249,7 +249,7 @@ sub readConfigurationFile
 	    $key =~ s/\s+$//;
 	    $val =~ s/^\s+//;
 	    $val =~ s/\s+$//;
-	    
+
 	    # Store value.
 	    $CONFIG{ $key } = $val;
 	}
@@ -283,14 +283,14 @@ sub parseCommandLineArguments
 	       "manual",     \$MANUAL,
 	       "version",    \$VERSION
 	      );
-    
+
     pod2usage(1) if $HELP;
     pod2usage(-verbose => 2 ) if $MANUAL;
 
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.30 $';
+	my $REVISION      = '$Revision: 1.31 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -329,7 +329,7 @@ sub deleteXenImage
     #  Now the swap image
     #
     if ( -e $CONFIG{'dir'} . "/domains/" . $hostname . "/swap.img" )
-    { 
+    {
 	unlink( $CONFIG{'dir'} . "/domains/" . $hostname . "/swap.img" );
     }
 
@@ -337,10 +337,18 @@ sub deleteXenImage
     #  Now the disk image
     #
     if ( -e $CONFIG{'dir'} . "/domains/" . $hostname . "/disk.img" )
-    { 
+    {
 	unlink( $CONFIG{'dir'} . "/domains/" . $hostname . "/disk.img" );
     }
 
+
+    #
+    #  Now the install log.
+    #
+    if ( -e $CONFIG{'dir'} . "/domains/" . $hostname . "/install.log" )
+    {
+	unlink( $CONFIG{'dir'} . "/domains/" . $hostname . "/install.log" );
+    }
 
     #
     #  Now remove the directory.
