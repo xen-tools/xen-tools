@@ -61,6 +61,6 @@ dhcp    = "dhcp"
 vif     = [ '' ]
 E_O_CFG
 else
-    echo "vif = ['ip=${ip}']" >> ${output_dir}/${hostname}.cfg
+    echo "vif = ['ip=${ip1}']" >> ${output_dir}/${hostname}.cfg
 fi
 

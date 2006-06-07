@@ -30,7 +30,7 @@ if [[ -z "${dhcp}" ]]; then
     grep -v '\(::\|IPv6\)' /etc/hosts > ${prefix}/etc/hosts
 
     # New entry.
-    echo "${ip}     ${hostname}" >> ${prefix}/etc/hosts
+    echo "${ip1}    ${hostname}" >> ${prefix}/etc/hosts
     echo " " >> ${prefix}/etc/hosts
 
     # IPv6 stuff.
@@ -48,7 +48,7 @@ if [[ -z "${dhcp}" ]]; then
         # Host already has IP address for the given host.
 	:
     else
-	echo "${ip}    ${hostname}" >> /etc/hosts
+	echo "${ip1}    ${hostname}" >> /etc/hosts
 
 	#
 	#  If we've updated the /etc/hosts file on the host machine
