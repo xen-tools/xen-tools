@@ -461,7 +461,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.127 2006-06-06 15:17:47 steve Exp $
+ $Id: xen-create-image,v 1.128 2006-06-07 09:09:30 steve Exp $
 
 =cut
 
@@ -650,7 +650,18 @@ print "initrd path    :  $CONFIG{'initrd'}\n";
 print "\nNetworking Information\n";
 print "----------------------\n";
 
-$CONFIG{'ip'}        && print "IP Address     : $CONFIG{'ip'}\n";
+#
+# Show each IP address added.
+#
+my $ips = $CONFIG{'ip'};
+my $count = 1;
+
+foreach my $i ( @$ips )
+{
+    print "IP Address $count   : $i\n";
+    $count += 1;
+}
+
 $CONFIG{'dhcp'}      && print "IP Address     : DHCP\n";
 $CONFIG{'netmask'}   && print "Netmask        : $CONFIG{'netmask'}\n";
 $CONFIG{'gateway'}   && print "Gateway        : $CONFIG{'gateway'}\n";
@@ -1014,7 +1025,7 @@ sub parseCommandLineArguments
     #
     GetOptions(
 	       "hostname=s",   \$CONFIG{'hostname'},
-	       "ip=s",         \$CONFIG{'ip'},
+	       "ip=s@",        \$CONFIG{'ip'},
 	       "gateway=s",    \$CONFIG{'gateway'},
 	       "netmask=s",    \$CONFIG{'netmask'},
 	       "dir=s",        \$CONFIG{'dir'},
@@ -1049,7 +1060,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.127 $';
+	my $REVISION      = '$Revision: 1.128 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -1059,6 +1070,7 @@ sub parseCommandLineArguments
 	print "xen-create-image release $RELEASE - CVS: $REVISION\n";
 	exit;
     }
+
 }
 
 
@@ -1235,7 +1247,7 @@ EOF
     #
     #  Only one of DHCP / IP is required.
     #
-    if ( $CONFIG{'ip'} && $CONFIG{'dhcp'})
+    if ( scalar($CONFIG{'ip'}) && $CONFIG{'dhcp'})
     {
 	print "You've chosen both DHCP and an IP address.\n";
 	print "Only one is supported\n";
@@ -1246,7 +1258,7 @@ EOF
     {
 	$CONFIG{'gateway'}   = '';
 	$CONFIG{'netmask'}   = '';
-	$CONFIG{'ip'}	     = '';
+	$CONFIG{'ip'}	     = ();
     }
 
     #
@@ -1732,18 +1744,50 @@ sub runHooks
 	if ( defined( $CONFIG{$key} ) )
 	{
 	    $ENV{$key} = $CONFIG{$key};
-
-	    if ( $CONFIG{'debug'} )
-	    {
-		print "\t" . $ENV{$key} . "=" . $CONFIG{$key} . "\n";
-	    }
 	}
     }
-    $CONFIG{'debug'} && print "=============\n";
 
+    #
+    # Set the image and swap file paths.
+    #
     $ENV{'imagevbd'} = $image_vbd;
     $ENV{'swapvbd'}  = $swap_vbd;
 
+    #
+    # Now update the environment for each defined IP address.
+    # these are handled specially since we use arrays.
+    #
+    # Remove the value we set above.
+    $ENV{'ip'} = undef;
+
+    #
+    # Setup a seperate ip$count value for each IP address.
+    #
+    my $ips   = $CONFIG{'ip'};
+    my $count = 1;
+
+    foreach my $i ( @$ips )
+    {
+	$ENV{'ip' . $count } = $i;
+	$count += 1;
+    }
+    $ENV{'ip_count'} = $count;
+
+
+    #
+    #  Now show the environment the children get
+    #
+
+    if ( $CONFIG{'debug'} )
+    {
+	print "=============\n";
+	foreach my $key ( sort keys %ENV )
+	{
+	    print "\t'" . $key . "' = '" . $CONFIG{$key} . "'\n";
+	}
+    }
+
+    #
     #
     # Make sure that our scripts run in sorted order, as
     # the user would expect.
