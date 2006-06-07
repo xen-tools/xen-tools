@@ -461,7 +461,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.129 2006-06-07 09:19:52 steve Exp $
+ $Id: xen-create-image,v 1.130 2006-06-07 09:37:27 steve Exp $
 
 =cut
 
@@ -481,7 +481,7 @@ Install an X11 server, using VNC and XDM
 
 =head1 LICENSE
 
-Copyright (c) 2005 by Steve Kemp.  All rights reserved.
+Copyright (c) 2005-2006 by Steve Kemp.  All rights reserved.
 
 This module is free software;
 you can redistribute it and/or modify it under
@@ -1060,7 +1060,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.129 $';
+	my $REVISION      = '$Revision: 1.130 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{

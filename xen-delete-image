@@ -79,14 +79,14 @@ Specify the LVM volume where images were previously saved.
  --
  http://www.steve.org.uk/
 
- $Id: xen-delete-image,v 1.31 2006-06-07 09:13:46 steve Exp $
+ $Id: xen-delete-image,v 1.32 2006-06-07 09:37:27 steve Exp $
 
 =cut
 
 
 =head1 LICENSE
 
-Copyright (c) 2005 by Steve Kemp.  All rights reserved.
+Copyright (c) 2005-2006 by Steve Kemp.  All rights reserved.
 
 This module is free software;
 you can redistribute it and/or modify it under
@@ -290,7 +290,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.31 $';
+	my $REVISION      = '$Revision: 1.32 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
