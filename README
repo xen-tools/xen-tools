@@ -6,21 +6,22 @@ CVS Repository:
     http://xen-tools.cvsrepository.org/
 
 
+
 xen-tools
 ---------
 
   The xen-tools package contains a collection of Perl scripts for
  working with Xen images under Debian GNU/Linux.
 
-  It is aimed at users who wish to create virtual instances of Debian.
- You may easily manipulate instances of Debian Sarge, Etch, or Sid.
- With the latest release you can also create virtual installations of
- CentOS 4.
+  It is primarily aimed at users who wish to create virtual instances
+ of Debian Sarge, Etch, or Sid.  Although there is support for installing
+ non-Debian instances this is both new and experimental.
 
   There are two ways to use the scripts:
 
-  1. With loopback files (simplest but slower).
+  1. With loopback files (simplest)
   2. With LVM.
+
 
 
 Loopback Files
@@ -45,9 +46,12 @@ Loopback Files
 |-- bar               [Virtual machine named 'bar']
 |   |-- disk.img        [Disk image]
 |   `-- swap.img        [Swap image]
+|   `-- install.log     [Debootstrap installation log]
 |-- etch              [Virtual machine named 'etch']
 |   |-- disk.img        [Disk image]
 |   `-- swap.img        [Swap image]
+|   `-- install.log     [Debootstrap installation log]
+
 
 
 
@@ -55,7 +59,8 @@ LVM Support
 -----------
 
   If you wish to use the LVM support then you will give the 
- scripts an LVM device to store the images upon.
+ scripts an LVM volume which will be used to create the storage
+ within.
 
   In this case you'll have two new volumes created, one for
  the swap image and one for the disk storage.
@@ -66,8 +71,8 @@ xen-create-image
 ----------------
 
   This script is designed to create new images which may be used
- with the Xen virtual machine.  You may create images of Sarge, 
- Etch, or Sid.
+ with the Xen virtual machine.  You may create images of Debian
+ or the non-Debian distributions which include CentOS 4.
 
   The virtual images will have their networking settings created and,
  you may optionally cause the new instance to boot once it has
@@ -88,7 +93,7 @@ xen-duplicate-image
 xen-delete-image
 ----------------
 
-  This script will delete an image by hostname.
+  This script will delete a images by hostname.
 
 
 xen-list-images
@@ -112,5 +117,5 @@ xen-update-image
 
 Steve
 --
-$Id: README,v 1.29 2006-05-26 15:02:35 steve Exp $
+$Id: README,v 1.30 2006-06-07 09:36:20 steve Exp $
 
