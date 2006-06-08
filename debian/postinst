@@ -1,0 +1,19 @@
+#!/bin/sh
+
+set -e
+
+#
+# Skip, if we are not in "configure" state
+#
+if [ "$1" != "configure" ]; then
+        echo "I: Skipping configuration"
+        exit 0
+fi
+
+if [ -d "/etc/xen-tools/xen-create-image.d" ]; then
+	rmdir "/etc/xen-tools/xen-create-image.d" 2>/dev/null || 
+	         echo "The directory /etc/xen-tools/xen-create-image.d is no longer used. You can safely remove it."
+fi
+
+#DEBHELPER#
+exit 0

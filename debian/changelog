@@ -1,0 +1,86 @@
+xen-tools (1.5-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Radu Spineanu <radu@debian.org>  Tue, 30 May 2006 00:07:30 +0300
+
+xen-tools (1.4-1) unstable; urgency=low
+
+  *  Delete the /etc/xen-tools/xen-create-image.d directory if it's empty
+     or display a warning otherwise
+  *  Closed wrong bug number in the 1.3-1 upload
+  *  Allow files to be copied to all new instances via /etc/xen-tools/skel
+     (Closes: #363070)
+  *  Added new option --initrd to specify the initial ramdisk.
+     (Closes: #365500)
+  
+ -- Steve Kemp <skx@debian.org>  Sun, 7 May 2006 14:43:43 +0000
+
+xen-tools (1.3-1) unstable; urgency=low
+
+  * New upstream release
+     + Ignore .dpkg-(new|old) files in the hooks directory 
+       (closes: #357716)
+
+ -- Radu Spineanu <radu@debian.org>  Sat, 15 Apr 2006 13:44:36 +0300
+
+xen-tools (1.1-1) unstable; urgency=low
+
+  * New upstream release 
+     + Disk devices are no longer created one unit bigger than asked 
+       (closes: #353155)
+     + Populate /dev on the virtual server (closes: #352942)
+     + Added --use-ide flag in case people want ide style device names
+       (closes: #352937)
+     + xen.cfg is no longer broken when using LVM 
+
+ -- Radu Spineanu <radu@debian.org>  Tue, 21 Feb 2006 01:28:28 +0200
+
+xen-tools (1.0-1) unstable; urgency=low
+
+  * New upstream release
+  * Changed priority from optional to extra because of debootstrap
+
+ -- Radu Spineanu <radu@debian.org>  Thu,  9 Feb 2006 00:25:41 +0200
+
+xen-tools (0.9-2) unstable; urgency=high
+
+  * BUGFIX:  Add "vif = ['']" to each configuration file created in
+    /etc/xen.  Without this networking of guest domains may fail in
+    Xen 3.0.1
+
+ -- Steve Kemp <skx@debian.org>  Sat,  4 Feb 2006 20:20:01 +0000
+
+xen-tools (0.9-1) unstable; urgency=low
+
+  * New upstream release.
+    Allows disabling of the .deb caching via "--cache=no" (Closes: #348721)
+
+ -- Steve Kemp <skx@debian.org>  Wed,  25 Jan 2006 09:19:21 +0000
+
+xen-tools (0.8.5-1) unstable; urgency=low
+
+  * New upstream release (closes: #345912)
+    (generated /etc/fstab broken)
+  * Fixes typo in description (closes: #346296)
+
+ -- Radu Spineanu <radu@debian.org>  Sun,  8 Jan 2006 21:57:17 +0200
+
+xen-tools (0.6-1) unstable; urgency=low
+
+  * New upstream release, featuring a collection of "hooks" to
+    do most of the processing.
+  * Build manpages at package creation time.
+  * Run the (minimal) test suite at package creation time.
+  * Added link to homepage in debian/control
+  * Added dependency upon libterm-size-perl so that the messages
+    may stretch the width of the console.
+
+ -- Steve Kemp <skx@debian.org>  Sun, 25 Dec 2005 15:01:38 +0000
+
+xen-tools (0.4-1) unstable; urgency=low
+
+  * Initial release (Closes: #344081)
+
+ -- Radu Spineanu <radu@debian.org>  Tue, 20 Dec 2005 02:21:05 +0200
+

@@ -5,7 +5,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.45 2006-05-26 15:02:35 steve Exp $
+# $Id: Makefile,v 1.46 2006-06-08 13:46:38 steve Exp $
 
 
 #
@@ -52,7 +52,9 @@ clean:
 	@find . -name 'tags' -exec rm \{\} \;
 	@find . -name '*.8.gz' -exec rm \{\} \;
 	@find man -name '*.html' -exec rm \{\} \;
-
+	@if [ -e build-stamp ]; then rm -f build-stamp ; fi
+	@if [ -e configure-stamp ]; then rm -f configure-stamp ; fi
+	@if [ -d debian/xen-tools ]; then rm -rf ./debian/xen-tools; fi
 
 commit: test
 	cvs -z3 commit
@@ -107,7 +109,7 @@ release: update-version clean changelog
 	rm -f $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz
 	cp -R . $(DIST_PREFIX)/$(BASE)-$(VERSION)
 	find  $(DIST_PREFIX)/$(BASE)-$(VERSION) -name "CVS" -print | xargs rm -rf
-	cd $(DIST_PREFIX) && tar  --exclude=.cvsignore -cvf $(DIST_PREFIX)/$(BASE)-$(VERSION).tar $(BASE)-$(VERSION)/
+	cd $(DIST_PREFIX) && tar --exclude=debian --exclude=.cvsignore -cvf $(DIST_PREFIX)/$(BASE)-$(VERSION).tar $(BASE)-$(VERSION)/
 	gzip $(DIST_PREFIX)/$(BASE)-$(VERSION).tar
 	mv $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz .
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)
