@@ -79,7 +79,7 @@ Install the distribution specified by the B<--dist> argument using the debootstr
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.8 2006-06-09 18:59:46 steve Exp $
+ $Id: xt-install-image,v 1.9 2006-06-09 19:49:18 steve Exp $
 
 =cut
 
@@ -106,8 +106,6 @@ use Pod::Usage;
 #
 #  Configuration values read from the command line.
 #
-#  We do not need to read any configuration file.
-#
 my %CONFIG;
 
 #
@@ -128,11 +126,8 @@ parseCommandLineArguments();
 checkArguments();
 
 
-
 #
-#  Work out how to install:
-#
-
+#  Install the new system.
 #
 #  Simplest cases first.
 #
@@ -163,7 +158,9 @@ else
     #
     # error
     #
-    # return a code so that xen-create-image can abort.
+    print "No recognised installation method was discovered.";
+    print "Aborting\n";
+    exit 1;
 }
 
 
@@ -219,7 +216,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.8 $';
+	my $REVISION      = '$Revision: 1.9 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -313,7 +310,7 @@ E_OR
     }
 
     #
-    # If count == 0 we had no recognised installation methods
+    # If count == 0 we had no recognised installation method.
     #
     if ( $count == 0 )
     {
