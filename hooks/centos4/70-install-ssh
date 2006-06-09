@@ -1,0 +1,37 @@
+#!/bin/sh
+#
+#  This script installs OpenSSH upon the new system.
+#
+# Steve
+# --
+# http://www.steve.org.uk/
+
+
+prefix=$1
+
+
+#
+#  Source our common functions
+#
+if [ -e ../common.sh ]; then
+    . ../common.sh
+fi
+
+
+#
+# Log our start
+#
+logMessage Script $0 starting
+
+#
+# Install the OpenSSH server.
+#
+chroot ${prefix} /bin/mount /proc
+chroot ${prefix} /usr/bin/yum -y install openssh-server
+chroot ${prefix} /bin/umount /proc
+
+
+#
+#  Log our finish
+#
+logMessage Script $0 finished
