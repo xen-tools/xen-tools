@@ -5,7 +5,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.46 2006-06-08 13:46:38 steve Exp $
+# $Id: Makefile,v 1.47 2006-06-09 09:22:57 steve Exp $
 
 
 #
@@ -109,7 +109,7 @@ release: update-version clean changelog
 	rm -f $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz
 	cp -R . $(DIST_PREFIX)/$(BASE)-$(VERSION)
 	find  $(DIST_PREFIX)/$(BASE)-$(VERSION) -name "CVS" -print | xargs rm -rf
-	cd $(DIST_PREFIX) && tar --exclude=debian --exclude=.cvsignore -cvf $(DIST_PREFIX)/$(BASE)-$(VERSION).tar $(BASE)-$(VERSION)/
+	cd $(DIST_PREFIX) && tar --exclude=bin --exclude=debian --exclude=.cvsignore -cvf $(DIST_PREFIX)/$(BASE)-$(VERSION).tar $(BASE)-$(VERSION)/
 	gzip $(DIST_PREFIX)/$(BASE)-$(VERSION).tar
 	mv $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz .
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)
