@@ -5,13 +5,13 @@
 #
 # Steve
 # --
-# $Id: pod-check.t,v 1.3 2006-01-02 14:05:58 steve Exp $
+# $Id: pod-check.t,v 1.4 2006-06-09 15:12:33 steve Exp $
 #
 
 use strict;
 use Test::More qw( no_plan );
 
-foreach my $file ( glob( "xen-*" ) )
+foreach my $file ( glob( "bin/*-*" ) )
 {
     ok( -e $file, "$file" );
     ok( -x $file, " File is executable: $file" );

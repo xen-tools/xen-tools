@@ -5,7 +5,7 @@
 #
 # Steve
 # --
-# $Id: plugin-checks.t,v 1.2 2006-01-07 23:23:12 steve Exp $
+# $Id: plugin-checks.t,v 1.3 2006-06-09 15:12:33 steve Exp $
 #
 
 
@@ -13,19 +13,38 @@ use strict;
 use Test::More qw( no_plan );
 
 
-foreach my $file ( glob( "etc/hook.d/*" ) )
-{
-    ok( -e $file, "$file" );
+testPlugins( "debian" );
+testPlugins( "centos4" );
 
-    if ( -f $file )
+
+sub testPlugins
+{
+    my ( $dist ) = ( @_ );
+
+    #
+    # Make sure there is a hook directory for the named distro
+    #
+    ok( -d "hooks/$dist/", "There is a hook directory for the distro $dist" );
+
+    #
+    # Make sure the plugins are OK.
+    #
+    foreach my $file ( glob( "hooks/$dist/*" ) )
     {
-	#
-	#  Make sure the file is OK
-	#
-	my $result = testFile( $file );
-	is( $result, 0, " File contains no mention of the config hash" );
+	ok( -e $file, "$file" );
+
+	if ( -f $file )
+	{
+	    #
+	    #  Make sure the file is OK
+	    #
+	    my $result = testFile( $file );
+	    is( $result, 0, " File contains no mention of the config hash" );
+	}
     }
+
 }
+
 
 
 #

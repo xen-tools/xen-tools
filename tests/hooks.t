@@ -4,18 +4,36 @@
 #
 # Steve
 # --
-# $Id: hooks.t,v 1.3 2006-01-07 23:23:12 steve Exp $
+# $Id: hooks.t,v 1.4 2006-06-09 15:12:33 steve Exp $
 #
 
 use strict;
 use Test::More qw( no_plan );
 
-foreach my $file ( glob( "etc/hook.d/*" ) )
+
+testDistroHooks( "debian" );
+testDistroHooks( "centos4" );
+
+
+sub testDistroHooks
 {
-    if ( ! -d $file )
+    my ( $dist ) = ( @_ );
+
+    #
+    # Make sure we have a distro-specific hook directory.
+    #
+    ok( -d "hooks/$dist", "There is a hook directory for distro $dist" );
+
+    #
+    # Now make sure we just have files, and that they are executable.
+    #
+    foreach my $file ( glob( "hooks/$dist/*" ) )
     {
-	ok( -e $file, "$file" );
-	ok( -x $file, " File is executable: $file" );
+	if ( ! -d $file )
+	{
+	    ok( -e $file, "$file" );
+	    ok( -x $file, " File is executable: $file" );
+	}
     }
 }
 
