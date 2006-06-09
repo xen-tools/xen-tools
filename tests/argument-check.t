@@ -5,12 +5,11 @@
 #
 # Steve
 # --
-# $Id: argument-check.t,v 1.3 2006-06-09 15:12:33 steve Exp $
+# $Id: argument-check.t,v 1.4 2006-06-09 22:03:30 steve Exp $
 #
 
 use strict;
-#use Test::More qw( no_plan );
-use Test::More skip_all => "ALl tests skipped documentation is known to be sub-par";
+use Test::More qw( no_plan );
 
 #
 #  Open and parse the xen-tools.conf configuration file.
