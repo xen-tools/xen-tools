@@ -73,7 +73,7 @@ if [[ -z "${dhcp}" ]]; then
 	#
 	#  This will let the local LAN clients lookup the new address.
 	#
-	if [ -x /usr/sbin/dnsmasq ] ;
+	if [ -x /usr/sbin/dnsmasq ] ; then
 	    if [ -e /var/run/dnsmasq.pid ]; then
 
 		logMessage Allowing DNSMasq to restart.
