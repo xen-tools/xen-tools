@@ -13,7 +13,6 @@
 
 
 prefix=$1
-dist=$2
 
 
 

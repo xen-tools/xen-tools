@@ -19,7 +19,7 @@ use File::Copy;
 
 my $prefix = shift;
 
-die "Prefix must be given" unless defined( $prefix );
+die "Prefix must be given"  unless defined( $prefix );
 die "Prefix must be a directory" unless ( -d $prefix );
 
 
