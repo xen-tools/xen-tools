@@ -5,7 +5,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.49 2006-06-09 10:49:00 steve Exp $
+# $Id: Makefile,v 1.50 2006-06-09 12:39:11 steve Exp $
 
 
 #
@@ -146,7 +146,7 @@ uninstall:
 
 
 update: 
-	cvs -z3 update -A -d 2>/dev/null
+	cvs -z3 update -A -P -d 2>/dev/null
 
 
 update-version:
