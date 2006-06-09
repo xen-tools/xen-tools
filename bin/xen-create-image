@@ -31,7 +31,7 @@ xen-create-image - Create a new Xen instance
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.6 2006-06-09 16:27:37 steve Exp $
+ $Id: xen-create-image,v 1.7 2006-06-09 16:42:53 steve Exp $
 
 =cut
 
@@ -51,6 +51,7 @@ The LICENSE file contains the full text of the license.
 use strict;
 use English;
 use Env;
+use File::Temp qw/ tempdir /;
 use Getopt::Long;
 use Pod::Usage;
 
@@ -60,6 +61,18 @@ use Pod::Usage;
 # file, then optionally overridden by the command line.
 #
 my %CONFIG;
+
+#
+#  Global variable containing the temporary file where our image
+# is mounted for installation purposes.
+#
+#  Why is this here?
+#
+#  Well it makes sure that the magic "END" section can unmount it
+# if there are errors.
+#
+#
+my $MOUNT_POINT = undef;
 
 
 #
@@ -129,6 +142,8 @@ if ( $CONFIG{'lvm'} )
 #
 #  Mount the image.
 #
+mountImage();
+
 
 #
 #  Call xt-install-image to do the install.
@@ -307,7 +322,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.6 $';
+	my $REVISION      = '$Revision: 1.7 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -621,6 +636,64 @@ sub createFilesystem
 
 
 
+=head2 mountImage
+
+  Mount the loopback disk image into a temporary directory.
+
+  Alternatively mount the relevant LVM volume instead.
+
+=cut
+
+sub mountImage
+{
+    #
+    #  Determine what we're to mount
+    #
+    my $image;
+
+    if ( $CONFIG{'lvm'} )
+    {
+	$image = "/dev/" . $CONFIG{'lvm'} . "/" . $CONFIG{'hostname'} . '-root';
+    }
+    elsif ( $CONFIG{'dir'} )
+    {
+	$image = $CONFIG{'dir'} . '/domains/' . $CONFIG{'hostname'} . "/disk.img" ;
+    }
+    else
+    {
+	print "I don't know what to mount!\n";
+	exit;
+    }
+
+
+    #
+    #  Create a temporary mount-point to use for the image/volume.
+    #
+    $MOUNT_POINT = tempdir( CLEANUP => 1 );
+
+    #
+    #  Lookup the correct arguments to pass to mount.
+    #
+    my $mount_cmd;
+    my $mount_type = $CONFIG{'mount_fs_' . $CONFIG{'fs'} };
+
+    #
+    #  LVM partition
+    #
+    if ( $CONFIG{'lvm'} )
+    {
+	$mount_cmd = "mount $mount_type $image $MOUNT_POINT";
+    }
+    else
+    {
+	$mount_cmd = "mount $mount_type -o loop $image $MOUNT_POINT";
+    }
+    runCommand( $mount_cmd );
+
+
+}
+
+
 
 =head2 runCommand
 
@@ -667,4 +740,29 @@ sub runCommand
     $CONFIG{'verbose'} && print "Finished : $cmd\n";
 
     return( $output );
+}
+
+
+
+
+=head2 END
+
+  If we still have the temporary image mounted then make sure
+ it is unmounted before we terminate.
+
+=cut
+
+sub END
+{
+    if ( defined( $MOUNT_POINT ) )
+    {
+	#
+	# Run mount to see if this is still mounted.
+	#
+	my $mount = `/bin/mount`;
+	if ( $mount =~ /$MOUNT_POINT/)
+	{
+	    runCommand( "umount $MOUNT_POINT" );
+	}
+    }
 }
