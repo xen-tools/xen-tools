@@ -83,7 +83,7 @@ Specify the LVM volume where images are located.
  --
  http://www.steve.org.uk/
 
- $Id: xen-update-image,v 1.29 2006-06-09 09:27:33 steve Exp $
+ $Id: xen-update-image,v 1.1 2006-06-09 12:43:03 steve Exp $
 
 =cut
 
@@ -337,7 +337,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.29 $';
+	my $REVISION      = '$Revision: 1.1 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
