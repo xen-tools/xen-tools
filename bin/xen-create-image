@@ -2,7 +2,7 @@
 
 =head1 NAME
 
- xen-create-image - Create a new Xen instance
+xen-create-image - Create a new Xen instance
 
 =cut
 
@@ -31,7 +31,7 @@
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.3 2006-06-09 14:41:22 steve Exp $
+ $Id: xen-create-image,v 1.4 2006-06-09 14:48:29 steve Exp $
 
 =cut
 
@@ -60,6 +60,7 @@ use Pod::Usage;
 #
 my %CONFIG;
 
+
 #
 # Release number.
 #
@@ -73,6 +74,12 @@ my $RELEASE = '2.0';
 #  Check the environment
 #
 checkSystem();
+
+
+#
+#  Setup default options.
+#
+setupDefaultOptions();
 
 
 #
@@ -160,6 +167,49 @@ sub checkSystem
 
 
 
+=head2 setupDefaultOptions
+
+  Setup the default options we'd expect into our global CONFIG hash.
+
+=cut
+
+sub setupDefaultOptions
+{
+
+    #
+    # Paths and files.
+    #
+    $CONFIG{'dir'}         = '';
+    $CONFIG{'xm'}	   = '/usr/sbin/xm';
+    $CONFIG{'kernel'}	   = '/boot/vmlinuz-2.6.16-1-xen-686';
+    $CONFIG{'initrd'}	   = '/boot/initrd.img-2.6.16-1-xen-686';
+
+    #
+    # Sizing options.
+    #
+    $CONFIG{'memory'}	   = '96Mb';
+    $CONFIG{'size'}	   = '2000Mb';
+    $CONFIG{'swap'}	   = '128M';
+    $CONFIG{'cache'}	   = 'yes';
+
+    #
+    # Misc. options.
+    #
+    $CONFIG{'mirror'}	   = 'http://ftp.us.debian.org/debian';
+    $CONFIG{'dist'}	   = 'sarge';
+    $CONFIG{'fs'}	   = 'ext3';
+    $CONFIG{'force'}	   = 0;
+
+    #
+    #  Installation methods
+    #
+    $CONFIG{'rpmstrap'}	   = 0;
+    $CONFIG{'debootstrap'} = 0;
+    $CONFIG{'copy'}        = '';
+    $CONFIG{'tar'}         = '';
+}
+
+
 
 =head2 parseCommandLineArguments
 
@@ -204,7 +254,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.3 $';
+	my $REVISION      = '$Revision: 1.4 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -236,6 +286,19 @@ sub checkArguments
     }
 
     #
+    #  Cheat and remap distributions names.
+    #
+    # TODO: Alternative create symlinks in the hook.d
+    if ( ( $CONFIG{'dist'} =~ /^sarge$/i ) ||
+	 ( $CONFIG{'dist'} =~ /^etch$/i  ) ||
+	 ( $CONFIG{'dist'} =~ /^sid$/i   ) )
+    {
+	$CONFIG{'dist'} = 'debian';
+    }
+
+
+    #
+    #
     #  Test that the distribution name we've been given
     # to configure has a collection of hook scripts.
     #
@@ -249,7 +312,7 @@ sub checkArguments
 	print <<E_OR;
 
   We're trying to configure an installation of $CONFIG{'dist'} in
- $CONFIG{'location'} - but there is no hook directory for us to use.
+ $CONFIG{'dir'} - but there is no hook directory for us to use.
 
   This means we don't know how to configure this installation.
 
