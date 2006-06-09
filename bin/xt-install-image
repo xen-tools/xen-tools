@@ -1,0 +1,12 @@
+#!/usr/bin/perl -w
+
+#
+#  Install Linux into a given directory, either via:
+#
+#    * debootstrap
+#    * rpmstrap
+#    * untarring.
+#    * copying
+#
+
+use strict;

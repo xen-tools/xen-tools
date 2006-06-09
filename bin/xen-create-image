@@ -1,0 +1,10 @@
+#!/usr/bin/perl -w
+
+#
+#  Parse arguments, and call 'xt-install-image' + 'xt-customize-image' 
+# appropriately.
+#
+
+use strict;
+
+

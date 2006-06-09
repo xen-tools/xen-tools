@@ -1,0 +1,7 @@
+#!/usr/bin/perl -w
+
+#
+#  Customize an installed copy of Linux by running hooks, etc.
+#
+
+use strict;
