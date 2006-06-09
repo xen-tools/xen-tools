@@ -1,0 +1,40 @@
+#!/bin/sh
+#
+#  Install modules from the host system into the new image.
+#
+# Steve
+# --
+# http://www.steve.org.uk/
+
+
+prefix=$1
+dist=$2
+
+
+
+#
+#  Source our common functions
+#
+if [ -e ../common.sh ]; then
+    . ../common.sh
+fi
+
+
+#
+# Log our start
+#
+logMessage Script $0 starting
+
+
+#
+#  Copy the modules from the host to the new system - we should only
+# really copy the *correct* modules, but we don't know what they are.
+#
+mkdir -p ${prefix}/lib/modules
+cp -R /lib/modules/*/ ${prefix}/lib/modules
+
+
+#
+#  Log our finish
+#
+logMessage Script $0 finished
