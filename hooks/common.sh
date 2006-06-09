@@ -1,7 +1,16 @@
 #
-#  Common functions which may be used by any hook script
+#  Common shell functions which may be used by any hook script
 #
+#  If you find that a distribution-specific hook script or two
+# are doing the same thing more than once it should be added here.
 #
+#  This script also includes a logging utility which you're encouraged
+# to use.
+#
+# Steve
+# -- 
+#
+
 
 
 #
