@@ -5,7 +5,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.48 2006-06-09 09:27:33 steve Exp $
+# $Id: Makefile,v 1.49 2006-06-09 10:49:00 steve Exp $
 
 
 #
@@ -66,27 +66,30 @@ diff:
 
 install: manpages
 	mkdir -p ${prefix}/usr/bin
-	cp xen-create-image ${prefix}/usr/bin
+	cp bin/xen-create-image ${prefix}/usr/bin
+	cp bin/xt-customize-image ${prefix}/usr/bin
+	cp bin/xt-install-image ${prefix}/usr/bin
 	cp xen-delete-image ${prefix}/usr/bin
 	cp xen-duplicate-image ${prefix}/usr/bin
 	cp xen-list-images ${prefix}/usr/bin
 	cp xen-update-image ${prefix}/usr/bin
 	chmod 755 ${prefix}/usr/bin/xen-create-image
+	chmod 755 ${prefix}/usr/bin/xt-customize-image
+	chmod 755 ${prefix}/usr/bin/xt-install-image
 	chmod 755 ${prefix}/usr/bin/xen-delete-image
 	chmod 755 ${prefix}/usr/bin/xen-duplicate-image
 	chmod 755 ${prefix}/usr/bin/xen-list-images
 	chmod 755 ${prefix}/usr/bin/xen-update-image
 	-mkdir -p ${prefix}/etc/xen-tools
-	-mkdir -p ${prefix}/etc/xen-tools/hook.d/
+	-if [ -d ${prefix}/etc/xen-tools/hook.d ]; then mv ${prefix}/etc/xen-tools/hook.d/  ${prefix}/etc/xen-tools/hook.d.obsolete ; fi
+	-if [ -d ${prefix}/etc/xen-tools/role.d ]; then mv ${prefix}/etc/xen-tools/role.d/  ${prefix}/etc/xen-tools/role.d.obsolete ; fi
 	-mkdir -p ${prefix}/etc/xen-tools/skel/
-	-mkdir -p ${prefix}/etc/xen-tools/role.d/
-	cp etc/hook.d/[0-9]* ${prefix}/etc/xen-tools/hook.d/
-	cp etc/role.d/builder ${prefix}/etc/xen-tools/role.d/
-	cp etc/role.d/gdm ${prefix}/etc/xen-tools/role.d/
-	cp etc/role.d/minimal ${prefix}/etc/xen-tools/role.d/
-	cp etc/role.d/xdm ${prefix}/etc/xen-tools/role.d/
-	chmod 755 ${prefix}/etc/xen-tools/role.d/*
-	chmod 755 ${prefix}/etc/xen-tools/hook.d/[0-9]*
+	mkdir -p ${prefix}/usr/lib/xen-tools
+	mkdir -p ${prefix}/usr/lib/xen-tools/debian.d/
+	mkdir -p ${prefix}/usr/lib/xen-tools/centos4.d/
+	cp hooks/common.sh ${prefix}/usr/lib/xen-tools
+	cp -R hooks/debian/*-* ${prefix}/usr/lib/xen-tools/debian.d
+	cp -R hooks/centos4/*-* ${prefix}/usr/lib/xen-tools/centos4.d
 	-mkdir -p ${prefix}/usr/share/man/man8/
 	cp man/*.8.gz ${prefix}/usr/share/man/man8/
 	cp etc/xen-tools.conf ${prefix}/etc/xen-tools/
