@@ -17,8 +17,8 @@ prefix=$1
 #
 #  Source our common functions
 #
-if [ -e ../common.sh ]; then
-    . ../common.sh
+if [ -e /usr/lib/xen-tools/common.sh ]; then
+    . /usr/lib/xen-tools/common.sh
 fi
 
 
