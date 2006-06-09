@@ -31,7 +31,7 @@ xen-create-image - Create a new Xen instance
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.5 2006-06-09 14:55:08 steve Exp $
+ $Id: xen-create-image,v 1.6 2006-06-09 16:27:37 steve Exp $
 
 =cut
 
@@ -110,17 +110,19 @@ showSummery();
 
 
 #
-#  Create and mount the images if we're using loopback filesystems.
+#  Create and format the images if we're using loopback filesystems.
 #
 if ( $CONFIG{'dir'} )
 {
+    createLoopbackImages();
 }
 
 #
-#  Create the LVM partitions if we're using LVM.
+#  Create and format the LVM partitions if we're using LVM.
 #
-if ( $CONFIG{'loopback'} )
+if ( $CONFIG{'lvm'} )
 {
+    createLVMBits();
 }
 
 
@@ -222,6 +224,26 @@ sub setupDefaultOptions
     $CONFIG{'debootstrap'} = 0;
     $CONFIG{'copy'}        = '';
     $CONFIG{'tar'}         = '';
+
+
+    #
+    #  The program to run to create a filesystem.
+    #
+    # NOTE: These commands end in a trailing slash.  The last parameter is
+    #       added as the loopback file/LVM volume to create the fs on....
+    #
+    $CONFIG{'make_fs_ext3'}	= '/sbin/mkfs.ext3 -F ';
+    $CONFIG{'make_fs_xfs'}	= '/sbin/mkfs.xfs -d name=';
+    $CONFIG{'make_fs_reiserfs'}	= '/sbin/mkfs.reiserfs -f -q ';
+
+    #
+    #  Flags to pass to "mount" to mount our image.
+    #
+    #  NOTE: Kinda redundent and may go away.
+    #
+    $CONFIG{'mount_fs_ext3'}      = '-t ext3';
+    $CONFIG{'mount_fs_xfs'}       = '-t xfs';
+    $CONFIG{'mount_fs_reiserfs'}  = '-t reiserfs';
 }
 
 
@@ -269,6 +291,7 @@ sub parseCommandLineArguments
 	       "cache=s",      \$CONFIG{'cache'},
                "ide",          \$CONFIG{'ide'},
 	       "passwd",       \$CONFIG{'passwd'},
+	       "force",        \$CONFIG{'force'},
 
 	       # Help options
 	       "debug",        \$CONFIG{'verbose'},
@@ -284,7 +307,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.5 $';
+	my $REVISION      = '$Revision: 1.6 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -425,4 +448,223 @@ sub showSummery
     $CONFIG{'gateway'}   && print "Gateway        : $CONFIG{'gateway'}\n";
     print "\n";
 
+}
+
+
+
+
+=head2 createLoopbackImages
+
+  Create the two images "swap.img" and "disk.img" in the directory
+ we've been given.
+
+  We also will call the filesystem creation routine to make sure we
+ have a valid filesystem.
+
+=cut
+
+sub createLoopbackImages
+{
+    #
+    #  The two files we need to test.
+    #
+    my $disk = $CONFIG{'dir'} . '/domains/' . $CONFIG{'hostname'} . "/disk.img" ;
+    my $swap = $CONFIG{'dir'} . '/domains/' . $CONFIG{'hostname'} . "/swap.img" ;
+
+    #
+    #  Make sure we have the relevant output directory.
+    #
+    if (  ! -d $CONFIG{'dir'} . "/domains/" )
+    {
+        mkdir $CONFIG{'dir'} . '/domains', 0777
+          || die "Cannot create $CONFIG{'dir'}/domains - $!";
+    }
+    if ( ! -d $CONFIG{'dir'} . "/domains/" . $CONFIG{'hostname'} )
+    {
+        mkdir $CONFIG{'dir'}. '/domains/' . $CONFIG{'hostname'}, 0777
+          || die "Cannot create $CONFIG{'dir'}/domains/$CONFIG{'hostname'} - $!" ;
+    }
+
+
+    #
+    # Only proceed overwritting if we have --force specified.
+    #
+    if ( ( -e $disk ) && ! $CONFIG{'force'} )
+    {
+	print "The disk image already exists.  Aborting.\n";
+	print "Specify '--force' to overwrite, or remove the following file\n";
+	print $disk . "\n";
+	exit;
+    }
+    if ( ( -e $swap ) && ! $CONFIG{'force'} )
+    {
+	print "The swap image already exists.  Aborting.\n";
+	print "Specify '--force' to overwrite, or remove the following file\n";
+	print $swap . "\n";
+	exit;
+    }
+
+
+    #
+    #  Modify the sizes to something reasonable
+    #
+    my $disk_size = $CONFIG{'size'};
+    my $swap_size = $CONFIG{'swap'};
+
+    #
+    # Convert Gb -> Mb for the disk image size, and swap size.
+    #
+    if ( $disk_size =~ /^(\d+)Gb*$/i )
+    {
+	$disk_size = $1 * 1024 . "M";
+    }
+    if ( $swap_size =~ /^(\d+)Gb*$/i )
+    {
+	$swap_size = $1 * 1024 . "M";
+    }
+
+    #
+    #  Final adjustments to sizing.
+    #
+    $disk_size =~ s/Mb*$/k/i;
+    if ( $swap_size =~ /^(\d+)Mb*$/i )
+    {
+	$swap_size = $1;
+    }
+
+
+    #  Use dd to create the swap
+    #
+    print "\nCreating swap image: $swap\n";
+    my $swap_cmd = "/bin/dd if=/dev/zero of=$swap bs=1024k count=$swap_size";
+    runCommand( $swap_cmd );
+    print "Done\n";
+
+
+    #
+    #  Use dd to create the disk image.
+    #
+    print "\nCreating disk image: $disk\n";
+    my $image_cmd = "/bin/dd if=/dev/zero of=$disk bs=$disk_size count=0 seek=1024";
+    runCommand( $image_cmd );
+    print "Done\n";
+
+
+    #
+    #  Finally create the filesystem
+    #
+    createFilesystem( $disk );
+}
+
+
+=head2 createLVMBits
+
+  TODO: Implement.
+
+=cut
+
+sub createLVMBits
+{
+    print "LVM not supported yet\n";
+
+}
+
+
+=head2 createFilesystem
+
+  Format the given image in the users choice of filesystem.
+
+=cut
+
+sub createFilesystem
+{
+    my( $image ) = ( @_ );
+
+    #
+    #  We have the filesystem the user wanted, make sure that the
+    # binary exists.
+    #
+    my $command = $CONFIG{ "make_fs_" . $CONFIG{'fs'} };
+
+    #
+    #  Split the command into "binary" + "args".  Make sure that
+    # the binary exists and is executable.
+    #
+    if ( $command =~ /([^ ]+) (.*)$/ )
+    {
+	my $binary = $1;
+	my $args   = $2;
+
+	if ( ! -x $binary )
+	{
+	    print "The binary '$binary' required to create the filesystem $CONFIG{'fs'} is missing\n";
+	    exit;
+	}
+    }
+    else
+    {
+	print "The filesystem creation hash is bogus for filesystem : $CONFIG{'fs'}\n";
+	exit;
+    }
+
+
+    #
+    #  OK we have the command and the filesystem.  Create it.
+    #
+    print "\nCreating $CONFIG{'fs'} filesystem on $image\n";
+
+    $command .= $image;
+
+    runCommand( $command );
+    print "Done\n";
+}
+
+
+
+
+=head2 runCommand
+
+  A utility method to run a system command.  We will capture the return
+ value and exit if the command files.
+
+  When running verbosely we will also display any command output.
+
+=cut
+
+sub runCommand
+{
+    my ( $cmd ) = (@_ );
+
+    #
+    #  Header.
+    #
+    $CONFIG{'verbose'} && print "Executing : $cmd\n";
+
+    #
+    #  Hide output unless running with --debug.
+    #
+    $cmd .= " >/dev/null 2>/dev/null" unless $CONFIG{'verbose'};
+
+    #
+    #  Run it.
+    #
+    my $output = `$cmd`;
+
+    if ( $? != 0 )
+    {
+	print "Running command '$cmd' failed.\n";
+	print "Aborting\n";
+	exit;
+    }
+
+
+    #
+    # All done.
+    #
+    $CONFIG{'verbose'} && print "Output\n";
+    $CONFIG{'verbose'} && print "======\n";
+    $CONFIG{'verbose'} && print $output . "\n";
+    $CONFIG{'verbose'} && print "Finished : $cmd\n";
+
+    return( $output );
 }
