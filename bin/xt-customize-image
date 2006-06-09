@@ -22,18 +22,18 @@ xt-customize-image - Customize a freshly installed copy of GNU/Linux
    --location The location of the new installation
    --dist     The name of the distribution which has been installed.
 
-  All other options from B<xen-create-image> will be passed as environmental
- variables.
+  All other options from xen-create-image, such as the new IP address(es)
+ to give to the new instance, will be passed as environmental variables.
 
 =cut
 
 =head1 NOTES
 
-  This script is invoked by B<xen-create-image> after it has created a
+  This script is invoked by xen-create-image after it has created a
  fresh installation of Linux withing a temporary location.
 
   This script will be invoked with a full copy of the arguments from
- B<xen-create-image> in its environment, along with several command line
+ xen-create-image in its environment, along with several command line
  arguments.
 
   The command line arguments which are mandatory are:
@@ -44,13 +44,29 @@ xt-customize-image - Customize a freshly installed copy of GNU/Linux
 =cut
 
 
+=head1 HOOK SCRIPTS
+
+  The distribution name is used to locate an appropriate collection
+ of scripts, or hooks, to execute to do the actual customisation.
+
+  The hooks will each be executed with a single parameter which is
+ the directory path to the new instance.  This argument is taken from
+ the --location option.
+
+  For the distribution named 'foo' the scripts will be loaded and
+ executed from '/usr/lib/xen-tools/foo.d'.  Each executable will
+ be loaded and executed in sorted order.
+
+=cut
+
+
 =head1 AUTHOR
 
  Steve
  --
  http://www.steve.org.uk/
 
- $Id: xt-customize-image,v 1.6 2006-06-09 15:12:24 steve Exp $
+ $Id: xt-customize-image,v 1.7 2006-06-09 18:59:46 steve Exp $
 
 =cut
 
@@ -147,7 +163,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.6 $';
+	my $REVISION      = '$Revision: 1.7 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{

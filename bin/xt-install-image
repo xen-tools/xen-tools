@@ -22,44 +22,53 @@ xt-install-image - Install a fresh copy of GNU/Linux into a directory
    --location The location to use for the new installation
    --dist     The name of the distribution which has been installed.
 
-  Exclusive Options:
-   --untar
-   --debootstrap  + --mirror
-   --rpmstrap
-   --copy
+  Misc Options:
+   --mirror   The mirror to use when installing with 'debootstrap'.
 
-  All other options from B<xen-create-image> will be passed as environmental
+  Installation Options:
+   --tar          Untar the given file.
+   --debootstrap  Install a new system via the debootstrap tool
+   --rpmstrap     Install a new system via the rpmstrap.
+   --copy         Copy the given directory recursively.
+
+  All other options from xen-create-image will be passed as environmental
  variables.
 
 =cut
 
+
 =head1 NOTES
 
-  This script is invoked by B<xen-create-image> after to create a new
- distribution of Linux. 
+  This script is invoked by xen-create-image after to create a new
+ distribution of Linux.  Once the script has been created the companion
+ script xt-customize-image will be invoked to perform the network
+ configuration, etc.
+
+
+=cut
+
+=head1 INSTALLATION METHODS
 
   There are several available methods of installation, depending upon the
- users choice:
+ users choice.  Only one option may be chosen at any given time.
 
-  The command line arguments which are mandatory are:
+  The methods available are:
 
-   --location  - The installation root to use.
-   --dist      - The distribution which is to be installed.
+=over 8
 
-  Once those mandatory arguments are parsed the installation method will
- be selected.  This could be one of :
+=item B<--tar>
+Untar a .tar file into the new installation location.  This tarfile is assumed to contain a complete archived system.
 
-* tar
-  Untar the given file.  Assume this contains a complete installation.
+=item B<--copy>
+Copy the given directory recursively.  This local directory is assumed to contain a complete installation.
 
-* copy
-  Copy from the given directory.  Assume this contains a complete installation.
+=item B<--rpmstrap>
+Install the distribution specified by B<--dist> using the rpmstrap command.
 
-* rpmstrap
-  Install using rpmstrap the named dist
+=item B<--debootstrap>
+Install the distribution specified by the B<--dist> argument using the debootstrap.  If you use this option you must specify a mirror with B<--mirror>.
 
-* debootstrap
-  Install using debootstrap the named dist.
+=back
 
 =cut
 
@@ -70,7 +79,7 @@ xt-install-image - Install a fresh copy of GNU/Linux into a directory
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.7 2006-06-09 18:36:32 steve Exp $
+ $Id: xt-install-image,v 1.8 2006-06-09 18:59:46 steve Exp $
 
 =cut
 
@@ -134,12 +143,12 @@ if ( $CONFIG{'copy'} )
     #
     runCommand( "/bin/cp -a $CONFIG{'copy'}/* $CONFIG{'location'}" );
 }
-elsif ( $CONFIG{'untar'} )
+elsif ( $CONFIG{'tar'} )
 {
     #
     #  Run a command to copy an installed system into the new root.
     #
-    runCommand( "cd $CONFIG{'location'} && tar -xvf $CONFIG{'untar'}" );
+    runCommand( "cd $CONFIG{'location'} && tar -xvf $CONFIG{'tar'}" );
 }
 elsif ( $CONFIG{'debootstrap'} )
 {
@@ -210,7 +219,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.7 $';
+	my $REVISION      = '$Revision: 1.8 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
