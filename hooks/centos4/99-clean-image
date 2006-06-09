@@ -1,0 +1,42 @@
+#!/bin/sh
+#
+#  This script cleans the yum database on the new system.
+#
+# Steve
+# --
+# http://www.steve.org.uk/
+
+
+prefix=$1
+
+#
+#  Source our common functions
+#
+if [ -e ../common.sh ]; then
+    . ../common.sh
+fi
+
+
+#
+# Log our start
+#
+logMessage Script $0 starting
+
+
+#
+# Clean up RPM files.
+#
+logMessage Cleaning .rpm* files.
+find ${prefix}/ -name '*.rpmorig' -exec rm -f \{\} \;
+find ${prefix}/ -name '*.rpmnew' -exec rm -f \{\} \;
+
+#
+#  Clean yum
+#
+logMessage Cleaning Yum Repository
+chroot ${prefix}/usr/bin/yum clean all
+
+#
+#  Log our finish
+#
+logMessage Script $0 finished
