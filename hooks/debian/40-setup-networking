@@ -98,6 +98,8 @@ E_O_STATIC
 	value=\$ip${count}
 	value=`eval echo $value`
 
+	logMessage Adding etho:${interface}
+
 	cat <<E_O_STATIC >>${prefix}/etc/network/interfaces
 auto eth0:${interface}
 iface eth0:${interface} inet static
