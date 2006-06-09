@@ -5,7 +5,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.51 2006-06-09 13:22:50 steve Exp $
+# $Id: Makefile,v 1.52 2006-06-09 18:36:46 steve Exp $
 
 
 #
@@ -86,6 +86,9 @@ install: manpages
 	-mkdir -p ${prefix}/etc/xen-tools/skel/
 	mkdir -p ${prefix}/usr/lib/xen-tools
 	mkdir -p ${prefix}/usr/lib/xen-tools/debian.d/
+	-ln -s /usr/lib/xen-tools/debian.d /usr/lib/xen-tools/sarge.d
+	-ln -s /usr/lib/xen-tools/debian.d /usr/lib/xen-tools/etch.d
+	-ln -s /usr/lib/xen-tools/debian.d /usr/lib/xen-tools/sid.d
 	mkdir -p ${prefix}/usr/lib/xen-tools/centos4.d/
 	cp hooks/common.sh ${prefix}/usr/lib/xen-tools
 	cp -R hooks/debian/*-* ${prefix}/usr/lib/xen-tools/debian.d
