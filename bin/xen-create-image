@@ -31,7 +31,7 @@ xen-create-image - Create a new Xen instance
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.4 2006-06-09 14:48:29 steve Exp $
+ $Id: xen-create-image,v 1.5 2006-06-09 14:55:08 steve Exp $
 
 =cut
 
@@ -49,6 +49,7 @@ The LICENSE file contains the full text of the license.
 
 
 use strict;
+use English;
 use Env;
 use Getopt::Long;
 use Pod::Usage;
@@ -89,9 +90,23 @@ parseCommandLineArguments();
 
 
 #
+#  Ensure we're started by root at this point.  This is required
+# to make sure we can create new LVM volumes, or mount loopback images.
+#
+testRootUser();
+
+
+#
 #  Check our arguments
 #
 checkArguments();
+
+
+#
+#  Show a summery of what we're going to do.
+#
+showSummery();
+
 
 
 #
@@ -231,21 +246,36 @@ sub parseCommandLineArguments
 	       "dist=s",      \$CONFIG{'dist'},
 
 	       # Locations
-	       "dir=s",       \$CONFIG{'dir'},
-	       "lvm=s",       \$CONFIG{'lvm'},
+	       "dir=s",        \$CONFIG{'dir'},
+	       "kernel=s",     \$CONFIG{'kernel'},
+	       "initrd=s",     \$CONFIG{'initrd'},
+	       "lvm=s",        \$CONFIG{'lvm'},
+
+	       # Networking options
+	       "dhcp",         \$CONFIG{'dhcp'},
+	       "gateway=s",    \$CONFIG{'gateway'},
+	       "hostname=s",   \$CONFIG{'hostname'},
+	       "ip=s@",        \$CONFIG{'ip'},
+	       "netmask=s",    \$CONFIG{'netmask'},
 
 	       # Exclusive
-	       "copy=s",      \$CONFIG{'rpmstrap'},
-	       "debootstrap", \$CONFIG{'debootstrap'},
-	       "rpmstrap",    \$CONFIG{'rpmstrap'},
-	       "tar=s",       \$CONFIG{'tar'},
+	       "copy=s",       \$CONFIG{'rpmstrap'},
+	       "debootstrap",  \$CONFIG{'debootstrap'},
+	       "rpmstrap",     \$CONFIG{'rpmstrap'},
+	       "tar=s",        \$CONFIG{'tar'},
+
+	       # Misc. options
+	       "boot",         \$CONFIG{'boot'},
+	       "cache=s",      \$CONFIG{'cache'},
+               "ide",          \$CONFIG{'ide'},
+	       "passwd",       \$CONFIG{'passwd'},
 
 	       # Help options
-	       "verbose",     \$CONFIG{'verbose'},
-	       "debug",       \$CONFIG{'verbose'},
-	       "help",        \$HELP,
-	       "manual",      \$MANUAL,
-	       "version",     \$VERSION
+	       "debug",        \$CONFIG{'verbose'},
+	       "help",         \$HELP,
+	       "manual",       \$MANUAL,
+	       "verbose",      \$CONFIG{'verbose'},
+	       "version",      \$VERSION
 	      );
 
     pod2usage(1) if $HELP;
@@ -254,7 +284,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.4 $';
+	my $REVISION      = '$Revision: 1.5 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -266,6 +296,30 @@ sub parseCommandLineArguments
 
     }
 }
+
+
+=head2 testRootUser
+
+  Make sure this script is being run by a user with UID 0.
+
+=cut
+
+sub testRootUser
+{
+    if ( $EFFECTIVE_USER_ID != 0 )
+    {
+	print <<E_O_ROOT;
+
+  In order to use this script you must be running with root privileges.
+
+  (This is necessary to mount the disk images which are created.)
+
+E_O_ROOT
+
+	exit;
+    }
+}
+
 
 
 =head2 checkArguments
@@ -326,3 +380,49 @@ E_OR
 }
 
 
+=head2 showSummery
+
+  Show the user a summery of what is going to be created for them
+
+=cut
+
+sub showSummery
+{
+    #
+    # Show the user what to expect.
+    #
+    print "\nGeneral Infomation\n";
+    print "--------------------\n";
+    print "Hostname       :  $CONFIG{'hostname'}\n";
+    print "Distribution   :  $CONFIG{'dist'}\n";
+    print "Fileystem Type :  $CONFIG{'fs'}\n";
+
+    print "\nSize Information\n";
+    print "----------------\n";
+    print "Image size     :  $CONFIG{'size'}\n";
+    print "Swap size      :  $CONFIG{'swap'}\n" unless ( $CONFIG{'no-swap' } );
+    print "Memory size    :  $CONFIG{'memory'}\n";
+    print "Kernel path    :  $CONFIG{'kernel'}\n";
+    print "initrd path    :  $CONFIG{'initrd'}\n";
+
+    print "\nNetworking Information\n";
+    print "----------------------\n";
+
+    #
+    # Show each IP address added.
+    #
+    my $ips = $CONFIG{'ip'};
+    my $count = 1;
+
+    foreach my $i ( @$ips )
+    {
+	print "IP Address $count   : $i\n";
+	$count += 1;
+    }
+
+    $CONFIG{'dhcp'}      && print "IP Address     : DHCP\n";
+    $CONFIG{'netmask'}   && print "Netmask        : $CONFIG{'netmask'}\n";
+    $CONFIG{'gateway'}   && print "Gateway        : $CONFIG{'gateway'}\n";
+    print "\n";
+
+}
