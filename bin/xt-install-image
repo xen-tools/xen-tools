@@ -79,7 +79,7 @@ Install the distribution specified by the B<--dist> argument using the debootstr
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.11 2006-06-09 20:27:50 steve Exp $
+ $Id: xt-install-image,v 1.12 2006-06-09 20:49:51 steve Exp $
 
 =cut
 
@@ -171,7 +171,7 @@ else
 #
 #  Test that we have some standard files.
 #
-foreach my $file ( qw( /bin/ls /bin/cp /etc/fstab ) )
+foreach my $file ( qw( /bin/ls /bin/cp ) )
 {
     if ( ! -x $CONFIG{'location'} . $file )
     {
@@ -234,7 +234,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.11 $';
+	my $REVISION      = '$Revision: 1.12 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
