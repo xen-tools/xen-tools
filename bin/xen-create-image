@@ -31,7 +31,7 @@ xen-create-image - Create a new Xen instance
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.7 2006-06-09 16:42:53 steve Exp $
+ $Id: xen-create-image,v 1.8 2006-06-09 16:53:26 steve Exp $
 
 =cut
 
@@ -148,17 +148,27 @@ mountImage();
 #
 #  Call xt-install-image to do the install.
 #
+installSystem();
 
 
 #
 #  If that worked call xt-customise-image to setup networking, and
 # run distro-specific hooks.
 #
+my $customize = "xt-customize-image --dist=$CONFIG{'dist'} --location=$MOUNT_POINT";
+if ( $CONFIG{'verbose'} )
+{
+    $customize .= " --verbose";
+}
+print "\nRunning hooks\n";
+runCommand( $customize );
+print "Done\n";
 
 
 #
 #  Unmount the disk image, and remove the temporary directory.
 #
+# skipped: this is handled in END
 
 
 #
@@ -169,7 +179,7 @@ mountImage();
 #
 #  Report success.
 #
-
+print "All done\n";
 
 
 
@@ -322,7 +332,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.7 $';
+	my $REVISION      = '$Revision: 1.8 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -691,6 +701,55 @@ sub mountImage
     runCommand( $mount_cmd );
 
 
+}
+
+
+
+=head2 installSystem
+
+  Install the system, by invoking the xt-install-system script.
+
+  The script will be given the appropriate arguments from our environment.
+
+=cut
+
+sub installSystem
+{
+    #
+    #  Basic command
+    #
+    my $cmd = "/usr/bin/xt-install-image --location=$MOUNT_POINT --dist=$CONFIG{'dist'}";
+
+    #
+    #  Installation method
+    #
+    if ( $CONFIG{'copy'} )
+    {
+	$cmd .= " --copy=$CONFIG{'copy'}";
+    }
+    if ( $CONFIG{'debootstrap'} )
+    {
+	$cmd .= " --debootstrap=$CONFIG{'debootstrap'}";
+    }
+    if ( $CONFIG{'rpmstrap'} )
+    {
+	$cmd .= " --rpmstrap=$CONFIG{'rpmstrap'}";
+    }
+    if ( $CONFIG{'tar'} )
+    {
+	$cmd .= " --tar=$CONFIG{'tar'}";
+    }
+
+
+    #
+    #  Propogate --verbose
+    #
+    if ( $CONFIG{'verbose'} )
+    {
+	$cmd .= " --verbose";
+    }
+
+    runCommand( $cmd );
 }
 
 
