@@ -79,7 +79,7 @@ Install the distribution specified by the B<--dist> argument using the debootstr
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.10 2006-06-09 19:55:10 steve Exp $
+ $Id: xt-install-image,v 1.11 2006-06-09 20:27:50 steve Exp $
 
 =cut
 
@@ -234,7 +234,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.10 $';
+	my $REVISION      = '$Revision: 1.11 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -390,17 +390,19 @@ sub installDebootstrapImage
     }
 
     #
-    #  This is the command we'll run
-    #
-    my $command = "/usr/sbin/debootstrap $CONFIG{'dist'} $CONFIG{'location'} $CONFIG{'mirror'}";
-
-    #
     #  Propogate the --verbose option if we've been given it.
     #
+    my $VERBOSE = '';
     if ( $CONFIG{'verbose'} )
     {
-	$command .= " --verbose";
+	$VERBOSE = "--verbose";
     }
+
+    #
+    #  This is the command we'll run
+    #
+    my $command = "/usr/sbin/debootstrap $VERBOSE $CONFIG{'dist'} $CONFIG{'location'} $CONFIG{'mirror'}";
+
 
     #
     #  Run the command.
