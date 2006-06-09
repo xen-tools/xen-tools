@@ -1,7 +1,6 @@
 #!/bin/sh
 #
-#  This script sets up the /etc/network/interface file for the new
-# image.
+#  This script sets up the networking files for the new image.
 #
 # Steve
 # --
