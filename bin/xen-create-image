@@ -31,7 +31,7 @@ xen-create-image - Create a new Xen instance
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.11 2006-06-09 17:18:19 steve Exp $
+ $Id: xen-create-image,v 1.12 2006-06-09 17:28:08 steve Exp $
 
 =cut
 
@@ -363,7 +363,7 @@ sub parseCommandLineArguments
 	       "netmask=s",    \$CONFIG{'netmask'},
 
 	       # Exclusive
-	       "copy=s",       \$CONFIG{'rpmstrap'},
+	       "copy=s",       \$CONFIG{'copy'},
 	       "debootstrap",  \$CONFIG{'debootstrap'},
 	       "rpmstrap",     \$CONFIG{'rpmstrap'},
 	       "tar=s",        \$CONFIG{'tar'},
@@ -389,7 +389,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.11 $';
+	my $REVISION      = '$Revision: 1.12 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
