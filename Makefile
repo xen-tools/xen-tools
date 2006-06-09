@@ -5,7 +5,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.50 2006-06-09 12:39:11 steve Exp $
+# $Id: Makefile,v 1.51 2006-06-09 13:22:50 steve Exp $
 
 
 #
@@ -69,10 +69,10 @@ install: manpages
 	cp bin/xen-create-image ${prefix}/usr/bin
 	cp bin/xt-customize-image ${prefix}/usr/bin
 	cp bin/xt-install-image ${prefix}/usr/bin
-	cp xen-delete-image ${prefix}/usr/bin
-	cp xen-duplicate-image ${prefix}/usr/bin
-	cp xen-list-images ${prefix}/usr/bin
-	cp xen-update-image ${prefix}/usr/bin
+	cp bin/xen-delete-image ${prefix}/usr/bin
+	cp bin/xen-duplicate-image ${prefix}/usr/bin
+	cp bin/xen-list-images ${prefix}/usr/bin
+	cp bin/xen-update-image ${prefix}/usr/bin
 	chmod 755 ${prefix}/usr/bin/xen-create-image
 	chmod 755 ${prefix}/usr/bin/xt-customize-image
 	chmod 755 ${prefix}/usr/bin/xt-install-image
@@ -99,7 +99,7 @@ install: manpages
 
 
 manpages:
-	for i in xen-*; do pod2man --release=${VERSION} --official --section=8 $$i man/$$i.8; done
+	cd bin; for i in *-*; do pod2man --release=${VERSION} --official --section=8 $$i ../man/$$i.8; done
 	for i in man/*.8; do gzip --force -9 $$i; done
 
 
