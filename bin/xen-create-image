@@ -8,3 +8,47 @@
 use strict;
 
 
+#
+#  Read configuration file.
+#
+
+
+#
+#  Parse arguments
+#
+
+
+#
+#  Check arguments.
+#
+
+
+#
+#  Create temporary directory to perform installation into
+#
+
+
+#
+#  Call xt-install-image to do the install.
+#
+
+
+#
+#  If that worked call xt-customise-image to setup networking, and
+# run distro-specific hooks.
+#
+
+
+#
+#  Unmount the temporary directory.
+#
+
+
+#
+#  Create xen configuration file.
+#
+
+
+#
+#  Report success.
+#
