@@ -70,7 +70,7 @@ xt-install-image - Install a fresh copy of GNU/Linux into a directory
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.6 2006-06-09 17:29:05 steve Exp $
+ $Id: xt-install-image,v 1.7 2006-06-09 18:36:32 steve Exp $
 
 =cut
 
@@ -89,6 +89,7 @@ The LICENSE file contains the full text of the license.
 
 use strict;
 use Env;
+use File::Copy;
 use Getopt::Long;
 use Pod::Usage;
 
@@ -142,7 +143,7 @@ elsif ( $CONFIG{'untar'} )
 }
 elsif ( $CONFIG{'debootstrap'} )
 {
-    print "TODO: rpmstrap\n";
+    installDebootstrapImage();
 }
 elsif ( $CONFIG{'rpmstrap'} )
 {
@@ -194,6 +195,7 @@ sub parseCommandLineArguments
 
 	       # Misc
 	       "mirror=s",       \$CONFIG{'mirror'},
+	       "cache=s",        \$CONFIG{'cache'},
 
 	       # Help.
 	       "verbose",        \$CONFIG{'verbose'},
@@ -208,7 +210,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.6 $';
+	my $REVISION      = '$Revision: 1.7 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -343,6 +345,61 @@ EOF
 
 
 
+=head2 installDebootstrapImage
+
+  Install a new image of Debian using 'debootstrap'.
+
+=cut
+
+sub installDebootstrapImage
+{
+    #
+    #  Cache from host -> new installation if we've got caching
+    # enabled.
+    #
+    if ( $CONFIG{'cache'} eq "yes" )
+    {
+	print "\nCopying files from host to image.\n";
+	runCommand( "mkdir -p $CONFIG{'location'}/var/cache/apt/archives" );
+	copyDebFiles( "/var/cache/apt/archives", "$CONFIG{'location'}/var/cache/apt/archives" );
+	print( "Done\n" );
+    }
+
+    #
+    #  This is the command we'll run
+    #
+    my $command = "/usr/sbin/debootstrap $CONFIG{'dist'} $CONFIG{'location'} $CONFIG{'mirror'}";
+
+    #
+    #  Propogate the --verbose option if we've been given it.
+    #
+    if ( $CONFIG{'verbose'} )
+    {
+	$command .= " --verbose";
+    }
+
+    #
+    #  Run the command.
+    #
+    runCommand( $command );
+
+    #
+    #  Cache from host -> new installation if we've got caching
+    # enabled.
+    #
+    if ( $CONFIG{'cache'} eq "yes" )
+    {
+	print "\nCopying files from new installation to host.\n";
+	copyDebFiles( "$CONFIG{'location'}/var/cache/apt/archives",
+		      "/var/cache/apt/archives" );
+	print( "Done\n" );
+    }
+
+
+}
+
+
+
 =head2 runCommand
 
   A utility method to run a system command.  We will capture the return
@@ -390,3 +447,41 @@ sub runCommand
     return( $output );
 }
 
+
+
+
+=head2 copyDebFiles
+
+  This function will copy all the .deb files from one directory
+ to another as a caching operation which will speed up debootstrap.
+
+=cut
+
+sub copyDebFiles
+{
+    my ( $source, $dest ) = ( @_ );
+
+    print "Copying files from $source -> $dest\n";
+
+    #
+    # Loop over only .deb files.
+    #
+    foreach my $file ( sort ( glob( $source . "/*.deb" ) ) )
+    {
+	my $name = $file;
+	if ( $name =~ /(.*)\/(.*)/ )
+	{
+	    $name = $2;
+	}
+
+	#
+	#  Only copy if the file doesn't already exist.
+	#
+	if ( ! ( -e $dest . "/" . $name ) )
+	{
+	    File::Copy::cp( $file, $dest );
+	}
+    }
+
+    print "Done\n";
+}
