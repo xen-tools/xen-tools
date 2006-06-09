@@ -70,7 +70,7 @@ xt-install-image - Install a fresh copy of GNU/Linux into a directory
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.5 2006-06-09 17:03:31 steve Exp $
+ $Id: xt-install-image,v 1.6 2006-06-09 17:29:05 steve Exp $
 
 =cut
 
@@ -122,17 +122,31 @@ checkArguments();
 #
 #  Work out how to install:
 #
-if ( $CONFIG{'debootstrap'} )
+
+#
+#  Simplest cases first.
+#
+if ( $CONFIG{'copy'} )
 {
-}
-elsif ( $CONFIG{'rpmstrap'} )
-{
-}
-elsif ( $CONFIG{'copy'} )
-{
+    #
+    #  Run a command to copy an installed system into the new root.
+    #
+    runCommand( "/bin/cp -a $CONFIG{'copy'}/* $CONFIG{'location'}" );
 }
 elsif ( $CONFIG{'untar'} )
 {
+    #
+    #  Run a command to copy an installed system into the new root.
+    #
+    runCommand( "cd $CONFIG{'location'} && tar -xvf $CONFIG{'untar'}" );
+}
+elsif ( $CONFIG{'debootstrap'} )
+{
+    print "TODO: rpmstrap\n";
+}
+elsif ( $CONFIG{'rpmstrap'} )
+{
+    print "TODO: rpmstrap\n";
 }
 else
 {
@@ -194,7 +208,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.5 $';
+	my $REVISION      = '$Revision: 1.6 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -324,5 +338,55 @@ EOF
 	exit 1;
     }
 
+}
+
+
+
+
+=head2 runCommand
+
+  A utility method to run a system command.  We will capture the return
+ value and exit if the command files.
+
+  When running verbosely we will also display any command output.
+
+=cut
+
+sub runCommand
+{
+    my ( $cmd ) = (@_ );
+
+    #
+    #  Header.
+    #
+    $CONFIG{'verbose'} && print "Executing : $cmd\n";
+
+    #
+    #  Hide output unless running with --debug.
+    #
+    $cmd .= " >/dev/null 2>/dev/null" unless $CONFIG{'verbose'};
+
+    #
+    #  Run it.
+    #
+    my $output = `$cmd`;
+
+    if ( $? != 0 )
+    {
+	print "Running command '$cmd' failed.\n";
+	print "Aborting\n";
+	exit;
+    }
+
+
+    #
+    # All done.
+    #
+    $CONFIG{'verbose'} && print "Output\n";
+    $CONFIG{'verbose'} && print "======\n";
+    $CONFIG{'verbose'} && print $output . "\n";
+    $CONFIG{'verbose'} && print "Finished : $cmd\n";
+
+    return( $output );
 }
 
