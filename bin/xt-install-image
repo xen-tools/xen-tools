@@ -2,7 +2,7 @@
 
 =head1 NAME
 
- xt-install-image - Install a fresh copy of GNU/Linux into a directory
+xt-install-image - Install a fresh copy of GNU/Linux into a directory
 
 =cut
 
@@ -70,7 +70,7 @@
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.3 2006-06-09 13:49:39 steve Exp $
+ $Id: xt-install-image,v 1.4 2006-06-09 15:12:24 steve Exp $
 
 =cut
 
@@ -191,7 +191,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.3 $';
+	my $REVISION      = '$Revision: 1.4 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
