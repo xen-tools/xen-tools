@@ -5,14 +5,14 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.54 2006-06-09 19:03:02 steve Exp $
+# $Id: Makefile,v 1.55 2006-06-09 19:04:05 steve Exp $
 
 
 #
 #  Only used to build distribution tarballs.
 #
 DIST_PREFIX = /tmp
-VERSION     = 1.6
+VERSION     = 2.0
 BASE        = xen-tools
 
 
@@ -153,4 +153,4 @@ update:
 
 
 update-version:
-	perl -pi.bak -e "s/RELEASE = '[0-9]\.[0-9]';/RELEASE = '${VERSION}';/g" xen-*
+	perl -pi.bak -e "s/RELEASE = '[0-9]\.[0-9]';/RELEASE = '${VERSION}';/g" bin/*-*
