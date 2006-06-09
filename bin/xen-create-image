@@ -31,7 +31,7 @@ xen-create-image - Create a new Xen instance
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.8 2006-06-09 16:53:26 steve Exp $
+ $Id: xen-create-image,v 1.9 2006-06-09 16:57:01 steve Exp $
 
 =cut
 
@@ -332,7 +332,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.8 $';
+	my $REVISION      = '$Revision: 1.9 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -730,6 +730,7 @@ sub installSystem
     if ( $CONFIG{'debootstrap'} )
     {
 	$cmd .= " --debootstrap=$CONFIG{'debootstrap'}";
+	$cmd .= " --mirror=$CONFIG{'mirror'}";
     }
     if ( $CONFIG{'rpmstrap'} )
     {
