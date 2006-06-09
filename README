@@ -1,6 +1,6 @@
 
 Homepage:
-    http://www.steve.org.uk/Software/xen-tools/
+    http://www.xen-tools.org/
 
 CVS Repository:
     http://xen-tools.cvsrepository.org/
@@ -78,8 +78,8 @@ xen-create-image
  you may optionally cause the new instance to boot once it has
  been created.
 
-  The image may be customised by either hook scripts or a single
- role script - see the manpage for more details.
+  The image may be customised by the use of hook scripts see the
+ manpage for more details.
 
 
 xen-duplicate-image
@@ -117,5 +117,5 @@ xen-update-image
 
 Steve
 --
-$Id: README,v 1.30 2006-06-07 09:36:20 steve Exp $
+$Id: README,v 1.31 2006-06-09 14:57:17 steve Exp $
 
