@@ -31,7 +31,7 @@ xen-create-image - Create a new Xen instance
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.12 2006-06-09 17:28:08 steve Exp $
+ $Id: xen-create-image,v 1.13 2006-06-09 18:36:10 steve Exp $
 
 =cut
 
@@ -389,7 +389,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.12 $';
+	my $REVISION      = '$Revision: 1.13 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -443,18 +443,6 @@ sub checkArguments
 	print "The '--dist' argument is mandatory\n";
 	exit 1;
     }
-
-    #
-    #  Cheat and remap distributions names.
-    #
-    # TODO: Alternative create symlinks in the hook.d
-    if ( ( $CONFIG{'dist'} =~ /^sarge$/i ) ||
-	 ( $CONFIG{'dist'} =~ /^etch$/i  ) ||
-	 ( $CONFIG{'dist'} =~ /^sid$/i   ) )
-    {
-	$CONFIG{'dist'} = 'debian';
-    }
-
 
     #
     #
@@ -776,6 +764,11 @@ sub installSystem
     #  Basic command
     #
     my $cmd = "/usr/bin/xt-install-image --location=$MOUNT_POINT --dist=$CONFIG{'dist'}";
+
+    #
+    #  Add on the current cache setting
+    #
+    $cmd .= " --cache=$CONFIG{'cache'}" if length( $CONFIG{'cache'} );
 
     #
     #  Installation method
