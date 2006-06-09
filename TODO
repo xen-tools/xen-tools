@@ -1,22 +1,19 @@
 TODO
 ----
 
-  1. Test and support more filesystem types.
+  1. Test and support more filesystem types.  Actually this should be
+    pretty simple now that the parameters are stored in the configuration
+    hash.  The only issue is that trailing whitespace is missing from the
+    "make_fs_foo" option.
 
-  2. Write more test cases.  Problem: Many scripts require root access.
 
-  3. If the new hostname is unqualified qualify it identically to the host?
+  2. Write more test cases.
 
-  4. Update other scripts to use LVM properly.
+  3. Support LVM properly.
 
-  5. Test for valid LVM devices.
-
-  6. Test more distributions with RPMStrap, instead of just centos4.
-
-  7. xen-duplicate-image should check source and destination distros match.
-     It should also handle non-Debian images.
+  4. Test more distributions with RPMStrap, instead of just centos4.
 
 Steve
 --
-$Id: TODO,v 1.15 2006-05-27 12:35:47 steve Exp $
+$Id: TODO,v 1.16 2006-06-09 19:43:49 steve Exp $
 
