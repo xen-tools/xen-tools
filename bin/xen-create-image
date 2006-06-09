@@ -31,7 +31,7 @@ xen-create-image - Create a new Xen instance
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.14 2006-06-09 20:14:50 steve Exp $
+ $Id: xen-create-image,v 1.15 2006-06-09 20:22:29 steve Exp $
 
 =cut
 
@@ -394,7 +394,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.14 $';
+	my $REVISION      = '$Revision: 1.15 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -765,6 +765,9 @@ sub mountImage
 
 sub installSystem
 {
+
+    print "\nInstalling your system with ";
+
     #
     #  Basic command
     #
@@ -781,19 +784,23 @@ sub installSystem
     if ( $CONFIG{'copy'} )
     {
 	$cmd .= " --copy=$CONFIG{'copy'}";
+	print "copy from $CONFIG{'copy'}\n";
     }
     if ( $CONFIG{'debootstrap'} )
     {
 	$cmd .= " --debootstrap";
 	$cmd .= " --mirror=$CONFIG{'mirror'}";
+	print "debootstrap  from $CONFIG{'mirror'}\n";
     }
     if ( $CONFIG{'rpmstrap'} )
     {
 	$cmd .= " --rpmstrap";
+	print "rpmstrap\n";
     }
     if ( $CONFIG{'tar'} )
     {
 	$cmd .= " --tar=$CONFIG{'tar'}";
+	print "tarfile $CONFIG{'tar'}\n";
     }
 
 
@@ -806,6 +813,8 @@ sub installSystem
     }
 
     runCommand( $cmd );
+
+    print "Done\n";
 }
 
 
