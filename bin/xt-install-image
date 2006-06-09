@@ -79,7 +79,7 @@ Install the distribution specified by the B<--dist> argument using the debootstr
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.9 2006-06-09 19:49:18 steve Exp $
+ $Id: xt-install-image,v 1.10 2006-06-09 19:55:10 steve Exp $
 
 =cut
 
@@ -151,7 +151,7 @@ elsif ( $CONFIG{'debootstrap'} )
 }
 elsif ( $CONFIG{'rpmstrap'} )
 {
-    print "TODO: rpmstrap\n";
+    installRPMStrapImage();
 }
 else
 {
@@ -163,6 +163,24 @@ else
     exit 1;
 }
 
+
+#
+#  At this point we should have a freshly installed system.
+#
+#  However errors have been known to happen ;)
+#
+#  Test that we have some standard files.
+#
+foreach my $file ( qw( /bin/ls /bin/cp /etc/fstab ) )
+{
+    if ( ! -x $CONFIG{'location'} . $file )
+    {
+	print "The installation of the new system appears to have failed.\n";
+	print "\n";
+	print "There is no '$file' installed in the new installation directory\n";
+	exit 1;
+    }
+}
 
 
 #
@@ -216,7 +234,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.9 $';
+	my $REVISION      = '$Revision: 1.10 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -401,6 +419,42 @@ sub installDebootstrapImage
 	print( "Done\n" );
     }
 
+
+}
+
+
+
+=head2 installRPMStrapImage
+
+  Install a new distribution of GNU/Linux using the rpmstrap tool.
+
+=cut
+
+sub installRPMStrapImage
+{
+
+    #
+    #  Make sure we have the rpmstrap binary present.
+    #
+    if ( ! -x '/usr/bin/rpmstrap' )
+    {
+	print "You've chosen to use the rpmstrap program, but it isn't installed.\n";
+	exit;
+    }
+
+    #
+    #  Propogate the verbosity setting.
+    #
+    my $VERBOSE='';
+    if ( $CONFIG{'verbose'} )
+    {
+	$VERBOSE .= "--verbose";
+    }
+
+    #
+    #  The command we're going to run.
+    #
+    my $command = "rpmstrap $VERBOSE $CONFIG{'dist'} $CONFIG{'location'}";
 
 }
 
