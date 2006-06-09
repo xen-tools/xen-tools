@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-#  This script sets up the /etc/apt/sources.list for APT.
+#  This script sets up the Yum for CentOS4.
 #
 # Steve
 # --
