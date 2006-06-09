@@ -31,7 +31,7 @@ xen-create-image - Create a new Xen instance
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.13 2006-06-09 18:36:10 steve Exp $
+ $Id: xen-create-image,v 1.14 2006-06-09 20:14:50 steve Exp $
 
 =cut
 
@@ -163,6 +163,11 @@ installSystem();
 #
 runCustomisationHooks();
 
+
+#
+#  Create the Xen configuration file.
+#
+runXenConfigCreation();
 
 #
 #  Unmount the disk image, and remove the temporary directory.
@@ -389,7 +394,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.13 $';
+	my $REVISION      = '$Revision: 1.14 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -872,6 +877,24 @@ sub runCustomisationHooks
     }
     print "\nRunning hooks\n";
     runCommand( $customize );
+    print "Done\n";
+}
+
+
+
+=head2 runXenConfigCreation
+
+  Create the Xen configuration file.
+
+=cut
+
+sub runXenConfigCreation
+{
+
+    my $command = '/usr/bin/xt-create-xen-config --output=/etc/xen';
+
+    print "\nCreating Xen configuration file\n";
+    runCommand( $command );
     print "Done\n";
 }
 
