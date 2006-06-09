@@ -31,7 +31,7 @@ xen-create-image - Create a new Xen instance
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.9 2006-06-09 16:57:01 steve Exp $
+ $Id: xen-create-image,v 1.10 2006-06-09 17:03:31 steve Exp $
 
 =cut
 
@@ -155,14 +155,7 @@ installSystem();
 #  If that worked call xt-customise-image to setup networking, and
 # run distro-specific hooks.
 #
-my $customize = "xt-customize-image --dist=$CONFIG{'dist'} --location=$MOUNT_POINT";
-if ( $CONFIG{'verbose'} )
-{
-    $customize .= " --verbose";
-}
-print "\nRunning hooks\n";
-runCommand( $customize );
-print "Done\n";
+runCustomisationHooks();
 
 
 #
@@ -332,7 +325,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.9 $';
+	my $REVISION      = '$Revision: 1.10 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -729,12 +722,12 @@ sub installSystem
     }
     if ( $CONFIG{'debootstrap'} )
     {
-	$cmd .= " --debootstrap=$CONFIG{'debootstrap'}";
+	$cmd .= " --debootstrap";
 	$cmd .= " --mirror=$CONFIG{'mirror'}";
     }
     if ( $CONFIG{'rpmstrap'} )
     {
-	$cmd .= " --rpmstrap=$CONFIG{'rpmstrap'}";
+	$cmd .= " --rpmstrap";
     }
     if ( $CONFIG{'tar'} )
     {
@@ -751,6 +744,78 @@ sub installSystem
     }
 
     runCommand( $cmd );
+}
+
+
+
+=head2 runCustomisationHooks
+
+  Run the xt-customise-system script to customize our fresh installation.
+
+  Before we do this we must pass all the relevent options into our
+ environment.
+
+=cut
+
+sub runCustomisationHooks
+{
+
+    #
+    #  Setup the environment for the child processes.
+    #
+    foreach my $key ( keys %CONFIG )
+    {
+	if ( defined( $CONFIG{$key} ) )
+	{
+	    $ENV{$key} = $CONFIG{$key};
+	}
+    }
+
+    #
+    # Now update the environment for each defined IP address.
+    # these are handled specially since we use arrays.
+    #
+    # Remove the value we set above.
+    delete $ENV{'ip'};
+
+    #
+    # Setup a seperate ip$count value for each IP address.
+    #
+    my $ips   = $CONFIG{'ip'};
+    my $count = 1;
+
+    foreach my $i ( @$ips )
+    {
+	$ENV{'ip' . $count } = $i;
+	$count += 1;
+    }
+    $ENV{'ip_count'} = ($count - 1);
+
+
+    #
+    #  Now show the environment the children get
+    #
+    if ( $CONFIG{'verbose'} )
+    {
+	print "=============\n";
+	foreach my $key ( sort keys %ENV )
+	{
+	    print "\t'" . $key . "' = '" . $CONFIG{$key} . "'\n";
+	}
+    }
+
+
+    #
+    #  Actually run the appropriate hooks
+    #
+    my $customize = "xt-customize-image --dist=$CONFIG{'dist'} --location=$MOUNT_POINT";
+    if ( $CONFIG{'verbose'} )
+    {
+	$customize .= " --verbose";
+    }
+    print "\nRunning hooks\n";
+    runCommand( $customize );
+    print "Done\n";
 }
 
 

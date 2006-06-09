@@ -24,7 +24,7 @@ xt-install-image - Install a fresh copy of GNU/Linux into a directory
 
   Exclusive Options:
    --untar
-   --debootstrap
+   --debootstrap  + --mirror
    --rpmstrap
    --copy
 
@@ -70,7 +70,7 @@ xt-install-image - Install a fresh copy of GNU/Linux into a directory
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.4 2006-06-09 15:12:24 steve Exp $
+ $Id: xt-install-image,v 1.5 2006-06-09 17:03:31 steve Exp $
 
 =cut
 
@@ -178,6 +178,9 @@ sub parseCommandLineArguments
 	       "rpmstrap",       \$CONFIG{'rpmstrap'},
 	       "debootstrap",    \$CONFIG{'debootstrap'},
 
+	       # Misc
+	       "mirror=s",       \$CONFIG{'mirror'},
+
 	       # Help.
 	       "verbose",        \$CONFIG{'verbose'},
 	       "help",           \$HELP,
@@ -191,7 +194,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.4 $';
+	my $REVISION      = '$Revision: 1.5 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
