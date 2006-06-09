@@ -5,3 +5,29 @@
 #
 
 use strict;
+
+
+#
+#  Parse arguments.
+#
+#  We'll need at least:
+#
+#    --installation = /tmp/3980fdf890
+#    --distro= { sid sarge etch centos4 gentoo .. etc }
+#
+#
+
+#
+#  Check arguments:
+#
+#   Distro hook directory must exist.
+#   if not abort.
+#
+
+#
+#  Run each relevent hook script.
+#
+
+#
+#  Exit cleanly
+#

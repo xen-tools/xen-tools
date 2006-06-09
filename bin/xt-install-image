@@ -10,3 +10,45 @@
 #
 
 use strict;
+
+
+#
+#  Parse our arguments.
+#
+
+
+#
+#  Check arguments.
+#
+
+#
+#  Work out how to install:
+#
+if ( $CONFIG{'debootstrap'} ) 
+{
+}
+elsif ( $CONFIG{'rpmstrap'} )
+{
+}
+elsif ( $CONFIG{'copy-from'} )
+{
+}
+elsif ( $CONFIG{'untar'} )
+{
+}
+else
+{
+    #
+    # error
+    #
+    # return a code so that xen-create-image can abort.
+}
+
+
+#
+#  Finished
+#
+
+#
+#  Return 0 so that xen-create-image knows we succeeded.
+#
