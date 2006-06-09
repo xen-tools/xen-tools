@@ -1,0 +1,249 @@
+#!/usr/bin/perl -w
+
+=head1 NAME
+
+xt-create-config - Create a Xen configuration file for a new domain.
+
+=cut
+
+=head1 SYNOPSIS
+
+  xt-create-config [options]
+
+  Help Options:
+   --help     Show this scripts help information.
+   --manual   Read this scripts manual.
+   --version  Show the version number and exit.
+
+  Debugging Options:
+   --verbose  Be verbose in our execution.
+
+  Mandatory Options:
+   --output   The output file to use
+
+  All other options from xen-create-image, such as the new IP address(es)
+ to give to the new instance, will be passed as environmental variables.
+
+=cut
+
+=head1 NOTES
+
+  This script is invoked by xen-create-image after it has created and
+ customised a new Xen domain.  It is responsible for creating the
+ configuration file that Xen itself will use.
+
+  This script will be invoked with a full copy of the arguments from
+ xen-create-image in its environment, along with several command line
+ arguments.
+
+=cut
+
+
+=head1 AUTHOR
+
+ Steve
+ --
+ http://www.steve.org.uk/
+
+ $Id: xt-create-xen-config,v 1.1 2006-06-09 20:14:43 steve Exp $
+
+=cut
+
+
+=head1 LICENSE
+
+Copyright (c) 2005-2006 by Steve Kemp.  All rights reserved.
+
+This module is free software;
+you can redistribute it and/or modify it under
+the same terms as Perl itself.
+The LICENSE file contains the full text of the license.
+
+=cut
+
+
+use strict;
+use Env;
+use Getopt::Long;
+use Pod::Usage;
+
+
+#
+#  Configuration values read from the command line.
+#
+#  We do not need to read any configuration file.
+#
+my %CONFIG;
+
+#
+# Release number.
+#
+my $RELEASE = '2.0';
+
+
+
+
+#
+#  Parse the command line arguments.
+#
+parseCommandLineArguments();
+
+
+#
+#  Check our arguments.
+#
+checkArguments();
+
+
+#
+#  Run each relevent hook scripts.
+#
+createXenConfig();
+
+#
+#  Exit cleanly - any errors which have already occurred will result
+# in "exit 1".
+#
+exit 0;
+
+
+
+
+
+
+=head2 parseArguments
+
+  Parse the command line arguments this script was given.
+
+=cut
+
+sub parseCommandLineArguments
+{
+    my $HELP	= 0;
+    my $MANUAL	= 0;
+    my $VERSION	= 0;
+
+    #
+    #  Parse options.
+    #
+    GetOptions(
+	       "output=s",   \$CONFIG{'output'},
+	       "verbose",    \$CONFIG{'verbose'},
+	       "help",       \$HELP,
+	       "manual",     \$MANUAL,
+	       "version",    \$VERSION
+	      );
+
+    pod2usage(1) if $HELP;
+    pod2usage(-verbose => 2 ) if $MANUAL;
+
+
+    if ( $VERSION )
+    {
+	my $REVISION      = '$Revision: 1.1 $';
+
+	if ( $REVISION =~ /1.([0-9.]+) / )
+	{
+	    $REVISION = $1;
+	}
+
+	print "xt-customize-image release $RELEASE - CVS: $REVISION\n";
+	exit;
+
+    }
+}
+
+
+
+=head2 checkArguments
+
+  Test that the command line arguments we were given make sense.
+
+=cut
+
+sub checkArguments
+{
+    #
+    #  We require a location.
+    #
+    if ( ! defined( $CONFIG{'output'} ) )
+    {
+	print "The '--output' argument is mandatory\n";
+	exit 1;
+    }
+}
+
+
+
+=head2 createXenConfig
+
+  This function does the real work of creating the Xen configuration
+ file.
+
+=cut
+
+sub createXenConfig
+{
+    my $file = $CONFIG{'output'} . '/' . $ENV{'hostname'} . '.cfg';
+
+    #
+    #  The parameters we use.
+    #
+    my $device = 'sda';
+    if ( defined( $ENV{'ide'} ) )
+    {
+	$device = 'hda';
+    }
+
+    my $network = '';
+
+    if ( $ENV{'dhcp'} )
+    {
+	$network =<<EOF;
+dhcp = "dhcp"
+vif  = [ '' ]
+EOF
+    }
+    else
+    {
+	$network =<<EOF;
+vif  = [ '$ENV{'ip1'}' ]
+EOF
+    }
+
+
+    #
+    # Images as presented to Xen.
+    #
+    my $image_vbd;
+    my $swap_vbd;
+
+    if ( $ENV{'lvm'} )
+    {
+	$image_vbd = "phy:$ENV{'lvm'}/$CONFIG{'hostname'}-root";
+	$swap_vbd  = "phy:$ENV{'lvm'}/$CONFIG{'hostname'}-swap";
+    }
+    else
+    {
+	$image_vbd = "file:$ENV{'dir'}/domains/$CONFIG{'hostname'}/disk.img";
+	$swap_vbd  = "file:$ENV{'dir'}/domains/$CONFIG{'hostname'}/swap.img";
+    }
+
+    #
+    #  Now output the data.
+    #
+    open( FILE, ">", $file );
+    print FILE <<E_O_HEADER;
+
+kernel  = '$ENV{'kernel'}'
+ramdisk = '$ENV{'initrd'}'
+memory  = $ENV{'memory'}
+name    = '$ENV{'hostname'}'
+root    = '/dev/$ENV{'device'}1 ro'
+disk    = [ '$imagevbd,$ENV{'device'}1,w', '$swapvbd,$ENV{'device'}2,w' ]
+
+E_O_HEADER
+
+    print FILE $network;
+
+    close( FILE );

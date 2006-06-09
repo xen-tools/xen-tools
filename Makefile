@@ -5,7 +5,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.55 2006-06-09 19:04:05 steve Exp $
+# $Id: Makefile,v 1.56 2006-06-09 20:14:43 steve Exp $
 
 
 #
@@ -69,6 +69,7 @@ install: manpages
 	cp bin/xen-create-image ${prefix}/usr/bin
 	cp bin/xt-customize-image ${prefix}/usr/bin
 	cp bin/xt-install-image ${prefix}/usr/bin
+	cp bin/xt-create-xen-config ${prefix}/usr/bin
 	cp bin/xen-delete-image ${prefix}/usr/bin
 	cp bin/xen-duplicate-image ${prefix}/usr/bin
 	cp bin/xen-list-images ${prefix}/usr/bin
@@ -76,6 +77,7 @@ install: manpages
 	chmod 755 ${prefix}/usr/bin/xen-create-image
 	chmod 755 ${prefix}/usr/bin/xt-customize-image
 	chmod 755 ${prefix}/usr/bin/xt-install-image
+	chmod 755 ${prefix}/usr/bin/xt-create-xen-config
 	chmod 755 ${prefix}/usr/bin/xen-delete-image
 	chmod 755 ${prefix}/usr/bin/xen-duplicate-image
 	chmod 755 ${prefix}/usr/bin/xen-list-images
