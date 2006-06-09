@@ -1,0 +1,47 @@
+#!/bin/sh
+#
+#  This script sets up the /etc/apt/sources.list for APT.
+#
+# Steve
+# --
+# http://www.steve.org.uk/
+
+
+prefix=$1
+
+
+#
+#  Source our common functions
+#
+if [ -e ../common.sh ]; then
+    . ../common.sh
+fi
+
+
+#
+# Log our start
+#
+logMessage Script $0 starting
+
+#
+# Transform yum so that it works.
+#
+perl -pi.bak -e 's/enabled=0/enabled=1/g'     ${prefix}/etc/yum.repos.d/*.repo
+perl -pi.bak -e 's/gpgcheck=1/gpgcheck=0/g'   ${prefix}/etc/yum.repos.d/*.repo
+perl -pi.bak -e 's/^\#baseurl/baseurl/g'      ${prefix}/etc/yum.repos.d/*.repo
+perl -pi.bak -e 's/^mirrorlist/#mirrorlist/g' ${prefix}/etc/yum.repos.d/*.repo
+perl -pi.bak -e 's/\$releasever/4/g' ${prefix}/etc/yum.repos.d/*.repo
+    
+#
+# Update yum
+#
+chroot ${prefix}/usr/bin/yum update
+
+#
+#  Log our finish
+#
+logMessage Script $0 finished
+
+
+
+
