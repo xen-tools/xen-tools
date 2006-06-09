@@ -1,0 +1,62 @@
+#!/bin/sh
+#
+#  This script sets up the /etc/apt/sources.list for APT.
+#
+# Steve
+# --
+# http://www.steve.org.uk/
+
+
+prefix=$1
+
+
+#
+#  Source our common functions
+#
+if [ -e ../common.sh ]; then
+    . ../common.sh
+fi
+
+
+#
+# Log our start
+#
+logMessage Script $0 starting
+
+
+#
+# Setup the sources.list file for new installations of Debian GNU/Linux.
+#
+cat <<E_O_APT > ${prefix}/etc/apt/sources.list
+#
+#  /etc/apt/sources.list
+#
+
+
+#
+# ${dist}
+#
+deb     ${mirror}     ${dist} main contrib non-free
+deb-src ${mirror}     ${dist} main contrib non-free
+
+# 
+#  Security updates
+# 
+deb     http://security.debian.org/ stable/updates  main contrib non-free
+deb-src http://security.debian.org/ stable/updates  main contrib non-free
+
+
+E_O_APT
+
+
+    
+#
+#  Now that the sources have been setup make sure the system is up to date.
+#
+chroot ${prefix} /usr/bin/apt-get update
+
+
+#
+#  Log our finish
+#
+logMessage Script $0 finished

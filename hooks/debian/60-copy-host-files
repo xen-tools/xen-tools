@@ -1,0 +1,101 @@
+#!/usr/bin/perl -w
+#
+#  This script copies "essential" files from the host to the new
+# system.
+#
+#  At the same time it tries to copy all non-system accounts from
+# the host system into the new guest unless the root password is
+# being setup with --passwd.
+#
+# Steve
+# --
+# http://www.steve.org.uk/
+
+
+use strict;
+use Env;
+use File::Copy;
+
+
+my $prefix = shift;
+
+die "Prefix must be given" unless defined( $prefix );
+die "Prefix must be a directory" unless ( -d $prefix );
+
+
+#
+#  Make sure we have $prefix/etc
+#
+die "Prefix is missing /etc : $prefix" unless ( -d $prefix . "/etc" );
+
+
+#
+#  Copy some files literally.
+#
+my @files = ( "/etc/hosts",
+              "/etc/resolv.conf",
+              "/etc/gshadow",
+              "/etc/group"
+	    );
+
+foreach my $file ( @files )
+{
+    File::Copy::copy( $file, $prefix . "/etc/" );
+}
+
+
+#
+#  Only copy the /etc/shadow file if --passwd is *not* specified.
+#
+if ( !$ENV{'passwd'} )
+{
+    File::Copy::copy( "/etc/shadow", $prefix . "/etc/" );
+}
+
+
+
+#
+# If sudo is installed upon the host then install it upon the guest,
+# with the same setup.
+#
+if ( ( -e "/etc/sudoers" ) && ( -x $prefix . "/usr/bin/apt-get" ) )
+{
+    File::Copy::copy( "/etc/sudoers", $prefix . "/etc" );
+    chmod( 0440, $prefix. "/etc/sudoers" );
+
+    `DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes --force-yes install sudo`;
+}
+
+
+
+#
+#  Now modify the password file *unless* the "--passwd" option
+# was given.
+#
+if ( ! $ENV{'passwd'} )
+{
+    open( ORIG, "<", "/etc/passwd" )
+      or die "Failed to open /etc/passwd - $!";
+    open( NEW,  ">>", $prefix . "/etc/passwd" )
+      or die "Failed to open $prefix/etc/passwd - $!";
+
+    foreach my $line ( <ORIG> )
+    {
+	chomp( $line );
+	if ( $line =~ /^([^:]+):([^:]+):([^:]+)/ )
+	{
+	    my $user = $1;
+	    my $pass = $2;
+	    my $uid  = $3;
+
+	    if ( ( $uid >= 1000 ) &&
+		 ( $user ne "nobody" ) )
+	    {
+		print NEW $line . "\n";
+	    }
+	}
+    }
+
+    close( NEW );
+    close( ORIG );
+}
