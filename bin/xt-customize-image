@@ -50,7 +50,7 @@
  --
  http://www.steve.org.uk/
 
- $Id: xt-customize-image,v 1.4 2006-06-09 13:26:01 steve Exp $
+ $Id: xt-customize-image,v 1.5 2006-06-09 13:34:21 steve Exp $
 
 =cut
 
@@ -67,21 +67,16 @@ The LICENSE file contains the full text of the license.
 =cut
 
 
-
-#
-#  Customize an installed copy of Linux by running hooks, etc.
-#
-
 use strict;
+use Env;
 use Getopt::Long;
 use Pod::Usage;
 
 
 #
-#  Configuration options, initially read from the configuration files
-# but may be overridden by the command line.
+#  Configuration values read from the command line.
 #
-#  Command line flags *always* take precedence over the configuration file.
+#  We do not need to read any configuration file.
 #
 my %CONFIG;
 
@@ -94,34 +89,26 @@ my $RELEASE = '2.0';
 
 
 #
-#  Parse arguments.
-#
-#  We'll need at least:
-#
-#    --location = /tmp/3980fdf890
-#    --dist     = { sid sarge etch centos4 gentoo .. etc }
-#
+#  Parse the command line arguments.
 #
 parseCommandLineArguments();
 
 
 #
-#  Check arguments:
+#  Check our arguments
 #
-#   Distro hook directory must exist: /usr/lib/${distro}.d/
-#
-#   Mountpoint must exist: ${location}
 checkArguments();
+
 
 #
 #  Run each relevent hook script.
 #
-#
 runDistributionHooks();
 
 
-
-#  Exit cleanly
+#
+#  Exit cleanly - any errors which have already occurred will result
+# in "exit 1".
 #
 exit 0;
 
@@ -142,6 +129,7 @@ sub parseCommandLineArguments
     my $MANUAL	= 0;
     my $VERSION	= 0;
 
+    #
     #  Parse options.
     #
     GetOptions(
@@ -159,7 +147,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.4 $';
+	my $REVISION      = '$Revision: 1.5 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -183,6 +171,16 @@ sub parseCommandLineArguments
 sub checkArguments
 {
     #
+    #  We require a location.
+    #
+    if ( ! defined( $CONFIG{'location'} ) )
+    {
+	print "The '--location' argument is mandatory\n";
+	exit 1;
+    }
+
+
+    #
     #  Test that the location we've been told contains
     # a fresh installation of Linux exists
     #
@@ -192,6 +190,17 @@ sub checkArguments
 	print "We tried to use : $CONFIG{'location'}\n";
 	exit 1;
     }
+
+
+    #
+    #  We require a distribution name.
+    #
+    if ( ! defined( $CONFIG{'dist'} ) )
+    {
+	print "The '--dist' argument is mandatory\n";
+	exit 1;
+    }
+
 
     #
     #  Test that the distribution name we've been given
@@ -227,13 +236,10 @@ E_OR
   This function does the real work of running each of our hook scripts.
 
   Each hook script is executed in turn, ignoring emacs save files and
- dpkg-temporary files.
+ dpkg files.
 
   We will give each script the name of the directory containing the
  installation as a single argument.
-
-  NOTE: We must change to the directory of the scripts prior to running them
-        so that ../common.sh exists and is accessible.
 
 =cut
 
@@ -244,7 +250,6 @@ sub runDistributionHooks
     #
     my $hooks = "/usr/lib/xen-tools/"  . $CONFIG{'dist'} .  ".d/";
 
-    chdir( $hooks );
     #
     #  Installation prefix
     #
@@ -291,19 +296,24 @@ sub runDistributionHooks
 	    #
 	    my $cmd = $hooks . $name . " $CONFIG{'location'}";
 
+	    #
+	    #  Run the command.  This has different prolog and epilog
+	    # depending on whether we're running verbosely or not.
+	    #
 	    if ( $CONFIG{'verbose'} )
 	    {
-		print "Running hook $name ['$cmd']";
+		print "Running hook $name ['$cmd']\n";
+		print "--\n";
+		system( $cmd );
+		print "--\n";
+		print "Done\n\n";
 	    }
 	    else
 	    {
 		print "Running hook $name";
+		system( $cmd );
+		print " - done.\n";
 	    }
-
-	    system( $cmd );
-
-	    print " - done.\n";
 	}
     }
-
 }
