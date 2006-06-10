@@ -12,6 +12,7 @@ xen-delete-image - Delete previously created Xen instances.
    --help     Show help information.
    --manual   Read the manual for this script.
    --version  Show the version information and exit.
+   --verbose  Show diagnostic output.
 
   General options:
    --dir      Specify the output directory where images were previously saved.
@@ -79,7 +80,7 @@ Specify the LVM volume where images were previously saved.
  --
  http://www.steve.org.uk/
 
- $Id: xen-delete-image,v 1.4 2006-06-10 14:18:23 steve Exp $
+ $Id: xen-delete-image,v 1.5 2006-06-10 14:22:27 steve Exp $
 
 =cut
 
@@ -252,6 +253,7 @@ sub parseCommandLineArguments
 	       "dir=s",      \$CONFIG{'dir'},
 	       "lvm=s",      \$CONFIG{'lvm'},
 	       "test",       \$CONFIG{'test'},
+	       "verbose",    \$CONFIG{'verbose'},
 	       "help",       \$HELP,
 	       "manual",     \$MANUAL,
 	       "version",    \$VERSION
@@ -263,7 +265,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.4 $';
+	my $REVISION      = '$Revision: 1.5 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -336,27 +338,37 @@ sub deleteXenImage
 	my $prefix = $CONFIG{'dir'} . "/domains/";
 
 	#
+	#  The files
+	#
+	my $swap = $prefix . $hostname . "/swap.img";
+	my $disk = $prefix . $hostname . "/disk.img";
+	my $log  = $prefix . $hostname . "/install.log";
+
+	#
 	# Swap
 	#
-	if ( -e $prefix . $hostname . "/swap.img" )
+	if ( -e $swap )
 	{
-	    unlink( $prefix . $hostname . "/swap.img" );
+	    $CONFIG{'verbose'} && print "Removing swap: $swap\n";
+	    unlink( $swap );
 	}
 
 	#
-	#  Disk
+	# Disk
 	#
-	if ( -e $prefix . $hostname . "/disk.img" )
+	if ( -e $disk )
 	{
-	    unlink( $prefix . $hostname . "/disk.img" );
+	    $CONFIG{'verbose'} && print "Removing disk: $disk\n";
+	    unlink( $disk );
 	}
 
 	#
 	#  Install log
 	#
-	if ( -e $prefix . $hostname . "/install.log" )
+	if ( -e $log )
 	{
-	    unlink( $prefix . $hostname . "/install.log" );
+	    $CONFIG{'verbose'} && print "Removing log: $log\n";
+	    unlink( $log );
 	}
 
 	#
@@ -364,6 +376,7 @@ sub deleteXenImage
 	#
 	if ( -d $prefix . $hostname )
 	{
+	    $CONFIG{'verbose'} && print "Removing directory: $prefix" . $hostname . "\n";
 	    rmdir ( $prefix . $hostname );
 	}
     }
@@ -378,8 +391,8 @@ sub deleteXenImage
 	my $swap = "lvremove /dev/$CONFIG{'lvm'}/$hostname-swap --force";
 	my $disk = "lvremove /dev/$CONFIG{'lvm'}/$hostname-disk --force";
 
-	system( $swap );
-	system( $disk );
+	runCommand( $swap );
+	runCommand( $disk );
     }
     else
     {
@@ -390,3 +403,51 @@ sub deleteXenImage
     }
 }
 
+
+
+=head2 runCommand
+
+  A utility method to run a system command.  We will capture the return
+ value and exit if the command files.
+
+  When running verbosely we will also display any command output.
+
+=cut
+
+sub runCommand
+{
+    my ( $cmd ) = (@_ );
+
+    #
+    #  Header.
+    #
+    $CONFIG{'verbose'} && print "Executing : $cmd\n";
+
+    #
+    #  Hide output unless running with --debug.
+    #
+    $cmd .= " >/dev/null 2>/dev/null" unless $CONFIG{'verbose'};
+
+    #
+    #  Run it.
+    #
+    my $output = `$cmd`;
+
+    if ( $? != 0 )
+    {
+	print "Running command '$cmd' failed.\n";
+	print "Aborting\n";
+	exit;
+    }
+
+
+    #
+    # All done.
+    #
+    $CONFIG{'verbose'} && print "Output\n";
+    $CONFIG{'verbose'} && print "======\n";
+    $CONFIG{'verbose'} && print $output . "\n";
+    $CONFIG{'verbose'} && print "Finished : $cmd\n";
+
+    return( $output );
+}
