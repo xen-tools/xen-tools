@@ -24,6 +24,7 @@ xen-create-image - Create a new Xen instance
    --kernel      Set the path to the kernel to use for dom U.
    --memory      Setup the amount of memory allocated to the instance.
    --passwd      Ask for a root password during setup.
+   --role        Run a specific role command post-install.
    --size        Set the size of the primary disk image.
    --swap        Set the size of the swap partition.
    --ide         Use IDE names for virtual devices (hda not sda)
@@ -122,6 +123,9 @@ Set the netmask the virtual image should use.
 
 =item B<--passwd>
 Setup a password for the root account of the virtual machine.
+
+=item B<--role>
+Run a single, specific, role-script once the image has been setup.
 
 =item B<--size>
 Specify the size of the primary drive to give the virtual image.  The size may be suffixed with either Mb, or Gb.
@@ -333,6 +337,38 @@ Specify the LVM volume group to store images within.  If you wish to use loopbac
 =cut
 
 
+=head1 ROLES
+
+  Each supported distribution has a hook directory which has been 
+ described already.  If that directory contains the subdirectory 'role.d'
+ then roles support is available.
+
+  Currently there are some roles scripts included for the Debian
+ distribution, these are intended primarily as examples:
+
+=over 8
+
+=item builder
+Setup the new virtual images with commonly used packages for rebuilding Debian packages from source.
+
+=item gdm
+Install an X11 server, using VNC and GDM
+
+=item minimal
+Customise the generated images to remove some packages.
+
+=item xdm
+Install an X11 server, using VNC and XDM
+
+
+  If you'd like to include your own role scripts you'll need to
+ create $dist.d/role.d/foo - then specify "--role=foo" when you're
+ creating your new instance.
+
+=back
+
+
+
 =head1 THE SKELLINGTON DIRECTORY
 
   Any files present in the directory /etc/xen-tools/skel will be copied
@@ -358,7 +394,7 @@ Specify the LVM volume group to store images within.  If you wish to use loopbac
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.21 2006-06-10 16:48:55 steve Exp $
+ $Id: xen-create-image,v 1.22 2006-06-10 17:28:41 steve Exp $
 
 =cut
 
@@ -502,6 +538,11 @@ installSystem();
 # run distro-specific hooks.
 #
 runCustomisationHooks();
+
+#
+#  If the user specified role script then run it
+#
+runRoleScript();
 
 
 #
@@ -718,6 +759,7 @@ sub parseCommandLineArguments
 	       "cache=s",      \$CONFIG{'cache'},
                "ide",          \$CONFIG{'ide'},
 	       "passwd",       \$CONFIG{'passwd'},
+	       "role",         \$CONFIG{'role'},
 	       "force",        \$CONFIG{'force'},
 
 	       # Help options
@@ -734,7 +776,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.21 $';
+	my $REVISION      = '$Revision: 1.22 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -1280,6 +1322,49 @@ sub runCustomisationHooks
     }
     print "\nRunning hooks\n";
     runCommand( $customize );
+    print "Done\n";
+}
+
+
+
+
+=head2 runRoleScript
+
+  If the user specified a role for the new instance then execute it.
+
+=cut
+
+sub runRoleScript
+{
+    my $roleDir	= '/usr/lib/xen-tools/' . $CONFIG{'dist'} . '.d/' ;
+    my $role	= $CONFIG{'role'};
+
+    if ( !defined( $role ) )
+    {
+	print "No role script specified\n";
+	return;
+    }
+
+    my $file = $roleDir . $role;
+
+    if ( -x $file )
+    {
+	print "Running role script $file for role '$role'\n";
+    }
+    else
+    {
+	print "Role script not executable : $file for role '$role'\n";
+	return;
+    }
+
+
+    #
+    #  Our environment is already setup because of the call to
+    # runCustomisationHooks.  So we just need to run the script
+    # with the mountpoint.
+    #
+    runCommand( $file . " " . $MOUNT_POINT );
+
     print "Done\n";
 }
 
