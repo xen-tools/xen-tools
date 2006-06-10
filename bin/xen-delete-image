@@ -15,7 +15,7 @@ xen-delete-image - Delete previously created Xen instances.
 
   General options:
    --dir      Specify the output directory where images were previously saved.
-   --volume   Specify the LVM volume to use.
+   --lvm      Specify the LVM volume to use.
 
   Testing options:
    --test     Don't complain if we're not invoked by root.
@@ -79,7 +79,7 @@ Specify the LVM volume where images were previously saved.
  --
  http://www.steve.org.uk/
 
- $Id: xen-delete-image,v 1.2 2006-06-09 19:04:13 steve Exp $
+ $Id: xen-delete-image,v 1.3 2006-06-10 13:58:50 steve Exp $
 
 =cut
 
@@ -134,38 +134,11 @@ if ( -e "/etc/xen-tools/xen-tools.conf" )
 #
 parseCommandLineArguments();
 
-#
-#  Make sure we have either a volume, or a root.
-#
-if ( $CONFIG{'volume'} && $CONFIG{'dir'} )
-{
-    print "Please only use a volume or a directory name - not both\n";
-    exit;
-}
-
-
-if ( ! defined( $CONFIG{'dir'} ) )
-{
-    print "The xen domain directory has not been specified\n";
-    exit;
-}
-else
-{
-    if ( ! -d $CONFIG{'dir'} )
-    {
-	print "The Xen domain directory '$CONFIG{'dir'}' doesn't exist\n";
-	exit;
-    }
-}
 
 #
-# Volumes are not supported yet :(
+#  Check that we got valid arguments.
 #
-if ( $CONFIG{'volume'} )
-{
-    print "LVM Volumes are not supported yet\n";
-    exit;
-}
+checkArguments();
 
 
 #
@@ -277,7 +250,7 @@ sub parseCommandLineArguments
     #
     GetOptions(
 	       "dir=s",      \$CONFIG{'dir'},
-	       "volume=s",   \$CONFIG{'volume'},
+	       "lvm=s",      \$CONFIG{'lvm'},
 	       "test",       \$CONFIG{'test'},
 	       "help",       \$HELP,
 	       "manual",     \$MANUAL,
@@ -290,7 +263,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.2 $';
+	my $REVISION      = '$Revision: 1.3 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -300,6 +273,36 @@ sub parseCommandLineArguments
 	print "xen-delete-image release $RELEASE - CVS: $REVISION\n";
 	exit;
 
+    }
+}
+
+
+
+=head2 checkArguments
+
+  Check that we received the arguments we expected.
+
+=cut
+
+sub checkArguments
+{
+    #
+    #  Make sure we have either a volume, or a root.
+    #
+    if ( $CONFIG{'lvm'} && $CONFIG{'dir'} )
+    {
+	print "Please only use a volume group or a directory name - not both\n";
+	exit;
+    }
+
+
+    #
+    #  Make sure we have at least one of the lvm or root specified.
+    #
+    if ( (!defined( $CONFIG{'dir'} ) ) && ( !defined( $CONFIG{'lvm'} ) ) )
+    {
+	print "Please specify either a directory root, or an LVM volume group\n";
+	exit;
     }
 }
 
@@ -326,36 +329,64 @@ sub deleteXenImage
 
 
     #
-    #  Now the swap image
+    #  If we're working on disk images remove them.
     #
-    if ( -e $CONFIG{'dir'} . "/domains/" . $hostname . "/swap.img" )
+    if ( defined( $CONFIG{'dir'} ) )
     {
-	unlink( $CONFIG{'dir'} . "/domains/" . $hostname . "/swap.img" );
+	my $prefix = $CONFIG{'dir'} . "/domains/";
+
+	#
+	# Swap
+	#
+	if ( -e $prefix . $hostname . "/swap.img" )
+	{
+	    unlink( $prefix . $hostname . "/swap.img" );
+	}
+
+	#
+	#  Disk
+	#
+	if ( -e $prefix . $hostname . "/disk.img" )
+	{
+	    unlink( $prefix . $hostname . "/disk.img" );
+	}
+
+	#
+	#  Install log
+	#
+	if ( -e $prefix . $hostname . "/install.log" )
+	{
+	    unlink( $prefix . $hostname . "/install.log" );
+	}
+
+	#
+	#  Now remove the directory.
+	#
+	if ( -d $prefix . $hostname )
+	{
+	    rmdir ( $prefix . $hostname );
+	}
     }
-
-    #
-    #  Now the disk image
-    #
-    if ( -e $CONFIG{'dir'} . "/domains/" . $hostname . "/disk.img" )
+    elsif ( defined( $CONFIG{'lvm'} ) )
     {
-	unlink( $CONFIG{'dir'} . "/domains/" . $hostname . "/disk.img" );
+	#
+	#  LVM volumes
+	#
+	#
+	#  TODO: Check we're not mounted.
+	#
+	my $swap = "lvremove /dev/$CONFIG{'lvm'}/$CONFIG{'hostname'}-swap --force";
+	my $disk = "lvremove /dev/$CONFIG{'lvm'}/$CONFIG{'hostname'}-root --force";
+
+	system( $swap );
+	system( $disk );
     }
-
-
-    #
-    #  Now the install log.
-    #
-    if ( -e $CONFIG{'dir'} . "/domains/" . $hostname . "/install.log" )
+    else
     {
-	unlink( $CONFIG{'dir'} . "/domains/" . $hostname . "/install.log" );
-    }
-
-    #
-    #  Now remove the directory.
-    #
-    if ( -d $CONFIG{'dir'} . "/domains/" . $hostname )
-    {
-	rmdir ( $CONFIG{'dir'} . "/domains/" . $hostname );
+	print "Error - neither --dir nor --lvm.\n";
+	print "Can't happen\n";
+	print "Hostname : $hostname\n";
+	exit;
     }
 }
 
