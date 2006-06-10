@@ -45,7 +45,7 @@ xt-create-config - Create a Xen configuration file for a new domain.
  --
  http://www.steve.org.uk/
 
- $Id: xt-create-xen-config,v 1.4 2006-06-10 14:02:13 steve Exp $
+ $Id: xt-create-xen-config,v 1.5 2006-06-10 14:18:23 steve Exp $
 
 =cut
 
@@ -140,7 +140,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.4 $';
+	my $REVISION      = '$Revision: 1.5 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -195,6 +195,14 @@ sub createXenConfig
 	$device = 'hda';
     }
 
+    #
+    #  Strip a trailing qualifier from the memory
+    #
+    if ( $ENV{'memory'} =~ /([^0-9]+)/ )
+    {
+	$ENV{'memory'} = $1;
+    }
+
     my $network = '';
 
     if ( $ENV{'dhcp'} )
@@ -207,7 +215,7 @@ EOF
     else
     {
 	$network =<<EOF;
-vif  = [ '$ENV{'ip1'}' ]
+vif  = [ 'ip=$ENV{'ip1'}' ]
 EOF
     }
 
@@ -239,8 +247,8 @@ kernel  = '$ENV{'kernel'}'
 ramdisk = '$ENV{'initrd'}'
 memory  =  $ENV{'memory'}
 name    = '$ENV{'hostname'}'
-root    = '/dev/$ENV{'device'}1 ro'
-disk    = [ '$image_vbd,$ENV{'device'}1,w', '$swap_vbd,$ENV{'device'}2,w' ]
+root    = '/dev/$device1 ro'
+disk    = [ '$image_vbd,$device1,w', '$swap_vbd,$device2,w' ]
 
 E_O_HEADER
 
