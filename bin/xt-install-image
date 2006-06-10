@@ -79,7 +79,7 @@ Install the distribution specified by the B<--dist> argument using the debootstr
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.12 2006-06-09 20:49:51 steve Exp $
+ $Id: xt-install-image,v 1.13 2006-06-10 16:48:55 steve Exp $
 
 =cut
 
@@ -234,7 +234,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.12 $';
+	my $REVISION      = '$Revision: 1.13 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -483,7 +483,18 @@ sub runCommand
     #
     #  Hide output unless running with --debug.
     #
-    $cmd .= " >/dev/null 2>/dev/null" unless $CONFIG{'verbose'};
+    if ( $CONFIG{'verbose'} )
+    {
+	#
+	#  Copy stderr to stdout, so we can see it.
+	#
+	$cmd .= " 2>&1";
+    }
+    else
+    {
+	$cmd .= " >/dev/null 2>/dev/null" ;
+    }
+
 
     #
     #  Run it.

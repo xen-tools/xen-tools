@@ -358,7 +358,7 @@ Specify the LVM volume group to store images within.  If you wish to use loopbac
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.20 2006-06-10 15:52:09 steve Exp $
+ $Id: xen-create-image,v 1.21 2006-06-10 16:48:55 steve Exp $
 
 =cut
 
@@ -734,7 +734,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.20 $';
+	my $REVISION      = '$Revision: 1.21 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -1324,7 +1324,17 @@ sub runCommand
     #
     #  Hide output unless running with --debug.
     #
-    $cmd .= " >/dev/null 2>/dev/null" unless $CONFIG{'verbose'};
+    if ( $CONFIG{'verbose'} )
+    {
+	#
+	#  Copy stderr to stdout, so we can see it.
+	#
+	$cmd .= " 2>&1";
+    }
+    else
+    {
+	$cmd .= " >/dev/null 2>/dev/null" ;
+    }
 
     #
     #  Run it.
