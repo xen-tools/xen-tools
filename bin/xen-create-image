@@ -394,7 +394,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.22 2006-06-10 17:28:41 steve Exp $
+ $Id: xen-create-image,v 1.23 2006-06-10 17:36:09 steve Exp $
 
 =cut
 
@@ -759,7 +759,7 @@ sub parseCommandLineArguments
 	       "cache=s",      \$CONFIG{'cache'},
                "ide",          \$CONFIG{'ide'},
 	       "passwd",       \$CONFIG{'passwd'},
-	       "role",         \$CONFIG{'role'},
+	       "role=s",       \$CONFIG{'role'},
 	       "force",        \$CONFIG{'force'},
 
 	       # Help options
@@ -776,7 +776,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.22 $';
+	my $REVISION      = '$Revision: 1.23 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -1304,7 +1304,8 @@ sub runCustomisationHooks
     #
     if ( $CONFIG{'verbose'} )
     {
-	print "=============\n";
+	print "Customization Script Environment:\n";
+	print "---------------------------------\n";
 	foreach my $key ( sort keys %ENV )
 	{
 	    print "\t'" . $key . "' = '" . $ENV{$key} . "'\n";
@@ -1426,14 +1427,6 @@ sub runCommand
     #
     my $output = `$cmd`;
 
-    if ( $? != 0 )
-    {
-	print "Running command '$cmd' failed.\n";
-	print "Aborting\n";
-	exit;
-    }
-
-
     #
     # All done.
     #
@@ -1441,6 +1434,15 @@ sub runCommand
     $CONFIG{'verbose'} && print "======\n";
     $CONFIG{'verbose'} && print $output . "\n";
     $CONFIG{'verbose'} && print "Finished : $cmd\n";
+
+
+    if ( $? != 0 )
+    {
+	print "Running command '$cmd' failed.\n";
+	print "Aborting\n";
+	exit;
+    }
+
 
     return( $output );
 }
