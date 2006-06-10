@@ -24,7 +24,6 @@ xen-create-image - Create a new Xen instance
    --kernel      Set the path to the kernel to use for dom U.
    --memory      Setup the amount of memory allocated to the instance.
    --passwd      Ask for a root password during setup.
-   --role        Run a role-specific script, post-install.
    --size        Set the size of the primary disk image.
    --swap        Set the size of the swap partition.
    --ide         Use IDE names for virtual devices (hda not sda)
@@ -156,7 +155,7 @@ Specify the LVM volume group to store images within.  If you wish to use loopbac
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.16 2006-06-09 22:03:14 steve Exp $
+ $Id: xen-create-image,v 1.17 2006-06-10 13:59:06 steve Exp $
 
 =cut
 
@@ -519,7 +518,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.16 $';
+	my $REVISION      = '$Revision: 1.17 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -759,14 +758,68 @@ sub createLoopbackImages
 
 =head2 createLVMBits
 
-  TODO: Implement.
+  This fucntion is responsible for creating two new logical volumes within
+ a given LVM volume group.
 
 =cut
 
 sub createLVMBits
 {
-    print "LVM not supported yet\n";
+    #
+    #  The two volumes we will need to use..
+    #
+    my $disk = $CONFIG{'hostname'} . "-disk" ;
+    my $swap = $CONFIG{'hostname'} . "-swap" ;
 
+    #
+    #  TODO:  Check whether the volumes exist, and if so abort
+    #         unless '--force' is specified.
+    #
+
+    #
+    #  Modify the sizes to something reasonable
+    #
+    my $disk_size = $CONFIG{'size'};
+    my $swap_size = $CONFIG{'swap'};
+
+    #
+    # Convert Gb -> Mb for the disk image size, and swap size.
+    #
+    if ( $disk_size =~ /^(\d+)Gb*$/i )
+    {
+	$disk_size = $1 * 1024 . "M";
+    }
+    if ( $swap_size =~ /^(\d+)Gb*$/i )
+    {
+	$swap_size = $1 * 1024 . "M";
+    }
+
+    #
+    #  Final adjustments to sizing.
+    #
+    $disk_size =~ s/Mb*$/k/i;
+    if ( $swap_size =~ /^(\d+)Mb*$/i )
+    {
+	$swap_size = $1;
+    }
+
+
+    #
+    # The commands to create the volumes.
+    #
+    my $disk_cmd = "/sbin/lvcreate $CONFIG{'lvm'} -L $CONFIG{'swap'}M -n $disk";
+    my $swap_cmd = "/sbin/lvcreate $CONFIG{'lvm'} -L $CONFIG{'size'} -n $swap";
+
+    #
+    # Create the volumes
+    #
+    runCommand( $disk_cmd );
+    runCommand( $swap_cmd );
+
+    #
+    #  Initialise the partition with the relevent filesystem.
+    #
+    createFilesystem( "/dev/$CONFIG{'lvm'}/$CONFIG{'hostname'}-disk" );
 }
 
 
@@ -838,7 +891,7 @@ sub mountImage
 
     if ( $CONFIG{'lvm'} )
     {
-	$image = "/dev/" . $CONFIG{'lvm'} . "/" . $CONFIG{'hostname'} . '-root';
+	$image = "/dev/" . $CONFIG{'lvm'} . "/" . $CONFIG{'hostname'} . '-disk';
     }
     elsif ( $CONFIG{'dir'} )
     {
