@@ -155,9 +155,22 @@ Specify the LVM volume group to store images within.  If you wish to use loopbac
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.18 2006-06-10 14:00:19 steve Exp $
+ $Id: xen-create-image,v 1.19 2006-06-10 14:57:11 steve Exp $
 
 =cut
+
+
+=head1 CONTRIBUTORS
+
+  Contributors to this code:
+
+=over 8
+
+=item  Radu Spineanu - many patches, and official Debian package maintainer.
+
+=item  Justin Azoff - contributed early support for LVM.
+
+=back
 
 
 =head1 LICENSE
@@ -518,7 +531,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.18 $';
+	my $REVISION      = '$Revision: 1.19 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
