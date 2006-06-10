@@ -1,8 +1,35 @@
+xen-tools (1.6-1) unstable; urgency=low
+
+  * New upstream release (closes: #368983)
+     + Install libc6-xen on sid/etch systems
+     + Don't update /etc/hosts on the host if there is already an
+       entry present for that given host.
+  * Added xen | xen-hypervisor-3.0 to depends again (closes: #370278)
+  * Updated Standards version
+  * Added missing 1.4-2 changelog entry
+
+ -- Radu Spineanu <radu@debian.org>  Sat, 10 Jun 2006 18:57:50 +0300
+
 xen-tools (1.5-1) unstable; urgency=low
 
   * New upstream release
 
  -- Radu Spineanu <radu@debian.org>  Tue, 30 May 2006 00:07:30 +0300
+
+xen-tools (1.4-2) unstable; urgency=medium
+
+  * Snapshot of CVS to close bugs.
+  * Consistently use SCSI / IDE style device names.
+    (Closes: #366252)
+  * Don't overwrite new images with xen-create-image, unless '--force'
+    is applied.  (Closes: #366403)
+  * Rather than recommending Xen (which is Xen 2.0) recommend either
+    xen or xen-hypervisor-3.0.  (Closes: #366459).
+  * Updated standards version to 3.7.2.  (No changes).
+  * Set the priority to "optional" not "extra".  Must remember to keep
+    this there this time..
+
+ -- Steve Kemp <skx@debian.org>  Mon, 22 May 2006 12:04:21 +0000
 
 xen-tools (1.4-1) unstable; urgency=low
 
