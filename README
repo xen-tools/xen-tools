@@ -1,6 +1,6 @@
 
 Homepage:
-    http://www.xen-tools.org/
+    http://www.xen-tools.org/software/xen-tools
 
 CVS Repository:
     http://xen-tools.cvsrepository.org/
@@ -19,8 +19,8 @@ xen-tools
 
   There are two ways to use the scripts:
 
-  1. With loopback files (simplest)
-  2. With LVM.
+  1. With loopback files which is the simplest method.
+  2. Using LVM for better performance.
 
 
 
@@ -59,12 +59,11 @@ LVM Support
 -----------
 
   If you wish to use the LVM support then you will give the 
- scripts an LVM volume which will be used to create the storage
- within.
+ scripts an LVM volume group as an argument, or in the configuration
+ file. 
 
-  In this case you'll have two new volumes created, one for
- the swap image and one for the disk storage.
-
+  The volume group will be used to create two new logical volumes,
+ one for the disk and one for the swap.
 
 
 xen-create-image
@@ -93,7 +92,9 @@ xen-duplicate-image
 xen-delete-image
 ----------------
 
-  This script will delete a images by hostname.
+  This script will delete a images by hostname, it will remove the
+ logical volumes, or loopback files, which make up the storage for the
+ Xen instance.
 
 
 xen-list-images
@@ -117,5 +118,5 @@ xen-update-image
 
 Steve
 --
-$Id: README,v 1.31 2006-06-09 14:57:17 steve Exp $
+$Id: README,v 1.32 2006-06-10 15:02:19 steve Exp $
 
