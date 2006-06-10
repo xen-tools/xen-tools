@@ -148,6 +148,209 @@ Specify the LVM volume group to store images within.  If you wish to use loopbac
 
 =cut
 
+=head1 LOOPBACK EXAMPLES
+
+  The following will create a 2Gb disk image, along with a 128Mb
+ swap file with Debian Sarge setup and running via DHCP.
+
+     xen-create-image --size=2Gb --swap=128Mb --dhcp \
+          --dir=/home/xen --hostname=vm01.my.flat
+
+  This next example sets up a host which has the name 'vm02' and
+ IP address 192.168.1.200, with the gateway address of 192.168.1.1
+
+     xen-create-image --size=2Gb --swap=128Mb \
+          --ip=192.168.1.200 --netmask=255.255.255.0
+          --gateway=192.168.1.1 \
+          --dir=/home/xen --hostname=vm02
+
+  To save typing these command line options may be specified in the
+ configuration file which is described in this manual.
+
+  The directory specified for the output will be used to store the files
+ which are produced.  To avoid clutter each host will have its images
+ stored beneath the specified directory, named after the hostname.
+
+  For example the images created above will be stored as:
+
+   $dir/domains/vm01.my.flat/
+   $dir/domains/vm01.my.flat/disk.img
+   $dir/domains/vm01.my.flat/swap.img
+
+   $dir/domains/vm02.my.flat/
+   $dir/domains/vm02.my.flat/disk.img
+   $dir/domains/vm02.my.flat/swap.img
+
+  The '/domains/' subdirectory will be created if necessary.
+
+=cut
+
+
+=head1 LVM EXAMPLES
+
+  If you wish to use an LVM volume group instead of a pair of loopback
+ images as shown above you can instead use the B<--lvm> argument to
+ specify one.
+
+     xen-create-image --size=2Gb --swap=128Mb --dhcp \
+          --lvm=myvolumegroup --hostname=vm01.my.flat
+
+  The given volume group will have two new logical volumes created within it:
+
+   ${hostname}-swap
+   ${hostname}-disk
+
+  This images can be mounted, as you would expect, by a command like this:
+
+    mkdir /mnt/foo
+    mount /dev/myvolumegroup/vm01.my.flat-disk /mnt/foo
+
+=cut
+
+
+=head1 DESCRIPTION
+
+
+  xen-create-image is a simple script which allows you to create new
+ Xen instances easily.  The new image will be given two volumes.  These
+ volumes will be stored upon the host as either loopback files, or
+ LVM logical volumes:
+
+   1.  An image for the systems root disk.
+   2.  An image for the systems swap device.
+
+  The new virtual installations will be configured with networking,
+ have OpenSSH installed upon it, and have most of its basic files
+ setup correctly.
+
+=cut
+
+=head1 CONFIGURATION
+
+  To reduce the length of the command line each of the options may
+ be specified inside a configuration file.
+
+  The script will check a global configuration file for options, the
+ file is:
+
+     /etc/xen-tools/xen-tools.conf
+
+  The configuration file may contain comments which begin with the
+ hash '#' character.  Otherwise the format is 'key = value'.
+
+  A sample configuration file would look like this:
+
+=for example begin
+
+  #
+  #  Output directory.  Images are stored beneath this directory, one
+  # subdirectory per hostname.
+  #
+  dir = /home/xen
+
+  #
+  #  LVM users should disable the 'dir' setting above, and instead
+  # specify the name of the volume group to use.
+  #
+  # lvm = myvolume
+
+  #
+  #  Disk and Sizing options.
+  #
+  size       = 2Gb      # Disk image size.
+  memory     = 128Mb    # Memory size
+  swap       = 128Mb    # Swap size
+  fs         = ext3     # use EXT3 filesystems
+  dist       = sarge    # Default distribution to install.
+
+  #
+  # Kernel options.
+  #
+  initrd     = /boot/initrd.img-2.6.16-2-xen-686
+  kernel     = /boot/vmlinuz-2.6.16-2-xen-686
+
+  #
+  # Networking options.
+  #
+  gateway   = 192.168.1.1
+  netmask   = 255.255.255.0
+
+=for example end
+
+  Using this configuration file a new image may be created with the
+ command:
+
+      xen-create-image --hostname=vm03.my.flat --ip=192.168.1.201
+
+=cut
+
+=head1 INSTALLATION METHODS
+
+  The new guest images may be installed in several different ways:
+
+  1.  By debootstrap
+  2.  By rpmstrap
+  3.  By copying an existing installation
+  4.  By untarring a file.
+
+  These different methods can be selected by either the command line
+ arguments, or settings in the configuration file.
+
+  The default option would be to install new systems with debootstrap.
+ This is mostly reliable, but can be quite slow even with caching.
+
+  However after your first installation you have the option of tarring
+ up the new system, and specifying that this tarfile should be used
+ for future installations of the same distribution.
+
+  Similarly if you were to mount an existing installation of a given
+ distribution you could simply copy that filesystem into the new image
+ with the B<--copy> option.
+
+=cut
+
+=head1 DEBOOTSTRAP CACHING
+
+  When installing new systems with the debootstrap tool there is
+ a fair amount of network overhead.
+
+  To minimize this the .deb files which are downloaded into the
+ new instance are cached by default upon the host, in the directory
+ /var/cache/apt/archives.
+
+  When a new image is created these packages are copied into the new
+ image - before the debootstrap process runs - this should help avoid
+ expensive network reading.
+
+  If you wish to clean the cache upon the host you may do so with
+ apt-get, as you'd expect:
+
+  apt-get clean
+
+  (This feature can be disabled with the command line flag B<--cache=no>,
+ or by the matching setting in the configuration file.)
+
+=cut
+
+
+=head1 THE SKELLINGTON DIRECTORY
+
+  Any files present in the directory /etc/xen-tools/skel will be copied
+ across to each new guest image.  The role of this directory is analogous
+ to the /etc/skel directory.
+
+  A typical use for this would be to copy a public key across to each
+ new system.  You could do this by running:
+
+=for example start
+
+    mkdir -p /etc/xen-tools/skel/root/.ssh
+    chmod -R 700 /etc/xen-tools/skel/root
+    cp /root/.ssh/id_rsa.pub /etc/xen-tools/skel/root/.ssh/authorized_keys2
+    chmod 644 /etc/xen-tools/skel/root/.ssh/authorized_keys2
+
+=for example cut
+
 
 =head1 AUTHOR
 
@@ -155,7 +358,7 @@ Specify the LVM volume group to store images within.  If you wish to use loopbac
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.19 2006-06-10 14:57:11 steve Exp $
+ $Id: xen-create-image,v 1.20 2006-06-10 15:52:09 steve Exp $
 
 =cut
 
@@ -531,7 +734,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.19 $';
+	my $REVISION      = '$Revision: 1.20 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
