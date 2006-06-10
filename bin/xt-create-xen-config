@@ -45,7 +45,7 @@ xt-create-config - Create a Xen configuration file for a new domain.
  --
  http://www.steve.org.uk/
 
- $Id: xt-create-xen-config,v 1.5 2006-06-10 14:18:23 steve Exp $
+ $Id: xt-create-xen-config,v 1.6 2006-06-10 14:26:45 steve Exp $
 
 =cut
 
@@ -140,7 +140,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.5 $';
+	my $REVISION      = '$Revision: 1.6 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -236,6 +236,12 @@ EOF
 	$image_vbd = "file:$ENV{'dir'}/domains/$ENV{'hostname'}/disk.img";
 	$swap_vbd  = "file:$ENV{'dir'}/domains/$ENV{'hostname'}/swap.img";
     }
+    
+    #
+    #  Quick hack
+    #
+    my $device1 = $device . "1";
+    my $device2 = $device . "2";
 
     #
     #  Now output the data.
