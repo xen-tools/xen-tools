@@ -28,6 +28,24 @@ function logMessage
 
 
 #
+#  Test the given condition is true, and if not abort.
+#
+#  Sample usage:
+#    assert $LINENO "${verbose}"
+#
+assert ()
+{
+    line=$1;
+    shift;
+
+    if ! [ $* ] ; then
+        echo "assert failed: $0:$lineno [$*]"
+	exit
+    fi
+}
+
+
+#
 #  Install a Debian package via apt-get.
 #
 function installDebianPackage
@@ -41,12 +59,15 @@ function installDebianPackage
     logMessage "Installing Debian package ${package} to prefix ${prefix}"
 
     #
-    # Make sure the prefix exists.
+    #  We require a package + prefix
     #
-    if [ -z "${prefix}" ]; then
-	logMessage "Prefix '${prefix}' does not exist.  Abortin"
-	return
-    fi
+    assert $LINENO "${package}"
+    assert $LINENO "${prefix}"
+
+    #
+    # Prefix must be a directory.
+    #
+    assert $LINENO -d ${prefix}
 
     #
     # Install the package
@@ -71,15 +92,19 @@ function installCentOS4Package
     logMessage "Installing CentOS4 ${package} to prefix ${prefix}"
 
     #
-    # Make sure the prefix exists.
+    #  We require a package + prefix
     #
-    if [ -z "${prefix}" ]; then
-	logMessage "Prefix '${prefix}' does not exist.  Abortin"
-	return
-    fi
+    assert $LINENO "${package}"
+    assert $LINENO "${prefix}"
+
+    #
+    # Prefix must be a directory.
+    #
+    assert $LINENO -d ${prefix}
 
     #
     # Install the package
     #
     chroot ${prefix} /usr/bin/yum -y install ${package}
 }
+
