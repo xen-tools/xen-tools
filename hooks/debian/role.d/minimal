@@ -1,0 +1,80 @@
+#!/bin/sh
+#
+#  Configure the new image to be a minimal image, by removing
+# a packages I don't care about - and installing some alternatives.
+#
+# Steve
+# --
+# http://www.steve.org.uk/
+#
+
+
+prefix=$1
+
+
+
+#
+#  This function installs a single package into the chroot, forcing
+# the installation to be non-interactive.
+#
+function install_package
+{
+    package=$1
+    
+    DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes --force-yes install $package
+
+}
+
+
+#
+#  This function removes the given package.
+#
+function remove_package
+{
+    package=$1
+
+    chroot ${prefix} /usr/bin/dpkg --purge ${package}
+}
+
+
+#
+#  Install some new packages - do this first to avoid dependency errors.
+#
+install_package syslog-ng 
+install_package deborphan
+install_package less
+install_package screen
+install_package sudo
+install_package vim
+
+
+#
+#  Remove some standard packages.
+#
+
+# PPP stuff.
+remove_package pppconfig
+remove_package pppoeconf
+remove_package pppoe
+remove_package ppp
+remove_package libpcap0.7
+
+# Editors
+remove_package nano
+remove_package ed
+remove_package nvi
+
+# Syslog
+remove_package klogd
+remove_package sysklogd
+
+# manpages
+remove_package manpages  
+remove_package man-db 
+remove_package info
+
+# misc
+remove_package tasksel
+remove_package pciutils
+remove_package fdutils
+remove_package cpio
