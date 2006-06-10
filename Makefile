@@ -5,7 +5,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.56 2006-06-09 20:14:43 steve Exp $
+# $Id: Makefile,v 1.57 2006-06-10 17:11:32 steve Exp $
 
 
 #
@@ -87,14 +87,18 @@ install: manpages
 	-if [ -d ${prefix}/etc/xen-tools/role.d ]; then mv ${prefix}/etc/xen-tools/role.d/  ${prefix}/etc/xen-tools/role.d.obsolete ; fi
 	-mkdir -p ${prefix}/etc/xen-tools/skel/
 	mkdir -p ${prefix}/usr/lib/xen-tools
-	mkdir -p ${prefix}/usr/lib/xen-tools/debian.d/
+	mkdir -p ${prefix}/usr/lib/xen-tools/debian.d/role.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d sarge.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d etch.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d sid.d
-	mkdir -p ${prefix}/usr/lib/xen-tools/centos4.d/
+	mkdir -p ${prefix}/usr/lib/xen-tools/centos4.d/role.d
 	cp hooks/common.sh ${prefix}/usr/lib/xen-tools
 	cp -R hooks/debian/*-* ${prefix}/usr/lib/xen-tools/debian.d
+	cp -R hooks/debian/role.d/* ${prefix}/usr/lib/xen-tools/debian.d/role.d/
+	-rm -rf ${prefix}/usr/lib/xen-tools/debian.d/role.d/CVS
 	cp -R hooks/centos4/*-* ${prefix}/usr/lib/xen-tools/centos4.d
+	cp -R hooks/centos4/role.d/* ${prefix}/usr/lib/xen-tools/centos4.d/role.d
+	-rm -rf ${prefix}/usr/lib/xen-tools/centos4.d/role.d/CVS
 	-mkdir -p ${prefix}/usr/share/man/man8/
 	cp man/*.8.gz ${prefix}/usr/share/man/man8/
 	cp etc/xen-tools.conf ${prefix}/etc/xen-tools/
@@ -139,10 +143,10 @@ uninstall:
 	rm -f ${prefix}/usr/bin/xen-list-images
 	rm -f ${prefix}/usr/bin/xen-update-image
 	rm -f ${prefix}/etc/xen-tools/xen-tools.conf
-	-rmdir ${prefix}/etc/xen-tools/xen-create-image.d/
 	-rmdir ${prefix}/etc/xen-tools/
 	-rm -f ${prefix}/etc/bash_completion.d/xen-tools
 	-rm -f ${prefix}/etc/bash_completion.d/xm
+	rm -rf ${prefix}/usr/lib/xen-tools
 	rm -f ${prefix}/usr/share/man/man8/xen-create-image.8.gz
 	rm -f ${prefix}/usr/share/man/man8/xen-delete-image.8.gz
 	rm -f ${prefix}/usr/share/man/man8/xen-duplicate-image.8.gz
