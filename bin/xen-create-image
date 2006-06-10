@@ -155,7 +155,7 @@ Specify the LVM volume group to store images within.  If you wish to use loopbac
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.17 2006-06-10 13:59:06 steve Exp $
+ $Id: xen-create-image,v 1.18 2006-06-10 14:00:19 steve Exp $
 
 =cut
 
@@ -518,7 +518,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.17 $';
+	my $REVISION      = '$Revision: 1.18 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -807,8 +807,8 @@ sub createLVMBits
     #
     # The commands to create the volumes.
     #
-    my $disk_cmd = "/sbin/lvcreate $CONFIG{'lvm'} -L $CONFIG{'swap'}M -n $disk";
-    my $swap_cmd = "/sbin/lvcreate $CONFIG{'lvm'} -L $CONFIG{'size'} -n $swap";
+    my $disk_cmd = "/sbin/lvcreate $CONFIG{'lvm'} -L $CONFIG{'size'}M -n $disk";
+    my $swap_cmd = "/sbin/lvcreate $CONFIG{'lvm'} -L $CONFIG{'swap'} -n $swap";
 
     #
     # Create the volumes
