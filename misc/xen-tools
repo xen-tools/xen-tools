@@ -20,7 +20,7 @@
 # --
 # http://www.steve.org.uk
 #
-# $Id: xen-tools,v 1.25 2006-06-11 07:33:45 steve Exp $
+# $Id: xen-tools,v 1.26 2006-06-11 07:37:46 steve Exp $
 #
 
 
@@ -55,7 +55,7 @@ _xen_create_image()
     #
     # Volume group completion
     #
-    vgs=`vgdisplay | grep Name | awk '{print $3}'`
+    vgs=`vgdisplay 2>/dev/null | grep Name | awk '{print $3}'`
 
     case "$prev" in
 	--cache)
@@ -84,7 +84,7 @@ _xen_create_image()
 	    return 0
 	    ;;
 	--role)
-	    roles=$(for x in `ls -1 /etc/xen-tools/role.d 2>/dev/null`; do echo ${x} ; done )
+	    roles=$(for x in `ls -1 /usr/lib/xen-tools/*.d/role.d/ 2>/dev/null | grep -v \/`; do echo ${x} ; done )
 	    COMPREPLY=( $( compgen -W '${roles}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
 	    return 0
 	    ;;
@@ -154,7 +154,7 @@ complete -F _xen_duplicate_image xen-duplicate-image
 #
 _xen_delete_image() 
 {
-    local cur prev opts base names
+    local cur prev opts base names vgs
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
@@ -173,15 +173,24 @@ _xen_delete_image()
     fi
 
     #
+    # Volume Group completion
+    #
+    vgs=`vgdisplay 2>/dev/null | grep Name | awk '{print $3}'`
+
+    #
     # Complete the options + all available hostnames.
     #
-    opts="--dir --help --manual --test --version --volume ${names}"
+    opts="--dir --help --lvm --manual --test --version ${names}"
 
     case "${prev}" in
         --dir)
 	    _filedir -d
 	    return 0
             ;;
+	--lvm)
+	    COMPREPLY=( $( compgen -W '${vgs}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+	    return 0
+	    ;;
         --hostname)
 	    if [[ ${base} != '/domains/' ]] ; then
 		
