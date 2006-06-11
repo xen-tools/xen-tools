@@ -20,7 +20,7 @@
 # --
 # http://www.steve.org.uk
 #
-# $Id: xen-tools,v 1.23 2006-05-23 14:22:10 steve Exp $
+# $Id: xen-tools,v 1.24 2006-06-11 07:21:19 steve Exp $
 #
 
 
@@ -33,12 +33,12 @@
 #
 _xen_create_image()
 {
-    local cur prev ip roles dists
+    local cur prev ip roles dists vgs
 
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
     prev=${COMP_WORDS[COMP_CWORD-1]}
-    opts='--broadcast --boot --debug --debootstrap --dhcp --dir --dist --force --fs --gateway --help --hostname --ide --ip --initrd --kernel --manual --memory --mirror --passwd --role --rpmstrap --size --swap --volume --version'
+    opts='--broadcast --boot --debug --debootstrap --dhcp --dir --dist --force --fs --gateway --help --hostname --ide --ip --initrd --kernel --lvm --manual --memory --mirror --passwd --role --rpmstrap --size --swap --version'
     
     
     #
@@ -51,6 +51,11 @@ _xen_create_image()
     if [ -d /usr/lib/rpmstrap/scripts ]; then
        dists=`ls -1 /usr/lib/rpmstrap/scripts`
     fi
+
+    #
+    # Volume group completion
+    #
+    vgs=`vgdisplay | grep Name | awk '{print $3}'`
 
     case "$prev" in
 	--dir)
@@ -68,6 +73,10 @@ _xen_create_image()
 	--ip)
 	    ip=`echo ${ip} | sed -e 's/[.][^.]*$/./'`
 	    COMPREPLY=( $(compgen -W "${ip}" -- ${cur}) )
+	    return 0
+	    ;;
+	--lvm)
+	    COMPREPLY=( $( compgen -W '${vgs}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
 	    return 0
 	    ;;
 	--role)
