@@ -1,12 +1,12 @@
 #!/usr/bin/perl -w
 #
-#  Test that the xen-list-images script can detete two "fake"
-# images we construct manually.
+#  Test that the xen-list-images script can process two "fake"
+# installations which we construct manually.
 #
 #
 # Steve
 # --
-# $Id: xen-lists-images.t,v 1.4 2006-06-13 13:26:01 steve Exp $
+# $Id: xen-lists-images.t,v 1.5 2006-06-13 17:18:39 steve Exp $
 #
 
 
@@ -16,101 +16,122 @@ use File::Temp;
 
 
 #
-#  Create a temporary directory.
+#  Test some random instances.
 #
-my $dir            = File::Temp::tempdir( CLEANUP => 1 );
-my $domains = $dir . "/domains";
+testRandomInstance( "foo.my.flat", 0 );
+testRandomInstance( "foo.my.flat", 1 );
 
-#
-#  Test that we can make the directory.
-#
-ok ( -d $dir, "The temporary directory was created: $dir" );
+testRandomInstance( "bar.my.flat", 0 );
+testRandomInstance( "bar.my.flat", 1 );
 
-#
-#  Create the domains directory.
-#
-ok ( ! -d $domains, "The temp directory doesn't have a domains directory." );
-mkdir( $domains, 0777 );
-ok ( -d $domains, "The temp directory now has a domains directory." );
+testRandomInstance( "baz.my.flat", 0 );
+testRandomInstance( "baz.my.flat", 1 );
 
 
-#
-#  Generate two random hostnames.
-#
-my $one = join ( '', map {('a'..'z')[rand 26]} 0..17 );
-ok( ! -d $domains . "/" . $one, "The first virtual hostname doesnt exist." );
-mkdir( $domains . "/" . $one, 0777 );
-ok( -d $domains . "/" . $one, "The first virtual hostname now exists." );
 
-my $two = join ( '', map {('a'..'z')[rand 26]} 0..17 );
-ok( ! -d $domains . "/" . $two, "The second virtual hostname doesnt exist." );
-mkdir( $domains . "/" . $two, 0777 );
-ok( -d $domains . "/" . $two, "The second virtual hostname now exists." );
+=head2 testRandomInstance
 
+  Create a fake Xen configuration file and test that the xen-list-images
+ script can work with it.
 
-#
-#  Create a stub disk image
-#
-createImage( $domains . "/" . $one );
-createImage( $domains . "/" . $two );
+=cut
 
-
-#
-#  Now we have :
-#
-#  $dir/
-#  $dir/domains/
-#  $dir/domains/$one
-#  $dir/domains/$one/disk.img
-#  $dir/domains/$one/swap.img
-#  $dir/domains/$two
-#  $dir/domains/$two/disk.img
-#  $dir/domains/$two/swap.img
-# 
-#  So we need to run the listing script and verify that two images
-# are detected.
-#
-#
-
-my $output = `./bin/xen-list-images --dir=$dir --test`;
-
-foreach my $line ( split( /\n/, $output ) )
+sub testRandomInstance
 {
-    if ( $line =~ /Image: $one/ )
+    my ( $name, $dhcp ) = ( @_ );
+
+    # Create a temporary directory.
+    my $dir = File::Temp::tempdir( CLEANUP => 1 );
+    ok ( -d $dir, "The temporary directory was created for test: $name" );
+
+
+    #
+    #  Generate a random amount of memory
+    #
+    my $memory = int( rand( 4096 ) );
+
+    #
+    #  Generate a random IP address.
+    #
+    my $ip    = '';
+    my $count = 0;
+    while( $count < 4 )
     {
-        ok( 1, "First image found" );
+        $ip .= int( rand( 256 ) ) . ".";
+
+        $count += 1;
     }
-    elsif ( $line =~ /Image: $two/ )
+
+
+    #
+    #  Write a xen configuration file to the temporary directory.
+    #
+    open( TMP, ">", $dir . "/foo.cfg" );
+
+    if ( $dhcp )
     {
-        ok( 1, "Second image found" );
+        print TMP <<EOD;
+kernel  = '/boot/vmlinuz-2.6.16-2-xen-686'
+ramdisk = '/boot/initrd.img-2.6.16-2-xen-686'
+memory  =  $memory
+name    = '$name'
+root    = '/dev/sda1 ro'
+disk    = [ 'phy:skx-vg/foo.my.flat-disk,sda1,w', 'phy:skx-vg/foo.my.flat-swap,sda2,w' ]
+dhcp  = "dhcp"
+EOD
     }
     else
     {
-        ok( 0, "Unexpected output : $line " );
+        print TMP <<EOS;
+kernel  = '/boot/vmlinuz-2.6.16-2-xen-686'
+ramdisk = '/boot/initrd.img-2.6.16-2-xen-686'
+memory  =  $memory
+name    = '$name'
+root    = '/dev/sda1 ro'
+disk    = [ 'phy:skx-vg/foo.my.flat-disk,sda1,w', 'phy:skx-vg/foo.my.flat-swap,sda2,w' ]
+vif  = [ 'ip=$ip' ]
+EOS
     }
+    close( TMP );
+
+
+    #
+    #  Now run the xen-list-images script to make sure we can read
+    # the relevent details back from it.
+    #
+    my $cmd = "./bin/xen-list-images --test=$dir";
+    my $output = `$cmd`;
+
+    ok( defined( $output ) && length( $output ), "Runing the list command produced some output" );
+
+    #
+    #  Process the output of the command, and make sure it was correct.
+    #
+    my $success = 0;
+    foreach my $line ( split( /\n/, $output ) )
+    {
+        if  ( $line =~ /Memory: ([0-9]+)/i )
+        {
+            is( $1, $memory, "We found the right amount of memory: $memory" );
+            $success += 1;
+        }
+        if  ( $line =~ /Name: (.*)/i )
+        {
+            is( $1, $name, "We found the correct hostname: $name" );
+            $success += 1;
+        }
+        if  ( $line =~ /DHCP/i )
+        {
+            is( $dhcp, 1, "Found the right DHCP details" );
+            $success += 1;
+        }
+        if  ( $line =~ /IP: ([0-9.]+)/i )
+        {
+            is( $1, $ip, "We found the IP address: $ip" );
+            is( $dhcp, 0, "And DHCP is disabled" );
+            $success += 1;
+        }
+    }
+
+    is( $success, 3, "All output accounted for!" );
 }
-
-
-
-
-#
-#  Create a disk + swap image in the given directory.
-#
-sub createImage
-{
-    my ($dir) = ( @_ );
-
-    open( IMAGE, ">", $dir . "/" . "disk.img" )
-      or warn "Failed to open disk image : $!";
-    print IMAGE "Test";
-    close( IMAGE );
-    ok( -e $dir . "/disk.img", "Disk image created properly" );
-
-
-    open( SWAP, ">", $dir . "/" . "swap.img" )
-      or warn "Failed to open disk image : $!";
-    print SWAP "Test";
-    close( SWAP );
-    ok( -e $dir . "/swap.img", "Swap image created properly" );
-}
-
