@@ -4,7 +4,7 @@
 #
 # Steve
 # --
-# $Id: no-tabs.t,v 1.1 2006-06-13 13:21:45 steve Exp $
+# $Id: no-tabs.t,v 1.2 2006-06-13 13:26:00 steve Exp $
 
 
 use strict;
@@ -35,13 +35,12 @@ sub checkFile
     # Nor about backup files.
     return if ( $file =~ /~$/ );
 
-    # Nor about files which start with ./debian/ + ./tests/
+    # Nor about files which start with ./debian/
     return if ( $file =~ /^\.\/debian\// );
-    return if ( $file =~ /^\.\/tests\// );
 
     # See if it is a shell/perl file.
-    my $isShell	= 0;
-    my $isPerl	= 0;
+    my $isShell        = 0;
+    my $isPerl        = 0;
 
     # Read the file.
     open( INPUT, "<", $file );
@@ -51,7 +50,7 @@ sub checkFile
              ( $line =~ /\/bin\/bash/ ) )
         {
             $isShell = 1;
-	}
+        }
         if ( $line =~ /\/usr\/bin\/perl/ )
         {
             $isPerl = 1;
@@ -64,12 +63,12 @@ sub checkFile
     #
     if ( $isShell || $isPerl )
     {
-	#
-	#  Count TAB characters
-	#
-	my $count = countTabCharacters( $file );
+        #
+        #  Count TAB characters
+        #
+        my $count = countTabCharacters( $file );
 
-	is( $count, 0, "Script has no tab characters: $file" );
+        is( $count, 0, "Script has no tab characters: $file" );
     }
 }
 
@@ -88,11 +87,11 @@ sub countTabCharacters
       or die "Cannot open $file - $!";
     foreach my $line ( <FILE> )
     {
-	while( $line =~ /(.*)\t(.*)/ )
-	{
-	    $count += 1;
-	    $line = $1 . $2;
-	}
+        while( $line =~ /(.*)\t(.*)/ )
+        {
+            $count += 1;
+            $line = $1 . $2;
+        }
     }
     close( FILE );
 

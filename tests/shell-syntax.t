@@ -4,7 +4,7 @@
 #
 # Steve
 # --
-# $Id: shell-syntax.t,v 1.1 2006-06-10 20:50:14 steve Exp $
+# $Id: shell-syntax.t,v 1.2 2006-06-13 13:26:01 steve Exp $
 
 
 use strict;
@@ -41,11 +41,11 @@ sub checkFile
     open( INPUT, "<", $file );
     foreach my $line ( <INPUT> )
     {
-	if ( ( $line =~ /\/bin\/sh/ ) ||
-	     ( $line =~ /\/bin\/bash/ ) )
-	{
-	    $isShell = 1;
-	}
+        if ( ( $line =~ /\/bin\/sh/ ) ||
+             ( $line =~ /\/bin\/bash/ ) )
+        {
+            $isShell = 1;
+        }
     }
     close( INPUT );
 

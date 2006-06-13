@@ -5,7 +5,7 @@
 #
 # Steve
 # --
-# $Id: pod-check.t,v 1.4 2006-06-09 15:12:33 steve Exp $
+# $Id: pod-check.t,v 1.5 2006-06-13 13:26:01 steve Exp $
 #
 
 use strict;
@@ -19,15 +19,15 @@ foreach my $file ( glob( "bin/*-*" ) )
 
     if ( ( -x $file ) && ( ! -d $file ) )
     {
-	#
-	#  Execute the command giving STDERR to STDOUT where we
-	# can capture it.
-	#
-	my $cmd	   = "podchecker $file";
-	my $output = `$cmd 2>&1`;
-	chomp( $output );
+        #
+        #  Execute the command giving STDERR to STDOUT where we
+        # can capture it.
+        #
+        my $cmd           = "podchecker $file";
+        my $output = `$cmd 2>&1`;
+        chomp( $output );
 
-	is( $output, "$file pod syntax OK.", " File has correct POD syntax: $file" );
+        is( $output, "$file pod syntax OK.", " File has correct POD syntax: $file" );
     }
 }
 

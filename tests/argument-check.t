@@ -5,7 +5,7 @@
 #
 # Steve
 # --
-# $Id: argument-check.t,v 1.4 2006-06-09 22:03:30 steve Exp $
+# $Id: argument-check.t,v 1.5 2006-06-13 13:26:00 steve Exp $
 #
 
 use strict;
@@ -40,10 +40,10 @@ foreach my $key ( sort keys %OPTIONS )
 
     foreach my $line ( @lines )
     {
-	if ( $line =~ /--$key/ )
-	{
-	    $found = 1;
-	}
+        if ( $line =~ /--$key/ )
+        {
+            $found = 1;
+        }
     }
 
     is( $found, 1 , " Found documentation for '$key'" );
@@ -75,38 +75,38 @@ sub parseConfigFile
     while (defined($line = <FILE>) ) 
     {
         chomp $line;
-	if ($line =~ s/\\$//) 
-	{
-	    $line .= <FILE>;
-	    redo unless eof(FILE);
-	}
+        if ($line =~ s/\\$//) 
+        {
+            $line .= <FILE>;
+            redo unless eof(FILE);
+        }
       
-	# Skip blank lines
-	next if ( length( $line ) < 1 );
+        # Skip blank lines
+        next if ( length( $line ) < 1 );
 
-	# Find variable settings
-	if ( $line =~ /([^=]+)=([^\n]+)/ )
-	{
-	    my $key = $1;
-	    my $val = $2;
+        # Find variable settings
+        if ( $line =~ /([^=]+)=([^\n]+)/ )
+        {
+            my $key = $1;
+            my $val = $2;
 
-	    if ( $key =~ /([ \t#]*)(.*)/ )
-	    {
-		$key = $2;
-	    }
+            if ( $key =~ /([ \t#]*)(.*)/ )
+            {
+                $key = $2;
+            }
 
 
-	    # Strip leading and trailing whitespace.
-	    $key =~ s/^\s+//;
-	    $key =~ s/\s+$//;
-	    $val =~ s/^\s+//;
-	    $val =~ s/\s+$//;
-	    
-	    next if ( $key =~ /--/ );
+            # Strip leading and trailing whitespace.
+            $key =~ s/^\s+//;
+            $key =~ s/\s+$//;
+            $val =~ s/^\s+//;
+            $val =~ s/\s+$//;
+            
+            next if ( $key =~ /--/ );
 
-	    # Store value.
-	    $CONFIG{ $key } = $val;
-	}
+            # Store value.
+            $CONFIG{ $key } = $val;
+        }
     }
 
     close( FILE );

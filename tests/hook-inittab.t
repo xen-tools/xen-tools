@@ -4,7 +4,7 @@
 #
 # Steve
 # --
-# $Id: hook-inittab.t,v 1.2 2006-06-09 15:12:33 steve Exp $
+# $Id: hook-inittab.t,v 1.3 2006-06-13 13:26:00 steve Exp $
 #
 
 use strict;
@@ -35,7 +35,7 @@ sub testHook
     #
     #  Create a temporary directory, and copy our inittab into it.
     #
-    my $dir	= File::Temp::tempdir( CLEANUP => 1 );
+    my $dir        = File::Temp::tempdir( CLEANUP => 1 );
     mkdir( $dir . "/etc", 0777 );
     File::Copy::cp( "/etc/inittab", $dir . "/etc" );
 
@@ -72,21 +72,21 @@ sub testHook
     my $count = 0;
     foreach my $line ( @lines )
     {
-	if ( $line =~ /^([1-9])(.*) (.*)$/ )
-	{
-	    #
-	    # This should be our only line:
-	    #
-	    #  1:2345:respawn:/sbin/getty 38400 console
-	    #
-	    ok( $1 eq "1", "We found the first getty line." );
-	    ok( $3 eq "console", "Which does use the console driver." );
-	}
+        if ( $line =~ /^([1-9])(.*) (.*)$/ )
+        {
+            #
+            # This should be our only line:
+            #
+            #  1:2345:respawn:/sbin/getty 38400 console
+            #
+            ok( $1 eq "1", "We found the first getty line." );
+            ok( $3 eq "console", "Which does use the console driver." );
+        }
 
-	if ( $line =~ /^(.).*getty/ )
-	{
-	    $count += 1 if ( $1 ne "#" );
-	}
+        if ( $line =~ /^(.).*getty/ )
+        {
+            $count += 1 if ( $1 ne "#" );
+        }
     }
 
     ok( $count = 1, "Only found one uncommented getty line" );

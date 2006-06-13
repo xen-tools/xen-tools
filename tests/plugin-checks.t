@@ -5,7 +5,7 @@
 #
 # Steve
 # --
-# $Id: plugin-checks.t,v 1.3 2006-06-09 15:12:33 steve Exp $
+# $Id: plugin-checks.t,v 1.4 2006-06-13 13:26:00 steve Exp $
 #
 
 
@@ -31,16 +31,16 @@ sub testPlugins
     #
     foreach my $file ( glob( "hooks/$dist/*" ) )
     {
-	ok( -e $file, "$file" );
+        ok( -e $file, "$file" );
 
-	if ( -f $file )
-	{
-	    #
-	    #  Make sure the file is OK
-	    #
-	    my $result = testFile( $file );
-	    is( $result, 0, " File contains no mention of the config hash" );
-	}
+        if ( -f $file )
+        {
+            #
+            #  Make sure the file is OK
+            #
+            my $result = testFile( $file );
+            is( $result, 0, " File contains no mention of the config hash" );
+        }
     }
 
 }
@@ -58,11 +58,11 @@ sub testFile
 
     foreach my $line ( <FILY> )
     {
-	if ( $line =~ /\$CONFIG{[ \t'"]+(.*)[ \t'"]+}/ )
-	{
-	    close( FILY );
-	    return $line;
-	}
+        if ( $line =~ /\$CONFIG{[ \t'"]+(.*)[ \t'"]+}/ )
+        {
+            close( FILY );
+            return $line;
+        }
     }
     close( FILY );
 

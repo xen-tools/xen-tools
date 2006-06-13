@@ -4,7 +4,7 @@
 #
 # Steve
 # --
-# $Id: hooks.t,v 1.4 2006-06-09 15:12:33 steve Exp $
+# $Id: hooks.t,v 1.5 2006-06-13 13:26:00 steve Exp $
 #
 
 use strict;
@@ -29,11 +29,11 @@ sub testDistroHooks
     #
     foreach my $file ( glob( "hooks/$dist/*" ) )
     {
-	if ( ! -d $file )
-	{
-	    ok( -e $file, "$file" );
-	    ok( -x $file, " File is executable: $file" );
-	}
+        if ( ! -d $file )
+        {
+            ok( -e $file, "$file" );
+            ok( -x $file, " File is executable: $file" );
+        }
     }
 }
 

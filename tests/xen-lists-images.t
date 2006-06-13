@@ -6,7 +6,7 @@
 #
 # Steve
 # --
-# $Id: xen-lists-images.t,v 1.3 2006-06-09 15:12:33 steve Exp $
+# $Id: xen-lists-images.t,v 1.4 2006-06-13 13:26:01 steve Exp $
 #
 
 
@@ -18,7 +18,7 @@ use File::Temp;
 #
 #  Create a temporary directory.
 #
-my $dir	    = File::Temp::tempdir( CLEANUP => 1 );
+my $dir            = File::Temp::tempdir( CLEANUP => 1 );
 my $domains = $dir . "/domains";
 
 #
@@ -78,15 +78,15 @@ foreach my $line ( split( /\n/, $output ) )
 {
     if ( $line =~ /Image: $one/ )
     {
-	ok( 1, "First image found" );
+        ok( 1, "First image found" );
     }
     elsif ( $line =~ /Image: $two/ )
     {
-	ok( 1, "Second image found" );
+        ok( 1, "Second image found" );
     }
     else
     {
-	ok( 0, "Unexpected output : $line " );
+        ok( 0, "Unexpected output : $line " );
     }
 }
 

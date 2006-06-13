@@ -4,7 +4,7 @@
 #
 # Steve
 # --
-# $Id: perl-syntax.t,v 1.1 2006-06-10 20:45:10 steve Exp $
+# $Id: perl-syntax.t,v 1.2 2006-06-13 13:26:00 steve Exp $
 
 
 use strict;
@@ -44,10 +44,10 @@ sub checkFile
     open( INPUT, "<", $file );
     foreach my $line ( <INPUT> )
     {
-	if ( $line =~ /\/usr\/bin\/perl/ )
-	{
-	    $isPerl = 1;
-	}
+        if ( $line =~ /\/usr\/bin\/perl/ )
+        {
+            $isPerl = 1;
+        }
     }
     close( INPUT );
 
