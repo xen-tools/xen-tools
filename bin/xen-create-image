@@ -394,7 +394,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.24 2006-06-10 17:49:56 steve Exp $
+ $Id: xen-create-image,v 1.25 2006-06-13 08:18:08 steve Exp $
 
 =cut
 
@@ -776,7 +776,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.24 $';
+	my $REVISION      = '$Revision: 1.25 $';
 
 	if ( $REVISION =~ /1.([0-9.]+) / )
 	{
@@ -1118,6 +1118,17 @@ sub createFilesystem
 	exit;
     }
 
+    #
+    #  Special case.
+    #
+    #  If the filesystem is xfs, and the image already existed before
+    # so the user is using '--force' we add the '-f' flag to force
+    # mkfs.xfs to recreate an image rather than complaining.
+    #
+    if ( $CONFIG{'fs'} && $CONFIG{'force'} )
+    {
+	$command .= " -f ";
+    }
 
     #
     #  OK we have the command and the filesystem.  Create it.
