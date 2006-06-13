@@ -38,8 +38,8 @@ options="errors=remount-ro"
 
 case "${fs}" in
     xfs)
-	options="defaults"
-	;;
+        options="defaults"
+        ;;
 esac
 
 
@@ -67,11 +67,11 @@ E_O_FSTAB
 #
 case "${fs}" in
     xfs)
-	installDebianPackage ${prefix} xfsprogs
-	;;
+        installDebianPackage ${prefix} xfsprogs
+        ;;
     reiserfs)
-	installDebianPackage ${prefix} reiserfsprogs
-	;;
+        installDebianPackage ${prefix} reiserfsprogs
+        ;;
 esac
 
 

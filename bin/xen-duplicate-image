@@ -122,7 +122,7 @@ Specify the LVM volume where images are to go
  --
  http://www.steve.org.uk/
 
- $Id: xen-duplicate-image,v 1.2 2006-06-09 19:04:13 steve Exp $
+ $Id: xen-duplicate-image,v 1.3 2006-06-13 13:21:22 steve Exp $
 
 =cut
 
@@ -177,7 +177,7 @@ my $RELEASE = '2.0';
 #
 #  Defaults
 #
-$CONFIG{'xm'} 		= '/usr/sbin/xm';
+$CONFIG{'xm'}               = '/usr/sbin/xm';
 
 
 #
@@ -323,10 +323,10 @@ if ( -x "/etc/xen-tools/hook.d/95-create-cfg" )
     #
     foreach my $key ( keys %CONFIG )
     {
-	if ( defined( $CONFIG{$key} ) )
-	{
-	    $ENV{$key} = $CONFIG{$key};
-	}
+       if ( defined( $CONFIG{$key} ) )
+       {
+           $ENV{$key} = $CONFIG{$key};
+       }
     }
     $ENV{'imagevbd'} = "file:" . $image_out;
     $ENV{'swapvbd'}  = "file:" . $swap_out;
@@ -352,11 +352,11 @@ if ( $CONFIG{'boot'} )
     my $pid = fork();
     if ( $pid )
     {
-	exit;
+       exit;
     }
     else
     {
-	system( "$CONFIG{'xm'} create $CONFIG{'hostname'}.cfg >/dev/null 2>/dev/null" );
+       system( "$CONFIG{'xm'} create $CONFIG{'hostname'}.cfg >/dev/null 2>/dev/null" );
     }
 }
 
@@ -384,39 +384,39 @@ sub readConfigurationFile
     while (defined($line = <FILE>) )
     {
         chomp $line;
-	if ($line =~ s/\\$//)
-	{
-	    $line .= <FILE>;
-	    redo unless eof(FILE);
-	}
+       if ($line =~ s/\\$//)
+       {
+           $line .= <FILE>;
+           redo unless eof(FILE);
+       }
 
-	# Skip lines beginning with comments
-	next if ( $line =~ /^([ \t]*)\#/ );
+       # Skip lines beginning with comments
+       next if ( $line =~ /^([ \t]*)\#/ );
 
-	# Skip blank lines
-	next if ( length( $line ) < 1 );
+       # Skip blank lines
+       next if ( length( $line ) < 1 );
 
-	# Strip trailing comments.
-	if ( $line =~ /(.*)\#(.*)/ )
-	{
-	    $line = $1;
-	}
+       # Strip trailing comments.
+       if ( $line =~ /(.*)\#(.*)/ )
+       {
+           $line = $1;
+       }
 
-	# Find variable settings
-	if ( $line =~ /([^=]+)=([^\n]+)/ )
-	{
-	    my $key = $1;
-	    my $val = $2;
+       # Find variable settings
+       if ( $line =~ /([^=]+)=([^\n]+)/ )
+       {
+           my $key = $1;
+           my $val = $2;
 
-	    # Strip leading and trailing whitespace.
-	    $key =~ s/^\s+//;
-	    $key =~ s/\s+$//;
-	    $val =~ s/^\s+//;
-	    $val =~ s/\s+$//;
+           # Strip leading and trailing whitespace.
+           $key =~ s/^\s+//;
+           $key =~ s/\s+$//;
+           $val =~ s/^\s+//;
+           $val =~ s/\s+$//;
 
-	    # Store value.
-	    $CONFIG{ $key } = $val;
-	}
+           # Store value.
+           $CONFIG{ $key } = $val;
+       }
     }
 
     close( FILE );
@@ -433,27 +433,27 @@ sub readConfigurationFile
 
 sub parseCommandLineArguments
 {
-    my $HELP	= 0;
-    my $MANUAL	= 0;
-    my $VERSION	= 0;
+    my $HELP       = 0;
+    my $MANUAL       = 0;
+    my $VERSION       = 0;
 
     #  Parse options.
     #
     GetOptions(
-	       "hostname=s", \$CONFIG{'hostname'},
-	       "from=s",     \$CONFIG{'from'},
-	       "ip=s",       \$CONFIG{'ip'},
-	       "gateway=s",  \$CONFIG{'gateway'},
-	       "netmask=s",  \$CONFIG{'netmask'},
-	       "dir=s",      \$CONFIG{'dir'},
-	       "volume=s",   \$CONFIG{'volume'},
-	       "kernel=s",   \$CONFIG{'kernel'},
-	       "dhcp",       \$CONFIG{'dhcp'},
+              "hostname=s", \$CONFIG{'hostname'},
+              "from=s",     \$CONFIG{'from'},
+              "ip=s",       \$CONFIG{'ip'},
+              "gateway=s",  \$CONFIG{'gateway'},
+              "netmask=s",  \$CONFIG{'netmask'},
+              "dir=s",      \$CONFIG{'dir'},
+              "volume=s",   \$CONFIG{'volume'},
+              "kernel=s",   \$CONFIG{'kernel'},
+              "dhcp",       \$CONFIG{'dhcp'},
                "ide",        \$CONFIG{'ide'},
-	       "help",       \$HELP,
-	       "manual",     \$MANUAL,
-	       "version",    \$VERSION
-	      );
+              "help",       \$HELP,
+              "manual",     \$MANUAL,
+              "version",    \$VERSION
+             );
 
     pod2usage(1) if $HELP;
     pod2usage(-verbose => 2 ) if $MANUAL;
@@ -461,15 +461,15 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.2 $';
+       my $REVISION      = '$Revision: 1.3 $';
 
-	if ( $REVISION =~ /1.([0-9.]+) / )
-	{
-	    $REVISION = $1;
-	}
+       if ( $REVISION =~ /1.([0-9.]+) / )
+       {
+           $REVISION = $1;
+       }
 
-	print "xen-duplicate-image release $RELEASE - CVS: $REVISION\n";
-	exit;
+       print "xen-duplicate-image release $RELEASE - CVS: $REVISION\n";
+       exit;
 
     }
 }
@@ -488,14 +488,14 @@ sub checkArguments
 
     if (!defined( $CONFIG{'hostname'} ) )
     {
-	print<<EOF
+       print<<EOF
 
   You should set a hostname with '--hostname=foo'.
 
   This option is required.
 EOF
       ;
-	exit;
+       exit;
     }
 
     if (!defined ($CONFIG{'from'} ) )
@@ -517,8 +517,8 @@ EOF
     #
     if ( $CONFIG{'volume'} && $CONFIG{'dir'} )
     {
-	print "Please only use a volume or a directory name - not both\n";
-	exit;
+       print "Please only use a volume or a directory name - not both\n";
+       exit;
     }
 
 
@@ -527,14 +527,14 @@ EOF
     #
     if ( $CONFIG{'volume'} )
     {
-	print "LVM Volumes are not supported yet\n";
-	exit;
+       print "LVM Volumes are not supported yet\n";
+       exit;
     }
 
 
     if (!defined( $CONFIG{'dir'} ) )
     {
-	print<<EOF
+       print<<EOF
 
   You should set an output directory with '--dir=/my/path'.
 
@@ -542,8 +542,8 @@ EOF
  beneath the directory you name.
 
 EOF
-	  ;
-	exit;
+         ;
+       exit;
     }
 
     #
@@ -561,14 +561,14 @@ EOF
     #
     if ( ! -d $CONFIG{'dir'} )
     {
-	print "Output directory '$CONFIG{'dir'}' doesn't exist\n";
-	exit;
+       print "Output directory '$CONFIG{'dir'}' doesn't exist\n";
+       exit;
     }
 
     if ( ! -w $CONFIG{'dir'} )
     {
-	print "Output directory '$CONFIG{'dir'}' isn't writable.\n";
-	exit;
+       print "Output directory '$CONFIG{'dir'}' isn't writable.\n";
+       exit;
     }
 
     #
@@ -577,15 +577,15 @@ EOF
     my $source = $CONFIG{'dir'} . "/domains/" . $CONFIG{'from'} . "/disk.img";
     if ( ! -e $source )
     {
-	print "The source image you've specified doesn't exist";
-	exit;
+       print "The source image you've specified doesn't exist";
+       exit;
     }
 
 
     # Strip trailing Mb from the memory size.
     if ( $CONFIG{'memory'} =~ /^(\d+)Mb*$/i )
     {
-	$CONFIG{'memory'} = $1;
+       $CONFIG{'memory'} = $1;
     }
 
     #
@@ -593,9 +593,9 @@ EOF
     #
     if ( $CONFIG{'ip'} && $CONFIG{'dhcp'})
     {
-	print "You've chosen both DHCP and an IP address.\n";
-	print "Only one is supported\n";
-	exit;
+       print "You've chosen both DHCP and an IP address.\n";
+       print "Only one is supported\n";
+       exit;
     }
 
     #
@@ -604,9 +604,9 @@ EOF
     #
     if ( $CONFIG{'dhcp'} )
     {
-	$CONFIG{'gateway'}   = '';
-	$CONFIG{'netmask'}   = '';
-	$CONFIG{'ip'}	     = '';
+       $CONFIG{'gateway'}   = '';
+       $CONFIG{'netmask'}   = '';
+       $CONFIG{'ip'}            = '';
     }
 }
 
@@ -629,7 +629,7 @@ sub setupNetworking
 
     if ( $CONFIG{'dhcp'} )
     {
-	print IP<<E_O_DHCP;
+       print IP<<E_O_DHCP;
 # This file describes the network interfaces available on your system
 # and how to activate them. For more information, see interfaces(5).
 
@@ -645,7 +645,7 @@ E_O_DHCP
     }
     else
     {
-	print IP<<E_O_STATIC_IP;
+       print IP<<E_O_STATIC_IP;
 # This file describes the network interfaces available on your system
 # and how to activate them. For more information, see interfaces(5).
 

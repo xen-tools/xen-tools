@@ -55,24 +55,23 @@ E_O_STATIC
 
      while [ "${count}" -le "${ip_count}" ]; do
     
-	 value=\$ip${count}
-	 value=`eval echo $value`
+         value=\$ip${count}
+         value=`eval echo $value`
 
-	 logMessage Adding etho:${interface}
+         logMessage Adding etho:${interface}
 
-	 cat <<E_O_STATIC >${prefix}/etc/sysconfig/network-scripts/ifcfg-eth0:${interface}
+         cat <<E_O_STATIC >${prefix}/etc/sysconfig/network-scripts/ifcfg-eth0:${interface}
 DEVICE=eth0:${interface}
 ONBOOT=yes
 BOOTPROTO=static
 IPADDR=${value}
 NETMASK=${netmask}
 E_O_STATIC
-	 count=`expr $count + 1`
-	 interface=`expr $interface + 1`
+         count=`expr $count + 1`
+         interface=`expr $interface + 1`
      done
 
 else
-	
     cat <<E_O_DHCP >${prefix}/etc/sysconfig/network-scripts/ifcfg-eth0
 DEVICE=eth0
 BOOTPROTO=dhcp

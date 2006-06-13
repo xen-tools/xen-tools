@@ -80,7 +80,7 @@ Specify the LVM volume where images were previously saved.
  --
  http://www.steve.org.uk/
 
- $Id: xen-delete-image,v 1.6 2006-06-10 16:48:55 steve Exp $
+ $Id: xen-delete-image,v 1.7 2006-06-13 13:21:22 steve Exp $
 
 =cut
 
@@ -194,39 +194,39 @@ sub readConfigurationFile
     while (defined($line = <FILE>) )
     {
         chomp $line;
-	if ($line =~ s/\\$//)
-	{
-	    $line .= <FILE>;
-	    redo unless eof(FILE);
-	}
+       if ($line =~ s/\\$//)
+       {
+           $line .= <FILE>;
+           redo unless eof(FILE);
+       }
 
-	# Skip lines beginning with comments
-	next if ( $line =~ /^([ \t]*)\#/ );
+       # Skip lines beginning with comments
+       next if ( $line =~ /^([ \t]*)\#/ );
 
-	# Skip blank lines
-	next if ( length( $line ) < 1 );
+       # Skip blank lines
+       next if ( length( $line ) < 1 );
 
-	# Strip trailing comments.
-	if ( $line =~ /(.*)\#(.*)/ )
-	{
-	    $line = $1;
-	}
+       # Strip trailing comments.
+       if ( $line =~ /(.*)\#(.*)/ )
+       {
+           $line = $1;
+       }
 
-	# Find variable settings
-	if ( $line =~ /([^=]+)=([^\n]+)/ )
-	{
-	    my $key = $1;
-	    my $val = $2;
+       # Find variable settings
+       if ( $line =~ /([^=]+)=([^\n]+)/ )
+       {
+           my $key = $1;
+           my $val = $2;
 
-	    # Strip leading and trailing whitespace.
-	    $key =~ s/^\s+//;
-	    $key =~ s/\s+$//;
-	    $val =~ s/^\s+//;
-	    $val =~ s/\s+$//;
+           # Strip leading and trailing whitespace.
+           $key =~ s/^\s+//;
+           $key =~ s/\s+$//;
+           $val =~ s/^\s+//;
+           $val =~ s/\s+$//;
 
-	    # Store value.
-	    $CONFIG{ $key } = $val;
-	}
+           # Store value.
+           $CONFIG{ $key } = $val;
+       }
     }
 
     close( FILE );
@@ -243,21 +243,21 @@ sub readConfigurationFile
 
 sub parseCommandLineArguments
 {
-    my $HELP	= 0;
-    my $MANUAL	= 0;
-    my $VERSION	= 0;
+    my $HELP       = 0;
+    my $MANUAL       = 0;
+    my $VERSION       = 0;
 
     #  Parse options.
     #
     GetOptions(
-	       "dir=s",      \$CONFIG{'dir'},
-	       "lvm=s",      \$CONFIG{'lvm'},
-	       "test",       \$CONFIG{'test'},
-	       "verbose",    \$CONFIG{'verbose'},
-	       "help",       \$HELP,
-	       "manual",     \$MANUAL,
-	       "version",    \$VERSION
-	      );
+              "dir=s",      \$CONFIG{'dir'},
+              "lvm=s",      \$CONFIG{'lvm'},
+              "test",       \$CONFIG{'test'},
+              "verbose",    \$CONFIG{'verbose'},
+              "help",       \$HELP,
+              "manual",     \$MANUAL,
+              "version",    \$VERSION
+             );
 
     pod2usage(1) if $HELP;
     pod2usage(-verbose => 2 ) if $MANUAL;
@@ -265,15 +265,15 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.6 $';
+       my $REVISION      = '$Revision: 1.7 $';
 
-	if ( $REVISION =~ /1.([0-9.]+) / )
-	{
-	    $REVISION = $1;
-	}
+       if ( $REVISION =~ /1.([0-9.]+) / )
+       {
+           $REVISION = $1;
+       }
 
-	print "xen-delete-image release $RELEASE - CVS: $REVISION\n";
-	exit;
+       print "xen-delete-image release $RELEASE - CVS: $REVISION\n";
+       exit;
 
     }
 }
@@ -293,8 +293,8 @@ sub checkArguments
     #
     if ( $CONFIG{'lvm'} && $CONFIG{'dir'} )
     {
-	print "Please only use a volume group or a directory name - not both\n";
-	exit;
+       print "Please only use a volume group or a directory name - not both\n";
+       exit;
     }
 
 
@@ -303,8 +303,8 @@ sub checkArguments
     #
     if ( (!defined( $CONFIG{'dir'} ) ) && ( !defined( $CONFIG{'lvm'} ) ) )
     {
-	print "Please specify either a directory root, or an LVM volume group\n";
-	exit;
+       print "Please specify either a directory root, or an LVM volume group\n";
+       exit;
     }
 }
 
@@ -326,7 +326,7 @@ sub deleteXenImage
     #
     if ( -e "/etc/xen/" . $hostname . ".cfg" )
     {
-	unlink( "/etc/xen/" . $hostname . ".cfg" );
+       unlink( "/etc/xen/" . $hostname . ".cfg" );
     }
 
 
@@ -335,71 +335,71 @@ sub deleteXenImage
     #
     if ( defined( $CONFIG{'dir'} ) )
     {
-	my $prefix = $CONFIG{'dir'} . "/domains/";
+       my $prefix = $CONFIG{'dir'} . "/domains/";
 
-	#
-	#  The files
-	#
-	my $swap = $prefix . $hostname . "/swap.img";
-	my $disk = $prefix . $hostname . "/disk.img";
-	my $log  = $prefix . $hostname . "/install.log";
+       #
+       #  The files
+       #
+       my $swap = $prefix . $hostname . "/swap.img";
+       my $disk = $prefix . $hostname . "/disk.img";
+       my $log  = $prefix . $hostname . "/install.log";
 
-	#
-	# Swap
-	#
-	if ( -e $swap )
-	{
-	    $CONFIG{'verbose'} && print "Removing swap: $swap\n";
-	    unlink( $swap );
-	}
+       #
+       # Swap
+       #
+       if ( -e $swap )
+       {
+           $CONFIG{'verbose'} && print "Removing swap: $swap\n";
+           unlink( $swap );
+       }
 
-	#
-	# Disk
-	#
-	if ( -e $disk )
-	{
-	    $CONFIG{'verbose'} && print "Removing disk: $disk\n";
-	    unlink( $disk );
-	}
+       #
+       # Disk
+       #
+       if ( -e $disk )
+       {
+           $CONFIG{'verbose'} && print "Removing disk: $disk\n";
+           unlink( $disk );
+       }
 
-	#
-	#  Install log
-	#
-	if ( -e $log )
-	{
-	    $CONFIG{'verbose'} && print "Removing log: $log\n";
-	    unlink( $log );
-	}
+       #
+       #  Install log
+       #
+       if ( -e $log )
+       {
+           $CONFIG{'verbose'} && print "Removing log: $log\n";
+           unlink( $log );
+       }
 
-	#
-	#  Now remove the directory.
-	#
-	if ( -d $prefix . $hostname )
-	{
-	    $CONFIG{'verbose'} && print "Removing directory: $prefix" . $hostname . "\n";
-	    rmdir ( $prefix . $hostname );
-	}
+       #
+       #  Now remove the directory.
+       #
+       if ( -d $prefix . $hostname )
+       {
+           $CONFIG{'verbose'} && print "Removing directory: $prefix" . $hostname . "\n";
+           rmdir ( $prefix . $hostname );
+       }
     }
     elsif ( defined( $CONFIG{'lvm'} ) )
     {
-	#
-	#  LVM volumes
-	#
-	#
-	#  TODO: Check we're not mounted.
-	#
-	my $swap = "lvremove /dev/$CONFIG{'lvm'}/$hostname-swap --force";
-	my $disk = "lvremove /dev/$CONFIG{'lvm'}/$hostname-disk --force";
+       #
+       #  LVM volumes
+       #
+       #
+       #  TODO: Check we're not mounted.
+       #
+       my $swap = "lvremove /dev/$CONFIG{'lvm'}/$hostname-swap --force";
+       my $disk = "lvremove /dev/$CONFIG{'lvm'}/$hostname-disk --force";
 
-	runCommand( $swap );
-	runCommand( $disk );
+       runCommand( $swap );
+       runCommand( $disk );
     }
     else
     {
-	print "Error - neither --dir nor --lvm.\n";
-	print "Can't happen\n";
-	print "Hostname : $hostname\n";
-	exit;
+       print "Error - neither --dir nor --lvm.\n";
+       print "Can't happen\n";
+       print "Hostname : $hostname\n";
+       exit;
     }
 }
 
@@ -428,14 +428,14 @@ sub runCommand
     #
     if ( $CONFIG{'verbose'} )
     {
-	#
-	#  Copy stderr to stdout, so we can see it.
-	#
-	$cmd .= " 2>&1";
+       #
+       #  Copy stderr to stdout, so we can see it.
+       #
+       $cmd .= " 2>&1";
     }
     else
     {
-	$cmd .= " >/dev/null 2>/dev/null" ;
+       $cmd .= " >/dev/null 2>/dev/null" ;
     }
 
 
@@ -446,9 +446,9 @@ sub runCommand
 
     if ( $? != 0 )
     {
-	print "Running command '$cmd' failed.\n";
-	print "Aborting\n";
-	exit;
+       print "Running command '$cmd' failed.\n";
+       print "Aborting\n";
+       exit;
     }
 
 

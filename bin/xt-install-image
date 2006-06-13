@@ -79,7 +79,7 @@ Install the distribution specified by the B<--dist> argument using the debootstr
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.13 2006-06-10 16:48:55 steve Exp $
+ $Id: xt-install-image,v 1.14 2006-06-13 13:21:22 steve Exp $
 
 =cut
 
@@ -175,10 +175,10 @@ foreach my $file ( qw( /bin/ls /bin/cp ) )
 {
     if ( ! -x $CONFIG{'location'} . $file )
     {
-	print "The installation of the new system appears to have failed.\n";
-	print "\n";
-	print "There is no '$file' installed in the new installation directory\n";
-	exit 1;
+       print "The installation of the new system appears to have failed.\n";
+       print "\n";
+       print "There is no '$file' installed in the new installation directory\n";
+       exit 1;
     }
 }
 
@@ -199,34 +199,34 @@ exit 0;
 
 sub parseCommandLineArguments
 {
-    my $HELP	= 0;
-    my $MANUAL	= 0;
-    my $VERSION	= 0;
+    my $HELP       = 0;
+    my $MANUAL       = 0;
+    my $VERSION       = 0;
 
     #
     #  Parse options.
     #
     GetOptions(
-	       # Mandatory
-	       "location=s",     \$CONFIG{'location'},
-	       "dist=s",         \$CONFIG{'dist'},
+              # Mandatory
+              "location=s",     \$CONFIG{'location'},
+              "dist=s",         \$CONFIG{'dist'},
 
-	       # Exclusive.
-	       "tar=s",          \$CONFIG{'tar'},
-	       "copy=s",         \$CONFIG{'copy'},
-	       "rpmstrap",       \$CONFIG{'rpmstrap'},
-	       "debootstrap",    \$CONFIG{'debootstrap'},
+              # Exclusive.
+              "tar=s",          \$CONFIG{'tar'},
+              "copy=s",         \$CONFIG{'copy'},
+              "rpmstrap",       \$CONFIG{'rpmstrap'},
+              "debootstrap",    \$CONFIG{'debootstrap'},
 
-	       # Misc
-	       "mirror=s",       \$CONFIG{'mirror'},
-	       "cache=s",        \$CONFIG{'cache'},
+              # Misc
+              "mirror=s",       \$CONFIG{'mirror'},
+              "cache=s",        \$CONFIG{'cache'},
 
-	       # Help.
-	       "verbose",        \$CONFIG{'verbose'},
-	       "help",           \$HELP,
-	       "manual",         \$MANUAL,
-	       "version",        \$VERSION
-	      );
+              # Help.
+              "verbose",        \$CONFIG{'verbose'},
+              "help",           \$HELP,
+              "manual",         \$MANUAL,
+              "version",        \$VERSION
+             );
 
     pod2usage(1) if $HELP;
     pod2usage(-verbose => 2 ) if $MANUAL;
@@ -234,15 +234,15 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.13 $';
+       my $REVISION      = '$Revision: 1.14 $';
 
-	if ( $REVISION =~ /1.([0-9.]+) / )
-	{
-	    $REVISION = $1;
-	}
+       if ( $REVISION =~ /1.([0-9.]+) / )
+       {
+           $REVISION = $1;
+       }
 
-	print "xt-install-image release $RELEASE - CVS: $REVISION\n";
-	exit;
+       print "xt-install-image release $RELEASE - CVS: $REVISION\n";
+       exit;
 
     }
 }
@@ -262,8 +262,8 @@ sub checkArguments
     #
     if ( ! defined( $CONFIG{'location'} ) )
     {
-	print "The '--location' argument is mandatory\n";
-	exit 1;
+       print "The '--location' argument is mandatory\n";
+       exit 1;
     }
 
 
@@ -273,9 +273,9 @@ sub checkArguments
     #
     if ( ! -d $CONFIG{'location'} )
     {
-	print "The installation directory we've been given doesn't exist\n";
-	print "We tried to use : $CONFIG{'location'}\n";
-	exit 1;
+       print "The installation directory we've been given doesn't exist\n";
+       print "We tried to use : $CONFIG{'location'}\n";
+       exit 1;
     }
 
 
@@ -284,8 +284,8 @@ sub checkArguments
     #
     if ( ! defined( $CONFIG{'dist'} ) )
     {
-	print "The '--dist' argument is mandatory\n";
-	exit 1;
+       print "The '--dist' argument is mandatory\n";
+       exit 1;
     }
 
 
@@ -300,7 +300,7 @@ sub checkArguments
 
     if ( ! -d $dir )
     {
-	print <<E_OR;
+       print <<E_OR;
 
   We're trying to configure an installation of $CONFIG{'dist'} in
  $CONFIG{'location'} - but there is no hook directory for us to use.
@@ -311,7 +311,7 @@ sub checkArguments
 
   Aborting.
 E_OR
-	exit 1;
+       exit 1;
     }
 
 
@@ -321,10 +321,10 @@ E_OR
     my $count = 0;
     foreach my $key ( qw(copy debootstrap rpmstrap tar ) )
     {
-	if ( defined( $CONFIG{$key} ) )
-	{
-	    $count += 1;
-	}
+       if ( defined( $CONFIG{$key} ) )
+       {
+           $count += 1;
+       }
     }
 
     #
@@ -332,7 +332,7 @@ E_OR
     #
     if ( $count == 0 )
     {
-	print <<EOF;
+       print <<EOF;
  You did not specify an installation method.
 
  One of the following must be given.  (Run "xt-install-image --manual" for details)
@@ -349,7 +349,7 @@ EOF
     }
     elsif ( $count > 1 )
     {
-	print <<EOF;
+       print <<EOF;
  You specify multiple installation methods.
 
  Only one of the following must be given:
@@ -361,7 +361,7 @@ EOF
 
  Aborting.
 EOF
-	exit 1;
+       exit 1;
     }
 
 }
@@ -383,10 +383,10 @@ sub installDebootstrapImage
     #
     if ( $CONFIG{'cache'} eq "yes" )
     {
-	print "\nCopying files from host to image.\n";
-	runCommand( "mkdir -p $CONFIG{'location'}/var/cache/apt/archives" );
-	copyDebFiles( "/var/cache/apt/archives", "$CONFIG{'location'}/var/cache/apt/archives" );
-	print( "Done\n" );
+       print "\nCopying files from host to image.\n";
+       runCommand( "mkdir -p $CONFIG{'location'}/var/cache/apt/archives" );
+       copyDebFiles( "/var/cache/apt/archives", "$CONFIG{'location'}/var/cache/apt/archives" );
+       print( "Done\n" );
     }
 
     #
@@ -395,7 +395,7 @@ sub installDebootstrapImage
     my $VERBOSE = '';
     if ( $CONFIG{'verbose'} )
     {
-	$VERBOSE = "--verbose";
+       $VERBOSE = "--verbose";
     }
 
     #
@@ -415,10 +415,10 @@ sub installDebootstrapImage
     #
     if ( $CONFIG{'cache'} eq "yes" )
     {
-	print "\nCopying files from new installation to host.\n";
-	copyDebFiles( "$CONFIG{'location'}/var/cache/apt/archives",
-		      "/var/cache/apt/archives" );
-	print( "Done\n" );
+       print "\nCopying files from new installation to host.\n";
+       copyDebFiles( "$CONFIG{'location'}/var/cache/apt/archives",
+                    "/var/cache/apt/archives" );
+       print( "Done\n" );
     }
 
 
@@ -440,8 +440,8 @@ sub installRPMStrapImage
     #
     if ( ! -x '/usr/bin/rpmstrap' )
     {
-	print "You've chosen to use the rpmstrap program, but it isn't installed.\n";
-	exit;
+       print "You've chosen to use the rpmstrap program, but it isn't installed.\n";
+       exit;
     }
 
     #
@@ -450,7 +450,7 @@ sub installRPMStrapImage
     my $VERBOSE='';
     if ( $CONFIG{'verbose'} )
     {
-	$VERBOSE .= "--verbose";
+       $VERBOSE .= "--verbose";
     }
 
     #
@@ -485,14 +485,14 @@ sub runCommand
     #
     if ( $CONFIG{'verbose'} )
     {
-	#
-	#  Copy stderr to stdout, so we can see it.
-	#
-	$cmd .= " 2>&1";
+       #
+       #  Copy stderr to stdout, so we can see it.
+       #
+       $cmd .= " 2>&1";
     }
     else
     {
-	$cmd .= " >/dev/null 2>/dev/null" ;
+       $cmd .= " >/dev/null 2>/dev/null" ;
     }
 
 
@@ -503,9 +503,9 @@ sub runCommand
 
     if ( $? != 0 )
     {
-	print "Running command '$cmd' failed.\n";
-	print "Aborting\n";
-	exit;
+       print "Running command '$cmd' failed.\n";
+       print "Aborting\n";
+       exit;
     }
 
 
@@ -541,19 +541,19 @@ sub copyDebFiles
     #
     foreach my $file ( sort ( glob( $source . "/*.deb" ) ) )
     {
-	my $name = $file;
-	if ( $name =~ /(.*)\/(.*)/ )
-	{
-	    $name = $2;
-	}
+       my $name = $file;
+       if ( $name =~ /(.*)\/(.*)/ )
+       {
+           $name = $2;
+       }
 
-	#
-	#  Only copy if the file doesn't already exist.
-	#
-	if ( ! ( -e $dest . "/" . $name ) )
-	{
-	    File::Copy::cp( $file, $dest );
-	}
+       #
+       #  Only copy if the file doesn't already exist.
+       #
+       if ( ! ( -e $dest . "/" . $name ) )
+       {
+           File::Copy::cp( $file, $dest );
+       }
     }
 
     print "Done\n";

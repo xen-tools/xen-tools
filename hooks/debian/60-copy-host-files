@@ -36,7 +36,7 @@ my @files = ( "/etc/hosts",
               "/etc/resolv.conf",
               "/etc/gshadow",
               "/etc/group"
-	    );
+            );
 
 foreach my $file ( @files )
 {
@@ -81,19 +81,19 @@ if ( ! $ENV{'passwd'} )
 
     foreach my $line ( <ORIG> )
     {
-	chomp( $line );
-	if ( $line =~ /^([^:]+):([^:]+):([^:]+)/ )
-	{
-	    my $user = $1;
-	    my $pass = $2;
-	    my $uid  = $3;
+        chomp( $line );
+        if ( $line =~ /^([^:]+):([^:]+):([^:]+)/ )
+        {
+            my $user = $1;
+            my $pass = $2;
+            my $uid  = $3;
 
-	    if ( ( $uid >= 1000 ) &&
-		 ( $user ne "nobody" ) )
-	    {
-		print NEW $line . "\n";
-	    }
-	}
+            if ( ( $uid >= 1000 ) &&
+                 ( $user ne "nobody" ) )
+            {
+                print NEW $line . "\n";
+            }
+        }
     }
 
     close( NEW );

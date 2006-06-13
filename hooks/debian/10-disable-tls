@@ -36,8 +36,8 @@ mkdir ${prefix}/lib/tls
 #
 case "${dist}" in
     etch|sid)
-	installDebianPackage ${prefix} libc6-xen
-	;;
+        installDebianPackage ${prefix} libc6-xen
+        ;;
 esac
 
 

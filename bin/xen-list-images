@@ -94,7 +94,7 @@ Specify the LVM volume where images are located
  --
  http://www.steve.org.uk/
 
- $Id: xen-list-images,v 1.2 2006-06-09 19:04:13 steve Exp $
+ $Id: xen-list-images,v 1.3 2006-06-13 13:21:22 steve Exp $
 
 =cut
 
@@ -197,29 +197,29 @@ foreach my $entry ( glob( $dir . "*" ) )
        #  Disk && Swap files.
        #
        if ( ( -e $image ) &&
-	    ( -e $swap ) )
+           ( -e $swap ) )
        {
 
-	   if ( $EFFECTIVE_USER_ID != 0 )
-	   {
-	       print "Image: $entry\n";
-	   }
-	   else
-	   {
-	       print "Image: $entry ";
+          if ( $EFFECTIVE_USER_ID != 0 )
+          {
+              print "Image: $entry\n";
+          }
+          else
+          {
+              print "Image: $entry ";
 
-	       #
-	       # Don't show the networking details if running with '--test'
-	       #
-	       if ( $CONFIG{'test'} )
-	       {
-		   print "\n";
-	       }
-	       else
-	       {
-		   showNetworkingDetails( $image );
-	       }
-	   }
+              #
+              # Don't show the networking details if running with '--test'
+              #
+              if ( $CONFIG{'test'} )
+              {
+                 print "\n";
+              }
+              else
+              {
+                 showNetworkingDetails( $image );
+              }
+          }
        }
    }
 }
@@ -250,39 +250,39 @@ sub readConfigurationFile
     while (defined($line = <FILE>) )
     {
         chomp $line;
-	if ($line =~ s/\\$//)
-	{
-	    $line .= <FILE>;
-	    redo unless eof(FILE);
-	}
+       if ($line =~ s/\\$//)
+       {
+           $line .= <FILE>;
+           redo unless eof(FILE);
+       }
 
-	# Skip lines beginning with comments
-	next if ( $line =~ /^([ \t]*)\#/ );
+       # Skip lines beginning with comments
+       next if ( $line =~ /^([ \t]*)\#/ );
 
-	# Skip blank lines
-	next if ( length( $line ) < 1 );
+       # Skip blank lines
+       next if ( length( $line ) < 1 );
 
-	# Strip trailing comments.
-	if ( $line =~ /(.*)\#(.*)/ )
-	{
-	    $line = $1;
-	}
+       # Strip trailing comments.
+       if ( $line =~ /(.*)\#(.*)/ )
+       {
+           $line = $1;
+       }
 
-	# Find variable settings
-	if ( $line =~ /([^=]+)=([^\n]+)/ )
-	{
-	    my $key = $1;
-	    my $val = $2;
+       # Find variable settings
+       if ( $line =~ /([^=]+)=([^\n]+)/ )
+       {
+           my $key = $1;
+           my $val = $2;
 
-	    # Strip leading and trailing whitespace.
-	    $key =~ s/^\s+//;
-	    $key =~ s/\s+$//;
-	    $val =~ s/^\s+//;
-	    $val =~ s/\s+$//;
+           # Strip leading and trailing whitespace.
+           $key =~ s/^\s+//;
+           $key =~ s/\s+$//;
+           $val =~ s/^\s+//;
+           $val =~ s/\s+$//;
 
-	    # Store value.
-	    $CONFIG{ $key } = $val;
-	}
+           # Store value.
+           $CONFIG{ $key } = $val;
+       }
     }
 
     close( FILE );
@@ -299,20 +299,20 @@ sub readConfigurationFile
 
 sub parseCommandLineArguments
 {
-    my $HELP	= 0;
-    my $MANUAL	= 0;
-    my $VERSION	= 0;
+    my $HELP       = 0;
+    my $MANUAL       = 0;
+    my $VERSION       = 0;
 
     #  Parse options.
     #
     GetOptions(
-	       "dir=s",      \$CONFIG{'dir'},
-	       "volume=s",   \$CONFIG{'volume'},
-	       "test",       \$CONFIG{'test'},
-	       "help",       \$HELP,
-	       "manual",     \$MANUAL,
-	       "version",    \$VERSION
-	      );
+              "dir=s",      \$CONFIG{'dir'},
+              "volume=s",   \$CONFIG{'volume'},
+              "test",       \$CONFIG{'test'},
+              "help",       \$HELP,
+              "manual",     \$MANUAL,
+              "version",    \$VERSION
+             );
 
     pod2usage(1) if $HELP;
     pod2usage(-verbose => 2 ) if $MANUAL;
@@ -320,15 +320,15 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.2 $';
+       my $REVISION      = '$Revision: 1.3 $';
 
-	if ( $REVISION =~ /1.([0-9.]+) / )
-	{
-	    $REVISION = $1;
-	}
+       if ( $REVISION =~ /1.([0-9.]+) / )
+       {
+           $REVISION = $1;
+       }
 
-	print "xen-list-images release $RELEASE - CVS: $REVISION\n";
-	exit;
+       print "xen-list-images release $RELEASE - CVS: $REVISION\n";
+       exit;
 
     }
 }
@@ -358,15 +358,15 @@ sub showNetworkingDetails
 
     if ( -e $dir . "/etc/network/interfaces" )
     {
-	showDebianNetworkingDetails( $dir );
+       showDebianNetworkingDetails( $dir );
     }
     elsif ( -e $dir . "/etc/sysconfig/network-scripts/ifcfg-eth0" )
     {
-	showCentosNetworkingDetails( $dir );
+       showCentosNetworkingDetails( $dir );
     }
     else
     {
-	print "Unknown distribution - No networking details.\n";
+       print "Unknown distribution - No networking details.\n";
     }
 
 
@@ -395,16 +395,16 @@ sub showCentosNetworkingDetails
     open( IN, "<", $dir . "/etc/sysconfig/network-scripts/ifcfg-eth0" );
     foreach my $line ( <IN> )
     {
-	if ( $line =~ /=[ \t]*dhci/i )
-	{
-	    print " DHCP\n";
-	    $found = 1;
-	}
-	if ( $line =~ /IPADDR[ \t]*=[ \t]*([1-9\.]+)/ )
-	{
-	    print $1 . "\n";
-	    $found = 1;
-	}
+       if ( $line =~ /=[ \t]*dhci/i )
+       {
+           print " DHCP\n";
+           $found = 1;
+       }
+       if ( $line =~ /IPADDR[ \t]*=[ \t]*([1-9\.]+)/ )
+       {
+           print $1 . "\n";
+           $found = 1;
+       }
     }
     close( IN );
     if ( ! $found ) { print "Unknown IP address\n"; }
@@ -430,17 +430,17 @@ sub showDebianNetworkingDetails
     open( IN, "<", $dir . "/etc/network/interfaces" );
     foreach my $line ( <IN> )
     {
-	if ( ( $line =~ /dhcp/ ) &&
-	     ( $line =~ /eth/ ) )
-	{
-	    print " DHCP\n";
-	    $found = 1;
-	}
-	if ( $line =~ /address ([0-9\.]+)/ )
-	{
-	    print $1 . "\n";
-	    $found = 1;
-	}
+       if ( ( $line =~ /dhcp/ ) &&
+            ( $line =~ /eth/ ) )
+       {
+           print " DHCP\n";
+           $found = 1;
+       }
+       if ( $line =~ /address ([0-9\.]+)/ )
+       {
+           print $1 . "\n";
+           $found = 1;
+       }
     }
     close( IN );
     if ( ! $found ) { print "Unknown IP address\n"; }

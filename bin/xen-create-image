@@ -40,7 +40,7 @@ xen-create-image - Create a new Xen instance
   Networking options:
    --dhcp      Setup the image to get an IP address via DHCP
    --gateway   Setup the iamge's network gateway.
-   --ip	       Setup the ip
+   --ip              Setup the ip
    --netmask   Setup the netmask
 
   Mandatory options:
@@ -394,7 +394,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.25 2006-06-13 08:18:08 steve Exp $
+ $Id: xen-create-image,v 1.26 2006-06-13 13:21:22 steve Exp $
 
 =cut
 
@@ -582,13 +582,13 @@ sub checkSystem
 {
     if ( ! -x "/usr/bin/xt-customize-image" )
     {
-	print "The script 'xt-customize-image' was not found.";
-	print "\nAborting\n\n";
+       print "The script 'xt-customize-image' was not found.";
+       print "\nAborting\n\n";
     }
     if ( ! -x "/usr/bin/xt-install-image" )
     {
-	print "The script 'xt-install-image' was not found.";
-	print "\nAborting\n\n";
+       print "The script 'xt-install-image' was not found.";
+       print "\nAborting\n\n";
     }
 }
 
@@ -607,30 +607,30 @@ sub setupDefaultOptions
     # Paths and files.
     #
     $CONFIG{'dir'}         = '';
-    $CONFIG{'xm'}	   = '/usr/sbin/xm';
-    $CONFIG{'kernel'}	   = '/boot/vmlinuz-2.6.16-1-xen-686';
-    $CONFIG{'initrd'}	   = '/boot/initrd.img-2.6.16-1-xen-686';
+    $CONFIG{'xm'}          = '/usr/sbin/xm';
+    $CONFIG{'kernel'}          = '/boot/vmlinuz-2.6.16-1-xen-686';
+    $CONFIG{'initrd'}          = '/boot/initrd.img-2.6.16-1-xen-686';
 
     #
     # Sizing options.
     #
-    $CONFIG{'memory'}	   = '96Mb';
-    $CONFIG{'size'}	   = '2000Mb';
-    $CONFIG{'swap'}	   = '128M';
-    $CONFIG{'cache'}	   = 'yes';
+    $CONFIG{'memory'}          = '96Mb';
+    $CONFIG{'size'}          = '2000Mb';
+    $CONFIG{'swap'}          = '128M';
+    $CONFIG{'cache'}          = 'yes';
 
     #
     # Misc. options.
     #
-    $CONFIG{'mirror'}	   = 'http://ftp.us.debian.org/debian';
-    $CONFIG{'dist'}	   = 'sarge';
-    $CONFIG{'fs'}	   = 'ext3';
-    $CONFIG{'force'}	   = 0;
+    $CONFIG{'mirror'}          = 'http://ftp.us.debian.org/debian';
+    $CONFIG{'dist'}          = 'sarge';
+    $CONFIG{'fs'}          = 'ext3';
+    $CONFIG{'force'}          = 0;
 
     #
     #  Installation methods
     #
-    $CONFIG{'rpmstrap'}	   = 0;
+    $CONFIG{'rpmstrap'}          = 0;
     $CONFIG{'debootstrap'} = 0;
     $CONFIG{'copy'}        = '';
     $CONFIG{'tar'}         = '';
@@ -642,9 +642,9 @@ sub setupDefaultOptions
     # NOTE: These commands end in a trailing slash.  The last parameter is
     #       added as the loopback file/LVM volume to create the fs on....
     #
-    $CONFIG{'make_fs_ext3'}	= '/sbin/mkfs.ext3 -F ';
-    $CONFIG{'make_fs_xfs'}	= '/sbin/mkfs.xfs -d name=';
-    $CONFIG{'make_fs_reiserfs'}	= '/sbin/mkfs.reiserfs -f -q ';
+    $CONFIG{'make_fs_ext3'}       = '/sbin/mkfs.ext3 -F ';
+    $CONFIG{'make_fs_xfs'}       = '/sbin/mkfs.xfs -d name=';
+    $CONFIG{'make_fs_reiserfs'}       = '/sbin/mkfs.reiserfs -f -q ';
 
     #
     #  Flags to pass to "mount" to mount our image.
@@ -676,39 +676,39 @@ sub readConfigurationFile
     while (defined($line = <FILE>) )
     {
         chomp $line;
-	if ($line =~ s/\\$//)
-	{
-	    $line .= <FILE>;
-	    redo unless eof(FILE);
-	}
+       if ($line =~ s/\\$//)
+       {
+           $line .= <FILE>;
+           redo unless eof(FILE);
+       }
 
-	# Skip lines beginning with comments
-	next if ( $line =~ /^([ \t]*)\#/ );
+       # Skip lines beginning with comments
+       next if ( $line =~ /^([ \t]*)\#/ );
 
-	# Skip blank lines
-	next if ( length( $line ) < 1 );
+       # Skip blank lines
+       next if ( length( $line ) < 1 );
 
-	# Strip trailing comments.
-	if ( $line =~ /(.*)\#(.*)/ )
-	{
-	    $line = $1;
-	}
+       # Strip trailing comments.
+       if ( $line =~ /(.*)\#(.*)/ )
+       {
+           $line = $1;
+       }
 
-	# Find variable settings
-	if ( $line =~ /([^=]+)=([^\n]+)/ )
-	{
-	    my $key = $1;
-	    my $val = $2;
+       # Find variable settings
+       if ( $line =~ /([^=]+)=([^\n]+)/ )
+       {
+           my $key = $1;
+           my $val = $2;
 
-	    # Strip leading and trailing whitespace.
-	    $key =~ s/^\s+//;
-	    $key =~ s/\s+$//;
-	    $val =~ s/^\s+//;
-	    $val =~ s/\s+$//;
+           # Strip leading and trailing whitespace.
+           $key =~ s/^\s+//;
+           $key =~ s/\s+$//;
+           $val =~ s/^\s+//;
+           $val =~ s/\s+$//;
 
-	    # Store value.
-	    $CONFIG{ $key } = $val;
-	}
+           # Store value.
+           $CONFIG{ $key } = $val;
+       }
     }
 
     close( FILE );
@@ -724,51 +724,51 @@ sub readConfigurationFile
 
 sub parseCommandLineArguments
 {
-    my $HELP	= 0;
-    my $MANUAL	= 0;
-    my $VERSION	= 0;
+    my $HELP       = 0;
+    my $MANUAL       = 0;
+    my $VERSION       = 0;
 
     #
     #  Parse options.
     #
     GetOptions(
-	       # Mandatory
-	       "dist=s",      \$CONFIG{'dist'},
+              # Mandatory
+              "dist=s",      \$CONFIG{'dist'},
 
-	       # Locations
-	       "dir=s",        \$CONFIG{'dir'},
-	       "kernel=s",     \$CONFIG{'kernel'},
-	       "initrd=s",     \$CONFIG{'initrd'},
-	       "lvm=s",        \$CONFIG{'lvm'},
+              # Locations
+              "dir=s",        \$CONFIG{'dir'},
+              "kernel=s",     \$CONFIG{'kernel'},
+              "initrd=s",     \$CONFIG{'initrd'},
+              "lvm=s",        \$CONFIG{'lvm'},
 
-	       # Networking options
-	       "dhcp",         \$CONFIG{'dhcp'},
-	       "gateway=s",    \$CONFIG{'gateway'},
-	       "hostname=s",   \$CONFIG{'hostname'},
-	       "ip=s@",        \$CONFIG{'ip'},
-	       "netmask=s",    \$CONFIG{'netmask'},
+              # Networking options
+              "dhcp",         \$CONFIG{'dhcp'},
+              "gateway=s",    \$CONFIG{'gateway'},
+              "hostname=s",   \$CONFIG{'hostname'},
+              "ip=s@",        \$CONFIG{'ip'},
+              "netmask=s",    \$CONFIG{'netmask'},
 
-	       # Exclusive
-	       "copy=s",       \$CONFIG{'copy'},
-	       "debootstrap",  \$CONFIG{'debootstrap'},
-	       "rpmstrap",     \$CONFIG{'rpmstrap'},
-	       "tar=s",        \$CONFIG{'tar'},
+              # Exclusive
+              "copy=s",       \$CONFIG{'copy'},
+              "debootstrap",  \$CONFIG{'debootstrap'},
+              "rpmstrap",     \$CONFIG{'rpmstrap'},
+              "tar=s",        \$CONFIG{'tar'},
 
-	       # Misc. options
-	       "boot",         \$CONFIG{'boot'},
-	       "cache=s",      \$CONFIG{'cache'},
+              # Misc. options
+              "boot",         \$CONFIG{'boot'},
+              "cache=s",      \$CONFIG{'cache'},
                "ide",          \$CONFIG{'ide'},
-	       "passwd",       \$CONFIG{'passwd'},
-	       "role=s",       \$CONFIG{'role'},
-	       "force",        \$CONFIG{'force'},
+              "passwd",       \$CONFIG{'passwd'},
+              "role=s",       \$CONFIG{'role'},
+              "force",        \$CONFIG{'force'},
 
-	       # Help options
-	       "debug",        \$CONFIG{'verbose'},
-	       "help",         \$HELP,
-	       "manual",       \$MANUAL,
-	       "verbose",      \$CONFIG{'verbose'},
-	       "version",      \$VERSION
-	      );
+              # Help options
+              "debug",        \$CONFIG{'verbose'},
+              "help",         \$HELP,
+              "manual",       \$MANUAL,
+              "verbose",      \$CONFIG{'verbose'},
+              "version",      \$VERSION
+             );
 
     pod2usage(1) if $HELP;
     pod2usage(-verbose => 2 ) if $MANUAL;
@@ -776,15 +776,15 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.25 $';
+       my $REVISION      = '$Revision: 1.26 $';
 
-	if ( $REVISION =~ /1.([0-9.]+) / )
-	{
-	    $REVISION = $1;
-	}
+       if ( $REVISION =~ /1.([0-9.]+) / )
+       {
+           $REVISION = $1;
+       }
 
-	print "xen-create-image release $RELEASE - CVS: $REVISION\n";
-	exit;
+       print "xen-create-image release $RELEASE - CVS: $REVISION\n";
+       exit;
 
     }
 }
@@ -800,7 +800,7 @@ sub testRootUser
 {
     if ( $EFFECTIVE_USER_ID != 0 )
     {
-	print <<E_O_ROOT;
+       print <<E_O_ROOT;
 
   In order to use this script you must be running with root privileges.
 
@@ -808,7 +808,7 @@ sub testRootUser
 
 E_O_ROOT
 
-	exit;
+       exit;
     }
 }
 
@@ -827,8 +827,8 @@ sub checkArguments
     #
     if ( ! defined( $CONFIG{'dist'} ) )
     {
-	print "The '--dist' argument is mandatory\n";
-	exit 1;
+       print "The '--dist' argument is mandatory\n";
+       exit 1;
     }
 
     #
@@ -843,7 +843,7 @@ sub checkArguments
 
     if ( ! -d $dir )
     {
-	print <<E_OR;
+       print <<E_OR;
 
   We're trying to configure an installation of $CONFIG{'dist'} in
  $CONFIG{'dir'} - but there is no hook directory for us to use.
@@ -854,7 +854,7 @@ sub checkArguments
 
   Aborting.
 E_OR
-	exit 1;
+       exit 1;
     }
 
 }
@@ -896,8 +896,8 @@ sub showSummery
 
     foreach my $i ( @$ips )
     {
-	print "IP Address $count   : $i\n";
-	$count += 1;
+       print "IP Address $count   : $i\n";
+       $count += 1;
     }
 
     $CONFIG{'dhcp'}      && print "IP Address     : DHCP\n";
@@ -948,17 +948,17 @@ sub createLoopbackImages
     #
     if ( ( -e $disk ) && ! $CONFIG{'force'} )
     {
-	print "The disk image already exists.  Aborting.\n";
-	print "Specify '--force' to overwrite, or remove the following file\n";
-	print $disk . "\n";
-	exit;
+       print "The disk image already exists.  Aborting.\n";
+       print "Specify '--force' to overwrite, or remove the following file\n";
+       print $disk . "\n";
+       exit;
     }
     if ( ( -e $swap ) && ! $CONFIG{'force'} )
     {
-	print "The swap image already exists.  Aborting.\n";
-	print "Specify '--force' to overwrite, or remove the following file\n";
-	print $swap . "\n";
-	exit;
+       print "The swap image already exists.  Aborting.\n";
+       print "Specify '--force' to overwrite, or remove the following file\n";
+       print $swap . "\n";
+       exit;
     }
 
 
@@ -973,11 +973,11 @@ sub createLoopbackImages
     #
     if ( $disk_size =~ /^(\d+)Gb*$/i )
     {
-	$disk_size = $1 * 1024 . "M";
+       $disk_size = $1 * 1024 . "M";
     }
     if ( $swap_size =~ /^(\d+)Gb*$/i )
     {
-	$swap_size = $1 * 1024 . "M";
+       $swap_size = $1 * 1024 . "M";
     }
 
     #
@@ -986,7 +986,7 @@ sub createLoopbackImages
     $disk_size =~ s/Mb*$/k/i;
     if ( $swap_size =~ /^(\d+)Mb*$/i )
     {
-	$swap_size = $1;
+       $swap_size = $1;
     }
 
 
@@ -1045,11 +1045,11 @@ sub createLVMBits
     #
     if ( $disk_size =~ /^(\d+)Gb*$/i )
     {
-	$disk_size = $1 * 1024 . "M";
+       $disk_size = $1 * 1024 . "M";
     }
     if ( $swap_size =~ /^(\d+)Gb*$/i )
     {
-	$swap_size = $1 * 1024 . "M";
+       $swap_size = $1 * 1024 . "M";
     }
 
     #
@@ -1058,7 +1058,7 @@ sub createLVMBits
     $disk_size =~ s/Mb*$/k/i;
     if ( $swap_size =~ /^(\d+)Mb*$/i )
     {
-	$swap_size = $1;
+       $swap_size = $1;
     }
 
 
@@ -1103,19 +1103,19 @@ sub createFilesystem
     #
     if ( $command =~ /([^ ]+) (.*)$/ )
     {
-	my $binary = $1;
-	my $args   = $2;
+       my $binary = $1;
+       my $args   = $2;
 
-	if ( ! -x $binary )
-	{
-	    print "The binary '$binary' required to create the filesystem $CONFIG{'fs'} is missing\n";
-	    exit;
-	}
+       if ( ! -x $binary )
+       {
+           print "The binary '$binary' required to create the filesystem $CONFIG{'fs'} is missing\n";
+           exit;
+       }
     }
     else
     {
-	print "The filesystem creation hash is bogus for filesystem : $CONFIG{'fs'}\n";
-	exit;
+       print "The filesystem creation hash is bogus for filesystem : $CONFIG{'fs'}\n";
+       exit;
     }
 
     #
@@ -1127,7 +1127,7 @@ sub createFilesystem
     #
     if ( $CONFIG{'fs'} && $CONFIG{'force'} )
     {
-	$command .= " -f ";
+       $command .= " -f ";
     }
 
     #
@@ -1160,16 +1160,16 @@ sub mountImage
 
     if ( $CONFIG{'lvm'} )
     {
-	$image = "/dev/" . $CONFIG{'lvm'} . "/" . $CONFIG{'hostname'} . '-disk';
+       $image = "/dev/" . $CONFIG{'lvm'} . "/" . $CONFIG{'hostname'} . '-disk';
     }
     elsif ( $CONFIG{'dir'} )
     {
-	$image = $CONFIG{'dir'} . '/domains/' . $CONFIG{'hostname'} . "/disk.img" ;
+       $image = $CONFIG{'dir'} . '/domains/' . $CONFIG{'hostname'} . "/disk.img" ;
     }
     else
     {
-	print "I don't know what to mount!\n";
-	exit;
+       print "I don't know what to mount!\n";
+       exit;
     }
 
 
@@ -1189,11 +1189,11 @@ sub mountImage
     #
     if ( $CONFIG{'lvm'} )
     {
-	$mount_cmd = "mount $mount_type $image $MOUNT_POINT";
+       $mount_cmd = "mount $mount_type $image $MOUNT_POINT";
     }
     else
     {
-	$mount_cmd = "mount $mount_type -o loop $image $MOUNT_POINT";
+       $mount_cmd = "mount $mount_type -o loop $image $MOUNT_POINT";
     }
     runCommand( $mount_cmd );
 
@@ -1230,24 +1230,24 @@ sub installSystem
     #
     if ( $CONFIG{'copy'} )
     {
-	$cmd .= " --copy=$CONFIG{'copy'}";
-	print "copy from $CONFIG{'copy'}\n";
+       $cmd .= " --copy=$CONFIG{'copy'}";
+       print "copy from $CONFIG{'copy'}\n";
     }
     if ( $CONFIG{'debootstrap'} )
     {
-	$cmd .= " --debootstrap";
-	$cmd .= " --mirror=$CONFIG{'mirror'}";
-	print "debootstrap  from $CONFIG{'mirror'}\n";
+       $cmd .= " --debootstrap";
+       $cmd .= " --mirror=$CONFIG{'mirror'}";
+       print "debootstrap  from $CONFIG{'mirror'}\n";
     }
     if ( $CONFIG{'rpmstrap'} )
     {
-	$cmd .= " --rpmstrap";
-	print "rpmstrap\n";
+       $cmd .= " --rpmstrap";
+       print "rpmstrap\n";
     }
     if ( $CONFIG{'tar'} )
     {
-	$cmd .= " --tar=$CONFIG{'tar'}";
-	print "tarfile $CONFIG{'tar'}\n";
+       $cmd .= " --tar=$CONFIG{'tar'}";
+       print "tarfile $CONFIG{'tar'}\n";
     }
 
 
@@ -1256,7 +1256,7 @@ sub installSystem
     #
     if ( $CONFIG{'verbose'} )
     {
-	$cmd .= " --verbose";
+       $cmd .= " --verbose";
     }
 
     runCommand( $cmd );
@@ -1283,10 +1283,10 @@ sub runCustomisationHooks
     #
     foreach my $key ( keys %CONFIG )
     {
-	if ( defined( $CONFIG{$key} ) )
-	{
-	    $ENV{$key} = $CONFIG{$key};
-	}
+       if ( defined( $CONFIG{$key} ) )
+       {
+           $ENV{$key} = $CONFIG{$key};
+       }
     }
 
     #
@@ -1304,8 +1304,8 @@ sub runCustomisationHooks
 
     foreach my $i ( @$ips )
     {
-	$ENV{'ip' . $count } = $i;
-	$count += 1;
+       $ENV{'ip' . $count } = $i;
+       $count += 1;
     }
     $ENV{'ip_count'} = ($count - 1);
 
@@ -1315,12 +1315,12 @@ sub runCustomisationHooks
     #
     if ( $CONFIG{'verbose'} )
     {
-	print "Customization Script Environment:\n";
-	print "---------------------------------\n";
-	foreach my $key ( sort keys %ENV )
-	{
-	    print "\t'" . $key . "' = '" . $ENV{$key} . "'\n";
-	}
+       print "Customization Script Environment:\n";
+       print "---------------------------------\n";
+       foreach my $key ( sort keys %ENV )
+       {
+           print "\t'" . $key . "' = '" . $ENV{$key} . "'\n";
+       }
     }
 
 
@@ -1330,7 +1330,7 @@ sub runCustomisationHooks
     my $customize = "xt-customize-image --dist=$CONFIG{'dist'} --location=$MOUNT_POINT";
     if ( $CONFIG{'verbose'} )
     {
-	$customize .= " --verbose";
+       $customize .= " --verbose";
     }
     print "\nRunning hooks\n";
     runCommand( $customize );
@@ -1348,25 +1348,25 @@ sub runCustomisationHooks
 
 sub runRoleScript
 {
-    my $roleDir	= '/usr/lib/xen-tools/' . $CONFIG{'dist'} . '.d/role.d/' ;
-    my $role	= $CONFIG{'role'};
+    my $roleDir       = '/usr/lib/xen-tools/' . $CONFIG{'dist'} . '.d/role.d/' ;
+    my $role       = $CONFIG{'role'};
 
     if ( !defined( $role ) )
     {
-	print "No role script specified\n";
-	return;
+       print "No role script specified\n";
+       return;
     }
 
     my $file = $roleDir . $role;
 
     if ( -x $file )
     {
-	print "Running role script $file for role '$role'\n";
+       print "Running role script $file for role '$role'\n";
     }
     else
     {
-	print "Role script not executable : $file for role '$role'\n";
-	return;
+       print "Role script not executable : $file for role '$role'\n";
+       return;
     }
 
 
@@ -1423,14 +1423,14 @@ sub runCommand
     #
     if ( $CONFIG{'verbose'} )
     {
-	#
-	#  Copy stderr to stdout, so we can see it.
-	#
-	$cmd .= " 2>&1";
+       #
+       #  Copy stderr to stdout, so we can see it.
+       #
+       $cmd .= " 2>&1";
     }
     else
     {
-	$cmd .= " >/dev/null 2>/dev/null" ;
+       $cmd .= " >/dev/null 2>/dev/null" ;
     }
 
     #
@@ -1449,9 +1449,9 @@ sub runCommand
 
     if ( $? != 0 )
     {
-	print "Running command '$cmd' failed.\n";
-	print "Aborting\n";
-	exit;
+       print "Running command '$cmd' failed.\n";
+       print "Aborting\n";
+       exit;
     }
 
 
@@ -1472,13 +1472,13 @@ sub END
 {
     if ( defined( $MOUNT_POINT ) )
     {
-	#
-	# Run mount to see if this is still mounted.
-	#
-	my $mount = `/bin/mount`;
-	if ( $mount =~ /$MOUNT_POINT/)
-	{
-	    runCommand( "umount $MOUNT_POINT" );
-	}
+       #
+       # Run mount to see if this is still mounted.
+       #
+       my $mount = `/bin/mount`;
+       if ( $mount =~ /$MOUNT_POINT/)
+       {
+           runCommand( "umount $MOUNT_POINT" );
+       }
     }
 }

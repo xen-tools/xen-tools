@@ -38,8 +38,8 @@ options="errors=remount-ro"
 
 case "${fs}" in
     xfs)
-	options="defaults"
-	;;
+        options="defaults"
+        ;;
 esac
 
 logMessage Filesystem options are ${options}
@@ -69,11 +69,11 @@ E_O_FSTAB
 #
 #case "${fs}" in
 #    xfs)
-#	install_package xfsprogs
-#	;;
+#       install_package xfsprogs
+#       ;;
 #    reiserfs)
-#	install_package reiserfsprogs
-#	;;
+#       install_package reiserfsprogs
+#    ;;
 #esac
 
 

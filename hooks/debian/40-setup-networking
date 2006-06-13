@@ -45,7 +45,7 @@ function setupDynamicNetworking
 # The loopback network interface
 auto lo
 iface lo inet loopback
-	    
+
 # The primary network interface
 auto eth0
 iface eth0 inet dhcp
@@ -75,7 +75,7 @@ function  setupStaticNetworking
 # The loopback network interface
 auto lo
 iface lo inet loopback
-	    
+
 # The primary network interface
 auto eth0
 iface eth0 inet static
@@ -94,21 +94,21 @@ E_O_STATIC
     count=2
 
     while [ "${count}" -le "${ip_count}" ]; do
-	
-	value=\$ip${count}
-	value=`eval echo $value`
 
-	logMessage Adding etho:${interface}
+        value=\$ip${count}
+        value=`eval echo $value`
 
-	cat <<E_O_STATIC >>${prefix}/etc/network/interfaces
+        logMessage Adding etho:${interface}
+
+        cat <<E_O_STATIC >>${prefix}/etc/network/interfaces
 auto eth0:${interface}
 iface eth0:${interface} inet static
  address ${value}
  netmask ${netmask}
  # post-up  ethtool -K eth0 tx off
 E_O_STATIC
-	count=`expr $count + 1`
-	interface=`expr $interface + 1`
+        count=`expr $count + 1`
+        interface=`expr $interface + 1`
     done
 }
 

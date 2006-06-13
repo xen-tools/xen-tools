@@ -66,7 +66,7 @@ xt-customize-image - Customize a freshly installed copy of GNU/Linux
  --
  http://www.steve.org.uk/
 
- $Id: xt-customize-image,v 1.8 2006-06-09 19:49:18 steve Exp $
+ $Id: xt-customize-image,v 1.9 2006-06-13 13:21:22 steve Exp $
 
 =cut
 
@@ -141,21 +141,21 @@ exit 0;
 
 sub parseCommandLineArguments
 {
-    my $HELP	= 0;
-    my $MANUAL	= 0;
-    my $VERSION	= 0;
+    my $HELP       = 0;
+    my $MANUAL       = 0;
+    my $VERSION       = 0;
 
     #
     #  Parse options.
     #
     GetOptions(
-	       "location=s", \$CONFIG{'location'},
-	       "dist=s",     \$CONFIG{'dist'},
-	       "verbose",    \$CONFIG{'verbose'},
-	       "help",       \$HELP,
-	       "manual",     \$MANUAL,
-	       "version",    \$VERSION
-	      );
+              "location=s", \$CONFIG{'location'},
+              "dist=s",     \$CONFIG{'dist'},
+              "verbose",    \$CONFIG{'verbose'},
+              "help",       \$HELP,
+              "manual",     \$MANUAL,
+              "version",    \$VERSION
+             );
 
     pod2usage(1) if $HELP;
     pod2usage(-verbose => 2 ) if $MANUAL;
@@ -163,15 +163,15 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-	my $REVISION      = '$Revision: 1.8 $';
+       my $REVISION      = '$Revision: 1.9 $';
 
-	if ( $REVISION =~ /1.([0-9.]+) / )
-	{
-	    $REVISION = $1;
-	}
+       if ( $REVISION =~ /1.([0-9.]+) / )
+       {
+           $REVISION = $1;
+       }
 
-	print "xt-customize-image release $RELEASE - CVS: $REVISION\n";
-	exit;
+       print "xt-customize-image release $RELEASE - CVS: $REVISION\n";
+       exit;
 
     }
 }
@@ -191,8 +191,8 @@ sub checkArguments
     #
     if ( ! defined( $CONFIG{'location'} ) )
     {
-	print "The '--location' argument is mandatory\n";
-	exit 1;
+       print "The '--location' argument is mandatory\n";
+       exit 1;
     }
 
 
@@ -202,9 +202,9 @@ sub checkArguments
     #
     if ( ! -d $CONFIG{'location'} )
     {
-	print "The installation directory we've been given doesn't exist\n";
-	print "We tried to use : $CONFIG{'location'}\n";
-	exit 1;
+       print "The installation directory we've been given doesn't exist\n";
+       print "We tried to use : $CONFIG{'location'}\n";
+       exit 1;
     }
 
 
@@ -213,8 +213,8 @@ sub checkArguments
     #
     if ( ! defined( $CONFIG{'dist'} ) )
     {
-	print "The '--dist' argument is mandatory\n";
-	exit 1;
+       print "The '--dist' argument is mandatory\n";
+       exit 1;
     }
 
 
@@ -229,7 +229,7 @@ sub checkArguments
 
     if ( ! -d $dir )
     {
-	print <<E_OR;
+       print <<E_OR;
 
   We're trying to configure an installation of $CONFIG{'dist'} in
  $CONFIG{'location'} - but there is no hook directory for us to use.
@@ -240,7 +240,7 @@ sub checkArguments
 
   Aborting.
 E_OR
-	exit 1;
+       exit 1;
     }
 
 }
@@ -280,7 +280,7 @@ sub runDistributionHooks
     #
     if ( $CONFIG{'verbose'} )
     {
-	$ENV{'verbose'} = 1;
+       $ENV{'verbose'} = 1;
     }
 
     #
@@ -293,43 +293,43 @@ sub runDistributionHooks
         next if ( $file =~ /\.dpkg-(new|old)/ );
         next if ( $file =~ /~$/ );
 
-	#
-	# Only run executable files.
-	#
-	if ( ( -x $file ) && ( -f $file ) )
-	{
-	    #
-	    # Just display the name - no need to see the full path.
-	    #
-	    my $name = $file;
-	    if ( $file =~ /(.*)\/(.*)/ )
-	    {
-		$name = $2;
-	    }
+       #
+       # Only run executable files.
+       #
+       if ( ( -x $file ) && ( -f $file ) )
+       {
+           #
+           # Just display the name - no need to see the full path.
+           #
+           my $name = $file;
+           if ( $file =~ /(.*)\/(.*)/ )
+           {
+              $name = $2;
+           }
 
-	    #
-	    # Complete path to the file.
-	    #
-	    my $cmd = $hooks . $name . " $CONFIG{'location'}";
+           #
+           # Complete path to the file.
+           #
+           my $cmd = $hooks . $name . " $CONFIG{'location'}";
 
-	    #
-	    #  Run the command.  This has different prolog and epilog
-	    # depending on whether we're running verbosely or not.
-	    #
-	    if ( $CONFIG{'verbose'} )
-	    {
-		print "Running hook $name ['$cmd']\n";
-		print "--\n";
-		system( $cmd );
-		print "--\n";
-		print "Done\n\n";
-	    }
-	    else
-	    {
-		print "Running hook $name";
-		system( $cmd );
-		print " - done.\n";
-	    }
-	}
+           #
+           #  Run the command.  This has different prolog and epilog
+           # depending on whether we're running verbosely or not.
+           #
+           if ( $CONFIG{'verbose'} )
+           {
+              print "Running hook $name ['$cmd']\n";
+              print "--\n";
+              system( $cmd );
+              print "--\n";
+              print "Done\n\n";
+           }
+           else
+           {
+              print "Running hook $name";
+              system( $cmd );
+              print " - done.\n";
+           }
+       }
     }
 }
