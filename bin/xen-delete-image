@@ -43,8 +43,8 @@ Don not complain, or exit, if the script is not executed by the root user.
 =item B<--version>
 Show the version number and exit.
 
-=item B<--volume>
-Specify the LVM volume where images were previously saved.
+=item B<--lvm>
+Specify the LVM volume group where images were previously saved.
 
 =back
 
@@ -54,22 +54,41 @@ Specify the LVM volume where images were previously saved.
 =head1 DESCRIPTION
 
   xen-delete-image is a simple script which allows you to delete
- Xen instances which have previously been created.
+ Xen instances which have previously been created by B<xen-create-image>.
 
   You must be root to run this script as it removes the Xen configuration
- file from /etc/xen.  (When invoked with the '--test' flag the script will
- continue running, but will fail to remove anything which the user does
- not have permission to delete.)
+ file from /etc/xen.
+
+  (When invoked with the '--test' flag the script will continue running,
+ but will fail to remove anything which the user does not have permission
+ to delete.)
 
 =cut
 
 
-=head1 EXAMPLES
+=head1 LOOPBACK EXAMPLE
 
   Assuming that you have three images 'foo', 'bar', and 'baz', stored
  beneath /home/xen the first two may be deleted via:
 
     xen-delete-image --dir=/home/xen foo bar
+
+  The Xen configuration files will also be removed.
+
+=cut
+
+
+=head1 LVM EXAMPLE
+
+  Assuming that you have the volume group 'skx-vol' containing three
+ Xen instances 'foo', 'bar', and 'baz' the first two may be deleted via:
+
+    xen-delete-image --lvm=skx-vol foo bar
+
+  This will remove the volumes 'foo-disk', 'foo-swap', 'bar-disk',
+ and 'bar-swap'.
+
+  The Xen configuration files will also be removed.
 
 =cut
 
@@ -80,7 +99,7 @@ Specify the LVM volume where images were previously saved.
  --
  http://www.steve.org.uk/
 
- $Id: xen-delete-image,v 1.7 2006-06-13 13:21:22 steve Exp $
+ $Id: xen-delete-image,v 1.8 2006-06-13 16:57:34 steve Exp $
 
 =cut
 
@@ -265,7 +284,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.7 $';
+       my $REVISION      = '$Revision: 1.8 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
