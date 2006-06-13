@@ -67,7 +67,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-list-images,v 1.4 2006-06-13 16:51:18 steve Exp $
+ $Id: xen-list-images,v 1.5 2006-06-13 17:04:52 steve Exp $
 
 =cut
 
@@ -220,7 +220,7 @@ sub parseCommandLineArguments
 {
     my $HELP    = 0;
     my $MANUAL  = 0;
-    my $VERSION	= 0;
+    my $VERSION        = 0;
 
     #  Parse options.
     #
@@ -237,7 +237,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.4 $';
+       my $REVISION      = '$Revision: 1.5 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -265,7 +265,7 @@ sub findXenInstances
 
     foreach my $file ( sort( glob( $CONFIG{'prefix'} . "/*.cfg" ) ) )
     {
-	push @found, $file if ( -e $file );
+        push @found, $file if ( -e $file );
     }
 
     return( @found );
@@ -301,22 +301,22 @@ sub displayInstance
 
     foreach my $line ( @LINES )
     {
-	if ( $line =~ /^\s*dhcp\s*=\s*"dhcp\"/i )
-	{
-	    $dhcp = 1;
-	}
-	if ( $line =~ /^\s*name\s*=\s*["']([^'"]+)['"]/i )
-	{
-	    $name = $1;
-	}
-	if ( $line =~ /^\s*memory\s*=\s*([0-9]+)/i )
-	{
-	    $mem = $1;
-	}
-	if ( $line =~ /ip=([0-9\.]+)/ )
-	{
-	    $ip = $1;
-	}
+        if ( $line =~ /^\s*dhcp\s*=\s*"dhcp\"/i )
+        {
+            $dhcp = 1;
+        }
+        if ( $line =~ /^\s*name\s*=\s*["']([^'"]+)['"]/i )
+        {
+            $name = $1;
+        }
+        if ( $line =~ /^\s*memory\s*=\s*([0-9]+)/i )
+        {
+            $mem = $1;
+        }
+        if ( $line =~ /ip=([0-9\.]+)/ )
+        {
+            $ip = $1;
+        }
     }
 
     print "Name: $name\n";
