@@ -8,25 +8,17 @@ xen-list-images - List all the created and configured Xen images.
 
   xen-list-image [options]
 
-
   Help Options:
    --help     Show this scripts help information.
    --manual   Read this scripts manual.
    --version  Show the version number and exit.
 
-  General Options:
-   --dir      Specify where the output images are located.
-   --volume   Specify the LVM volume where images are located.
-
   Testing options:
-   --test     List an image even if there is no configuration file in /etc/xen
+   --test     Specify an alternate Xen configuration directory.
 
 =head1 OPTIONS
 
 =over 8
-
-=item B<--dir>
-Specify the output directory where images were saved.
 
 =item B<--help>
 Show the scripts help information.
@@ -35,13 +27,10 @@ Show the scripts help information.
 Read the manual.
 
 =item B<--test>
-This flag causes an image to be listed even if the configuration file in /etc/xen doesn't exist.  It is soley used for the test script.
+This flag causes the script to load the Xen configuration files from a different directory than the default of B</etc/xen>.
 
 =item B<--version>
 Show the version number and exit.
-
-=item B<--volume>
-Specify the LVM volume where images are located
 
 =back
 
@@ -49,42 +38,26 @@ Specify the LVM volume where images are located
 =head1 DESCRIPTION
 
   xen-list-images is a simple script which will display all the
- images which have been created in a given directory.
+ Xen images which have been created.
 
-  The script follows the same pattern as the other scripts, it
- assumes that all images are stored beneath a prefix directory
- in a layout such as this:
+  This works by iterating over all files matching the pattern
+ B</etc/xen/*.cfg> which is what the B<xen-create-image> script would
+ create.
 
-   $dir/domains/vm01.my.flat/
-   $dir/domains/vm01.my.flat/disk.img
-   $dir/domains/vm01.my.flat/swap.img
-
-   $dir/domains/vm02.my.flat/
-   $dir/domains/vm02.my.flat/disk.img
-   $dir/domains/vm02.my.flat/swap.img
-
-  For each subdirectory found beneath $dir/domains the image will
- be tested if:
-
-   1.  The disk.img file exists.
-   2.  The swap.img file exists.
-   3.  A configuration file /etc/xen/$name.cfg exists.
-
-  If these conditions are met the name will be output, along with
- networking information.
-
-
-=head2 NOTES
-
-  If the script is run by a non-root user the networking information
- will not be displayed.  This is because a non-user may not mount
- the disk images to read the configuration.
-
-  If you wish to see the networking details you must execute this
- script as root.
+  For each instance which has been created we'll display the name,
+ and then either the IP address configured, or "DHCP" to denote
+ a dynamice host.
 
 =cut
 
+=head1 TODO
+
+  It should be possible to determine the disk(s) used by the images,
+ and then display their sizes.
+
+  Along with the memory allocated, etc.
+
+=cut
 
 
 =head1 AUTHOR
@@ -94,7 +67,7 @@ Specify the LVM volume where images are located
  --
  http://www.steve.org.uk/
 
- $Id: xen-list-images,v 1.3 2006-06-13 13:21:22 steve Exp $
+ $Id: xen-list-images,v 1.4 2006-06-13 16:51:18 steve Exp $
 
 =cut
 
@@ -127,6 +100,11 @@ use Pod::Usage;
 my %CONFIG;
 
 #
+#  Default prefix
+#
+$CONFIG{'prefix'} = "/etc/xen";
+
+#
 # Release number.
 #
 my $RELEASE = '2.0';
@@ -148,89 +126,30 @@ if ( -e "/etc/xen-tools/xen-tools.conf" )
 #
 parseCommandLineArguments();
 
+
 #
-#  Make sure we have either a volume, or a root.
+#  Read all the xen configuration files.
 #
-if ( $CONFIG{'volume'} && $CONFIG{'dir'} )
+my @instances = findXenInstances();
+
+
+#
+#  Now process each instance.
+#
+my $count = 0;
+foreach my $instance ( @instances )
 {
-    print "Please only use a volume or a directory name - not both\n";
-    exit;
+    if ( $count ) { print "\n"; }
+
+    displayInstance( $instance );
+    $count += 1;
 }
-
-
-#
-# Volumes are not supported yet :(
-#
-if ( $CONFIG{'volume'} )
-{
-    print "LVM Volumes are not supported yet\n";
-    exit;
-}
-
-
-
-#
-#  Get the directory which holds the images.
-#
-my $dir = $CONFIG{'dir'}  . "/domains/";
-
-
-#
-# Get the name of the image.
-#
-foreach my $entry ( glob( $dir . "*" ) )
-{
-   if ( $entry =~ /(.*)\/domains\/(.*)/ )
-   {
-       $entry = $2;
-   }
-
-   #
-   # Xen configuration file.
-   #
-   if ( $CONFIG{'test'} or ( -e "/etc/xen/" . $entry . ".cfg" ) )
-   {
-       my $image = $CONFIG{'dir'} . "/domains/$entry/disk.img";
-       my $swap  = $CONFIG{'dir'} . "/domains/$entry/swap.img";
-
-       #
-       #  Disk && Swap files.
-       #
-       if ( ( -e $image ) &&
-           ( -e $swap ) )
-       {
-
-          if ( $EFFECTIVE_USER_ID != 0 )
-          {
-              print "Image: $entry\n";
-          }
-          else
-          {
-              print "Image: $entry ";
-
-              #
-              # Don't show the networking details if running with '--test'
-              #
-              if ( $CONFIG{'test'} )
-              {
-                 print "\n";
-              }
-              else
-              {
-                 showNetworkingDetails( $image );
-              }
-          }
-       }
-   }
-}
-
 
 
 #
 #  All done.
 #
 exit;
-
 
 
 =head2 readConfigurationFile
@@ -299,16 +218,14 @@ sub readConfigurationFile
 
 sub parseCommandLineArguments
 {
-    my $HELP       = 0;
-    my $MANUAL       = 0;
-    my $VERSION       = 0;
+    my $HELP    = 0;
+    my $MANUAL  = 0;
+    my $VERSION	= 0;
 
     #  Parse options.
     #
     GetOptions(
-              "dir=s",      \$CONFIG{'dir'},
-              "volume=s",   \$CONFIG{'volume'},
-              "test",       \$CONFIG{'test'},
+              "test=s",     \$CONFIG{'prefix'},
               "help",       \$HELP,
               "manual",     \$MANUAL,
               "version",    \$VERSION
@@ -320,7 +237,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.3 $';
+       my $REVISION      = '$Revision: 1.4 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -334,115 +251,79 @@ sub parseCommandLineArguments
 }
 
 
-=head2 showNetworkingDetails
 
-  Mount the given disk image and read the networking details from it.
+=head2 findXenInstances
 
-  This will deal with both Debian images and CentOS4 images.  Other
- distributions are not yet recognised.
+  Return an array containing the names of each xen configuration
+ file we found.
 
 =cut
 
-sub showNetworkingDetails
+sub findXenInstances
 {
-    my ( $image ) = ( @_ );
+    my @found;
 
-
-    #
-    # Mount the image securely
-    #
-    my $dir = tempdir( CLEANUP => 1 );
-    my $mount_cmd = "mount -t auto -o loop $image $dir";
-    `$mount_cmd`;
-
-
-    if ( -e $dir . "/etc/network/interfaces" )
+    foreach my $file ( sort( glob( $CONFIG{'prefix'} . "/*.cfg" ) ) )
     {
-       showDebianNetworkingDetails( $dir );
-    }
-    elsif ( -e $dir . "/etc/sysconfig/network-scripts/ifcfg-eth0" )
-    {
-       showCentosNetworkingDetails( $dir );
-    }
-    else
-    {
-       print "Unknown distribution - No networking details.\n";
+	push @found, $file if ( -e $file );
     }
 
-
-    #
-    # Unmount the image.
-    #
-    `umount $dir`;
+    return( @found );
 }
 
 
 
-=head2 showCentosNetworkingDetails
+=head2 displayInstance
 
-  Read and display the configured network address of a CentOS4 instance.
+  Show details about the the Xen instance contained in the given
+ configuration file.
 
 =cut
 
-sub showCentosNetworkingDetails
+sub displayInstance
 {
-    my ( $dir ) = ( @_ );
+    my ( $file ) = ( @_ );
 
     #
-    #  Read /etc/network/interfaces
+    #  Read each line.
     #
-    my $found = 0;
-    open( IN, "<", $dir . "/etc/sysconfig/network-scripts/ifcfg-eth0" );
-    foreach my $line ( <IN> )
+    open( FILY, "<", $file );
+    my @LINES = <FILY>;
+    close( FILY );
+
+    #
+    #  Is it dynamic?
+    #
+    my $dhcp = 0;
+    my $ip   = '';
+    my $name = '';
+    my $mem  = 0;
+
+    foreach my $line ( @LINES )
     {
-       if ( $line =~ /=[ \t]*dhci/i )
-       {
-           print " DHCP\n";
-           $found = 1;
-       }
-       if ( $line =~ /IPADDR[ \t]*=[ \t]*([1-9\.]+)/ )
-       {
-           print $1 . "\n";
-           $found = 1;
-       }
+	if ( $line =~ /^\s*dhcp\s*=\s*"dhcp\"/i )
+	{
+	    $dhcp = 1;
+	}
+	if ( $line =~ /^\s*name\s*=\s*["']([^'"]+)['"]/i )
+	{
+	    $name = $1;
+	}
+	if ( $line =~ /^\s*memory\s*=\s*([0-9]+)/i )
+	{
+	    $mem = $1;
+	}
+	if ( $line =~ /ip=([0-9\.]+)/ )
+	{
+	    $ip = $1;
+	}
     }
-    close( IN );
-    if ( ! $found ) { print "Unknown IP address\n"; }
+
+    print "Name: $name\n";
+    print "Memory: $mem\n";
+    print "IP: $ip\n" if length( $ip );
+    print "DHCP\n" if $dhcp;
 
 }
 
 
-
-=head2 showDebianNetworkingDetails
-
-  Read and display the static IP address of a Debian GNU/Linux instance.
-
-=cut
-
-sub showDebianNetworkingDetails
-{
-    my ( $dir ) = ( @_ );
-
-    #
-    #  Read /etc/network/interfaces
-    #
-    my $found = 0;
-    open( IN, "<", $dir . "/etc/network/interfaces" );
-    foreach my $line ( <IN> )
-    {
-       if ( ( $line =~ /dhcp/ ) &&
-            ( $line =~ /eth/ ) )
-       {
-           print " DHCP\n";
-           $found = 1;
-       }
-       if ( $line =~ /address ([0-9\.]+)/ )
-       {
-           print $1 . "\n";
-           $found = 1;
-       }
-    }
-    close( IN );
-    if ( ! $found ) { print "Unknown IP address\n"; }
-
-}
