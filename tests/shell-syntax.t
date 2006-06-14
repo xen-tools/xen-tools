@@ -4,7 +4,7 @@
 #
 # Steve
 # --
-# $Id: shell-syntax.t,v 1.2 2006-06-13 13:26:01 steve Exp $
+# $Id: shell-syntax.t,v 1.3 2006-06-14 13:46:25 steve Exp $
 
 
 use strict;
@@ -34,7 +34,7 @@ sub checkFile
     # We don't care about directories
     return if ( ! -f $file );
 
-    # See if it is a perl file.
+    # See if it is a shell script.
     my $isShell = 0;
 
     # Read the file.
