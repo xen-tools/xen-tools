@@ -17,7 +17,7 @@ my @required = qw( /usr/sbin/debootstrap /bin/ls /bin/dd /bin/mount /bin/cp /bin
 #
 #  Files that we might wish to use.
 #
-my @optional = qw( /usr/bin/rpmstrap /usr/sbin/xm );
+my @optional = qw( /usr/bin/rpmstrap /usr/sbin/xm /sbin/mkfs.ext3 /sbin/mkfs.xfs/sbin/mkfs.reiserfs  );
 
 
 
