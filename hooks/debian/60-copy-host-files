@@ -34,24 +34,13 @@ die "Prefix is missing /etc : $prefix" unless ( -d $prefix . "/etc" );
 #
 my @files = ( "/etc/hosts",
               "/etc/resolv.conf",
-              "/etc/gshadow",
-              "/etc/group"
             );
 
 foreach my $file ( @files )
 {
+    $ENV{'verbose'} && print "Copying from host -> guest: $file\n";
     File::Copy::copy( $file, $prefix . "/etc/" );
 }
-
-
-#
-#  Only copy the /etc/shadow file if --passwd is *not* specified.
-#
-if ( !$ENV{'passwd'} )
-{
-    File::Copy::copy( "/etc/shadow", $prefix . "/etc/" );
-}
-
 
 
 #
@@ -60,42 +49,105 @@ if ( !$ENV{'passwd'} )
 #
 if ( ( -e "/etc/sudoers" ) && ( -x $prefix . "/usr/bin/apt-get" ) )
 {
+    $ENV{'verbose'} && print "Copying from host -> guest: /etc/sudoers\n";
     File::Copy::copy( "/etc/sudoers", $prefix . "/etc" );
     chmod( 0440, $prefix. "/etc/sudoers" );
 
+    $ENV{'verbose'} && print "Installing sudo, since it is on the host.\n";
     `DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes --force-yes install sudo`;
 }
 
 
-
 #
-#  Now modify the password file *unless* the "--passwd" option
-# was given.
+#  If the user is specifying the --passwd flag then don't do anything else.
 #
-if ( ! $ENV{'passwd'} )
+if ( $ENV{'passwd'} )
 {
-    open( ORIG, "<", "/etc/passwd" )
-      or die "Failed to open /etc/passwd - $!";
-    open( NEW,  ">>", $prefix . "/etc/passwd" )
-      or die "Failed to open $prefix/etc/passwd - $!";
+    exit 0;
+}
 
+
+#
+#  Otherwise we want to copy all non-system accounts from the files:
+#
+#     /etc/passwd + /etc/shadow
+#
+open( ORIG, "<", "/etc/passwd" )
+  or die "Failed to open /etc/passwd - $!";
+open( NEW,  ">>", $prefix . "/etc/passwd" )
+  or die "Failed to open $prefix/etc/passwd - $!";
+
+#
+#  Here we store the user accounts we've copied over so that we
+# can copy the shadow lines too.
+#
+my %copied;
+
+#
+#  Read the lines from the /etc/passwd on the host.
+#
+foreach my $line ( <ORIG> )
+{
+    chomp( $line );
+
+    #
+    #  Split up line.
+    #
+    if ( $line =~ /^([^:]+):([^:]+):([^:]+)/ )
+    {
+        my $user = $1;
+        my $pass = $2;
+        my $uid  = $3;
+
+        #
+        #  A non-system account.
+        #
+        if ( ( $uid >= 1000 ) &&
+             ( $user ne "nobody" ) )
+        {
+            $ENV{'verbose'} && print "Adding '$user' to /etc/passwd on guest\n";
+            print NEW $line . "\n";
+
+            #
+            # Save the username we copied, so we can append the /etc/shadow
+            # lines too.
+            #
+            $copied{ $user } = 1;
+        }
+    }
+}
+close( NEW );
+close( ORIG );
+
+
+#
+#  Patchup /etc/shadow on the new image, to ensure that it has the
+# lines for each user we copied.
+#
+foreach my $username ( keys %copied )
+{
+    #
+    #  Open the shadow files.
+    #
+    open( ORIG, "<", "/etc/shadow" )
+      or die "Failed to open /etc/shadow - $!";
+    open( NEW,  ">>", $prefix . "/etc/shadow" )
+      or die "Failed to open $prefix/etc/shadow - $!";
+
+    #
+    #  Now look for a line matching the user in the host file.
+    #
     foreach my $line ( <ORIG> )
     {
         chomp( $line );
-        if ( $line =~ /^([^:]+):([^:]+):([^:]+)/ )
+        if ( $line =~ /^$username:/ )
         {
-            my $user = $1;
-            my $pass = $2;
-            my $uid  = $3;
-
-            if ( ( $uid >= 1000 ) &&
-                 ( $user ne "nobody" ) )
-            {
-                print NEW $line . "\n";
-            }
+            $ENV{'verbose'} && print "Added line to /etc/shadow for user '$username'\n";
+            print NEW $line . "\n";
         }
     }
 
-    close( NEW );
     close( ORIG );
+    close( NEW );
 }
+
