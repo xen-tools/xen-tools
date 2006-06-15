@@ -394,7 +394,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.26 2006-06-13 13:21:22 steve Exp $
+ $Id: xen-create-image,v 1.27 2006-06-15 07:31:49 steve Exp $
 
 =cut
 
@@ -495,6 +495,12 @@ testRootUser();
 #  Check our arguments
 #
 checkArguments();
+
+
+#
+#  Check we have installed binaries.
+#
+checkFilesPresent();
 
 
 #
@@ -608,29 +614,29 @@ sub setupDefaultOptions
     #
     $CONFIG{'dir'}         = '';
     $CONFIG{'xm'}          = '/usr/sbin/xm';
-    $CONFIG{'kernel'}          = '/boot/vmlinuz-2.6.16-1-xen-686';
-    $CONFIG{'initrd'}          = '/boot/initrd.img-2.6.16-1-xen-686';
+    $CONFIG{'kernel'}      = '/boot/vmlinuz-2.6.16-1-xen-686';
+    $CONFIG{'initrd'}      = '/boot/initrd.img-2.6.16-1-xen-686';
 
     #
     # Sizing options.
     #
-    $CONFIG{'memory'}          = '96Mb';
-    $CONFIG{'size'}          = '2000Mb';
-    $CONFIG{'swap'}          = '128M';
-    $CONFIG{'cache'}          = 'yes';
+    $CONFIG{'memory'}      = '96Mb';
+    $CONFIG{'size'}        = '2000Mb';
+    $CONFIG{'swap'}        = '128M';
+    $CONFIG{'cache'}       = 'yes';
 
     #
     # Misc. options.
     #
-    $CONFIG{'mirror'}          = 'http://ftp.us.debian.org/debian';
-    $CONFIG{'dist'}          = 'sarge';
+    $CONFIG{'mirror'}      = 'http://ftp.us.debian.org/debian';
+    $CONFIG{'dist'}        = 'sarge';
     $CONFIG{'fs'}          = 'ext3';
-    $CONFIG{'force'}          = 0;
+    $CONFIG{'force'}       = 0;
 
     #
     #  Installation methods
     #
-    $CONFIG{'rpmstrap'}          = 0;
+    $CONFIG{'rpmstrap'}    = 0;
     $CONFIG{'debootstrap'} = 0;
     $CONFIG{'copy'}        = '';
     $CONFIG{'tar'}         = '';
@@ -642,9 +648,9 @@ sub setupDefaultOptions
     # NOTE: These commands end in a trailing slash.  The last parameter is
     #       added as the loopback file/LVM volume to create the fs on....
     #
-    $CONFIG{'make_fs_ext3'}       = '/sbin/mkfs.ext3 -F ';
+    $CONFIG{'make_fs_ext3'}      = '/sbin/mkfs.ext3 -F ';
     $CONFIG{'make_fs_xfs'}       = '/sbin/mkfs.xfs -d name=';
-    $CONFIG{'make_fs_reiserfs'}       = '/sbin/mkfs.reiserfs -f -q ';
+    $CONFIG{'make_fs_reiserfs'}  = '/sbin/mkfs.reiserfs -f -q ';
 
     #
     #  Flags to pass to "mount" to mount our image.
@@ -776,7 +782,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.26 $';
+       my $REVISION      = '$Revision: 1.27 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -858,6 +864,54 @@ E_OR
     }
 
 }
+
+
+
+=head2 checkFilesPresent
+
+  Check that we have some required files present.
+
+=cut
+
+sub checkFilesPresent
+{
+    #
+    #  Files we demand are present in all cases.
+    #
+    my @required = qw ( /usr/sbin/debootstrap /bin/dd /bin/mount);
+
+    foreach my $file ( @required )
+    {
+	if ( -x $file )
+	{
+	    print "The following binary is required to run this tool\n";
+	    print "\t$file\n";
+	    exit;
+	}
+    }
+
+    
+    #
+    #  LVM specific binaries
+    #
+    if ( $CONFIG{'lvm'} )
+    {
+	my @lvm = qw ( /sbin/lvcreate );
+
+	foreach my $file ( @lvm )
+	{
+	    if ( -x $file )
+	    {
+		print "The following binary is required to run this tool\n";
+		print "\t$file\n";
+		print "(This is only required for LVM volumes, which you've selected)\n";
+		exit;
+	    }
+	}
+    }
+}
+
+
 
 
 =head2 showSummery
@@ -1081,6 +1135,7 @@ sub createLVMBits
 }
 
 
+
 =head2 createFilesystem
 
   Format the given image in the users choice of filesystem.
@@ -1125,7 +1180,7 @@ sub createFilesystem
     # so the user is using '--force' we add the '-f' flag to force
     # mkfs.xfs to recreate an image rather than complaining.
     #
-    if ( $CONFIG{'fs'} && $CONFIG{'force'} )
+    if ( ( $CONFIG{'fs'} eq 'xfs' ) && $CONFIG{'force'} )
     {
        $command .= " -f ";
     }
