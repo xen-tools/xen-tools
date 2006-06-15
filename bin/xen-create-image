@@ -20,6 +20,7 @@ xen-create-image - Create a new Xen instance
    --cache       Cache .deb files on the host when using B<--debootstrap>
    --force       Force overwriting existing images.
    --fs          Specify the filesystem type to use.
+   --image       Specify whether to create "sparse" or "full" disk images.
    --initrd      Specify the initial ramdisk
    --kernel      Set the path to the kernel to use for dom U.
    --memory      Setup the amount of memory allocated to the instance.
@@ -98,6 +99,9 @@ Set the hostname of the new instance.
 
 =item B<--ide>
 Use IDE style device names for the virtual devices.
+
+=item B<--image>
+Specify whether to use B<sparse> or B<full> images for the disk and swap spaces.
 
 =item B<--initrd>
 Specify the initial ramdisk.
@@ -262,6 +266,7 @@ Specify the LVM volume group to store images within.  If you wish to use loopbac
   #  Disk and Sizing options.
   #
   size       = 2Gb      # Disk image size.
+  image      = full     # Allocate the full disk size immediately.
   memory     = 128Mb    # Memory size
   swap       = 128Mb    # Swap size
   fs         = ext3     # use EXT3 filesystems
@@ -394,7 +399,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.28 2006-06-15 07:35:09 steve Exp $
+ $Id: xen-create-image,v 1.29 2006-06-15 23:20:22 steve Exp $
 
 =cut
 
@@ -624,6 +629,7 @@ sub setupDefaultOptions
     $CONFIG{'size'}        = '2000Mb';
     $CONFIG{'swap'}        = '128M';
     $CONFIG{'cache'}       = 'yes';
+    $CONFIG{'image'}       = 'full';
 
     #
     # Misc. options.
@@ -730,9 +736,9 @@ sub readConfigurationFile
 
 sub parseCommandLineArguments
 {
-    my $HELP       = 0;
-    my $MANUAL       = 0;
-    my $VERSION       = 0;
+    my $HELP    = 0;
+    my $MANUAL  = 0;
+    my $VERSION = 0;
 
     #
     #  Parse options.
@@ -740,6 +746,12 @@ sub parseCommandLineArguments
     GetOptions(
               # Mandatory
               "dist=s",      \$CONFIG{'dist'},
+
+              # Size options.
+              "size=s",       \$CONFIG{'size'},
+              "swap=s",       \$CONFIG{'swap'},
+              "image=s",      \$CONFIG{'image'},
+              "memory=s",     \$CONFIG{'memory'},
 
               # Locations
               "dir=s",        \$CONFIG{'dir'},
@@ -763,7 +775,7 @@ sub parseCommandLineArguments
               # Misc. options
               "boot",         \$CONFIG{'boot'},
               "cache=s",      \$CONFIG{'cache'},
-               "ide",          \$CONFIG{'ide'},
+              "ide",          \$CONFIG{'ide'},
               "passwd",       \$CONFIG{'passwd'},
               "role=s",       \$CONFIG{'role'},
               "force",        \$CONFIG{'force'},
@@ -782,7 +794,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.28 $';
+       my $REVISION      = '$Revision: 1.29 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -838,6 +850,15 @@ sub checkArguments
     }
 
     #
+    #  We require a hostname.
+    #
+    if ( ! defined( $CONFIG{'hostname'} ) )
+    {
+	print "The '--hostname' argument is mandatory.\n";
+	exit 1;
+    }
+
+    #
     #
     #  Test that the distribution name we've been given
     # to configure has a collection of hook scripts.
@@ -863,6 +884,19 @@ E_OR
        exit 1;
     }
 
+
+    #
+    #  Image must be 'sparse' or 'full'.
+    #
+    if ( defined( $CONFIG{'image'} ) )
+    {
+	if ( ( $CONFIG{'image'} ne "sparse" ) &&
+	     ( $CONFIG{'image'} ne "full" ) )
+	{
+	    print "Image type must be 'sparse' or 'full'\n";
+	    exit;
+	}
+    }
 }
 
 
@@ -882,8 +916,7 @@ sub checkFilesPresent
 
     foreach my $file ( @required )
     {
-
-        if ( -x $file )
+        if ( ! -x $file )
         {
             print "The following binary is required to run this tool\n";
             print "\t$file\n";
@@ -935,6 +968,7 @@ sub showSummery
     print "----------------\n";
     print "Image size     :  $CONFIG{'size'}\n";
     print "Swap size      :  $CONFIG{'swap'}\n" unless ( $CONFIG{'no-swap' } );
+    print "Image type     :  $CONFIG{'image'}\n";
     print "Memory size    :  $CONFIG{'memory'}\n";
     print "Kernel path    :  $CONFIG{'kernel'}\n";
     print "initrd path    :  $CONFIG{'initrd'}\n";
@@ -1056,7 +1090,18 @@ sub createLoopbackImages
     #  Use dd to create the disk image.
     #
     print "\nCreating disk image: $disk\n";
-    my $image_cmd = "/bin/dd if=/dev/zero of=$disk bs=$disk_size count=0 seek=1024";
+    my $image_cmd;
+    if ( $CONFIG{'image'} eq "sparse" )
+    {
+	$CONFIG{'verbose'} && print "Creating sparse image\n";
+	$image_cmd = "/bin/dd if=/dev/zero of=$disk bs=$disk_size count=0 seek=1024";
+    }
+    else
+    {
+	$CONFIG{'verbose'} && print "Creating full-sized image\n";
+	$image_cmd = "/bin/dd if=/dev/zero of=$disk bs=$disk_size count=1024";
+    }
+
     runCommand( $image_cmd );
     print "Done\n";
 
@@ -1224,6 +1269,7 @@ sub mountImage
     else
     {
        print "I don't know what to mount!\n";
+       print "Please specify '--dir' or '--lvm'\n";
        exit;
     }
 
