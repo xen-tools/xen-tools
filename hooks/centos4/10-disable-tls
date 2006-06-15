@@ -16,6 +16,8 @@ prefix=$1
 #
 if [ -e /usr/lib/xen-tools/common.sh ]; then
     . /usr/lib/xen-tools/common.sh
+else
+    . ../common.sh
 fi
 
 
