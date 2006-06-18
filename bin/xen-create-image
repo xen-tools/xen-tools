@@ -399,7 +399,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.30 2006-06-15 23:23:12 steve Exp $
+ $Id: xen-create-image,v 1.31 2006-06-18 18:11:57 steve Exp $
 
 =cut
 
@@ -794,7 +794,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.30 $';
+       my $REVISION      = '$Revision: 1.31 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -854,8 +854,8 @@ sub checkArguments
     #
     if ( ! defined( $CONFIG{'hostname'} ) )
     {
-	print "The '--hostname' argument is mandatory.\n";
-	exit 1;
+        print "The '--hostname' argument is mandatory.\n";
+        exit 1;
     }
 
     #
@@ -890,12 +890,12 @@ E_OR
     #
     if ( defined( $CONFIG{'image'} ) )
     {
-	if ( ( $CONFIG{'image'} ne "sparse" ) &&
-	     ( $CONFIG{'image'} ne "full" ) )
-	{
-	    print "Image type must be 'sparse' or 'full'\n";
-	    exit;
-	}
+        if ( ( $CONFIG{'image'} ne "sparse" ) &&
+             ( $CONFIG{'image'} ne "full" ) )
+        {
+            print "Image type must be 'sparse' or 'full'\n";
+            exit;
+        }
     }
 }
 
@@ -1093,13 +1093,13 @@ sub createLoopbackImages
     my $image_cmd;
     if ( $CONFIG{'image'} eq "sparse" )
     {
-	$CONFIG{'verbose'} && print "Creating sparse image\n";
-	$image_cmd = "/bin/dd if=/dev/zero of=$disk bs=$disk_size count=0 seek=1024";
+        $CONFIG{'verbose'} && print "Creating sparse image\n";
+        $image_cmd = "/bin/dd if=/dev/zero of=$disk bs=$disk_size count=0 seek=1024";
     }
     else
     {
-	$CONFIG{'verbose'} && print "Creating full-sized image\n";
-	$image_cmd = "/bin/dd if=/dev/zero of=$disk bs=$disk_size count=1024";
+        $CONFIG{'verbose'} && print "Creating full-sized image\n";
+        $image_cmd = "/bin/dd if=/dev/zero of=$disk bs=$disk_size count=1024";
     }
 
     runCommand( $image_cmd );

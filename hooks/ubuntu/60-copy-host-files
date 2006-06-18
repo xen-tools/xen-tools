@@ -33,7 +33,7 @@ die "Prefix is missing /etc : $prefix" unless ( -d $prefix . "/etc" );
 #  Copy some files literally.
 #
 my @files = (
-	     "/etc/resolv.conf",
+              "/etc/resolv.conf",
             );
 
 foreach my $file ( @files )
