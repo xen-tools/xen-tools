@@ -126,7 +126,7 @@ Specify the mirror to use when installing distributions with the debootstrap too
 Set the netmask the virtual image should use.
 
 =item B<--passwd>
-Setup a password for the root account of the virtual machine.
+Setup a password for the root account of the virtual machine.  Note that specifying this will avoid copying user accounts into the new guest image.  (i.e.  The guest image will only have a B<root> account setup.)
 
 =item B<--role>
 Run a single, specific, role-script once the image has been setup.
@@ -374,7 +374,7 @@ Install an X11 server, using VNC and XDM
 
 
 
-=head1 THE SKELLINGTON DIRECTORY
+=head1 THE SKELETON DIRECTORY
 
   Any files present in the directory /etc/xen-tools/skel will be copied
  across to each new guest image.  The role of this directory is analogous
@@ -399,7 +399,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.31 2006-06-18 18:11:57 steve Exp $
+ $Id: xen-create-image,v 1.32 2006-06-18 22:20:08 steve Exp $
 
 =cut
 
@@ -794,7 +794,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.31 $';
+       my $REVISION      = '$Revision: 1.32 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
