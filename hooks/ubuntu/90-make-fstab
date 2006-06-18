@@ -1,0 +1,83 @@
+#!/bin/sh
+#
+#  This script is responsible for setting up /etc/fstab upon the
+# new instance.
+#
+#  This should be a simple job, but it is complicated by some of the
+# differences between filesystems - some root filesystems will require
+# the installation of new packages, and we have to handle that here.
+#
+# Steve
+# --
+# http://www.steve.org.uk/
+
+
+prefix=$1
+
+#
+#  Source our common functions
+#
+if [ -e /usr/lib/xen-tools/common.sh ]; then
+    . /usr/lib/xen-tools/common.sh
+else
+    . ./hooks/common.sh
+fi
+
+
+#
+# Log our start
+#
+logMessage Script $0 starting
+
+
+#
+#  Options to mount the root filesystem with, we need to have
+# different options for xfs.
+#
+#  The default option works for ext2, ext3, and reiserfs.
+#
+options="errors=remount-ro"
+
+case "${fs}" in
+    xfs)
+        options="defaults"
+        ;;
+esac
+
+
+#
+# Make sure we use ide style device names if required
+#
+device=sda
+if [ "${ide}" ]; then
+    device=hda
+fi
+
+#
+#  Now we have the options we can create the fstab.
+#
+cat <<E_O_FSTAB > ${prefix}/etc/fstab
+/dev/${device}1     /     ${fs}     ${options}   0     1
+/dev/${device}2     none  swap     sw                    0     0
+proc          /proc proc     defaults              0     0
+E_O_FSTAB
+
+
+#
+#  Finally we can install any required packages for the given root
+# filesystem
+#
+case "${fs}" in
+    xfs)
+        installDebianPackage ${prefix} xfsprogs
+        ;;
+    reiserfs)
+        installDebianPackage ${prefix} reiserfsprogs
+        ;;
+esac
+
+
+#
+#  Log our finish
+#
+logMessage Script $0 finished

@@ -1,0 +1,35 @@
+#!/bin/sh
+#
+#  This script sets up the /etc/apt/sources.list for APT.
+#
+# Steve
+# --
+# $Id: 20-setup-apt,v 1.1 2006-06-18 17:44:08 steve Exp $
+
+
+prefix=$1
+
+cat <<E_O_APT > ${prefix}/etc/apt/sources.list
+#
+#  /etc/apt/sources.list
+#
+
+
+#
+# ${dist}
+#
+deb     ${mirror}     ${dist} main restricted universe multiverse
+deb-src ${mirror}     ${dist} main restricted universe
+deb     ${mirror}     ${dist}-updates main restricted universe multiverse
+deb-src ${mirror}     ${dist}-updates main restricted universe
+deb http://security.ubuntu.com/ubuntu ${dist}-security main restricted universe
+deb-src http://security.ubuntu.com/ubuntu ${dist}-security main restricted universe
+
+E_O_APT
+
+
+
+#
+#  Now that the sources have been setup make sure the system is up to date.
+#
+chroot ${prefix} /usr/bin/apt-get update

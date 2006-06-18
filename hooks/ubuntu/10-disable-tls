@@ -1,0 +1,49 @@
+#!/bin/sh
+#
+#  This script disables TLS on the new image.
+#
+# Steve
+# --
+# http://www.steve.org.uk/
+
+
+prefix=$1
+
+#
+#  Source our common functions
+#
+if [ -e /usr/lib/xen-tools/common.sh ]; then
+    . /usr/lib/xen-tools/common.sh
+else
+    . ./hooks/common.sh
+fi
+
+
+#
+# Log our start
+#
+logMessage Script $0 starting
+
+
+
+#
+# Disable TLS and create an empty directory in its place
+# 
+mv ${prefix}/lib/tls ${prefix}/lib/tls.disabled
+mkdir ${prefix}/lib/tls
+
+
+#
+# For sid + etch systems install libc6-xen
+#
+case "${dist}" in
+    etch|sid)
+        installDebianPackage ${prefix} libc6-xen
+        ;;
+esac
+
+
+#
+#  Log our finish
+#
+logMessage Script $0 finished
