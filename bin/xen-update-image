@@ -15,7 +15,7 @@ xen-update-image - Update the software installed upon offline Xen images.
 
   General Options:
    --dir       Specify the directory which contains the image(s).
-   --volume    Specify the LVM volume which contains the image(s).
+   --lvm       Specify the LVM volume group which contains the image(s).
 
 =cut
 
@@ -29,16 +29,16 @@ xen-update-image - Update the software installed upon offline Xen images.
 Specify the directory which contains the image(s).
 
 =item B<--help>
-Show the script help
+Show the script help.
 
 =item B<--manual>
-Read the manual
+Read the manual.
 
 =item B<--version>
 Show the version number and exit.
 
-=item B<--volume>
-Specify the LVM volume where images are located.
+=item B<--lvm>
+Specify the LVM volume group which contains the image(s).
 
 =back
 
@@ -57,7 +57,7 @@ Specify the LVM volume where images are located.
 
       apt-get upgrade
 
-  If the image is already running within Xen this will cause corruption
+  B<NOTE> If the image is already running within Xen this will cause corruption
  otherwise it will allow you to update your image without booting it.
 
 =cut
@@ -69,7 +69,6 @@ Specify the LVM volume where images are located.
  running.  The images are called 'test.my.flat', and 'x11.my.flat'.
 
   Updating both images can be accomplished by executing:
-
 
      xen-update-images --dir=/home/xen test.my.flat x11.my.flat
 
@@ -83,7 +82,7 @@ Specify the LVM volume where images are located.
  --
  http://www.steve.org.uk/
 
- $Id: xen-update-image,v 1.3 2006-06-13 13:21:22 steve Exp $
+ $Id: xen-update-image,v 1.4 2006-06-18 18:10:03 steve Exp $
 
 =cut
 
@@ -138,23 +137,9 @@ parseCommandLineArguments();
 
 
 #
-#  Make sure we have either a volume, or a root.
+#  Test that our arguments are sane.
 #
-if ( $CONFIG{'volume'} && $CONFIG{'dir'} )
-{
-    print "Please only use a volume or a directory name - not both\n";
-    exit;
-}
-
-
-#
-# Volumes are not supported yet :(
-#
-if ( $CONFIG{'volume'} )
-{
-    print "LVM Volumes are not supported yet\n";
-    exit;
-}
+checkArguments();
 
 
 #
@@ -166,7 +151,7 @@ if ( $EFFECTIVE_USER_ID != 0 )
 
   This script is not running with root privileges.
 
-  root privileges are required to successfully mount the disk images.
+  root privileges are required to successfully mount the disk image(s).
 
 E_O_ROOT
 
@@ -193,7 +178,7 @@ exit;
 
 =head2 updateXenImage
 
-  Actually perform the updates of the relevant image.
+  Mount the primary disk image, so that we're ready to update it.
 
 =cut
 
@@ -201,31 +186,57 @@ sub updateXenImage
 {
     my ( $name ) = ( @_ );
 
-
     #
-    #  Find the disk image.
-    #
-    my $image =  $CONFIG{'dir'} . "/domains/" . $name . "/disk.img";
-
-    if ( ! -e $image )
-    {
-       print "Disk image '$image' for host '$name' not found\n";
-       exit;
-    }
-
-
-    #
-    #  Create a temporary directory to mount the image upon securely.
+    #  Create a temporary directory, and prepare to mount the
+    # image there.
     #
     my $tmp = tempdir( CLEANUP => 1 );
-    my $mount_cmd = "mount -t auto -o loop $image $tmp";
+    my $img = '';
+
+
+    #
+    #  If we're dealing with loopback images find the main one,
+    # and mount it.
+    #
+    if ( $CONFIG{'dir'} )
+    {
+        # The loopback image.
+        $img =  $CONFIG{'dir'} . "/domains/" . $name . "/disk.img";
+
+        if ( ! -e $img )
+        {
+            print "Disk image '$img' for host '$name' not found\n";
+            return;
+        }
+    }
+    elsif ( $CONFIG{'lvm'} )
+    {
+        # The LVM volume
+        $img = "/dev/" . $CONFIG{'lvm'} . "/$name-disk";
+
+        # make sure it exists.
+        if ( ! -e $img )
+        {
+            print "Logical volume '$img' for host '$name' not found\n";
+            return;
+        }
+    }
+    else
+    {
+        die "Can't happen?\n";
+    }
+
+    #
+    #  Mount the image.
+    # 
+    my $mount_cmd = "mount -t auto -o loop $img $tmp";
     `$mount_cmd`;
 
     #
     #  Make sure this is a Debian image.
     #
     if ( ( -e $tmp . "/usr/bin/apt-get" ) &&
-        ( -e $tmp . "/etc/apt/sources.list" ) )
+         ( -e $tmp . "/etc/apt/sources.list" ) )
     {
        #
        #  Now run the update command.
@@ -326,7 +337,7 @@ sub parseCommandLineArguments
     #
     GetOptions(
               "dir=s",      \$CONFIG{'dir'},
-              "volume=s",   \$CONFIG{'volume'},
+              "lvm=s",      \$CONFIG{'lvm'},
               "help",       \$HELP,
               "manual",     \$MANUAL,
               "version",    \$VERSION
@@ -337,7 +348,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.3 $';
+       my $REVISION      = '$Revision: 1.4 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -350,3 +361,33 @@ sub parseCommandLineArguments
 }
 
 
+
+=head2 checkArguments
+
+  Test that the options we received from the command line, or our
+ configuration file, make sense.
+
+=cut
+
+sub checkArguments
+{
+
+    #
+    #  Make sure we have either a volume, or a root.
+    #
+    if ( $CONFIG{'lvm'} && $CONFIG{'dir'} )
+    {
+       print "Please only specify a volume group or a directory name - not both\n";
+       exit;
+    }
+
+
+    #
+    #  Make sure we have at least one of the lvm or root specified.
+    #
+    if ( (!defined( $CONFIG{'dir'} ) ) && ( !defined( $CONFIG{'lvm'} ) ) )
+    {
+       print "Please specify either a directory root, or an LVM volume group\n";
+       exit;
+    }
+}
