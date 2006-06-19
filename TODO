@@ -6,14 +6,12 @@ TODO
     hash.  The only issue is that trailing whitespace is missing from the
     "make_fs_foo" option.
 
-
   2. Write more test cases.
 
-  3. Support LVM properly.
+  3. Test more distributions with RPMStrap, instead of just centos4.
 
-  4. Test more distributions with RPMStrap, instead of just centos4.
 
 Steve
 --
-$Id: TODO,v 1.19 2006-06-19 12:51:43 steve Exp $
+$Id: TODO,v 1.20 2006-06-19 20:39:37 steve Exp $
 
