@@ -13,12 +13,7 @@ TODO
 
   4. Test more distributions with RPMStrap, instead of just centos4.
 
-
-Before 2.x release:
-
-  * xen-duplicate-image needs work.
-
 Steve
 --
-$Id: TODO,v 1.18 2006-06-18 18:42:31 steve Exp $
+$Id: TODO,v 1.19 2006-06-19 12:51:43 steve Exp $
 

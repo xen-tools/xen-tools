@@ -5,7 +5,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.62 2006-06-19 11:20:22 steve Exp $
+# $Id: Makefile,v 1.63 2006-06-19 12:51:43 steve Exp $
 
 
 #
@@ -88,7 +88,6 @@ install-bin:
 	cp bin/xt-install-image     ${prefix}/usr/bin
 	cp bin/xt-create-xen-config ${prefix}/usr/bin
 	cp bin/xen-delete-image     ${prefix}/usr/bin
-	cp bin/xen-duplicate-image  ${prefix}/usr/bin
 	cp bin/xen-list-images      ${prefix}/usr/bin
 	cp bin/xen-update-image     ${prefix}/usr/bin
 	chmod 755 ${prefix}/usr/bin/xen-create-image
@@ -96,7 +95,6 @@ install-bin:
 	chmod 755 ${prefix}/usr/bin/xt-install-image
 	chmod 755 ${prefix}/usr/bin/xt-create-xen-config
 	chmod 755 ${prefix}/usr/bin/xen-delete-image
-	chmod 755 ${prefix}/usr/bin/xen-duplicate-image
 	chmod 755 ${prefix}/usr/bin/xen-list-images
 	chmod 755 ${prefix}/usr/bin/xen-update-image
 
@@ -170,7 +168,6 @@ test-verbose:
 uninstall:
 	rm -f ${prefix}/usr/bin/xen-create-image
 	rm -f ${prefix}/usr/bin/xen-delete-image
-	rm -f ${prefix}/usr/bin/xen-duplicate-image
 	rm -f ${prefix}/usr/bin/xen-list-images
 	rm -f ${prefix}/usr/bin/xen-update-image
 	rm -f ${prefix}/etc/xen-tools/xen-tools.conf
@@ -182,7 +179,6 @@ uninstall:
 	rm -rf ${prefix}/usr/lib/xen-tools
 	rm -f ${prefix}/usr/share/man/man8/xen-create-image.8.gz
 	rm -f ${prefix}/usr/share/man/man8/xen-delete-image.8.gz
-	rm -f ${prefix}/usr/share/man/man8/xen-duplicate-image.8.gz
 	rm -f ${prefix}/usr/share/man/man8/xen-list-images.8.gz
 	rm -f ${prefix}/usr/share/man/man8/xen-update-image.8.gz
 
