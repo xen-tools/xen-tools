@@ -1,11 +1,13 @@
 #
-#  Utility makefile for people working with xen-tools
+#  Utility makefile for people working with xen-tools, this contains
+# a lot of targets useful for people working on the code from the 
+# CVS repository - but it also contains other useful targets.
 #
 # Steve
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.63 2006-06-19 12:51:43 steve Exp $
+# $Id: Makefile,v 1.64 2006-06-19 22:45:56 steve Exp $
 
 
 #
@@ -17,7 +19,7 @@ BASE        = xen-tools
 
 
 #
-#  Installation prefix
+#  Installation prefix, useful for the Debian package.
 #
 prefix=
 
@@ -37,12 +39,18 @@ nop:
 	@echo " "
 
 
-
+#
+#  Extract the CVS revision history and make a ChangeLog file
+# with those details.
+#
 changelog:
 	-if [ -x /usr/bin/cvs2cl ] ; then cvs2cl; fi
 	-rm ChangeLog.bak
 
 
+#
+#  Delete all temporary files, recursively.
+#
 clean:
 	@find . -name '.*~' -exec rm \{\} \;
 	@find . -name '.#*' -exec rm \{\} \;
@@ -56,10 +64,17 @@ clean:
 	@if [ -e configure-stamp ]; then rm -f configure-stamp ; fi
 	@if [ -d debian/xen-tools ]; then rm -rf ./debian/xen-tools; fi
 
+
+#
+#  If the testsuite runs correctly then commit any pending changes.
+#
 commit: test
 	cvs -z3 commit
 
 
+#
+#  Show what has been changed in the local copy vs. the CVS repository.
+#
 diff:
 	cvs diff --unified 2>/dev/null
 
@@ -77,6 +92,7 @@ install-etc:
 	-mkdir -p             ${prefix}/etc/bash_completion.d
 	cp misc/xen-tools     ${prefix}/etc/bash_completion.d/
 	cp misc/xm            ${prefix}/etc/bash_completion.d/
+
 
 #
 #  Install binary files.
@@ -121,30 +137,39 @@ install-hooks:
 	-rm -rf ${prefix}/usr/lib/xen-tools/centos4.d/role.d/CVS
 
 
-
 #
-#  Generate an install manpages.
+#  Generate and install manpages.
 #
 install-manpages: manpages
 	-mkdir -p ${prefix}/usr/share/man/man8/
 	cp man/*.8.gz ${prefix}/usr/share/man/man8/
 
 
-
-
+#
+#  Install everything.
+#
 install: install-bin install-etc install-hooks install-manpages
 
 
+#
+#  Build our manpages via the `pod2man` command.
+#
 manpages:
 	cd bin; for i in *-*; do pod2man --release=${VERSION} --official --section=8 $$i ../man/$$i.8; done
 	for i in man/*.8; do gzip --force -9 $$i; done
 
 
+#
+#  Generate HTML versions of our manpages.  Steve-Specific?
+#
 manpages-html:
 	for i in xen-*; do pod2html $$i > man/$$i.html; done
 
 
-release: update-version clean changelog
+#
+#  Make a new release tarball.
+#
+release: test update-version update-modules clean changelog
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)
 	rm -f $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz
 	cp -R . $(DIST_PREFIX)/$(BASE)-$(VERSION)
@@ -157,14 +182,23 @@ release: update-version clean changelog
 	gpg --armour --detach-sign $(BASE)-$(VERSION).tar.gz
 
 
+#
+#  Run the test suite.
+#
 test:
 	@perl -MTest::Harness -e '$$Test::Harness::verbose=0; runtests @ARGV;' tests/*.t
 
 
+#
+#  Run the test suite verbosely.
+#
 test-verbose:
 	@perl -MTest::Harness -e '$$Test::Harness::verbose=1; runtests @ARGV;' tests/*.t
 
 
+#
+#  Uninstall the software, completely.
+#
 uninstall:
 	rm -f ${prefix}/usr/bin/xen-create-image
 	rm -f ${prefix}/usr/bin/xen-delete-image
@@ -183,9 +217,26 @@ uninstall:
 	rm -f ${prefix}/usr/share/man/man8/xen-update-image.8.gz
 
 
+#
+#  Update the local copy from the CVS repository.
+#
+#  NOTE: Removes empty local directories.
+#
 update: 
 	cvs -z3 update -A -P -d 2>/dev/null
 
 
+#
+#  Update the module test - this is designed to automatically write test
+# cases to ensure that all required modules are available.
+#
+update-modules:
+	cd tests && make modules
+
+
+#
+#  Update the release number of each script we have from the variable
+# at the top of this file.  Steve-Specific?
+#
 update-version:
 	perl -pi.bak -e "s/RELEASE = '[0-9]\.[0-9]';/RELEASE = '${VERSION}';/g" bin/*-*
