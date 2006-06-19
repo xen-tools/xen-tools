@@ -3,7 +3,7 @@ Section: utils
 Priority: extra
 Maintainer: Radu Spineanu <radu@debian.org>
 Uploaders: Steve Kemp <skx@debian.org>
-Build-Depends: debhelper (>= 4.0.0), libtest-pod-perl
+Build-Depends: debhelper (>= 4.0.0), libtest-pod-perl, libtext-template-perl
 Standards-Version: 3.7.2
 
 Package: xen-tools
