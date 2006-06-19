@@ -31,7 +31,7 @@ name    = '{$hostname}'
 #
 { if ( $dhcp )
   {
-    $OUT .= "dhcp = 'dhcp'";
+    $OUT .= "dhcp = 'dhcp'\n";
     $OUT .= "vif  = [ '' ]";
   }    
   else
