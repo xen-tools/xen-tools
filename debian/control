@@ -8,7 +8,7 @@ Standards-Version: 3.7.2
 
 Package: xen-tools
 Architecture: all
-Depends: debootstrap, perl-modules, libterm-size-perl
+Depends: debootstrap, perl-modules, libterm-size-perl, libtext-template-perl
 Recommends: xen | xen-hypervisor-3.0, reiserfsprogs, xfsprogs
 Description: Tools to manage debian XEN virtual servers
  This package contains tools to manage debian based XEN virtual servers.
