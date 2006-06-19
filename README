@@ -24,6 +24,22 @@ xen-tools
  for installing non-Debian instances.
 
 
+Requirements
+------------
+
+  To use these tools you'll need the following software:
+
+        * Perl
+        * The Perl module "Text::Template"  
+
+  Optionally you'll need "debootstrap" and "rpmstrap" to take advantage
+ of the most common installation methods - although you could get by without
+ them if you were prepared to work at it.
+
+
+The Scripts
+-----------
+
   There now follows a brief description of each included script,
  for more thorough documentation please consult their manpages.
 
@@ -84,5 +100,5 @@ xen-update-image
 
 Steve
 --
-$Id: README,v 1.35 2006-06-19 20:39:27 steve Exp $
+$Id: README,v 1.36 2006-06-19 22:48:21 steve Exp $
 
