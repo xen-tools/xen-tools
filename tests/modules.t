@@ -22,6 +22,10 @@ BEGIN{ use_ok( 'File::Copy' ); }
 require_ok( 'File::Copy' );
 
 
+BEGIN{ use_ok( 'File::Find' ); }
+require_ok( 'File::Find' );
+
+
 BEGIN{ use_ok( 'File::Temp' ); }
 require_ok( 'File::Temp' );
 
@@ -30,23 +34,19 @@ BEGIN{ use_ok( 'Getopt::Long' ); }
 require_ok( 'Getopt::Long' );
 
 
-BEGIN{ use_ok( 'IPC::Open3' ); }
-require_ok( 'IPC::Open3' );
-
-
 BEGIN{ use_ok( 'Pod::Usage' ); }
 require_ok( 'Pod::Usage' );
+
+
+BEGIN{ use_ok( 'strict' ); }
+require_ok( 'strict' );
 
 
 BEGIN{ use_ok( 'Test::More' ); }
 require_ok( 'Test::More' );
 
 
-BEGIN{ use_ok( 'diagnostics' ); }
-require_ok( 'diagnostics' );
-
-
-BEGIN{ use_ok( 'strict' ); }
-require_ok( 'strict' );
+BEGIN{ use_ok( 'Text::Template' ); }
+require_ok( 'Text::Template' );
 
 
