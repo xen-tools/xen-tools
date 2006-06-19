@@ -5,7 +5,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.61 2006-06-19 11:18:57 steve Exp $
+# $Id: Makefile,v 1.62 2006-06-19 11:20:22 steve Exp $
 
 
 #
@@ -174,6 +174,8 @@ uninstall:
 	rm -f ${prefix}/usr/bin/xen-list-images
 	rm -f ${prefix}/usr/bin/xen-update-image
 	rm -f ${prefix}/etc/xen-tools/xen-tools.conf
+	rm -f ${prefix}/etc/xen-tools/xm.tmpl
+	-rm -rf ${prefix}/etc/xen-tools/skel
 	-rmdir ${prefix}/etc/xen-tools/
 	-rm -f ${prefix}/etc/bash_completion.d/xen-tools
 	-rm -f ${prefix}/etc/bash_completion.d/xm
