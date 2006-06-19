@@ -1,0 +1,22 @@
+
+Reporting Bugs
+--------------
+
+  To report a bug please use the xen-tools mailing list:
+
+        http://beta.xen-tools.org/software/xen-tools/lists.html
+
+  If you're capable of fixing it yourself a patch is appreciated,
+ and a test case would be a useful bonus.
+
+
+Known Bugs
+----------
+
+  None currently known, but the Debian bug tracker might contain
+ some reported since the previous release:
+
+        http://bugs.debian.org/xen-tools/
+
+Steve
+-- 
