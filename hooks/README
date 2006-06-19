@@ -2,25 +2,25 @@
 hooks/
 
 
-  Once a distribution of GNU/Linux has been installed with xt-install-image
- we'll have a pristine, unconfigured, installation.
+  Once a distribution of GNU/Linux has been installed by the
+ xt-install-image script we'll have a pristine system.
 
-  To configure this the program xt-customize-image will call a collection
- of distro-specific shell scripts.
+  To configure this the program xt-customize-image will call
+ a collection of distro-specific shell scripts, or hooks.
 
-  These scripts are called hooks.  For each distribution we support there
- is a subdirectory containing the necessary functions to configure the
- host minimally.
+  For each distribution we support there is a subdirectory 
+ containing the necessary functions to configure the host
+ minimally.
 
   By the time the scripts finish we'll expect:
 
-	* The installation to have a working fstab file.
-	* The installation will have IP address + networking configured.
-	* The installation will have a running installation of OpenSSH
+   * The installation to have a working fstab file.
+   * The installation will have IP address + networking configured.
+   * The installation will have a running installation of OpenSSH
 
-  These subdirectories will be installed to the directory
- /usr/lib/xen-tools/
+  The subdirectories in this hooks/ directory will be installed
+ to the directory /usr/lib/xen-tools/
 
 Steve
 --
-$Id: README,v 1.1 2006-06-09 10:37:55 steve Exp $
+$Id: README,v 1.2 2006-06-19 20:39:51 steve Exp $
