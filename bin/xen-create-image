@@ -39,10 +39,10 @@ xen-create-image - Create a new Xen instance
    --tar         Install the new image by untarring the given file.
 
   Networking options:
-   --dhcp      Setup the image to get an IP address via DHCP
-   --gateway   Setup the iamge's network gateway.
-   --ip              Setup the ip
-   --netmask   Setup the netmask
+   --dhcp      Configure the new image to fetch its networking details via DHCP.
+   --gateway   Setup the network gateway for the new instance.
+   --ip        Setup the IP address of the machine, multiple IPs are allowed.
+   --netmask   Setup the netmask for the new instance.
 
   Mandatory options:
 
@@ -104,20 +104,20 @@ Use IDE style device names for the virtual devices.
 Specify whether to use B<sparse> or B<full> images for the disk and swap spaces.
 
 =item B<--initrd>
-Specify the initial ramdisk.
+Specify the initial ramdisk to be used by the booting Xen instance.
 
 =item B<--ip>
 Set the IP address for the virtual image.  Conflicts with B<--dhcp>.  This argument may be specified multiple times to give your new instance multiple IP addresses.
 
 =item B<--kernel>
-Set the path to the kernel to use for the image.
+Specify the kernel which should be used for booting the new Xen instance.
 
 =item B<--manual>
 Read the manual, with examples.
 
 =item B<--memory>
 Specify the amount of memory the virtual image should be allocated.  Defaults
-to 96Mb.
+to 128Mb.
 
 =item B<--mirror>
 Specify the mirror to use when installing distributions with the debootstrap tool.  This defaults to http://ftp.us.debian.org/debian
@@ -399,7 +399,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.32 2006-06-18 22:20:08 steve Exp $
+ $Id: xen-create-image,v 1.33 2006-06-19 20:43:13 steve Exp $
 
 =cut
 
@@ -629,7 +629,7 @@ sub setupDefaultOptions
     $CONFIG{'size'}        = '2000Mb';
     $CONFIG{'swap'}        = '128M';
     $CONFIG{'cache'}       = 'yes';
-    $CONFIG{'image'}       = 'full';
+    $CONFIG{'image'}       = 'sparse';
 
     #
     # Misc. options.
@@ -661,7 +661,8 @@ sub setupDefaultOptions
     #
     #  Flags to pass to "mount" to mount our image.
     #
-    #  NOTE: Kinda redundent and may go away.
+    #  NOTE: Kinda redundent and may go away since '-t auto' should do
+    #        the right thing.
     #
     $CONFIG{'mount_fs_ext3'}      = '-t ext3';
     $CONFIG{'mount_fs_xfs'}       = '-t xfs';
@@ -794,7 +795,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.32 $';
+       my $REVISION      = '$Revision: 1.33 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -1487,6 +1488,9 @@ sub runRoleScript
 
   Create the Xen configuration file.
 
+  Note that we don't need to do any setup for the environment since
+ we did this already before running the hook scripts.
+
 =cut
 
 sub runXenConfigCreation
@@ -1506,7 +1510,8 @@ sub runXenConfigCreation
   A utility method to run a system command.  We will capture the return
  value and exit if the command files.
 
-  When running verbosely we will also display any command output.
+  When running verbosely we will also display any command output once
+ it has finished.
 
 =cut
 
@@ -1520,7 +1525,7 @@ sub runCommand
     $CONFIG{'verbose'} && print "Executing : $cmd\n";
 
     #
-    #  Hide output unless running with --debug.
+    #  Hide output unless running with --verbose.
     #
     if ( $CONFIG{'verbose'} )
     {
