@@ -6,10 +6,7 @@
 #
 # This file offers basic support for all the command line options, along with
 # some specialist support to complete filesystem types, distribution targets,
-# virtual images and hostnames.
-#
-# Hostname completion will only work if 'dir=xxx' has been filled out
-# within the configuration file /etc/xen-tools/xen-tools.conf
+# virtual images, etc.
 #
 #  References on command line completion:
 #
@@ -21,13 +18,13 @@
 # --
 # http://www.steve.org.uk
 #
-# $Id: xen-tools,v 1.28 2006-06-18 19:00:39 steve Exp $
+# $Id: xen-tools,v 1.29 2006-06-19 13:06:01 steve Exp $
 #
 
 
 #
 #  Utility function to find the names of each existing Xen image,
-# we do this by finding parsing the files /etc/xen/*.cfg
+# we do this by parsing the files matching /etc/xen/*.cfg
 #
 function _find_xen_images
 {
@@ -56,7 +53,7 @@ _xen_create_image()
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
     prev=${COMP_WORDS[COMP_CWORD-1]}
-    opts='--broadcast --boot --cache --debug --debootstrap --dhcp --dir --dist --force --fs --gateway --help --hostname --ide --image --initrd --ip --kernel --lvm --manual --memory --mirror --passwd --role --rpmstrap --size --swap --version'
+    opts='--broadcast --boot --cache --debug --debootstrap --dhcp --dir --dist --force --fs --gateway --help --hostname --ide --image --initrd --ip --kernel --lvm --manual --memory --mirror --passwd --role --rpmstrap --size --swap --version --verbose'
     
     
     #
@@ -64,11 +61,14 @@ _xen_create_image()
     ip=`grep ^gateway /etc/xen-tools/xen-tools.conf | awk -F'= '  '{print $2}'`
 
     #
-    # Available distributions, from rpmstrap
+    # Available distributions, by which we mean distributions which
+    # we have hook scripts available.
     #
-    if [ -d /usr/lib/rpmstrap/scripts ]; then
-       dists=`ls -1 /usr/lib/rpmstrap/scripts`
-    fi
+    for i in `ls -1 /usr/lib/xen-tools/ ` ; do
+        if [ -d /usr/lib/xen-tools/${i} ]; then
+            dists="${dists} ${i/.d/}"
+        fi
+    done
 
     #
     # Volume group completion
@@ -89,7 +89,7 @@ _xen_create_image()
 	    return 0
 	    ;;
 	--dist)
-	    COMPREPLY=( $( compgen -W '${dists} dapper sid sarge etch'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+	    COMPREPLY=( $( compgen -W '${dists}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
 	    return 0
 	    ;;
 	--fs)
@@ -252,12 +252,16 @@ _xt-create-xen-config()
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
     prev=${COMP_WORDS[COMP_CWORD-1]}
-    opts='--help --manual --output --verbose --version'
+    opts='--help --manual --output --template --verbose --version'
     
     
     case "$prev" in
 	--output)
 	    _filedir -d
+	    return 0
+	    ;;
+	--template)
+	    COMPREPLY=( $( compgen -f -- ${cur#*:} ) )
 	    return 0
 	    ;;
     esac
