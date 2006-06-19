@@ -26,11 +26,23 @@ xt-create-config - Create a Xen configuration file for a new domain.
 
 =cut
 
-=head1 NOTES
+=head1 ABOUT
 
-  This script is invoked by xen-create-image after it has created and
+  This script is invoked by B<xen-create-image> after it has created and
  customised a new Xen domain.  It is responsible for creating the
- configuration file that Xen itself will use.
+ configuration file that Xen should use to start the instance.
+
+  The configuration file will be created in the directory /etc/xen using
+ the template file B</etc/xen-tools/xm.tmpl> to specify what is included.
+
+  If you wish to make changes to the Xen configuration file for every
+ domain which is created then you should modify the master template rather
+ than fixing up each new instances configuration afterwards.
+
+=cut
+
+
+=head1 ARGUMENT PASSING
 
   This script will be invoked with a full copy of the arguments from
  xen-create-image in its environment, along with several command line
@@ -45,7 +57,7 @@ xt-create-config - Create a Xen configuration file for a new domain.
  --
  http://www.steve.org.uk/
 
- $Id: xt-create-xen-config,v 1.8 2006-06-13 13:21:22 steve Exp $
+ $Id: xt-create-xen-config,v 1.9 2006-06-19 12:49:34 steve Exp $
 
 =cut
 
@@ -66,6 +78,8 @@ use strict;
 use Env;
 use Getopt::Long;
 use Pod::Usage;
+use Text::Template;
+
 
 
 #
@@ -74,6 +88,12 @@ use Pod::Usage;
 #  We do not need to read any configuration file.
 #
 my %CONFIG;
+
+#
+#  Default options
+#
+$CONFIG{'template'} = '/etc/xen-tools/xm.tmpl';
+
 
 #
 # Release number.
@@ -100,6 +120,7 @@ checkArguments();
 #
 createXenConfig();
 
+
 #
 #  Exit cleanly - any errors which have already occurred will result
 # in "exit 1".
@@ -119,15 +140,16 @@ exit 0;
 
 sub parseCommandLineArguments
 {
-    my $HELP       = 0;
-    my $MANUAL       = 0;
-    my $VERSION       = 0;
+    my $HELP    = 0;
+    my $MANUAL  = 0;
+    my $VERSION = 0;
 
     #
     #  Parse options.
     #
     GetOptions(
               "output=s",   \$CONFIG{'output'},
+              "template=s", \$CONFIG{'template'},
               "verbose",    \$CONFIG{'verbose'},
               "help",       \$HELP,
               "manual",     \$MANUAL,
@@ -140,14 +162,14 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.8 $';
+       my $REVISION      = '$Revision: 1.9 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
            $REVISION = $1;
        }
 
-       print "xt-customize-image release $RELEASE - CVS: $REVISION\n";
+       print "xt-create-xen-config release $RELEASE - CVS: $REVISION\n";
        exit;
 
     }
@@ -171,6 +193,23 @@ sub checkArguments
        print "The '--output' argument is mandatory\n";
        exit 1;
     }
+
+    #
+    #  Make sure that any specified tempalte file exists.
+    #
+    if ( defined( $CONFIG{'template'} ) )
+    {
+        if ( ! -e $CONFIG{'template'} )
+        {
+            print "The specified template file, $CONFIG{'template'} does not exist.\n";
+            exit 1;
+        }
+    }
+    else
+    {
+        print "A template file was not specified.  Aborting\n";
+        exit 1;
+    }
 }
 
 
@@ -184,39 +223,35 @@ sub checkArguments
 
 sub createXenConfig
 {
+    #
+    #  The output file we're going to process.
+    #
     my $file = $CONFIG{'output'} . '/' . $ENV{'hostname'} . '.cfg';
 
     #
-    #  The parameters we use.
+    #  The template we're going to read from.
+    #
+    my $template = new Text::Template( TYPE => 'FILE',
+                                       SOURCE => $CONFIG{'template'} );
+
+
+    #
+    #  The device we're using.
     #
     my $device = 'sda';
     if ( defined( $ENV{'ide'} ) )
     {
        $device = 'hda';
     }
+    $ENV{'device'} = $device;
+
 
     #
-    #  Strip a trailing qualifier from the memory
+    #  The memory size.
     #
     if ( $ENV{'memory'} =~ /([0-9]+)/ )
     {
        $ENV{'memory'} = $1;
-    }
-
-    my $network = '';
-
-    if ( $ENV{'dhcp'} )
-    {
-       $network =<<EOF;
-dhcp = "dhcp"
-vif  = [ '' ]
-EOF
-    }
-    else
-    {
-       $network =<<EOF;
-vif  = [ 'ip=$ENV{'ip1'}' ]
-EOF
     }
 
 
@@ -236,29 +271,36 @@ EOF
        $image_vbd = "file:$ENV{'dir'}/domains/$ENV{'hostname'}/disk.img";
        $swap_vbd  = "file:$ENV{'dir'}/domains/$ENV{'hostname'}/swap.img";
     }
-    
+    $ENV{'image_vbd'} = $image_vbd;
+    $ENV{'swap_vbd'}  = $swap_vbd;
+
+
     #
-    #  Quick hack
+    #  Now we should have a suitable environment.  What we want to
+    # do now is to make sure that these environmental variables are
+    # made available to our template file.
     #
-    my $device1 = $device . "1";
-    my $device2 = $device . "2";
+    my %vars;
+    foreach my $key (sort keys %ENV )
+    {
+        $vars{$key} = $ENV{$key};
+    }
 
     #
     #  Now output the data.
     #
     open( FILE, ">", $file );
-    print FILE <<E_O_HEADER;
 
-kernel  = '$ENV{'kernel'}'
-ramdisk = '$ENV{'initrd'}'
-memory  =  $ENV{'memory'}
-name    = '$ENV{'hostname'}'
-root    = '/dev/$device1 ro'
-disk    = [ '$image_vbd,$device1,w', '$swap_vbd,$device2,w' ]
+    my $result = $template->fill_in(HASH => \%vars);
 
-E_O_HEADER
-
-    print FILE $network;
-
+    if (defined $result)
+    {
+        print FILE $result ;
+    }
+    else
+    {
+        print FILE "Error creating configuration file\n";
+    }
     close( FILE );
+
 }

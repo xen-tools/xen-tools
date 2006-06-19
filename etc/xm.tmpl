@@ -1,0 +1,48 @@
+#
+#  Configuration file for the Xen instance {$hostname}, created on
+# { scalar localtime }.
+#
+
+
+#
+#  Kernel + memory size
+#
+kernel  = '{$kernel}'
+ramdisk = '{$initrd}'
+memory  = '{$memory}'
+
+
+#
+#  Disk device(s).
+#
+root    = '/dev/{$device}1 ro'
+disk    = [ '{$image_vbd},{$device}1,w', 
+            '{$swap_vbd},{$device}2,w' ]
+
+
+#
+#  Hostname
+#
+name    = '{$hostname}'
+
+
+#
+#  Networking
+#
+{ if ( $dhcp )
+  {
+    $OUT .= "dhcp = 'dhcp'";
+    $OUT .= "vif  = [ '' ]";
+  }    
+  else
+  {
+    $OUT .= "vif  = [ 'ip=$ip1' ]";
+  }
+}
+
+#
+#  Behaviour
+#
+on_poweroff = 'destroy'
+on_reboot   = 'restart'
+on_crash    = 'restart'
