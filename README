@@ -15,89 +15,59 @@ xen-tools
   The xen-tools package contains a collection of Perl scripts for
  working with Xen images under Debian GNU/Linux.
 
-  It is primarily aimed at users who wish to create virtual instances
- of Debian Sarge, Etch, or Sid.  Although there is support for installing
- non-Debian instances this is both new and experimental.
+  Using this software you can easily create new Xen guest images
+ which are setup with networking, including an installation of 
+ OpenSSH, and configured to be ready to work.
 
-  There are two ways to use the scripts:
-
-  1. With loopback files which is the simplest method.
-  2. Using LVM for better performance.
-
+  It is primarily aimed at users who wish to create virtual 
+ instances of Debian Sarge, Etch, or Sid.  Although there is support
+ for installing non-Debian instances.
 
 
-Loopback Files
---------------
+  There now follows a brief description of each included script,
+ for more thorough documentation please consult their manpages.
 
-  If you use the default setup with loopback files then each virtaul
- image will use two files on your host system:
-
-	1. A disk image to be used by Xen as the primary drive.
-	2. A disk image to be used by Xen as the swap partition.
-
-  These images will be kept beneath whichever directory you specify 
- as your root directory (via the command line flag "--dir=.." or a 
- configuration file entry "dir = ..")
-
-  Beneath the root directory each virtual instance will have a
- subdirectory, named after the hostname of the image.  
-
-  A typical layout would look like this:
-
-/home/xen/domains/
-|-- bar               [Virtual machine named 'bar']
-|   |-- disk.img        [Disk image]
-|   `-- swap.img        [Swap image]
-|   `-- install.log     [Debootstrap installation log]
-|-- etch              [Virtual machine named 'etch']
-|   |-- disk.img        [Disk image]
-|   `-- swap.img        [Swap image]
-|   `-- install.log     [Debootstrap installation log]
-
-
-
-
-LVM Support
------------
-
-  If you wish to use the LVM support then you will give the 
- scripts an LVM volume group as an argument, or in the configuration
- file. 
-
-  The volume group will be used to create two new logical volumes,
- one for the disk and one for the swap.
 
 
 xen-create-image
 ----------------
 
   This script is designed to create new images which may be used
- with the Xen virtual machine.  You may create images of Debian
- or the non-Debian distributions which include CentOS 4.
+ with the Xen hyperviser.  
 
   The virtual images will have their networking settings created and,
  you may optionally cause the new instance to boot once it has
  been created.
 
-  The image may be customised by the use of hook scripts see the
- manpage for more details.
+  This script performs the initial setup, then delegates the real
+ work to a collection of helper scripts:
+
+    * xt-install-image
+      Installs a distribution into a directory.
+
+    * xt-customize-image
+      Run a collection of hook scripts to configure the freshly 
+      installed system.
+
+    * xt-create-xen-config
+      Create a configuration file in /etc/xen such that Xen can
+      boot the newly created machine.
 
 
 xen-delete-image
 ----------------
 
-  This script will delete a images by hostname, it will remove the
- logical volumes, or loopback files, which make up the storage for the
- Xen instance.
+  This script will allow you to completely remove Xen instances
+ which have previously been created by xen-create-image, this
+ includes removing the storage block devices from the system,
+ and deleting the Xen configuration file.
 
 
 xen-list-images
 ---------------
 
   List all the created images beneath a given root directory along
- with their network addresses.
-
-  (In the case of images using DHCP an IP address will not be listed.)
+ with a brief overview of their setup details.
 
 
 xen-update-image
@@ -106,11 +76,13 @@ xen-update-image
   This script runs "apt-get update; apt-get upgrade" for a given
  Xen image.
 
-  NOTE:  The image should not be mounted/live/running or things will
- be corrupted.  (Still if the image is "live" you may just use SSH, right?)
+  NOTES: 
+
+  *  The image should not be running or corruption will occur!
+  *  The script should only be used for Xen instances of Debian.
 
 
 Steve
 --
-$Id: README,v 1.34 2006-06-19 12:36:46 steve Exp $
+$Id: README,v 1.35 2006-06-19 20:39:27 steve Exp $
 
