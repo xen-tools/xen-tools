@@ -1,3 +1,19 @@
+xen-tools (2.0-1) unreleased; urgency=low
+
+  * New upstream release
+     + Moves the hook directories from /etc/xen-tools to /usr/lib/xen-tools
+     + Adds explicit support for Ubuntu Dapper.
+  * Updated build-deps to include modules required for clean pass of test
+    suite.
+  * Added dependency for Text::Template, and removed obsolete Term::Size.
+  * Improved documentation relating to the LVM support.
+    Note: --volume becomes --lvm from 2.0 upwards.
+    (Closes: #368831)
+  * Installation on LVM partitions now works without error.
+    (Closes: #373800)
+
+ -- Steve Kemp <skx@debian.org>  Mon, 19 Jun 2006 21:41:02 +0000
+  
 xen-tools (1.6-1) unstable; urgency=low
 
   * New upstream release (closes: #368983)
