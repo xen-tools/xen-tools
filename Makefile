@@ -5,7 +5,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.60 2006-06-18 17:44:07 steve Exp $
+# $Id: Makefile,v 1.61 2006-06-19 11:18:57 steve Exp $
 
 
 #
@@ -64,16 +64,33 @@ diff:
 	cvs diff --unified 2>/dev/null
 
 
-install: manpages
+#
+#  Install files to /etc/
+#
+install-etc:
+	-mkdir -p ${prefix}/etc/xen-tools
+	-if [ -d ${prefix}/etc/xen-tools/hook.d ]; then mv ${prefix}/etc/xen-tools/hook.d/  ${prefix}/etc/xen-tools/hook.d.obsolete ; fi
+	-if [ -d ${prefix}/etc/xen-tools/role.d ]; then mv ${prefix}/etc/xen-tools/role.d/  ${prefix}/etc/xen-tools/role.d.obsolete ; fi
+	-mkdir -p ${prefix}/etc/xen-tools/skel/
+	cp etc/xen-tools.conf ${prefix}/etc/xen-tools/
+	cp etc/xm.tmpl        ${prefix}/etc/xen-tools/
+	-mkdir -p             ${prefix}/etc/bash_completion.d
+	cp misc/xen-tools     ${prefix}/etc/bash_completion.d/
+	cp misc/xm            ${prefix}/etc/bash_completion.d/
+
+#
+#  Install binary files.
+#
+install-bin:
 	mkdir -p ${prefix}/usr/bin
-	cp bin/xen-create-image ${prefix}/usr/bin
-	cp bin/xt-customize-image ${prefix}/usr/bin
-	cp bin/xt-install-image ${prefix}/usr/bin
+	cp bin/xen-create-image     ${prefix}/usr/bin
+	cp bin/xt-customize-image   ${prefix}/usr/bin
+	cp bin/xt-install-image     ${prefix}/usr/bin
 	cp bin/xt-create-xen-config ${prefix}/usr/bin
-	cp bin/xen-delete-image ${prefix}/usr/bin
-	cp bin/xen-duplicate-image ${prefix}/usr/bin
-	cp bin/xen-list-images ${prefix}/usr/bin
-	cp bin/xen-update-image ${prefix}/usr/bin
+	cp bin/xen-delete-image     ${prefix}/usr/bin
+	cp bin/xen-duplicate-image  ${prefix}/usr/bin
+	cp bin/xen-list-images      ${prefix}/usr/bin
+	cp bin/xen-update-image     ${prefix}/usr/bin
 	chmod 755 ${prefix}/usr/bin/xen-create-image
 	chmod 755 ${prefix}/usr/bin/xt-customize-image
 	chmod 755 ${prefix}/usr/bin/xt-install-image
@@ -82,10 +99,12 @@ install: manpages
 	chmod 755 ${prefix}/usr/bin/xen-duplicate-image
 	chmod 755 ${prefix}/usr/bin/xen-list-images
 	chmod 755 ${prefix}/usr/bin/xen-update-image
-	-mkdir -p ${prefix}/etc/xen-tools
-	-if [ -d ${prefix}/etc/xen-tools/hook.d ]; then mv ${prefix}/etc/xen-tools/hook.d/  ${prefix}/etc/xen-tools/hook.d.obsolete ; fi
-	-if [ -d ${prefix}/etc/xen-tools/role.d ]; then mv ${prefix}/etc/xen-tools/role.d/  ${prefix}/etc/xen-tools/role.d.obsolete ; fi
-	-mkdir -p ${prefix}/etc/xen-tools/skel/
+
+
+#
+#  Install hooks
+#
+install-hooks:
 	mkdir -p ${prefix}/usr/lib/xen-tools
 	mkdir -p ${prefix}/usr/lib/xen-tools/debian.d/role.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d sarge.d
@@ -102,12 +121,20 @@ install: manpages
 	cp -R hooks/centos4/*-* ${prefix}/usr/lib/xen-tools/centos4.d
 	cp -R hooks/centos4/role.d/* ${prefix}/usr/lib/xen-tools/centos4.d/role.d
 	-rm -rf ${prefix}/usr/lib/xen-tools/centos4.d/role.d/CVS
+
+
+
+#
+#  Generate an install manpages.
+#
+install-manpages: manpages
 	-mkdir -p ${prefix}/usr/share/man/man8/
 	cp man/*.8.gz ${prefix}/usr/share/man/man8/
-	cp etc/xen-tools.conf ${prefix}/etc/xen-tools/
-	-mkdir -p ${prefix}/etc/bash_completion.d
-	cp misc/xen-tools ${prefix}/etc/bash_completion.d/
-	cp misc/xm ${prefix}/etc/bash_completion.d/
+
+
+
+
+install: install-bin install-etc install-hooks install-manpages
 
 
 manpages:
