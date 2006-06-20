@@ -7,7 +7,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.64 2006-06-19 22:45:56 steve Exp $
+# $Id: Makefile,v 1.65 2006-06-20 21:13:51 steve Exp $
 
 
 #
@@ -119,22 +119,22 @@ install-bin:
 #  Install hooks
 #
 install-hooks:
-	mkdir -p ${prefix}/usr/lib/xen-tools
+	mkdir -p ${prefix}/usr/lib/xen-tools/centos4.d/role.d
+	cp -R hooks/centos4/role.d/* ${prefix}/usr/lib/xen-tools/centos4.d/role.d
+	cp -R hooks/centos4/*-* ${prefix}/usr/lib/xen-tools/centos4.d
 	mkdir -p ${prefix}/usr/lib/xen-tools/debian.d/role.d
+	cp -R hooks/debian/role.d/* ${prefix}/usr/lib/xen-tools/debian.d/role.d/
+	cp -R hooks/debian/*-* ${prefix}/usr/lib/xen-tools/debian.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d sarge.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d etch.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d sid.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s ubuntu.d dapper.d
-	mkdir -p ${prefix}/usr/lib/xen-tools/centos4.d/role.d
+	mkdir -p ${prefix}/usr/lib/xen-tools/gentoo.d/role.d
+	cp -R hooks/gentoo/*-* ${prefix}/usr/lib/xen-tools/gentoo.d
 	mkdir -p ${prefix}/usr/lib/xen-tools/ubuntu.d/role.d
-	cp hooks/common.sh ${prefix}/usr/lib/xen-tools
-	cp -R hooks/debian/*-* ${prefix}/usr/lib/xen-tools/debian.d
 	cp -R hooks/ubuntu/*-* ${prefix}/usr/lib/xen-tools/ubuntu.d
-	cp -R hooks/debian/role.d/* ${prefix}/usr/lib/xen-tools/debian.d/role.d/
-	-rm -rf ${prefix}/usr/lib/xen-tools/debian.d/role.d/CVS
-	cp -R hooks/centos4/*-* ${prefix}/usr/lib/xen-tools/centos4.d
-	cp -R hooks/centos4/role.d/* ${prefix}/usr/lib/xen-tools/centos4.d/role.d
-	-rm -rf ${prefix}/usr/lib/xen-tools/centos4.d/role.d/CVS
+	cp hooks/common.sh ${prefix}/usr/lib/xen-tools
+	@find ${prefix}/usr/lib/xen-tools -name 'CVS' -exec rm \{\} \;
 
 
 #
