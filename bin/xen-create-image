@@ -174,63 +174,6 @@ Create a configuration file in /etc/xen so that xm can create the new image.
 =cut
 
 
-=head1 LOOPBACK EXAMPLES
-
-  The following will create a 2Gb disk image, along with a 128Mb
- swap file with Debian Sarge setup and running via DHCP.
-
-     xen-create-image --size=2Gb --swap=128Mb --dhcp \
-          --dir=/home/xen --hostname=vm01.my.flat
-
-  This next example sets up a host which has the name 'vm02.my.flat' and
- IP address 192.168.1.200, with the gateway address of 192.168.1.1
-
-     xen-create-image --size=2Gb --swap=128Mb \
-          --ip=192.168.1.200 --netmask=255.255.255.0
-          --gateway=192.168.1.1 \
-          --dir=/home/xen --hostname=vm02.my.flat
-
-  The directory specified for the output will be used to store the files
- which are produced.  To avoid clutter each host will have its images
- stored beneath the specified directory, named after the hostname.
-
-  For example the images created above will be stored as:
-
-   $dir/domains/vm01.my.flat/
-   $dir/domains/vm01.my.flat/disk.img
-   $dir/domains/vm01.my.flat/swap.img
-
-   $dir/domains/vm02.my.flat/
-   $dir/domains/vm02.my.flat/disk.img
-   $dir/domains/vm02.my.flat/swap.img
-
-  The '/domains/' subdirectory will be created if necessary.
-
-=cut
-
-
-=head1 LVM EXAMPLES
-
-  If you wish to use an LVM volume group instead of a pair of loopback
- images as shown above you can instead use the B<--lvm> argument to
- specify one.
-
-     xen-create-image --size=2Gb --swap=128Mb --dhcp \
-          --lvm=myvolumegroup --hostname=vm01.my.flat
-
-  The given volume group will have two new logical volumes created within it:
-
-   ${hostname}-swap
-   ${hostname}-disk
-
-  This images can be mounted, as you would expect, by a command like this:
-
-    mkdir /mnt/foo
-    mount /dev/myvolumegroup/vm01.my.flat-disk /mnt/foo
-
-=cut
-
-
 =head1 DESCRIPTION
 
   xen-create-image is a simple script which allows you to create new
@@ -249,11 +192,10 @@ Create a configuration file in /etc/xen so that xm can create the new image.
 
 =head1 CONFIGURATION
 
-  To reduce the length of the command line each of the options may
- be specified inside a configuration file.
+  To reduce the length of the command line each of the supported options
+ may be specified inside a configuration file.
 
-  The script will check a global configuration file for options, the
- file is:
+  The global configuration file read for options is:
 
      /etc/xen-tools/xen-tools.conf
 
@@ -317,11 +259,68 @@ Create a configuration file in /etc/xen so that xm can create the new image.
  for Xen will be saved in the directory B</etc/xen>.
 
   The configuration file is built up using the template file
- B</etc/xen-tools/xm.tmpl> - which is a file processed via the Text::Template
- perl module.
+ B</etc/xen-tools/xm.tmpl> - which is a file processed via
+ the Text::Template perl module.
 
   If you wish to modify the files which are generated please make your
  changes to that input file.
+
+=cut
+
+
+=head1 LOOPBACK EXAMPLES
+
+  The following will create a 2Gb disk image, along with a 128Mb
+ swap file with Debian Sarge setup and running via DHCP.
+
+     xen-create-image --size=2Gb --swap=128Mb --dhcp \
+          --dir=/home/xen --hostname=vm01.my.flat
+
+  This next example sets up a host which has the name 'vm02.my.flat' and
+ IP address 192.168.1.200, with the gateway address of 192.168.1.1
+
+     xen-create-image --size=2Gb --swap=128Mb \
+          --ip=192.168.1.200 --netmask=255.255.255.0
+          --gateway=192.168.1.1 \
+          --dir=/home/xen --hostname=vm02.my.flat
+
+  The directory specified for the output will be used to store the files
+ which are produced.  To avoid clutter each host will have its images
+ stored beneath the specified directory, named after the hostname.
+
+  For example the images created above will be stored as:
+
+   $dir/domains/vm01.my.flat/
+   $dir/domains/vm01.my.flat/disk.img
+   $dir/domains/vm01.my.flat/swap.img
+
+   $dir/domains/vm02.my.flat/
+   $dir/domains/vm02.my.flat/disk.img
+   $dir/domains/vm02.my.flat/swap.img
+
+  The '/domains/' subdirectory will be created if necessary.
+
+=cut
+
+
+=head1 LVM EXAMPLES
+
+  If you wish to use an LVM volume group instead of a pair of loopback
+ images as shown above you can instead use the B<--lvm> argument to
+ specify one.
+
+     xen-create-image --size=2Gb --swap=128Mb --dhcp \
+          --lvm=myvolumegroup --hostname=vm01.my.flat
+
+  The given volume group will have two new logical volumes created within it:
+
+   ${hostname}-swap
+   ${hostname}-disk
+
+  This images can be mounted, as you would expect, by a command like this:
+
+    mkdir /mnt/foo
+    mount /dev/myvolumegroup/vm01.my.flat-disk /mnt/foo
 
 =cut
 
@@ -433,7 +432,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.35 2006-06-20 22:44:12 steve Exp $
+ $Id: xen-create-image,v 1.36 2006-06-20 22:48:35 steve Exp $
 
 =cut
 
@@ -845,7 +844,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.35 $';
+       my $REVISION      = '$Revision: 1.36 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
