@@ -32,7 +32,7 @@ logMessage Script $0 starting
 #  We need to split up the hostname into name + domain
 # do this by looking for a dot.
 name=${hostname/.*/}
-domain=${HOSTNAME/${name}\./}
+domain=${hostname/${name}\./}
 
 
 #
