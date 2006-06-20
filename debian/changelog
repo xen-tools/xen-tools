@@ -1,4 +1,4 @@
-xen-tools (2.0-1) unreleased; urgency=low
+xen-tools (2.0-1) unstable; urgency=low
 
   * New upstream release
      + Moves the hook directories from /etc/xen-tools to /usr/lib/xen-tools
@@ -13,7 +13,7 @@ xen-tools (2.0-1) unreleased; urgency=low
   * Installation on LVM partitions now works without error.
     (Closes: #373800)
 
- -- Steve Kemp <skx@debian.org>  Mon, 19 Jun 2006 21:41:02 +0000
+ -- Steve Kemp <skx@debian.org>  Tue, 20 Jun 2006 09:57:45 +0000
   
 xen-tools (1.6-1) unstable; urgency=low
 
