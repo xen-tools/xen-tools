@@ -38,8 +38,8 @@ domain=${HOSTNAME/${name}\./}
 #
 #  Setup the hostname + domain names.
 #
-echo HOSTNAME=\"${name}" >> ${prefix}/etc/conf.d/hostname
-echo DNSDOMAIN=\"${domain}" >> ${prefix}/etc/conf.d/domainname
+echo HOSTNAME=\"${name}\" >> ${prefix}/etc/conf.d/hostname
+echo DNSDOMAIN=\"${domain}\" >> ${prefix}/etc/conf.d/domainname
 
 
 #
