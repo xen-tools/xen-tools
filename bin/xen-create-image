@@ -432,7 +432,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.36 2006-06-20 22:48:35 steve Exp $
+ $Id: xen-create-image,v 1.37 2006-06-20 23:06:05 steve Exp $
 
 =cut
 
@@ -844,7 +844,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.36 $';
+       my $REVISION      = '$Revision: 1.37 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -1172,16 +1172,52 @@ sub createLoopbackImages
 
 sub createLVMBits
 {
-    #
-    #  The two volumes we will need to use..
-    #
-    my $disk = $CONFIG{'hostname'} . "-disk" ;
-    my $swap = $CONFIG{'hostname'} . "-swap" ;
+     #  The two volumes we will need to use..
+     my $disk = $CONFIG{'hostname'} . "-disk" ;
+     my $swap = $CONFIG{'hostname'} . "-swap" ;
 
     #
-    #  TODO:  Check whether the volumes exist, and if so abort
-    #         unless '--force' is specified.
+    #  Check whether the disk volume exists already, and if so abort
+    #  unless '--force' is specified.
     #
+    my $lvm_disk = "/dev/$CONFIG{'lvm'}/$CONFIG{'hostname'}-disk";
+    if ( -e $lvm_disk )
+    {
+        # Delete if forcing
+        if ( $CONFIG{'force'} )
+        {
+            runCommand( "lvremove --force $lvm_disk" );
+        }
+        else
+        {
+            print "The LVM disk image already exists.  Aborting.\n";
+            print "Specify '--force' to delete and recreate\n";
+            exit;
+        }
+    }
+
+
+
+    #
+    #  Check whether the sawp volume exists already, and if so abort
+    #  unless '--force' is specified.
+    #
+    my $lvm_swap = "/dev/$CONFIG{'lvm'}/$CONFIG{'hostname'}-swap";
+    if ( -e $lvm_swap )
+    {
+        # Delete if forcing
+        if ( $CONFIG{'force'} )
+        {
+            runCommand( "lvremove --force $lvm_swap" );
+        }
+        else
+        {
+            print "The LVM sawp image already exists.  Aborting.\n";
+            print "Specify '--force' to delete and recreate\n";
+            exit;
+        }
+    }
+
 
     #
     #  Modify the sizes to something reasonable
