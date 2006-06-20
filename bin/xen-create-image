@@ -67,13 +67,13 @@ Cache the .deb files in /var/cache/apt/archives upon the host system when instal
 Install a new system by copying files recursively from the given directory.  This is significantly faster than using B<--rpmstrap> or B<--debootstrap>, but it does require that you have installed a distribution "slowly" at least once.
 
 =item B<--debug>
-Show the commands this script executes as an aid to debugging.
+Show the commands this script executes as an aid to debugging, along with their output once it has completed.
 
 =item B<--debootstrap>
-Use debootstrap to install the distribution B<--dist>.  When specifying B<--debootstrap> you should choose a local mirror with B<--mirror>
+Use the B<debootstrap> tool to install the distribution B<--dist>.  When specifying B<--debootstrap> you should choose a local mirror with B<--mirror>
 
 =item B<--dhcp>
-Specify that the virtual image should use DHCP to obtain its networking information.  Conflicts with B<--ip>.
+Specify that the virtual image should use DHCP to obtain its networking information.  This option conflicts with B<--ip>.
 
 =item B<--dir>
 Specify the root directory beneath which the image should be saved.  Subdirectories will be created for each virtual image.  If you do not wish to use loopback files instead specify an LVM volume group with B<--lvm>.
@@ -82,7 +82,7 @@ Specify the root directory beneath which the image should be saved.  Subdirector
 Specify the distribution to install, defaults to 'sarge'.
 
 =item B<--force>
-Force the script to overwrite any existing swap or disk images.  By default existing images will cause the script to abort.
+Force the script to overwrite any existing swap or disk images.  By default the present of an existing image for the same hostname will cause the script to abort.
 
 =item B<--fs>
 Specify the filesystem the image should be given.  Valid options are 'ext3',
@@ -95,13 +95,13 @@ Specify the gateway address for the virtual image, only useful if DHCP is not us
 Show the brief help information.
 
 =item B<--hostname>
-Set the hostname of the new instance.
+Set the hostname of the new instance.  B<Note> this should ideally be a fully qualified hostname, sine several of the supported distributions will expect a domain name to be present.
 
 =item B<--ide>
 Use IDE style device names for the virtual devices.
 
 =item B<--image>
-Specify whether to use B<sparse> or B<full> images for the disk and swap spaces.
+Specify whether to use B<sparse> or B<full> images for the disk and swap volumes.
 
 =item B<--initrd>
 Specify the initial ramdisk to be used by the booting Xen instance.
@@ -145,7 +145,7 @@ Install a new system by untarring the given file.  This is significantly faster 
 Show the version number and exit.
 
 =item B<--lvm>
-Specify the LVM volume group to store images within.  If you wish to use loopback files please specify an output directory with B<--dir>.
+Specify the LVM volume group to store images within.  If you wish to use loopback files instead please specify an output directory with B<--dir>.  LVM and loopback files conflict with each other; choose only one.
 
 =back
 
@@ -153,8 +153,26 @@ Specify the LVM volume group to store images within.  If you wish to use loopbac
 
 =head1 NOTES
 
+  This script is a simple wrapper around three external tools
+
+=over 8
+
+=item B<xt-install-image>
+Install a new distribution.
+
+=item B<xt-customize-image>
+Run a collection of hook scripts to customise the freshly installed system.
+
+=item B<xt-create-xen-config>
+Create a configuration file in /etc/xen so that xm can create the new image.
+
+=back
+
+  The result of invoking these three scripts, and some minor glue between
+ them is a simple means of creating new Xen guest domains.
 
 =cut
+
 
 =head1 LOOPBACK EXAMPLES
 
@@ -164,16 +182,13 @@ Specify the LVM volume group to store images within.  If you wish to use loopbac
      xen-create-image --size=2Gb --swap=128Mb --dhcp \
           --dir=/home/xen --hostname=vm01.my.flat
 
-  This next example sets up a host which has the name 'vm02' and
+  This next example sets up a host which has the name 'vm02.my.flat' and
  IP address 192.168.1.200, with the gateway address of 192.168.1.1
 
      xen-create-image --size=2Gb --swap=128Mb \
           --ip=192.168.1.200 --netmask=255.255.255.0
           --gateway=192.168.1.1 \
-          --dir=/home/xen --hostname=vm02
-
-  To save typing these command line options may be specified in the
- configuration file which is described in this manual.
+          --dir=/home/xen --hostname=vm02.my.flat
 
   The directory specified for the output will be used to store the files
  which are produced.  To avoid clutter each host will have its images
@@ -217,7 +232,6 @@ Specify the LVM volume group to store images within.  If you wish to use loopbac
 
 
 =head1 DESCRIPTION
-
 
   xen-create-image is a simple script which allows you to create new
  Xen instances easily.  The new image will be given two volumes.  These
@@ -287,20 +301,39 @@ Specify the LVM volume group to store images within.  If you wish to use loopbac
 =for example end
 
   Using this configuration file a new image may be created with the
- command:
+ following command:
 
       xen-create-image --hostname=vm03.my.flat --ip=192.168.1.201
 
+  This makes use of loopback images stored beneath B</home/xen> and
+ will be installed via the B<deboostrap> command.
+
 =cut
+
+
+=head1 XEN CONFIGURATION FILE
+
+  Once a new image has been created an appropriate configuration file
+ for Xen will be saved in the directory B</etc/xen>.
+
+  The configuration file is built up using the template file
+ B</etc/xen-tools/xm.tmpl> - which is a file processed via the Text::Template
+ perl module.
+
+  If you wish to modify the files which are generated please make your
+ changes to that input file.
+
+=cut
+
 
 =head1 INSTALLATION METHODS
 
   The new guest images may be installed in several different ways:
 
-  1.  By debootstrap
-  2.  By rpmstrap
-  3.  By copying an existing installation
-  4.  By untarring a file.
+  1.  With the B<debootstrap> command.
+  2.  With the B<rpmstrap> command.
+  3.  By copying an existing installation.
+  4.  By untarring a file containing a previous installation.
 
   These different methods can be selected by either the command line
  arguments, or settings in the configuration file.
@@ -344,7 +377,7 @@ Specify the LVM volume group to store images within.  If you wish to use loopbac
 
 =head1 ROLES
 
-  Each supported distribution has a hook directory which has been 
+  Each supported distribution has a hook directory which has been
  described already.  If that directory contains the subdirectory 'role.d'
  then roles support is available.
 
@@ -354,7 +387,7 @@ Specify the LVM volume group to store images within.  If you wish to use loopbac
 =over 8
 
 =item builder
-Setup the new virtual images with commonly used packages for rebuilding Debian packages from source.
+Setup the new virtual images with commonly used packages for rebuilding Debian packages from their source.
 
 =item gdm
 Install an X11 server, using VNC and GDM
@@ -365,12 +398,13 @@ Customise the generated images to remove some packages.
 =item xdm
 Install an X11 server, using VNC and XDM
 
+=back
 
   If you'd like to include your own role scripts you'll need to
  create $dist.d/role.d/foo - then specify "--role=foo" when you're
  creating your new instance.
 
-=back
+=cut
 
 
 
@@ -399,23 +433,9 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.34 2006-06-20 17:34:08 steve Exp $
+ $Id: xen-create-image,v 1.35 2006-06-20 22:44:12 steve Exp $
 
 =cut
-
-
-=head1 CONTRIBUTORS
-
-  Contributors to this code:
-
-=over 8
-
-=item  Radu Spineanu - many patches, and official Debian package maintainer.
-
-=item  Justin Azoff - contributed early support for LVM.
-
-=back
-
 
 =head1 LICENSE
 
@@ -825,7 +845,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.34 $';
+       my $REVISION      = '$Revision: 1.35 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
