@@ -1,0 +1,42 @@
+#!/bin/sh
+#
+#  This script allows all users to use 'su' to become root.
+#
+# Steve
+# --
+# http://www.steve.org.uk/
+
+
+prefix=$1
+
+#
+#  Source our common functions
+#
+if [ -e /usr/lib/xen-tools/common.sh ]; then
+    . /usr/lib/xen-tools/common.sh
+else
+    . ./hooks/common.sh
+fi
+
+
+#
+# Log our start
+#
+logMessage Script $0 starting
+
+#
+# Remove lines matching 'group' or 'wheel'.
+#
+grep -v wheel ${prefix}/etc/pam.d/su     > ${prefix}/etc/pam.d/su.tmp
+grep -v group ${prefix}/etc/pam.d/su.tmp > ${prefix}/etc/pam.d/su
+
+#
+# Make sure permissions are correct.
+#
+chown root:root ${prefix}/etc/pam.d/su
+chmod 600       ${prefix}/etc/pam.d/su
+
+#
+#  Log our finish
+#
+logMessage Script $0 finished
