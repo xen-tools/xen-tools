@@ -3,6 +3,7 @@ xen-tools (2.0-1) unreleased; urgency=low
   * New upstream release
      + Moves the hook directories from /etc/xen-tools to /usr/lib/xen-tools
      + Adds explicit support for Ubuntu Dapper.
+     + Changed homepage links.
   * Updated build-deps to include modules required for clean pass of test
     suite.
   * Added dependency for Text::Template, and removed obsolete Term::Size.

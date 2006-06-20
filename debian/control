@@ -11,7 +11,9 @@ Architecture: all
 Depends: debootstrap, perl-modules, libtext-template-perl
 Recommends: xen | xen-hypervisor-3.0, reiserfsprogs, xfsprogs, rpmstrap
 Description: Tools to manage debian XEN virtual servers
- This package contains tools to manage debian based XEN virtual servers.
- With them you can create, duplicate, update or delete virtual servers. 
+ This package contains tools to manage Debian based XEN virtual servers.
  .
- Homepage: http://www.steve.org.uk/Software/xen-tools
+ Using the scripts you can easily create fully configured Xen guest
+ domains (domU) which can be listed, updated, or copied easily.
+ .
+ Homepage: http://xen-tools.org/software/xen-tools
