@@ -79,7 +79,7 @@ Install the distribution specified by the B<--dist> argument using the debootstr
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.14 2006-06-13 13:21:22 steve Exp $
+ $Id: xt-install-image,v 1.15 2006-06-21 19:34:14 steve Exp $
 
 =cut
 
@@ -177,8 +177,7 @@ foreach my $file ( qw( /bin/ls /bin/cp ) )
     {
        print "The installation of the new system appears to have failed.\n";
        print "\n";
-       print "There is no '$file' installed in the new installation directory\n";
-       exit 1;
+       print "There is no '$file' installed in the new installation directory\n";      exit 1;
     }
 }
 
@@ -234,7 +233,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.14 $';
+       my $REVISION      = '$Revision: 1.15 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -390,12 +389,12 @@ sub installDebootstrapImage
     }
 
     #
-    #  Propogate the --verbose option if we've been given it.
+    #  Propogate --verbose appropriately.
     #
     my $VERBOSE = '';
     if ( $CONFIG{'verbose'} )
     {
-       $VERBOSE = "--verbose";
+        $VERBOSE = '--verbose';
     }
 
     #
@@ -403,9 +402,11 @@ sub installDebootstrapImage
     #
     my $command = "/usr/sbin/debootstrap $VERBOSE $CONFIG{'dist'} $CONFIG{'location'} $CONFIG{'mirror'}";
 
-
     #
     #  Run the command.
+    #
+    #  NOTE:  runCommand has special logic to display the debootstrap log
+    #        if the command files it will be displayed.
     #
     runCommand( $command );
 
@@ -505,6 +506,27 @@ sub runCommand
     {
        print "Running command '$cmd' failed.\n";
        print "Aborting\n";
+
+       #
+       #  Show output from debootstrap
+       #
+       #
+       #  If the user installed via debootstrap show the log.
+       #
+       if ( ( $CONFIG{'debootstrap'} ) &&
+            ( -e $CONFIG{'location'} . "/debootstrap/debootstrap.log" ) &&
+            ( $cmd =~ /debootstrap/ ) )
+       {
+           print "\nDebootstrap Output:\n";
+           open( LOG, "<", "$CONFIG{'location'}/debootstrap/debootstrap.log" );
+           while( <LOG> )
+           {
+               print;
+           }
+           close( LOG );
+           print "\n\n";
+       }
+
        exit;
     }
 
