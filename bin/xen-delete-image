@@ -99,7 +99,7 @@ Specify the LVM volume group where images were previously saved.
  --
  http://www.steve.org.uk/
 
- $Id: xen-delete-image,v 1.8 2006-06-13 16:57:34 steve Exp $
+ $Id: xen-delete-image,v 1.9 2006-06-21 16:59:34 steve Exp $
 
 =cut
 
@@ -284,7 +284,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.8 $';
+       my $REVISION      = '$Revision: 1.9 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -308,6 +308,14 @@ sub parseCommandLineArguments
 sub checkArguments
 {
     #
+    #  When testing we only care about loopback images, not disk images.
+    #
+    if ( $CONFIG{'test'} )
+    {
+        $CONFIG{'lvm'} = undef;
+    }
+
+    #
     #  Make sure we have either a volume, or a root.
     #
     if ( $CONFIG{'lvm'} && $CONFIG{'dir'} )
@@ -325,6 +333,7 @@ sub checkArguments
        print "Please specify either a directory root, or an LVM volume group\n";
        exit;
     }
+
 }
 
 
