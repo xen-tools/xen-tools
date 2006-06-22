@@ -7,7 +7,7 @@
 #
 # Steve
 # --
-# $Id: getopt.t,v 1.1 2006-06-22 14:52:58 steve Exp $
+# $Id: getopt.t,v 1.2 2006-06-22 15:01:53 steve Exp $
 
 
 use strict;
@@ -25,10 +25,9 @@ foreach my $file ( sort( glob "./bin/*-*" ) )
 
 
 #
-#  Check a file.
+#  Check that the given file implements all the option processing it
+# is supposed to.
 #
-#  If this is a perl file then call "perl -c $name", otherwise
-# return
 #
 sub testFile
 {
@@ -55,12 +54,15 @@ sub testFile
     }
 
     #
-    #  Test we got some options
+    #  Test we discovered some documented options.
     #
     ok( $#documented > 1, "We found some options documented." );
 
+
+
     #
-    #  Now read the input file.
+    #  Now read the input file so that we can see if these advertised
+    # options are actually used.
     #
     open( IN, "<", $file ) or die "Failed to open file for reading $file - $!";
     my @LINES = <IN>;
@@ -78,6 +80,10 @@ sub testFile
     my $complete = join( "\n", @LINES );
     if ( $complete =~ /GetOptions\(([^\)]+)\)/mi )
     {
+        #
+        #  Multi-line text which should have all the options we've
+        # invoked GetOptions with.
+        #
         my $opt = $1;
 
         #
@@ -118,12 +124,15 @@ sub testFile
             #
             #  Phew.  Now we're done.
             #
+            #  This option '$o' is something we call GetOptions with.
+            #
             $accepted{$o} = 1;
         }
     }
 
     #
-    #  Now we want to find an option that is not documented.
+    #  Now we want to make sure that each documented option is
+    # present in the list of options we pass to getopt.
     #
     foreach my $argument ( @documented )
     {
