@@ -432,7 +432,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.41 2006-06-22 15:17:21 steve Exp $
+ $Id: xen-create-image,v 1.42 2006-06-22 15:20:36 steve Exp $
 
 =cut
 
@@ -846,7 +846,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.41 $';
+       my $REVISION      = '$Revision: 1.42 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -998,7 +998,7 @@ sub checkFilesPresent
     #
     #  Files we demand are present in all cases.
     #
-    my @required = qw ( /usr/sbin/debootstrap /bin/dd /bin/mount);
+    my @required = qw ( /usr/sbin/debootstrap /bin/dd /bin/mount /sbin/mkswap );
 
     foreach my $file ( @required )
     {
@@ -1193,9 +1193,10 @@ sub createLoopbackImages
 
 
     #
-    #  Finally create the filesystem
+    #  Finally create the filesystem + swap
     #
     createFilesystem( $disk );
+    createSwap( $swap );
 }
 
 
@@ -1295,10 +1296,11 @@ sub createLVMBits
     runCommand( $disk_cmd );
     runCommand( $swap_cmd );
 
-    #
-    #  Initialise the partition with the relevent filesystem.
-    #
-    createFilesystem( "/dev/$CONFIG{'lvm'}/$CONFIG{'hostname'}-disk" );
+     #
+     #  Initialise the partitions with the relevent filesystem.
+     #
+     createFilesystem( "/dev/$CONFIG{'lvm'}/$CONFIG{'hostname'}-disk" );
+     createSwap( "/dev/$CONFIG{'lvm'}/$CONFIG{'hostname'}-swap" );
 }
 
 
@@ -1363,6 +1365,20 @@ sub createFilesystem
     print "Done\n";
 }
 
+
+
+=head2 createSwap
+
+  Create the swap filesystem on the given device.
+
+=cut
+
+sub createSwap
+{
+    my ( $path ) = ( @_ );
+
+    runCommand( "/sbin/mkswap $path" );
+}
 
 
 =head2 mountImage
