@@ -432,7 +432,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.38 2006-06-21 08:31:00 steve Exp $
+ $Id: xen-create-image,v 1.39 2006-06-22 14:21:38 steve Exp $
 
 =cut
 
@@ -823,6 +823,7 @@ sub parseCommandLineArguments
               "tar=s",        \$CONFIG{'tar'},
 
               # Misc. options
+              "fs",           \$CONFIG{'fs'},
               "boot",         \$CONFIG{'boot'},
               "cache=s",      \$CONFIG{'cache'},
               "ide",          \$CONFIG{'ide'},
@@ -844,7 +845,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.38 $';
+       my $REVISION      = '$Revision: 1.39 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
