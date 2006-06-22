@@ -7,7 +7,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.65 2006-06-20 21:13:51 steve Exp $
+# $Id: Makefile,v 1.66 2006-06-22 08:05:08 steve Exp $
 
 
 #
@@ -130,8 +130,10 @@ install-hooks:
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d sid.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s ubuntu.d dapper.d
 	mkdir -p ${prefix}/usr/lib/xen-tools/gentoo.d/role.d
+	cp -R hooks/gentoo/role.d/* ${prefix}/usr/lib/xen-tools/gentoo.d/role.d
 	cp -R hooks/gentoo/*-* ${prefix}/usr/lib/xen-tools/gentoo.d
 	mkdir -p ${prefix}/usr/lib/xen-tools/ubuntu.d/role.d
+	cp -R hooks/ubuntu/role.d/* ${prefix}/usr/lib/xen-tools/ubuntu.d/role.d
 	cp -R hooks/ubuntu/*-* ${prefix}/usr/lib/xen-tools/ubuntu.d
 	cp hooks/common.sh ${prefix}/usr/lib/xen-tools
 	@find ${prefix}/usr/lib/xen-tools -name 'CVS' -exec rm \{\} \;
