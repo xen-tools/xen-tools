@@ -1,3 +1,14 @@
+xen-tools (xxx) *unreleased*; urgency=high
+
+  * New upstream release
+    - The --boot option works again.
+    - Accept the --mirror command line option.
+    - Accept the --fs command line option (Closes: #374987)
+    - Create swap for new images (Closes: #374989)
+    - Always create non-sparse images on LVM systems (Closes: #374988)
+
+ -- Steve Kemp <skx@debian.org>  
+  
 xen-tools (2.0-1) unstable; urgency=low
 
   * New upstream release
