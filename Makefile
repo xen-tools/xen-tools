@@ -7,7 +7,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.67 2006-06-23 08:56:32 steve Exp $
+# $Id: Makefile,v 1.68 2006-06-23 18:32:26 steve Exp $
 
 
 #
@@ -136,7 +136,7 @@ install-hooks:
 	cp -R hooks/ubuntu/role.d/* ${prefix}/usr/lib/xen-tools/ubuntu.d/role.d
 	cp -R hooks/ubuntu/*-* ${prefix}/usr/lib/xen-tools/ubuntu.d
 	cp hooks/common.sh ${prefix}/usr/lib/xen-tools
-	@find ${prefix}/usr/lib/xen-tools -name 'CVS' -exec rm \{\} \;
+	@-find ${prefix}/usr/lib/xen-tools -name 'CVS' -exec rm -rf \{\} \;
 
 
 #

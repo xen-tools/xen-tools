@@ -16,6 +16,7 @@ xen-create-image - Create a new Xen instance
    --version  Show the version number and exit.
 
   Size / General options:
+   --accounts    Copy all non-system accounts to the guest image
    --boot        Boot the new instance after creating it.
    --cache       Cache .deb files on the host when using B<--debootstrap>
    --force       Force overwriting existing images.
@@ -432,7 +433,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.43 2006-06-23 08:56:32 steve Exp $
+ $Id: xen-create-image,v 1.44 2006-06-23 18:32:26 steve Exp $
 
 =cut
 
@@ -581,9 +582,9 @@ runRoleScript();
 runXenConfigCreation();
 
 #
-#  Unmount the disk image, and remove the temporary directory.
+#  Setup the password if the user wanted that.
 #
-# skipped: this is handled in END
+setupRootPassword() if ( $CONFIG{'passwd'} );
 
 
 #
@@ -824,6 +825,7 @@ sub parseCommandLineArguments
               "tar=s",        \$CONFIG{'tar'},
 
               # Misc. options
+              "accounts",     \$CONFIG{'accounts'},
               "fs",           \$CONFIG{'fs'},
               "boot",         \$CONFIG{'boot'},
               "cache=s",      \$CONFIG{'cache'},
@@ -846,7 +848,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.43 $';
+       my $REVISION      = '$Revision: 1.44 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -1638,6 +1640,28 @@ sub runXenConfigCreation
     print "\nCreating Xen configuration file\n";
     runCommand( $command );
     print "Done\n";
+}
+
+
+
+=head2 setupRootPassword
+
+  chroot() into the new system and setup the password.
+
+=cut
+
+sub setupRootPassword
+{
+    print "Setting up root password\n";
+
+    if ( -x $MOUNT_POINT . "/usr/bin/passwd" )
+    {
+        system( "chroot $MOUNT_POINT /usr/bin/passwd" );
+    }
+    else
+    {
+        print "/usr/bin/passwd on the new system doesn't exist...\n";
+    }
 }
 
 
