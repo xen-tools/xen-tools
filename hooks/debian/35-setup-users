@@ -27,7 +27,6 @@ die "Prefix must be a directory" unless ( -d $prefix );
 #
 exit unless ( $ENV{'accounts'} );
 
-
 #
 #  Make sure we have $prefix/etc
 #
@@ -119,8 +118,6 @@ sub addAccount
             open( OUTY, ">>", $prefix . "/etc/passwd" );
             print OUTY $line . "\n";
             close( OUTY );
-
-            print "addexd\n";
         }
     }
     close( PASSWD );
@@ -129,11 +126,11 @@ sub addAccount
     #
     #  shadow file.
     #
-    open( SHADOW, "<", "/etc/shadow" ) or return;
+    open( SHADOW, "<", "/etc/shadow" ) or die "Failed to open : $!";
     foreach my $line ( <SHADOW> )
     {
         chomp( $line );
-        if ( $line =~ /\Q^$user:^E/ )
+        if ( $line =~ /^\Q$user\E:/ )
         {
             #
             #  Add the line
