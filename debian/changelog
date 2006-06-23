@@ -1,14 +1,17 @@
-xen-tools (xxx) *unreleased*; urgency=high
+xen-tools (2.1-1) unstable; urgency=high
 
-  * New upstream release
+  * New upstream release:
     - The --boot option works again.
     - Accept the --mirror command line option.
     - Accept the --fs command line option (Closes: #374987)
     - Create swap for new images (Closes: #374989)
     - Always create non-sparse images on LVM systems (Closes: #374988)
+    - Gentoo image customisation supported.
+  * Urgency set to high primarily because of the failure to create
+    swap devices.
 
- -- Steve Kemp <skx@debian.org>  
-  
+ -- Steve Kemp <skx@debian.org>  Thur, 23 Jun 2006 10:08:32 +0000
+
 xen-tools (2.0-1) unstable; urgency=low
 
   * New upstream release
