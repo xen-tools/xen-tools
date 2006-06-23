@@ -138,7 +138,7 @@ sub addAccount
             #
             #  Add the line
             #
-            open( OUTY, ">", $prefix . "/etc/shadow" );
+            open( OUTY, ">>", $prefix . "/etc/shadow" );
             print OUTY $line . "\n";
             close( OUTY );
         }
