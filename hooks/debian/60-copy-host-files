@@ -1,153 +1,59 @@
-#!/usr/bin/perl -w
+#!/bin/sh
 #
-#  This script copies "essential" files from the host to the new
-# system.
+#  Copy files from a 'skel' directory, if present, into the
+# new images
 #
-#  At the same time it tries to copy all non-system accounts from
-# the host system into the new guest unless the root password is
-# being setup with --passwd.
-#
-# Steve
-# --
-# http://www.steve.org.uk/
 
 
-use strict;
-use Env;
-use File::Copy;
-
-
-my $prefix = shift;
-
-die "Prefix must be given"  unless defined( $prefix );
-die "Prefix must be a directory" unless ( -d $prefix );
+prefix=$1
 
 
 #
-#  Make sure we have $prefix/etc
+#  Source our common functions
 #
-die "Prefix is missing /etc : $prefix" unless ( -d $prefix . "/etc" );
-
-
-#
-#  Copy some files literally.
-#
-my @files = (
-              "/etc/resolv.conf",
-            );
-
-foreach my $file ( @files )
-{
-    $ENV{'verbose'} && print "Copying from host -> guest: $file\n";
-    File::Copy::copy( $file, $prefix . "/etc/" );
-}
+if [ -e /usr/lib/xen-tools/common.sh ]; then
+    . /usr/lib/xen-tools/common.sh
+else
+    . ./hooks/common.sh
+fi
 
 
 #
-# If sudo is installed upon the host then install it upon the guest,
-# with the same setup.
+# Log our start
 #
-if ( ( -e "/etc/sudoers" ) && ( -x $prefix . "/usr/bin/apt-get" ) )
-{
-    $ENV{'verbose'} && print "Copying from host -> guest: /etc/sudoers\n";
-    File::Copy::copy( "/etc/sudoers", $prefix . "/etc" );
-    chmod( 0440, $prefix. "/etc/sudoers" );
-
-    $ENV{'verbose'} && print "Installing sudo, since it is on the host.\n";
-    `DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes --force-yes install sudo`;
-}
+logMessage Script $0 starting
 
 
 #
-#  If the user is specifying the --passwd flag then don't do anything else.
+# Copy "required" files from our host.
 #
-if ( $ENV{'passwd'} )
-{
-    exit 0;
-}
+cp /etc/resolv.conf ${prefix}/etc
 
 
 #
-#  Otherwise we want to copy all non-system accounts from the files:
+# If the host has sudo then copy the configuration file, and install
+# the package
 #
-#     /etc/passwd + /etc/shadow
-#
-open( ORIG, "<", "/etc/passwd" )
-  or die "Failed to open /etc/passwd - $!";
-open( NEW,  ">>", $prefix . "/etc/passwd" )
-  or die "Failed to open $prefix/etc/passwd - $!";
+if [ -e /etc/sudoers ]; then
 
-#
-#  Here we store the user accounts we've copied over so that we
-# can copy the shadow lines too.
-#
-my %copied;
+  logMessage Installing SUDO too.
 
-#
-#  Read the lines from the /etc/passwd on the host.
-#
-foreach my $line ( <ORIG> )
-{
-    chomp( $line );
+  #
+  #  Copy file and fixup permissions.
+  #
+  cp /etc/resolv.conf ${prefix}/etc
+  chown root:root ${prefix}/etc/sudoers
+  chmod 440       ${prefix}/etc/sudoers
 
-    #
-    #  Split up line.
-    #
-    if ( $line =~ /^([^:]+):([^:]+):([^:]+)/ )
-    {
-        my $user = $1;
-        my $pass = $2;
-        my $uid  = $3;
+  #
+  #  Install sudo
+  #
+  installDebianPackage ${prefix} sudo
 
-        #
-        #  A non-system account.
-        #
-        if ( ( $uid >= 1000 ) &&
-             ( $user ne "nobody" ) )
-        {
-            $ENV{'verbose'} && print "Adding '$user' to /etc/passwd on guest\n";
-            print NEW $line . "\n";
-
-            #
-            # Save the username we copied, so we can append the /etc/shadow
-            # lines too.
-            #
-            $copied{ $user } = 1;
-        }
-    }
-}
-close( NEW );
-close( ORIG );
+fi
 
 
 #
-#  Patchup /etc/shadow on the new image, to ensure that it has the
-# lines for each user we copied.
+#  Log our finish
 #
-foreach my $username ( keys %copied )
-{
-    #
-    #  Open the shadow files.
-    #
-    open( ORIG, "<", "/etc/shadow" )
-      or die "Failed to open /etc/shadow - $!";
-    open( NEW,  ">>", $prefix . "/etc/shadow" )
-      or die "Failed to open $prefix/etc/shadow - $!";
-
-    #
-    #  Now look for a line matching the user in the host file.
-    #
-    foreach my $line ( <ORIG> )
-    {
-        chomp( $line );
-        if ( $line =~ /^$username:/ )
-        {
-            $ENV{'verbose'} && print "Added line to /etc/shadow for user '$username'\n";
-            print NEW $line . "\n";
-        }
-    }
-
-    close( ORIG );
-    close( NEW );
-}
-
+logMessage Script $0 finished
