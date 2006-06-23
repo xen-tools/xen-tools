@@ -108,3 +108,22 @@ function installCentOS4Package
     chroot ${prefix} /usr/bin/yum -y install ${package}
 }
 
+
+#
+#  Install a package upon a gentoo system via emerge.
+#
+# TODO: STUB
+#
+function installDebianPackage
+{
+    prefix=$1
+    package=$2
+
+    #
+    # Log our options
+    #
+    logMessage "Installing Gentoo package ${package} to prefix ${prefix}"
+    
+    logMessage "NOTE: Not doing anything - this is a stub - FIXME"
+
+}
