@@ -82,7 +82,7 @@ Specify the LVM volume group which contains the image(s).
  --
  http://www.steve.org.uk/
 
- $Id: xen-update-image,v 1.4 2006-06-18 18:10:03 steve Exp $
+ $Id: xen-update-image,v 1.5 2006-06-23 08:56:32 steve Exp $
 
 =cut
 
@@ -117,7 +117,7 @@ my %CONFIG;
 #
 # Release number.
 #
-my $RELEASE = '2.0';
+my $RELEASE = '2.1';
 
 
 #
@@ -348,7 +348,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.4 $';
+       my $REVISION      = '$Revision: 1.5 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
