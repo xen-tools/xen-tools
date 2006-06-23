@@ -16,6 +16,19 @@ Mailing List
  contains some notes on reporting bugs.
 
 
+Xen Queries
+-----------
+
+  If your query is mostly related to Xen, rather than these tools,
+ then please consider joining the xen-users mailing list:
+
+        http://lists.xensource.com/cgi-bin/mailman/listinfo/xen-users
+
+  The members of that list are very good at diagnosing issues with
+ networking, block devices, and other Xen oddities.
+
+
+
 Contact The Author
 ------------------
 
