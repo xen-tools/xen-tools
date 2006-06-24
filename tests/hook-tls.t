@@ -4,7 +4,7 @@
 #
 # Steve
 # --
-# $Id: hook-tls.t,v 1.2 2006-06-09 15:12:33 steve Exp $
+# $Id: hook-tls.t,v 1.3 2006-06-24 20:18:27 steve Exp $
 #
 
 use strict;
@@ -12,8 +12,10 @@ use Test::More qw( no_plan );
 use File::Temp;
 
 
-testTLSDisabling( "debian" );
 testTLSDisabling( "centos4" );
+testTLSDisabling( "debian" );
+testTLSDisabling( "gentoo" );
+testTLSDisabling( "ubuntu" );
 
 
 #

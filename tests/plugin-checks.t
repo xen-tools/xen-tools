@@ -5,7 +5,7 @@
 #
 # Steve
 # --
-# $Id: plugin-checks.t,v 1.4 2006-06-13 13:26:00 steve Exp $
+# $Id: plugin-checks.t,v 1.5 2006-06-24 20:18:27 steve Exp $
 #
 
 
@@ -13,8 +13,10 @@ use strict;
 use Test::More qw( no_plan );
 
 
-testPlugins( "debian" );
 testPlugins( "centos4" );
+testPlugins( "debian" );
+testPlugins( "gentoo" );
+testPlugins( "ubuntu" );
 
 
 sub testPlugins

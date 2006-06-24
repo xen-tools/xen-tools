@@ -4,15 +4,17 @@
 #
 # Steve
 # --
-# $Id: hooks.t,v 1.5 2006-06-13 13:26:00 steve Exp $
+# $Id: hooks.t,v 1.6 2006-06-24 20:18:27 steve Exp $
 #
 
 use strict;
 use Test::More qw( no_plan );
 
 
-testDistroHooks( "debian" );
 testDistroHooks( "centos4" );
+testDistroHooks( "debian" );
+testDistroHooks( "gentoo" );
+testDistroHooks( "ubuntu" );
 
 
 sub testDistroHooks
