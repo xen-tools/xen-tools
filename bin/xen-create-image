@@ -433,7 +433,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.44 2006-06-23 18:32:26 steve Exp $
+ $Id: xen-create-image,v 1.45 2006-06-24 14:23:33 steve Exp $
 
 =cut
 
@@ -848,7 +848,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.44 $';
+       my $REVISION      = '$Revision: 1.45 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -1594,7 +1594,7 @@ sub runRoleScript
 
     if ( !defined( $role ) )
     {
-       print "No role script specified\n";
+       print "\nNo role script specified.  Skipping\n";
        return;
     }
 
@@ -1602,11 +1602,12 @@ sub runRoleScript
 
     if ( -x $file )
     {
-       print "Running role script $file for role '$role'\n";
+       print "\nRunning role script $file for role '$role'\n";
     }
     else
     {
-       print "Role script not executable : $file for role '$role'\n";
+       print "\nRole script not executable : $file for role '$role'\n";
+       print "Ignoring\n";
        return;
     }
 
