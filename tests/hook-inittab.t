@@ -4,7 +4,7 @@
 #
 # Steve
 # --
-# $Id: hook-inittab.t,v 1.3 2006-06-13 13:26:00 steve Exp $
+# $Id: hook-inittab.t,v 1.4 2006-06-24 20:17:09 steve Exp $
 #
 
 use strict;
@@ -24,8 +24,10 @@ ok( -e "/etc/inittab", "/etc/inittab exists." );
 #
 #  Test the inittab hooks
 #
-testHook( "debian" );
 testHook( "centos4" );
+testHook( "debian" );
+testHook( "gentoo" );
+testHook( "ubuntu" );
 
 
 sub testHook
