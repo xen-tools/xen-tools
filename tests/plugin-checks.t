@@ -5,7 +5,7 @@
 #
 # Steve
 # --
-# $Id: plugin-checks.t,v 1.5 2006-06-24 20:18:27 steve Exp $
+# $Id: plugin-checks.t,v 1.6 2006-06-24 20:19:17 steve Exp $
 #
 
 
@@ -37,11 +37,14 @@ sub testPlugins
 
         if ( -f $file )
         {
+            ok( -x $file, "File is executable" );
+
             #
             #  Make sure the file is OK
             #
             my $result = testFile( $file );
             is( $result, 0, " File contains no mention of the config hash" );
+
         }
     }
 
