@@ -1,9 +1,9 @@
 
 all:
-	@cd ..; perl -MTest::Harness -e '$$Test::Harness::verbose=0; runtests @ARGV;' tests/*.t
+	@cd ..; prove --shuffle tests/
 
 verbose:
-	@cd ..; perl -MTest::Harness -e '$$Test::Harness::verbose=1; runtests @ARGV;' tests/*.t
+	@cd ..; prove --shuffle --verbose tests/
 
 
 modules: .PHONY

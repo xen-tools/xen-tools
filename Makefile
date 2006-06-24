@@ -7,7 +7,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.68 2006-06-23 18:32:26 steve Exp $
+# $Id: Makefile,v 1.69 2006-06-24 20:22:40 steve Exp $
 
 
 #
@@ -188,14 +188,15 @@ release: test update-version update-modules clean changelog
 #  Run the test suite.
 #
 test:
-	@perl -MTest::Harness -e '$$Test::Harness::verbose=0; runtests @ARGV;' tests/*.t
+	prove --shuffle tests/
 
 
 #
 #  Run the test suite verbosely.
 #
 test-verbose:
-	@perl -MTest::Harness -e '$$Test::Harness::verbose=1; runtests @ARGV;' tests/*.t
+	prove --shuffle --verbose tests/
+
 
 
 #
