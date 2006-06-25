@@ -7,7 +7,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.70 2006-06-25 08:57:02 steve Exp $
+# $Id: Makefile,v 1.71 2006-06-25 19:55:16 steve Exp $
 
 
 #
@@ -128,6 +128,10 @@ install-hooks:
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d sarge.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d etch.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d sid.d
+	mkdir -p ${prefix}/usr/lib/xen-tools/fedora.d/role.d
+	cp -R hooks/fedora/role.d/* ${prefix}/usr/lib/xen-tools/fedora.d/role.d
+	cp -R hooks/fedora/*-* ${prefix}/usr/lib/xen-tools/fedora.d
+	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora.d fedora-core4.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s ubuntu.d dapper.d
 	mkdir -p ${prefix}/usr/lib/xen-tools/gentoo.d/role.d
 	cp -R hooks/gentoo/role.d/* ${prefix}/usr/lib/xen-tools/gentoo.d/role.d
