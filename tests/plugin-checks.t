@@ -5,7 +5,7 @@
 #
 # Steve
 # --
-# $Id: plugin-checks.t,v 1.6 2006-06-24 20:19:17 steve Exp $
+# $Id: plugin-checks.t,v 1.7 2006-06-25 20:02:33 steve Exp $
 #
 
 
@@ -13,11 +13,30 @@ use strict;
 use Test::More qw( no_plan );
 
 
-testPlugins( "centos4" );
-testPlugins( "debian" );
-testPlugins( "gentoo" );
-testPlugins( "ubuntu" );
+#
+#  Rather than having a hardwired list of distributions to test
+# against we look for subdirectories beneath hooks/ and test each
+# one.
+#
+foreach my $dir ( glob( "hooks/*" ) )
+{
+    next if ( $dir =~ /CVS/i );
+    next if ( ! -d $dir );
 
+    if ( $dir =~ /hooks\/(.*)/ )
+    {
+        my $dist = $1;
+        testPlugins( $dist );
+    }
+}
+
+
+
+=head2 testPlugins
+
+  Test each plugin associated with the given directory.
+
+=cut
 
 sub testPlugins
 {

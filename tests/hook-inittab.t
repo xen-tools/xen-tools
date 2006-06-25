@@ -4,7 +4,7 @@
 #
 # Steve
 # --
-# $Id: hook-inittab.t,v 1.4 2006-06-24 20:17:09 steve Exp $
+# $Id: hook-inittab.t,v 1.5 2006-06-25 20:02:33 steve Exp $
 #
 
 use strict;
@@ -20,14 +20,24 @@ ok( -e "/etc/inittab", "/etc/inittab exists." );
 
 
 
+#
+#  Rather than having a hardwired list of distributions to test
+# against we look for subdirectories beneath hooks/ and test each
+# one.
+#
+foreach my $dir ( glob( "hooks/*" ) )
+{
+    next if ( $dir =~ /CVS/i );
+    next if ( ! -d $dir );
 
-#
-#  Test the inittab hooks
-#
-testHook( "centos4" );
-testHook( "debian" );
-testHook( "gentoo" );
-testHook( "ubuntu" );
+    if ( $dir =~ /hooks\/(.*)/ )
+    {
+        my $dist = $1;
+        testHook( $dist );
+    }
+}
+
+
 
 
 sub testHook

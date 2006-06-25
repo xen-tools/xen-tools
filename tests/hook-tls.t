@@ -4,7 +4,7 @@
 #
 # Steve
 # --
-# $Id: hook-tls.t,v 1.3 2006-06-24 20:18:27 steve Exp $
+# $Id: hook-tls.t,v 1.4 2006-06-25 20:02:33 steve Exp $
 #
 
 use strict;
@@ -12,10 +12,26 @@ use Test::More qw( no_plan );
 use File::Temp;
 
 
-testTLSDisabling( "centos4" );
-testTLSDisabling( "debian" );
-testTLSDisabling( "gentoo" );
-testTLSDisabling( "ubuntu" );
+
+
+#
+#  Rather than having a hardwired list of distributions to test
+# against we look for subdirectories beneath hooks/ and test each
+# one.
+#
+foreach my $dir ( glob( "hooks/*" ) )
+{
+    next if ( $dir =~ /CVS/i );
+    next if ( ! -d $dir );
+
+    if ( $dir =~ /hooks\/(.*)/ )
+    {
+        my $dist = $1;
+        testTLSDisabling( $dist );
+    }
+}
+
+
 
 
 #
