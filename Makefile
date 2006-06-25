@@ -7,7 +7,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.71 2006-06-25 19:55:16 steve Exp $
+# $Id: Makefile,v 1.72 2006-06-25 20:17:39 steve Exp $
 
 
 #
@@ -131,7 +131,7 @@ install-hooks:
 	mkdir -p ${prefix}/usr/lib/xen-tools/fedora.d/role.d
 	cp -R hooks/fedora/role.d/* ${prefix}/usr/lib/xen-tools/fedora.d/role.d
 	cp -R hooks/fedora/*-* ${prefix}/usr/lib/xen-tools/fedora.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora.d fedora-core4.d
+	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora.d stentz.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s ubuntu.d dapper.d
 	mkdir -p ${prefix}/usr/lib/xen-tools/gentoo.d/role.d
 	cp -R hooks/gentoo/role.d/* ${prefix}/usr/lib/xen-tools/gentoo.d/role.d
