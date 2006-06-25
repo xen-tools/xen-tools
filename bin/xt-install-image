@@ -79,7 +79,7 @@ Install the distribution specified by the B<--dist> argument using the debootstr
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.16 2006-06-23 08:56:32 steve Exp $
+ $Id: xt-install-image,v 1.17 2006-06-25 20:20:40 steve Exp $
 
 =cut
 
@@ -233,7 +233,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.16 $';
+       my $REVISION      = '$Revision: 1.17 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -458,7 +458,7 @@ sub installRPMStrapImage
     #  The command we're going to run.
     #
     my $command = "rpmstrap $VERBOSE $CONFIG{'dist'} $CONFIG{'location'}";
-
+    runCommand( $command );
 }
 
 
