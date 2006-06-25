@@ -46,7 +46,7 @@ Show the version number and exit.
 
   For each instance which has been created we'll display the name,
  and then either the IP address configured, or "DHCP" to denote
- a dynamice host.
+ a dynamic host.
 
 =cut
 
@@ -67,7 +67,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-list-images,v 1.7 2006-06-23 08:56:32 steve Exp $
+ $Id: xen-list-images,v 1.8 2006-06-25 17:39:54 steve Exp $
 
 =cut
 
@@ -237,7 +237,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.7 $';
+       my $REVISION      = '$Revision: 1.8 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {

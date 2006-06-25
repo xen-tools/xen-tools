@@ -71,7 +71,7 @@ Install a new system by copying files recursively from the given directory.  Thi
 Show the commands this script executes as an aid to debugging, along with their output once it has completed.
 
 =item B<--debootstrap>
-Use the B<debootstrap> tool to install the distribution B<--dist>.  When specifying B<--debootstrap> you should choose a local mirror with B<--mirror>
+Use the B<--debootstrap> tool to install the distribution B<--dist>.  When specifying B<--debootstrap> you should choose a local mirror with B<--mirror>
 
 =item B<--dhcp>
 Specify that the virtual image should use DHCP to obtain its networking information.  This option conflicts with B<--ip>.
@@ -249,7 +249,7 @@ Create a configuration file in /etc/xen so that xm can create the new image.
       xen-create-image --hostname=vm03.my.flat --ip=192.168.1.201
 
   This makes use of loopback images stored beneath B</home/xen> and
- will be installed via the B<deboostrap> command.
+ will be installed via the B<--debootstrap> command.
 
 =cut
 
@@ -433,7 +433,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.47 2006-06-25 17:29:52 steve Exp $
+ $Id: xen-create-image,v 1.48 2006-06-25 17:39:54 steve Exp $
 
 =cut
 
@@ -851,7 +851,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.47 $';
+       my $REVISION      = '$Revision: 1.48 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -1207,7 +1207,7 @@ sub createLoopbackImages
 
 =head2 createLVMBits
 
-  This fucntion is responsible for creating two new logical volumes within
+  This function is responsible for creating two new logical volumes within
  a given LVM volume group.
 
 =cut
@@ -1302,7 +1302,7 @@ sub createLVMBits
     runCommand( $swap_cmd );
 
      #
-     #  Initialise the partitions with the relevent filesystem.
+     #  Initialise the partitions with the relevant filesystem.
      #
      createFilesystem( "/dev/$CONFIG{'lvm'}/$CONFIG{'hostname'}-disk" );
      createSwap( "/dev/$CONFIG{'lvm'}/$CONFIG{'hostname'}-swap" );
