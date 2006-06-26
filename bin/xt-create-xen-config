@@ -19,7 +19,7 @@ xt-create-config - Create a Xen configuration file for a new domain.
    --verbose  Be verbose in our execution.
 
   Mandatory Options:
-   --output   The output file to use
+   --output   The directory to save our configuration file to.
 
   All other options from xen-create-image, such as the new IP address(es)
  to give to the new instance, will be passed as environmental variables.
@@ -57,7 +57,7 @@ xt-create-config - Create a Xen configuration file for a new domain.
  --
  http://www.steve.org.uk/
 
- $Id: xt-create-xen-config,v 1.10 2006-06-23 08:56:32 steve Exp $
+ $Id: xt-create-xen-config,v 1.11 2006-06-26 10:06:52 steve Exp $
 
 =cut
 
@@ -116,7 +116,7 @@ checkArguments();
 
 
 #
-#  Run each relevent hook scripts.
+#  Create the Xen configuration file.
 #
 createXenConfig();
 
@@ -162,7 +162,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.10 $';
+       my $REVISION      = '$Revision: 1.11 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -186,7 +186,7 @@ sub parseCommandLineArguments
 sub checkArguments
 {
     #
-    #  We require a location.
+    #  We require an output location.
     #
     if ( ! defined( $CONFIG{'output'} ) )
     {
@@ -195,7 +195,18 @@ sub checkArguments
     }
 
     #
-    #  Make sure that any specified tempalte file exists.
+    #  The output location should be a directory which exists.
+    #
+    if ( ! -d $CONFIG{'output'} )
+    {
+        print "The output directory we've been given, $CONFIG{'output'}, doesnt exist\n";
+        print "Aborting\n";
+        exit 1;
+    }
+
+
+    #
+    #  Make sure that any specified template file exists.
     #
     if ( defined( $CONFIG{'template'} ) )
     {
@@ -217,7 +228,8 @@ sub checkArguments
 =head2 createXenConfig
 
   This function does the real work of creating the Xen configuration
- file.
+ file.  We modify some of the variables contained in our environment
+ and then process the template file with B<Text::Template>.
 
 =cut
 
@@ -247,7 +259,7 @@ sub createXenConfig
 
 
     #
-    #  The memory size.
+    #  The memory size:  Strip any trailing size characters "M", "G", etc.
     #
     if ( $ENV{'memory'} =~ /([0-9]+)/ )
     {
@@ -256,7 +268,7 @@ sub createXenConfig
 
 
     #
-    # Images as presented to Xen.
+    # Images as presented to Xen - either loopback images, or LVM partitions.
     #
     my $image_vbd;
     my $swap_vbd;
@@ -291,8 +303,14 @@ sub createXenConfig
     #
     open( FILE, ">", $file );
 
+    #
+    #  The template file gets a complete copy of our configuration values.
+    #
     my $result = $template->fill_in(HASH => \%vars);
 
+    #
+    #  Write the output of processing the template file, if it succeeds.
+    #
     if (defined $result)
     {
         print FILE $result ;
@@ -301,6 +319,10 @@ sub createXenConfig
     {
         print FILE "Error creating configuration file\n";
     }
+
+    #
+    #  Close the output file.
+    #
     close( FILE );
 
 }

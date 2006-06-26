@@ -79,7 +79,7 @@ Install the distribution specified by the B<--dist> argument using the debootstr
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.17 2006-06-25 20:20:40 steve Exp $
+ $Id: xt-install-image,v 1.18 2006-06-26 10:06:52 steve Exp $
 
 =cut
 
@@ -233,7 +233,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.17 $';
+       my $REVISION      = '$Revision: 1.18 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -267,8 +267,7 @@ sub checkArguments
 
 
     #
-    #  Test that the location we've been told contains
-    # a fresh installation of Linux exists
+    #  Test that the location we've been given exists
     #
     if ( ! -d $CONFIG{'location'} )
     {
@@ -466,7 +465,7 @@ sub installRPMStrapImage
 =head2 runCommand
 
   A utility method to run a system command.  We will capture the return
- value and exit if the command files.
+ value and exit if the command fails.
 
   When running verbosely we will also display any command output.
 
@@ -548,7 +547,8 @@ sub runCommand
 =head2 copyDebFiles
 
   This function will copy all the .deb files from one directory
- to another as a caching operation which will speed up debootstrap.
+ to another as a caching operation which will speed up installations via
+ debootstrap.
 
 =cut
 
