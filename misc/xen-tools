@@ -18,7 +18,7 @@
 # --
 # http://www.steve.org.uk
 #
-# $Id: xen-tools,v 1.30 2006-06-23 18:35:40 steve Exp $
+# $Id: xen-tools,v 1.31 2006-06-26 10:12:38 steve Exp $
 #
 
 
@@ -319,7 +319,7 @@ complete -F _xt-customize-image xt-customize-image
 #
 _xt-install-image()
 {
-    local cur prev ip roles dists
+    local cur prev dists
 
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
@@ -327,10 +327,6 @@ _xt-install-image()
     opts='--copy --cache --debootstrap --dist --help --location --manual --mirror --rpmstrap --tar --verbose --version'
     
     
-    #
-    # Complete the initial part of the IP in the configuration file.
-    ip=`grep ^gateway /etc/xen-tools/xen-tools.conf | awk -F'= '  '{print $2}'`
-
     #
     # Available distributions, from rpmstrap
     #
