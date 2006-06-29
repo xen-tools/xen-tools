@@ -433,7 +433,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.52 2006-06-29 15:31:21 steve Exp $
+ $Id: xen-create-image,v 1.53 2006-06-29 15:35:40 steve Exp $
 
 =cut
 
@@ -543,6 +543,8 @@ showSummery();
 #
 if ( $CONFIG{'dir'} )
 {
+    testLoopbackModule();
+
     createLoopbackImages();
 }
 
@@ -644,7 +646,7 @@ exit;
 
 sub checkSystem
 {
-    my @required = qw ( /xt-customize-image xt-install-image xt-create-xen-config/ );
+    my @required = qw ( /xt-customize-image xt-install-image xt-create-xen-config / );
 
     foreach my $bin ( @required )
     {
@@ -853,7 +855,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.52 $';
+       my $REVISION      = '$Revision: 1.53 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -1097,6 +1099,32 @@ sub showSummery
 
 }
 
+
+
+
+=head2 testLoopbackModule
+
+  Test that the user has the "loop" module loaded and present,
+ this is just a warning useful to newcomers.
+
+=cut
+
+sub testLoopbackModule
+{
+    if ( -e "/proc/modules" )
+    {
+        my $modules = `cat /proc/modules`;
+
+        if ( $modules !~ m/loop/ )
+        {
+            print "WARNING\n";
+            print "-------\n";
+            print "Loopback module not loaded and you're using loopback images\n";
+            print "Run the following to load the module:\n\n";
+            print "modprobe loop loop_max=255\n\n";
+        }
+    }
+}
 
 
 
