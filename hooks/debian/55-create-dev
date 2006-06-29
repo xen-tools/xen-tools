@@ -32,6 +32,7 @@ logMessage Script $0 starting
 #
 cd ${prefix}/dev
 ./MAKEDEV generic
+./MAKEDEV sd
 
 
 #
