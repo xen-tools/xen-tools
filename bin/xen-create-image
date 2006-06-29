@@ -433,7 +433,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.51 2006-06-29 13:28:11 steve Exp $
+ $Id: xen-create-image,v 1.52 2006-06-29 15:31:21 steve Exp $
 
 =cut
 
@@ -637,22 +637,23 @@ exit;
   Test that this system is fully setup for the new xen-create-image
  script.
 
-  This means that the two binaries xt-install-image and xt-customize-image
- are present.
+  This means that the the companion scripts xt-* are present on the
+ host.
 
 =cut
 
 sub checkSystem
 {
-    if ( ! -x "/usr/bin/xt-customize-image" )
+    my @required = qw ( /xt-customize-image xt-install-image xt-create-xen-config/ );
+
+    foreach my $bin ( @required )
     {
-       print "The script 'xt-customize-image' was not found.";
-       print "\nAborting\n\n";
-    }
-    if ( ! -x "/usr/bin/xt-install-image" )
-    {
-       print "The script 'xt-install-image' was not found.";
-       print "\nAborting\n\n";
+        if  ( ! -x "/usr/bin/" . $bin )
+        {
+            print "The script '$bin' was not found.\n";
+            print "Aborting\n\n";
+            exit;
+        }
     }
 }
 
@@ -852,7 +853,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.51 $';
+       my $REVISION      = '$Revision: 1.52 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
