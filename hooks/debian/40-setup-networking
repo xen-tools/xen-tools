@@ -68,6 +68,16 @@ E_O_DHCP
 function  setupStaticNetworking
 {
     #
+    #  if $p2p is set then add a "pointtopoint" setting.
+    #
+    point='';
+    if [ ! -z "${p2p}" ]; then
+        point="pointtopoint ${p2p}"
+    else
+        point=''
+    fi
+
+    #
     # We have a static IP address
     #
     cat <<E_O_STATIC >${prefix}/etc/network/interfaces
@@ -84,6 +94,7 @@ iface eth0 inet static
  address ${ip1}
  gateway ${gateway}
  netmask ${netmask}
+ ${point}
  # post-up  ethtool -K eth0 tx off
 
 #

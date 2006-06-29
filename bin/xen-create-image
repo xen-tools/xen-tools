@@ -433,7 +433,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.49 2006-06-25 20:17:39 steve Exp $
+ $Id: xen-create-image,v 1.50 2006-06-29 13:24:51 steve Exp $
 
 =cut
 
@@ -820,6 +820,7 @@ sub parseCommandLineArguments
               "hostname=s",   \$CONFIG{'hostname'},
               "ip=s@",        \$CONFIG{'ip'},
               "netmask=s",    \$CONFIG{'netmask'},
+              "p2p=s",        \$CONFIG{'p2p'},
 
               # Exclusive
               "copy=s",       \$CONFIG{'copy'},
@@ -851,7 +852,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.49 $';
+       my $REVISION      = '$Revision: 1.50 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
