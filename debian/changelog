@@ -1,3 +1,13 @@
+xen-tools (2.1-2) unstable; urgency=high
+
+  * CVS snapshot to fix RC bugs and allow package into testing.
+    - Build from source with no test-case failures.
+      (Closes: #375267)
+    - Fixed several typos in the configuration file, and scripts.
+      (Closes: #375382)
+
+ -- Steve Kemp <skx@debian.org>  Thur, 29 Jun 2006 10:31:23 +0000
+
 xen-tools (2.1-1) unstable; urgency=high
 
   * New upstream release:
