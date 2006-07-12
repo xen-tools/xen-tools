@@ -4,7 +4,7 @@
 #
 # Steve
 # --
-# $Id: perl-syntax.t,v 1.2 2006-06-13 13:26:00 steve Exp $
+# $Id: perl-syntax.t,v 1.3 2006-07-12 14:44:33 steve Exp $
 
 
 use strict;
@@ -58,9 +58,13 @@ sub checkFile
 
     #
     #  Now run 'perl -c $file' to see if we pass the syntax
-    # check
+    # check.  We add a couple of parameters to make sure we're
+    # really OK.
     #
-    my $retval = system( "perl -c $file 2>/dev/null >/dev/null" );
+    #        use strict "vars";
+    #        use strict "subs";
+    #
+    my $retval = system( "perl -Mstrict=subs -Mstrict=vars -c $file 2>/dev/null >/dev/null" );
 
     is( $retval, 0, "Perl file passes our syntax check: $file" );
 }
