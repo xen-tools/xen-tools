@@ -17,6 +17,9 @@ Contributions
   Edd Dumbill <edd [at] com.usefulinc>
    - Contributed APT sources.list file for Ubuntus Dapper release.
 
+  Sven Hertge <sven [at] de.svenhartge>
+   - Bugfix for Debian/Gentoo package installation.
+
   Radu Spineanu <radu [at] org.debian>
    - Supplied many small tweaks, bugfixes, and suggestions. 
    - Radu is also the Debian package maintainer and has CVS commit access.
