@@ -114,7 +114,7 @@ function installCentOS4Package
 #
 # TODO: STUB
 #
-function installDebianPackage
+function installGentooPackage
 {
     prefix=$1
     package=$2
@@ -127,3 +127,4 @@ function installDebianPackage
     logMessage "NOTE: Not doing anything - this is a stub - FIXME"
 
 }
+
