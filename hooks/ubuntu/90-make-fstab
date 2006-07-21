@@ -34,12 +34,15 @@ logMessage Script $0 starting
 #  Options to mount the root filesystem with, we need to have
 # different options for xfs.
 #
-#  The default option works for ext2, ext3, and reiserfs.
+#  The default option works for ext2 & ext3.
 #
 options="errors=remount-ro"
 
 case "${fs}" in
     xfs)
+        options="defaults"
+        ;;
+    reiserfs)
         options="defaults"
         ;;
 esac
