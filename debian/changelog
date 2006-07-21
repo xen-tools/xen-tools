@@ -1,3 +1,17 @@
+xen-tools (2.2-1) unstable; urgency=high
+
+  * New upstream release, fixes several important bugs hence urgency=high.
+    - /etc/fstab creation generated correctly for reiserfs 
+      (Closes: #379023) (Closes: #379096)
+    - --force works with xfs filesystems.
+      (Closes: #377684)
+    - Timezone configuration file copied over into new guest domains.
+      (Closes: #376846)
+    - Debian image creation works correctly.
+      (Closes: #378165)
+
+ -- Steve Kemp <skx@debian.org>  xxx
+
 xen-tools (2.1-2) unstable; urgency=high
 
   * CVS snapshot to fix RC bugs and allow package into testing.
