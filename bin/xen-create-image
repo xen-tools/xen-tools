@@ -433,7 +433,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.53 2006-06-29 15:35:40 steve Exp $
+ $Id: xen-create-image,v 1.54 2006-07-21 20:14:30 steve Exp $
 
 =cut
 
@@ -710,8 +710,12 @@ sub setupDefaultOptions
     # NOTE: These commands end in a trailing slash.  The last parameter is
     #       added as the loopback file/LVM volume to create the fs on....
     #
+    # NOTE 2:  Each of these scripts will "force" the creation of a new
+    #         filesystem, even if it exists.  This script must detect
+    #         prior existance itself.
+    #
     $CONFIG{'make_fs_ext3'}      = '/sbin/mkfs.ext3 -F ';
-    $CONFIG{'make_fs_xfs'}       = '/sbin/mkfs.xfs -d name=';
+    $CONFIG{'make_fs_xfs'}       = '/sbin/mkfs.xfs -f -d name=';
     $CONFIG{'make_fs_reiserfs'}  = '/sbin/mkfs.reiserfs -f -q ';
 
     #
@@ -855,7 +859,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.53 $';
+       my $REVISION      = '$Revision: 1.54 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -1384,18 +1388,6 @@ sub createFilesystem
     {
        print "The filesystem creation hash is bogus for filesystem : $CONFIG{'fs'}\n";
        exit;
-    }
-
-    #
-    #  Special case.
-    #
-    #  If the filesystem is xfs, and the image already existed before
-    # so the user is using '--force' we add the '-f' flag to force
-    # mkfs.xfs to recreate an image rather than complaining.
-    #
-    if ( ( $CONFIG{'fs'} eq 'xfs' ) && $CONFIG{'force'} )
-    {
-       $command .= " -f ";
     }
 
     #
