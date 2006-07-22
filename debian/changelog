@@ -10,7 +10,7 @@ xen-tools (2.2-1) unstable; urgency=high
     - Debian image creation works correctly.
       (Closes: #378165)
 
- -- Steve Kemp <skx@debian.org>  xxx
+ -- Steve Kemp <skx@debian.org>  Sat, 22 Jul 2006 16:59:39 +0000
 
 xen-tools (2.1-2) unstable; urgency=high
 
