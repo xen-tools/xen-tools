@@ -439,7 +439,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.57 2006-07-23 00:56:29 steve Exp $
+ $Id: xen-create-image,v 1.58 2006-07-25 15:49:52 steve Exp $
 
 =cut
 
@@ -865,7 +865,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.57 $';
+       my $REVISION      = '$Revision: 1.58 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -1016,7 +1016,7 @@ E_OR
     my $count = 0;
     foreach my $key ( qw/debootstrap rpmstrap copy tar/ )
     {
-        if ( defined $CONFIG{$key} )
+        if ( $CONFIG{$key} )
         {
             $count += 1;
         }
