@@ -1,3 +1,11 @@
+xen-tools (2.2-2) unstable; urgency=low
+
+  * Applied upstream patches to ensure a suitable image-creation method
+    is specified to xen-create-image and improved the documentation for
+    that script.  (Closes: #379347)
+
+ -- Steve Kemp <skx@debian.org>  Sun, 23 Jul 2006 21:22:24 +0000
+
 xen-tools (2.2-1) unstable; urgency=high
 
   * New upstream release, fixes several important bugs hence urgency=high.
