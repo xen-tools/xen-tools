@@ -26,6 +26,31 @@ fi
 logMessage Script $0 starting
 
 
+
+#
+# Attempt to auto-magically detect the use of a Proxy for apt-get, and
+# replicate that setup in our new guest.
+#
+#
+#  Process any of the present apt-conf setup lines.
+#
+for i in /etc/apt/apt.conf /etc/apt/apt.conf.d/* ; do 
+
+    #
+    # If the file exists.  (Need this in case the literal glob fails.)
+    #
+    if [ -e $i ] ; then
+
+        #
+        # Save the matching line(s) to the proxy guess file.
+        #
+        logMessage The use of a proxy detected.
+        grep -i HTTP::Proxy $i >> ${prefix}/etc/apt/apt.conf.d/proxy-guess
+    fi
+done
+
+
+
 #
 # Setup the sources.list file for new installations of Debian GNU/Linux.
 #

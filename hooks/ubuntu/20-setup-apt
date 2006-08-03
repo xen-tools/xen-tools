@@ -4,10 +4,55 @@
 #
 # Steve
 # --
-# $Id: 20-setup-apt,v 1.1 2006-06-18 17:44:08 steve Exp $
+# $Id: 20-setup-apt,v 1.2 2006-08-03 15:12:26 steve Exp $
+
+
 
 
 prefix=$1
+
+
+#
+#  Source our common functions
+#
+if [ -e /usr/lib/xen-tools/common.sh ]; then
+    . /usr/lib/xen-tools/common.sh
+else
+    . ./hooks/common.sh
+fi
+
+
+#
+# Log our start
+#
+logMessage Script $0 starting
+
+
+
+
+#
+# Attempt to auto-magically detect the use of a Proxy for apt-get, and
+# replicate that setup in our new guest.
+#
+#
+#  Process any of the present apt-conf setup lines.
+#
+for i in /etc/apt/apt.conf /etc/apt/apt.conf.d/* ; do 
+
+    #
+    # If the file exists.  (Need this in case the literal glob fails.)
+    #
+    if [ -e $i ] ; then
+
+        #
+        # Save the matching line(s) to the proxy guess file.
+        #
+        logMessage The use of a proxy detected.
+        grep -i HTTP::Proxy $i >> ${prefix}/etc/apt/apt.conf.d/proxy-guess
+    fi
+done
+
+
 
 cat <<E_O_APT > ${prefix}/etc/apt/sources.list
 #
@@ -33,3 +78,8 @@ E_O_APT
 #  Now that the sources have been setup make sure the system is up to date.
 #
 chroot ${prefix} /usr/bin/apt-get update
+
+#
+#  Log our finish
+#
+logMessage Script $0 finished
