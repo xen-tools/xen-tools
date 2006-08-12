@@ -1,7 +1,7 @@
 TODO
 ----
 
-  1. Test and support more filesystem types.  Actually this should be
+  1. Test and support more file system types.  Actually this should be
     pretty simple now that the parameters are stored in the configuration
     hash.  The only issue is that trailing whitespace is missing from the
     "make_fs_foo" option.
@@ -10,11 +10,7 @@ TODO
 
   3. Test more distributions with RPMStrap, instead of just centos4.
 
-
-  4. pointtopoint 
-
-
 Steve
 --
-$Id: TODO,v 1.21 2006-06-27 13:49:35 steve Exp $
+$Id: TODO,v 1.22 2006-08-12 23:17:38 steve Exp $
 
