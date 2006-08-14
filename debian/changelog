@@ -7,6 +7,8 @@ xen-tools (2.3-0) unstable; urgency=low
     via "--template=xx"
     (Closes: #383036)
 
+ -- Steve Kemp <skx@debian.org>  Mon, 14 Aug 2006 22:34:59 +0000
+
 xen-tools (2.2-2) unstable; urgency=low
 
   * Applied upstream patches to ensure a suitable image-creation method
