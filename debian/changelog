@@ -1,3 +1,12 @@
+xen-tools (2.3-0) unstable; urgency=low
+
+  * Better manpage for xen-create-image.
+    - No longer display internal functions in any manpages.
+    (Closes: #383032)
+  * Add support for using a user-selected Xen configuration file template
+    via "--template=xx"
+    (Closes: #383036)
+
 xen-tools (2.2-2) unstable; urgency=low
 
   * Applied upstream patches to ensure a suitable image-creation method
