@@ -38,6 +38,7 @@ xen-create-image - Create a new Xen instance
    --mirror      Setup the mirror to use when installing with --debootstrap.
    --rpmstrap    Use rpmstrap to install the distribution --dist.
    --tar         Install the new image by untarring the given file.
+   --template    Specify the template file for Xen configuration file creation
 
   Networking options:
    --dhcp      Configure the new image to fetch its networking details via DHCP.
@@ -141,6 +142,9 @@ suffixed with either Mb, or Gb.
 
 =item B<--tar>
 Install a new system by untarring the given file.  This is significantly faster than using --rpmstrap or --debootstrap, but it does require that you have installed a distribution "slowly" at least once.
+
+=item B<--template>
+The Xen configuration file is created in /etc/xen is created by the means of a template file.  By default this will be /etc/xen-tools/xm.tmpl using this argument you can specify an alternative template file to use.
 
 =item B<--version>
 Show the version number and exit.
@@ -439,7 +443,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.59 2006-08-14 20:55:29 steve Exp $
+ $Id: xen-create-image,v 1.60 2006-08-14 21:00:59 steve Exp $
 
 =cut
 
@@ -700,6 +704,7 @@ sub setupDefaultOptions
     $CONFIG{'dist'}        = 'sarge';
     $CONFIG{'fs'}          = 'ext3';
     $CONFIG{'force'}       = 0;
+    $CONFIG{'template'}    = '';
 
     #
     #  Installation methods
@@ -850,6 +855,7 @@ sub parseCommandLineArguments
               "passwd",       \$CONFIG{'passwd'},
               "role=s",       \$CONFIG{'role'},
               "force",        \$CONFIG{'force'},
+              "template=s",   \$CONFIG{'template'},
 
               # Help options
               "debug",        \$CONFIG{'verbose'},
@@ -865,7 +871,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.59 $';
+       my $REVISION      = '$Revision: 1.60 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -1706,6 +1712,12 @@ sub runXenConfigCreation
 {
 
     my $command = '/usr/bin/xt-create-xen-config --output=/etc/xen';
+
+    if ( ( defined( $CONFIG{'template'} ) ) &&
+         ( -e $CONFIG{'template'} ) )
+    {
+        $command .= " --template=" . $CONFIG{'template'};
+    }
 
     print "\nCreating Xen configuration file\n";
     runCommand( $command );
