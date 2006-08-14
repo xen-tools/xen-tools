@@ -99,7 +99,7 @@ Specify the LVM volume group where images were previously saved.
  --
  http://www.steve.org.uk/
 
- $Id: xen-delete-image,v 1.11 2006-07-21 20:17:41 steve Exp $
+ $Id: xen-delete-image,v 1.12 2006-08-14 20:55:29 steve Exp $
 
 =cut
 
@@ -196,7 +196,7 @@ exit;
 
 
 
-=head2 readConfigurationFile
+=begin doc
 
   Read the configuration file specified.
 
@@ -254,7 +254,7 @@ sub readConfigurationFile
 
 
 
-=head2 parseCommandLineArguments
+=begin doc
 
   Parse the arguments specified upon the command line.
 
@@ -284,7 +284,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.11 $';
+       my $REVISION      = '$Revision: 1.12 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -299,7 +299,7 @@ sub parseCommandLineArguments
 
 
 
-=head2 checkArguments
+=begin doc
 
   Check that we received the arguments we expected.
 
@@ -338,7 +338,7 @@ sub checkArguments
 
 
 
-=head2 deleteXenImage
+=begin doc
 
   Delete the named image, and the corresponding configuration file
  from /etc/xen.
@@ -433,7 +433,7 @@ sub deleteXenImage
 
 
 
-=head2 runCommand
+=begin doc
 
   A utility method to run a system command.  We will capture the return
  value and exit if the command files.

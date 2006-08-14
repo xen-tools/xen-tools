@@ -82,7 +82,7 @@ Specify the LVM volume group which contains the image(s).
  --
  http://www.steve.org.uk/
 
- $Id: xen-update-image,v 1.6 2006-07-21 20:17:41 steve Exp $
+ $Id: xen-update-image,v 1.7 2006-08-14 20:55:29 steve Exp $
 
 =cut
 
@@ -176,7 +176,7 @@ exit;
 
 
 
-=head2 updateXenImage
+=begin doc
 
   Mount the primary disk image, so that we're ready to update it.
 
@@ -263,7 +263,7 @@ sub updateXenImage
 }
 
 
-=head2 readConfigurationFile
+=begin doc
 
   Read the configuration file specified.
 
@@ -321,7 +321,7 @@ sub readConfigurationFile
 
 
 
-=head2 parseCommandLineArguments
+=begin doc
 
   Parse the arguments specified upon the command line.
 
@@ -348,7 +348,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.6 $';
+       my $REVISION      = '$Revision: 1.7 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -362,7 +362,7 @@ sub parseCommandLineArguments
 
 
 
-=head2 checkArguments
+=begin doc
 
   Test that the options we received from the command line, or our
  configuration file, make sense.

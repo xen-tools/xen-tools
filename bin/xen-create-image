@@ -439,7 +439,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.58 2006-07-25 15:49:52 steve Exp $
+ $Id: xen-create-image,v 1.59 2006-08-14 20:55:29 steve Exp $
 
 =cut
 
@@ -640,7 +640,7 @@ exit;
 
 
 
-=head2 checkSystem
+=begin doc
 
   Test that this system is fully setup for the new xen-create-image
  script.
@@ -667,7 +667,7 @@ sub checkSystem
 
 
 
-=head2 setupDefaultOptions
+=begin doc
 
   Setup the default options we'd expect into our global CONFIG hash.
 
@@ -738,7 +738,7 @@ sub setupDefaultOptions
 
 
 
-=head2 readConfigurationFile
+=begin doc
 
   read the global configuration file /etc/xen-tools/xen-tools.conf
 
@@ -795,7 +795,7 @@ sub readConfigurationFile
 
 
 
-=head2 parseCommandLineArguments
+=begin doc
 
   Parse the command line arguments this script was given.
 
@@ -865,7 +865,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.58 $';
+       my $REVISION      = '$Revision: 1.59 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -879,7 +879,7 @@ sub parseCommandLineArguments
 }
 
 
-=head2 testRootUser
+=begin doc
 
   Make sure this script is being run by a user with UID 0.
 
@@ -903,7 +903,7 @@ E_O_ROOT
 
 
 
-=head2 checkArguments
+=begin doc
 
   Test that the command line arguments we were given make sense.
 
@@ -1043,7 +1043,7 @@ E_O_ERROR
 
 
 
-=head2 checkFilesPresent
+=begin doc
 
   Check that we have some required files present.
 
@@ -1089,7 +1089,7 @@ sub checkFilesPresent
 
 
 
-=head2 showSummery
+=begin doc
 
   Show the user a summery of what is going to be created for them
 
@@ -1141,7 +1141,7 @@ sub showSummery
 
 
 
-=head2 testLoopbackModule
+=begin doc
 
   Test that the user has the "loop" module loaded and present,
  this is just a warning useful to newcomers.
@@ -1167,7 +1167,7 @@ sub testLoopbackModule
 
 
 
-=head2 createLoopbackImages
+=begin doc
 
   Create the two images "swap.img" and "disk.img" in the directory
  we've been given.
@@ -1283,7 +1283,7 @@ sub createLoopbackImages
 }
 
 
-=head2 createLVMBits
+=begin doc
 
   This function is responsible for creating two new logical volumes within
  a given LVM volume group.
@@ -1388,7 +1388,7 @@ sub createLVMBits
 
 
 
-=head2 createFilesystem
+=begin doc
 
   Format the given image in the users choice of filesystem.
 
@@ -1438,7 +1438,7 @@ sub createFilesystem
 
 
 
-=head2 createSwap
+=begin doc
 
   Create the swap filesystem on the given device.
 
@@ -1452,7 +1452,7 @@ sub createSwap
 }
 
 
-=head2 mountImage
+=begin doc
 
   Mount the loopback disk image into a temporary directory.
 
@@ -1512,7 +1512,7 @@ sub mountImage
 
 
 
-=head2 installSystem
+=begin doc
 
   Install the system, by invoking the xt-install-system script.
 
@@ -1576,7 +1576,7 @@ sub installSystem
 
 
 
-=head2 runCustomisationHooks
+=begin doc
 
   Run the xt-customise-system script to customize our fresh installation.
 
@@ -1650,7 +1650,7 @@ sub runCustomisationHooks
 
 
 
-=head2 runRoleScript
+=begin doc
 
   If the user specified a role for the new instance then execute it.
 
@@ -1693,7 +1693,7 @@ sub runRoleScript
 
 
 
-=head2 runXenConfigCreation
+=begin doc
 
   Create the Xen configuration file.
 
@@ -1714,7 +1714,7 @@ sub runXenConfigCreation
 
 
 
-=head2 setupRootPassword
+=begin doc
 
   chroot() into the new system and setup the password.
 
@@ -1736,7 +1736,7 @@ sub setupRootPassword
 
 
 
-=head2 runCommand
+=begin doc
 
   A utility method to run a system command.  We will capture the return
  value and exit if the command files.
@@ -1798,7 +1798,7 @@ sub runCommand
 
 
 
-=head2 END
+=begin doc
 
   If we still have the temporary image mounted then make sure
  it is unmounted before we terminate.

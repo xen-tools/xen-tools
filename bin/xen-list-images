@@ -67,7 +67,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-list-images,v 1.9 2006-07-21 20:17:41 steve Exp $
+ $Id: xen-list-images,v 1.10 2006-08-14 20:55:29 steve Exp $
 
 =cut
 
@@ -152,7 +152,8 @@ foreach my $instance ( @instances )
 exit;
 
 
-=head2 readConfigurationFile
+
+=begin doc
 
   Read the configuration file specified.
 
@@ -210,7 +211,7 @@ sub readConfigurationFile
 
 
 
-=head2 parseCommandLineArguments
+=begin doc
 
   Parse the arguments specified upon the command line.
 
@@ -237,7 +238,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.9 $';
+       my $REVISION      = '$Revision: 1.10 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -252,7 +253,7 @@ sub parseCommandLineArguments
 
 
 
-=head2 findXenInstances
+=begin doc
 
   Return an array containing the names of each xen configuration
  file we found.
@@ -273,7 +274,7 @@ sub findXenInstances
 
 
 
-=head2 displayInstance
+=begin doc
 
   Show details about the the Xen instance contained in the given
  configuration file.
