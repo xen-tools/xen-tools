@@ -60,7 +60,7 @@ fi
 #
 cat <<E_O_FSTAB > ${prefix}/etc/fstab
 /dev/${device}1     /     ${fs}     ${options}   0     1
-proc          /proc proc     defaults              0     0
+proc          /proc proc     rw,nodev,nosuid,noexec              0     0
 E_O_FSTAB
 
 
@@ -68,7 +68,7 @@ E_O_FSTAB
 #  Add in the swap unless it is disabled
 #
 if [ "${noswap}" ]; then
-    #
+    :
 else
 cat <<E_O_FSTAB >> ${prefix}/etc/fstab
 /dev/${device}2     none  swap     sw                    0     0
