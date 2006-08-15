@@ -6,6 +6,8 @@ xen-tools (2.3-0) unstable; urgency=low
   * Add support for using a user-selected Xen configuration file template
     via "--template=xx"
     (Closes: #383036)
+  * Allow new images to be created without swap via "--noswap".
+    (Closes: #383058)
 
  -- Steve Kemp <skx@debian.org>  Mon, 14 Aug 2006 22:34:59 +0000
 
