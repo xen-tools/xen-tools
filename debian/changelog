@@ -12,6 +12,8 @@ xen-tools (2.3-0) unstable; urgency=low
     - Allow command line installation method or installation type (dir/lvm)
       to override the configuration file options.
       (Closes: #383033)
+    - Allow "arch" to be specified and passed to rpmstrap/debootstrap.
+      (Closes: #383041)
 
  -- Steve Kemp <skx@debian.org>  Mon, 14 Aug 2006 22:34:59 +0000
 

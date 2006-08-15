@@ -65,6 +65,11 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
 
   Installation options:
+
+   --arch        Pass the given architecture to debootstrap or rpm strap.
+                 This argument is ignored if you install with a different
+                 installation type.
+
    --copy        Install the new image by copying a previously installed system.
                  This is much faster than installing from scratch.
 
@@ -435,7 +440,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.64 2006-08-15 21:11:31 steve Exp $
+ $Id: xen-create-image,v 1.65 2006-08-15 21:17:28 steve Exp $
 
 =cut
 
@@ -695,6 +700,7 @@ sub setupDefaultOptions
     # Misc. options.
     #
     $CONFIG{'mirror'}      = 'http://ftp.us.debian.org/debian';
+    $CONFIG{'arch'}        = '';
     $CONFIG{'dist'}        = 'sarge';
     $CONFIG{'fs'}          = 'ext3';
     $CONFIG{'force'}       = 0;
@@ -859,6 +865,7 @@ sub parseCommandLineArguments
 
               # Misc. options
               "accounts",     \$CONFIG{'accounts'},
+              "arch=s",       \$CONFIG{'arch'},
               "fs",           \$CONFIG{'fs'},
               "boot",         \$CONFIG{'boot'},
               "cache=s",      \$CONFIG{'cache'},
@@ -882,7 +889,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.64 $';
+       my $REVISION      = '$Revision: 1.65 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -1074,7 +1081,7 @@ E_OR
     #  The kernel + initrd images should exist.
     #
     if ( defined( $CONFIG{'kernel'} ) &&
-         length( $CONFIG{'kernel'} )   &&
+         length( $CONFIG{'kernel'} )  &&
          ! -e $CONFIG{'kernel'} )
     {
         print "The kernel image we're trying to use does not exist.\n";
@@ -1084,7 +1091,7 @@ E_OR
     }
 
     if ( defined( $CONFIG{'initrd'} ) &&
-         length( $CONFIG{'initrd'} )   &&
+         length( $CONFIG{'initrd'} )  &&
          ! -e $CONFIG{'initrd'} )
     {
         print "The initial ramdisk we're trying to use does not exist.\n";

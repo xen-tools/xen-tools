@@ -11,19 +11,20 @@ xt-install-image - Install a fresh copy of GNU/Linux into a directory
   xt-install-image [options]
 
   Help Options:
-   --help     Show this scripts help information.
-   --manual   Read this scripts manual.
-   --version  Show the version number and exit.
+   --help         Show this scripts help information.
+   --manual       Read this scripts manual.
+   --version      Show the version number and exit.
 
   Debugging Options:
-   --verbose  Be verbose in our execution.
+   --verbose      Be verbose in our execution.
 
   Mandatory Options:
-   --location The location to use for the new installation
-   --dist     The name of the distribution which has been installed.
+   --location     The location to use for the new installation
+   --dist         The name of the distribution which has been installed.
 
   Misc Options:
-   --mirror   The mirror to use when installing with 'debootstrap'.
+   --arch         Pass the given arch setting to debootstrap or rpmstrap.
+   --mirror       The mirror to use when installing with 'debootstrap'.
 
   Installation Options:
    --tar          Untar the given file.
@@ -79,7 +80,7 @@ Install the distribution specified by the B<--dist> argument using the debootstr
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.21 2006-08-15 17:34:23 steve Exp $
+ $Id: xt-install-image,v 1.22 2006-08-15 21:17:28 steve Exp $
 
 =cut
 
@@ -198,9 +199,9 @@ exit 0;
 
 sub parseCommandLineArguments
 {
-    my $HELP       = 0;
-    my $MANUAL       = 0;
-    my $VERSION       = 0;
+    my $HELP    = 0;
+    my $MANUAL  = 0;
+    my $VERSION = 0;
 
     #
     #  Parse options.
@@ -217,8 +218,9 @@ sub parseCommandLineArguments
               "debootstrap",    \$CONFIG{'debootstrap'},
 
               # Misc
-              "mirror=s",       \$CONFIG{'mirror'},
+              "arch=s",         \$CONFIG{'arch'},
               "cache=s",        \$CONFIG{'cache'},
+              "mirror=s",       \$CONFIG{'mirror'},
 
               # Help.
               "verbose",        \$CONFIG{'verbose'},
@@ -233,7 +235,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.21 $';
+       my $REVISION      = '$Revision: 1.22 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -390,16 +392,25 @@ sub installDebootstrapImage
     #
     #  Propogate --verbose appropriately.
     #
-    my $VERBOSE = '';
+    my $EXTRA = '';
     if ( $CONFIG{'verbose'} )
     {
-        $VERBOSE = '--verbose';
+        $EXTRA = ' --verbose';
     }
+
+    #
+    #  Propogate the --arch argument
+    #
+    if ( $CONFIG{'arch'} )
+    {
+        $EXTRA .= " --arch $CONFIG{'arch'}"
+    }
+
 
     #
     #  This is the command we'll run
     #
-    my $command = "/usr/sbin/debootstrap --keep-debootstrap-dir $VERBOSE $CONFIG{'dist'} $CONFIG{'location'} $CONFIG{'mirror'}";
+    my $command = "/usr/sbin/debootstrap --keep-debootstrap-dir $ARCH $CONFIG{'dist'} $CONFIG{'location'} $CONFIG{'mirror'}";
 
     #
     #  Run the command.
@@ -457,16 +468,23 @@ sub installRPMStrapImage
     #
     #  Propogate the verbosity setting.
     #
-    my $VERBOSE='';
+    my $EXTRA='';
     if ( $CONFIG{'verbose'} )
     {
-       $VERBOSE .= "--verbose";
+       $EXTRA .= " --verbose";
     }
 
     #
+    #  Propogate any arch setting we might have.
+    #
+    if ( $CONFIG{'arch'} )
+    {
+        $EXTRA .= " --arch $CONFIG{'arch'}";
+    }
+    #
     #  The command we're going to run.
     #
-    my $command = "rpmstrap $VERBOSE $CONFIG{'dist'} $CONFIG{'location'}";
+    my $command = "rpmstrap $EXTRA $CONFIG{'dist'} $CONFIG{'location'}";
     runCommand( $command );
 }
 
