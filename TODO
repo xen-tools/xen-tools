@@ -10,7 +10,10 @@ TODO
 
   3. Test more distributions with RPMStrap, instead of just centos4.
 
+  4. Roll-back in case of errors? 
+     #383029
+
 Steve
 --
-$Id: TODO,v 1.22 2006-08-12 23:17:38 steve Exp $
+$Id: TODO,v 1.23 2006-08-15 18:53:11 steve Exp $
 
