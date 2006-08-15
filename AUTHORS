@@ -1,5 +1,5 @@
 
-
+        
 Primary Author
 --------------
 
@@ -24,3 +24,5 @@ Contributions
    - Supplied many small tweaks, bugfixes, and suggestions. 
    - Radu is also the Debian package maintainer and has CVS commit access.
  
+  Gergely Tamas <dice [at] hu.kfki.mfa>
+   - Added patch to make initrd setup optional.
