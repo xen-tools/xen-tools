@@ -29,6 +29,7 @@ xen-create-image - Create a new Xen instance
    --role        Run a specific role command post-install.
    --size        Set the size of the primary disk image.
    --swap        Set the size of the swap partition.
+   --noswap      Do not create a swap partition.
    --ide         Use IDE names for virtual devices (hda not sda)
 
   Installation options:
@@ -126,6 +127,9 @@ Specify the mirror to use when installing distributions with the debootstrap too
 
 =item B<--netmask>
 Set the netmask the virtual image should use.
+
+=item B<--noswap>
+Do not create swap.
 
 =item B<--passwd>
 Setup a password for the root account of the virtual machine.  Note that specifying this will avoid copying user accounts into the new guest image.  (i.e.  The guest image will only have a root account setup.)
@@ -443,7 +447,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.61 2006-08-15 09:12:03 steve Exp $
+ $Id: xen-create-image,v 1.62 2006-08-15 09:19:24 steve Exp $
 
 =cut
 
@@ -694,6 +698,7 @@ sub setupDefaultOptions
     $CONFIG{'memory'}      = '96Mb';
     $CONFIG{'size'}        = '2000Mb';
     $CONFIG{'swap'}        = '128M';
+    $CONFIG{'noswap'}      = 0;
     $CONFIG{'cache'}       = 'yes';
     $CONFIG{'image'}       = 'sparse';
 
@@ -871,7 +876,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.61 $';
+       my $REVISION      = '$Revision: 1.62 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -1115,7 +1120,7 @@ sub showSummery
     print "\nSize Information\n";
     print "----------------\n";
     print "Image size     :  $CONFIG{'size'}\n";
-    print "Swap size      :  $CONFIG{'swap'}\n" unless ( $CONFIG{'no-swap' } );
+    print "Swap size      :  $CONFIG{'swap'}\n" unless ( $CONFIG{'noswap' } );
     print "Image type     :  $CONFIG{'image'}\n";
     print "Memory size    :  $CONFIG{'memory'}\n";
     print "Kernel path    :  $CONFIG{'kernel'}\n";
@@ -1260,10 +1265,13 @@ sub createLoopbackImages
 
     #  Use dd to create the swap
     #
-    print "\nCreating swap image: $swap\n";
-    my $swap_cmd = "/bin/dd if=/dev/zero of=$swap bs=1024k count=$swap_size";
-    runCommand( $swap_cmd );
-    print "Done\n";
+    unless( $CONFIG{'noswap'} )
+    {
+        print "\nCreating swap image: $swap\n";
+        my $swap_cmd = "/bin/dd if=/dev/zero of=$swap bs=1024k count=$swap_size";
+        runCommand( $swap_cmd );
+        print "Done\n";
+    }
 
 
     #
@@ -1290,7 +1298,7 @@ sub createLoopbackImages
     #  Finally create the filesystem + swap
     #
     createFilesystem( $disk );
-    createSwap( $swap );
+    createSwap( $swap ) unless( $CONFIG{'noswap'} );
 }
 
 
