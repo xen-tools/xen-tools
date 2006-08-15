@@ -31,7 +31,6 @@ install: build
 
 	make manpages
 	make install prefix=`pwd`/debian/xen-tools
-	make test-verbose
 
 	dh_installdirs
 
