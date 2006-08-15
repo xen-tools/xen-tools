@@ -1,13 +1,15 @@
 xen-tools (2.3-0) unstable; urgency=low
 
   * Better manpage for xen-create-image.
-    - No longer display internal functions in any manpages.
+    - No longer display internal functions in our manpages.
     (Closes: #383032)
   * Add support for using a user-selected Xen configuration file template
     via "--template=xx"
     (Closes: #383036)
   * Allow new images to be created without swap via "--noswap".
     (Closes: #383058)
+  * Preserve debootstrap error output in xt-install-image.
+    (Closes: #383037)
 
  -- Steve Kemp <skx@debian.org>  Mon, 14 Aug 2006 22:34:59 +0000
 
