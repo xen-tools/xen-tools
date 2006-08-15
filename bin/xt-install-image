@@ -80,7 +80,7 @@ Install the distribution specified by the B<--dist> argument using the debootstr
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.22 2006-08-15 21:17:28 steve Exp $
+ $Id: xt-install-image,v 1.23 2006-08-15 21:30:07 steve Exp $
 
 =cut
 
@@ -195,6 +195,8 @@ exit 0;
 
   Parse the command line arguments this script was given.
 
+=end doc
+
 =cut
 
 sub parseCommandLineArguments
@@ -235,7 +237,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.22 $';
+       my $REVISION      = '$Revision: 1.23 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -253,6 +255,8 @@ sub parseCommandLineArguments
 =begin doc
 
   Test that the command line arguments we were given make sense.
+
+=end doc
 
 =cut
 
@@ -373,6 +377,8 @@ EOF
 
   Install a new image of Debian using 'debootstrap'.
 
+=end doc
+
 =cut
 
 sub installDebootstrapImage
@@ -451,6 +457,8 @@ sub installDebootstrapImage
 
   Install a new distribution of GNU/Linux using the rpmstrap tool.
 
+=end doc
+
 =cut
 
 sub installRPMStrapImage
@@ -496,6 +504,8 @@ sub installRPMStrapImage
  value and exit if the command fails.
 
   When running verbosely we will also display any command output.
+
+=end doc
 
 =cut
 
@@ -577,6 +587,8 @@ sub runCommand
   This function will copy all the .deb files from one directory
  to another as a caching operation which will speed up installations via
  debootstrap.
+
+=end doc
 
 =cut
 

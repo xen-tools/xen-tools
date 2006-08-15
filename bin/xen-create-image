@@ -440,7 +440,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.65 2006-08-15 21:17:28 steve Exp $
+ $Id: xen-create-image,v 1.66 2006-08-15 21:30:07 steve Exp $
 
 =cut
 
@@ -650,6 +650,8 @@ exit;
   This means that the the companion scripts xt-* are present on the
  host.
 
+=end doc
+
 =cut
 
 sub checkSystem
@@ -672,6 +674,8 @@ sub checkSystem
 =begin doc
 
   Setup the default options we'd expect into our global CONFIG hash.
+
+=end doc
 
 =cut
 
@@ -747,6 +751,8 @@ sub setupDefaultOptions
 
   read the global configuration file /etc/xen-tools/xen-tools.conf
 
+=end doc
+
 =cut
 
 sub readConfigurationFile
@@ -803,6 +809,8 @@ sub readConfigurationFile
 =begin doc
 
   Parse the command line arguments this script was given.
+
+=end doc
 
 =cut
 
@@ -889,7 +897,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.65 $';
+       my $REVISION      = '$Revision: 1.66 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -973,6 +981,8 @@ E_O_ERROR
 
   Make sure this script is being run by a user with UID 0.
 
+=end doc
+
 =cut
 
 sub testRootUser
@@ -996,6 +1006,8 @@ E_O_ROOT
 =begin doc
 
   Test that the command line arguments we were given make sense.
+
+=end doc
 
 =cut
 
@@ -1139,6 +1151,8 @@ E_O_ERROR
 
   Check that we have some required files present.
 
+=end doc
+
 =cut
 
 sub checkFilesPresent
@@ -1184,6 +1198,8 @@ sub checkFilesPresent
 =begin doc
 
   Show the user a summery of what is going to be created for them
+
+=end doc
 
 =cut
 
@@ -1243,6 +1259,8 @@ sub showSummery
   Test that the user has the "loop" module loaded and present,
  this is just a warning useful to newcomers.
 
+=end doc
+
 =cut
 
 sub testLoopbackModule
@@ -1271,6 +1289,8 @@ sub testLoopbackModule
 
   We also will call the filesystem creation routine to make sure we
  have a valid filesystem.
+
+=end doc
 
 =cut
 
@@ -1388,6 +1408,8 @@ sub createLoopbackImages
   This function is responsible for creating two new logical volumes within
  a given LVM volume group.
 
+=end doc
+
 =cut
 
 sub createLVMBits
@@ -1492,6 +1514,8 @@ sub createLVMBits
 
   Format the given image in the users choice of filesystem.
 
+=end doc
+
 =cut
 
 sub createFilesystem
@@ -1542,6 +1566,8 @@ sub createFilesystem
 
   Create the swap filesystem on the given device.
 
+=end doc
+
 =cut
 
 sub createSwap
@@ -1557,6 +1583,8 @@ sub createSwap
   Mount the loopback disk image into a temporary directory.
 
   Alternatively mount the relevant LVM volume instead.
+
+=end doc
 
 =cut
 
@@ -1617,6 +1645,8 @@ sub mountImage
   Install the system, by invoking the xt-install-system script.
 
   The script will be given the appropriate arguments from our environment.
+
+=end doc
 
 =cut
 
@@ -1682,6 +1712,8 @@ sub installSystem
 
   Before we do this we must pass all the relevent options into our
  environment.
+
+=end doc
 
 =cut
 
@@ -1754,6 +1786,8 @@ sub runCustomisationHooks
 
   If the user specified a role for the new instance then execute it.
 
+=end doc
+
 =cut
 
 sub runRoleScript
@@ -1800,6 +1834,8 @@ sub runRoleScript
   Note that we don't need to do any setup for the environment since
  we did this already before running the hook scripts.
 
+=end doc
+
 =cut
 
 sub runXenConfigCreation
@@ -1823,6 +1859,8 @@ sub runXenConfigCreation
 =begin doc
 
   chroot() into the new system and setup the password.
+
+=end doc
 
 =cut
 
@@ -1849,6 +1887,8 @@ sub setupRootPassword
 
   When running verbosely we will also display any command output once
  it has finished.
+
+=end doc
 
 =cut
 
@@ -1908,6 +1948,8 @@ sub runCommand
 
   If we still have the temporary image mounted then make sure
  it is unmounted before we terminate.
+
+=end doc
 
 =cut
 
