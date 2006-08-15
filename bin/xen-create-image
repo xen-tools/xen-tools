@@ -435,7 +435,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.63 2006-08-15 18:04:14 steve Exp $
+ $Id: xen-create-image,v 1.64 2006-08-15 21:11:31 steve Exp $
 
 =cut
 
@@ -476,6 +476,7 @@ my %CONFIG;
 #
 #
 my $MOUNT_POINT = undef;
+
 
 
 #
@@ -806,6 +807,20 @@ sub parseCommandLineArguments
     my $VERSION = 0;
 
     #
+    #  We record the installation method here because we want
+    # to ensure that we allow the method supplied upon the command line
+    # to overwrite the one we might have ready read from the configuration
+    # file.
+    #
+    my %install;
+    $install{'debootstrap'} = 0;
+    $install{'rpmstrap'}    = 0;
+    $install{'copy'}        = undef;
+    $install{'tar'}         = undef;
+    $install{'dir'}         = undef;
+    $install{'lvm'}         = undef;
+
+    #
     #  Parse options.
     #
     GetOptions(
@@ -819,11 +834,11 @@ sub parseCommandLineArguments
               "memory=s",     \$CONFIG{'memory'},
 
               # Locations
-              "dir=s",        \$CONFIG{'dir'},
+              "dir=s",        \$install{'dir'},
               "kernel=s",     \$CONFIG{'kernel'},
               "initrd=s",     \$CONFIG{'initrd'},
               "mirror=s",     \$CONFIG{'mirror'},
-              "lvm=s",        \$CONFIG{'lvm'},
+              "lvm=s",        \$install{'lvm'},
 
               # Networking options
               "dhcp",         \$CONFIG{'dhcp'},
@@ -833,11 +848,14 @@ sub parseCommandLineArguments
               "netmask=s",    \$CONFIG{'netmask'},
               "p2p=s",        \$CONFIG{'p2p'},
 
-              # Exclusive
-              "copy=s",       \$CONFIG{'copy'},
-              "debootstrap",  \$CONFIG{'debootstrap'},
-              "rpmstrap",     \$CONFIG{'rpmstrap'},
-              "tar=s",        \$CONFIG{'tar'},
+               # Exclusive
+               #
+               #  NOTE:  We set the local variable here, not the global.
+               #
+              "copy=s",       \$install{'copy'},
+              "debootstrap",  \$install{'debootstrap'},
+              "rpmstrap",     \$install{'rpmstrap'},
+              "tar=s",        \$install{'tar'},
 
               # Misc. options
               "accounts",     \$CONFIG{'accounts'},
@@ -864,7 +882,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.63 $';
+       my $REVISION      = '$Revision: 1.64 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -874,6 +892,72 @@ sub parseCommandLineArguments
        print "xen-create-image release $RELEASE - CVS: $REVISION\n";
        exit;
 
+    }
+
+    #
+    #  If we have had one of the local installation methods specified,
+    # and *only* one of them the we'll reset the global option(s) which
+    # came from the configuration file.
+    #
+    #  Count the number which wer supplied
+    #
+    my $count = 0;
+    foreach my $key ( qw/debootstrap rpmstrap copy tar/ )
+    {
+        if ( $install{$key} )
+        {
+            $count += 1;
+        }
+    }
+
+    #
+    #  If we had exactly one specified then we can proceed.
+    #
+    if ( $count == 1 )
+    {
+        foreach my $key ( qw/debootstrap rpmstrap copy tar/ )
+        {
+            $CONFIG{$key} = $install{$key};
+        }
+    }
+    elsif ( $count > 1 )
+    {
+        print <<E_O_ERROR;
+
+  Please specify an installation method using only *one* of the following
+ command line options:
+
+   --debootstrap     =  Install the system using the deboostrap command.
+   --rpmstrap        =  Install the system using the rpmstrap command.
+   --copy /path      =  Install by copying the specified directory recursively.
+   --untar file.tar  =  Install by untarring the given file.
+
+  (You could specify one of these options as the default in the configuration
+ file /etc/xen-tools/xen-tools.conf.)
+
+E_O_ERROR
+    }
+    else
+    {
+        # count == 0;
+        #OK.
+    }
+
+
+    #
+    #  Now do a similar thing so that the command line setting of
+    # '--lvm=x' and '--dir=x' override anything in the configuration
+    # file.
+    #
+    if ( $install{'dir'} )
+    {
+        $CONFIG{'lvm'} = undef;
+        $CONFIG{'dir'} = $install{'dir'};
+    }
+    if ( $install{'lvm'} )
+    {
+        $CONFIG{'dir'} = undef;
+        $CONFIG{'lvm'} = $install{'lvm'};
     }
 }
 
@@ -1020,7 +1104,8 @@ E_OR
             $count += 1;
         }
     }
-    if ( $count != 1 )
+
+    if ( $count > 1 )
     {
         print <<E_O_ERROR;
 
@@ -1036,7 +1121,8 @@ E_OR
  file /etc/xen-tools/xen-tools.conf.)
 
 E_O_ERROR
-       exit;
+        exit;
+
     }
 }
 
