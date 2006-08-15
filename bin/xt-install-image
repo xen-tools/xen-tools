@@ -80,7 +80,7 @@ Install the distribution specified by the B<--dist> argument using the debootstr
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.23 2006-08-15 21:30:07 steve Exp $
+ $Id: xt-install-image,v 1.24 2006-08-15 21:30:57 steve Exp $
 
 =cut
 
@@ -237,7 +237,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.23 $';
+       my $REVISION      = '$Revision: 1.24 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -416,7 +416,7 @@ sub installDebootstrapImage
     #
     #  This is the command we'll run
     #
-    my $command = "/usr/sbin/debootstrap --keep-debootstrap-dir $ARCH $CONFIG{'dist'} $CONFIG{'location'} $CONFIG{'mirror'}";
+    my $command = "/usr/sbin/debootstrap --keep-debootstrap-dir $EXTRA $CONFIG{'dist'} $CONFIG{'location'} $CONFIG{'mirror'}";
 
     #
     #  Run the command.
