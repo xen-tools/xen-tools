@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-xen-create-image - Create a new Xen instance
+xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
 =cut
 
@@ -10,155 +10,115 @@ xen-create-image - Create a new Xen instance
 
 
   Help Options:
-   --debug    Show useful debugging information.
-   --help     Show this scripts help information.
-   --manual   Read this scripts manual.
-   --version  Show the version number and exit.
+
+   --help        Show the help information for this script.
+
+   --manual      Read the manual, and examples, for this script.
+
+   --verbose     Show useful debugging information.
+
+   --version     Show the version number and exit.
+
 
   Size / General options:
    --accounts    Copy all non-system accounts to the guest image
+
    --boot        Boot the new instance after creating it.
-   --cache       Cache .deb files on the host when using --debootstrap
+
+   --cache       Cache .deb files on the host when installing the new guest
+                with the debootstrap tool.
+
    --force       Force overwriting existing images.
-   --fs          Specify the filesystem type to use.
+                 This will remove existing images, or LVM volumes which match
+                 those which are liable to be used by the new invocation.
+
+   --fs          Specify the filesystem type to use for the new guest.
+                 Valid choices are 'ext3', 'reiserfs', or 'xfs'.
+
    --image       Specify whether to create "sparse" or "full" disk images.
+                 Full images are mandatory when using LVM, so this setting
+                 is ignored in that case.
+
    --initrd      Specify the initial ramdisk
-   --kernel      Set the path to the kernel to use for dom U.
-   --memory      Setup the amount of memory allocated to the instance.
+                 If an image is specified it must exist.
+
+   --kernel      Set the path to the kernel to use for domU.
+                 This image must exist on the host system.
+
+   --memory      Setup the amount of memory allocated to the new instance.
+
    --passwd      Ask for a root password during setup.
+                 This is done interactively.
+
    --role        Run a specific role command post-install.
+                 These role scripts are discussed in the manpage later.
+
    --size        Set the size of the primary disk image.
+
    --swap        Set the size of the swap partition.
+
    --noswap      Do not create a swap partition.
+                 When this option is used the system will not have a swap
+                 entry added to its /etc/fstab file either.
+
    --ide         Use IDE names for virtual devices (hda not sda)
 
+
   Installation options:
-   --copy        Install the new image by copying from the given directory.
-   --dist        Specify the distribution you wish to install
-   --debootstrap Use debootstrap to install the distribution --dist.
-   --mirror      Setup the mirror to use when installing with --debootstrap.
-   --rpmstrap    Use rpmstrap to install the distribution --dist.
+   --copy        Install the new image by copying a previously installed system.
+                 This is much faster than installing from scratch.
+
+   --dist        Specify the distribution you wish to install.
+
+   --debootstrap Use debootstrap to install the guest system.
+                 --dist should be used to specify a distribution debootstrap
+                 understands.
+
+   --mirror      Setup the mirror to use when installing via debootstrap.
+
+   --rpmstrap    Use rpmstrap to install the guest distribution.
+                 --dist should be used to specify a distribution rpmstrap
+                 understands.
+
    --tar         Install the new image by untarring the given file.
+                 Similar to --copy this is signficantly faster than installing
+                 via rpmstrap or debootstrap.  (Even with caching.)
+
    --template    Specify the template file for Xen configuration file creation
 
+
+
   Networking options:
-   --dhcp      Configure the new image to fetch its networking details via DHCP.
-   --gateway   Setup the network gateway for the new instance.
-   --ip        Setup the IP address of the machine, multiple IPs are allowed.
-   --netmask   Setup the netmask for the new instance.
+   --dhcp        The new instance will fetch its networking details via DHCP.
+
+   --gateway     Setup the network gateway for the new instance.
+
+   --ip          Setup the IP address of the machine, multiple IPs are allowed.
+                 When specifying multiple IPs the first one is setup as the
+                 "system" IP, and the additional ones are created as aliases.
+                 Note that Xen 3.x only supports a maximum of three IP addresses
+                 per guest.  This option conflicts with --dhcp.
+
+   --netmask     Setup the netmask for the new instance.
 
   Mandatory options:
 
-   --dir       Specify where the output images should go.
-   --lvm       Specify the volume group to save images within.
-   --hostname  Set the images hostname.
+   --dir         Specify where the output images should go.
+                 Subdirectories will be created for each guest.  If you do not
+                 wish to use loopback images specify --lvm.  (These two options
+                 are mutually exclusive.)
+
+   --lvm         Specify the volume group to save images within.
+                 If you do not wish to use LVM specify --dir.
+                 (These two options are mutually exclusive.)
+
+   --hostname    Set the hostname of the new guest system.
+                 Ideally this will be fully-qualified since several of the hook
+                 scripts will expect to be able to parse a domain name out of
+                 it for various purposes.
 
 =cut
 
-
-=head1 OPTIONS
-
-=over 8
-
-=item B<--boot>
-Start the new virtual instance as soon as the installation has finished.
-
-=item B<--cache>
-Cache the .deb files in /var/cache/apt/archives upon the host system when installing a new image with B<--debootstrap> for a large speed improvement. [Defaults to yes.]
-
-=item B<--copy>
-Install a new system by copying files recursively from the given directory.  This is significantly faster than using --rpmstrap or --debootstrap, but it does require that you have installed a distribution "slowly" at least once.
-
-=item B<--debug>
-Show the commands this script executes as an aid to debugging, along with their output once it has completed.
-
-=item B<--debootstrap>
-Use the debootstrap tool to install the distribution specified with --dist.  When specifying --debootstrap you should choose a local mirror with --mirror.
-
-=item B<--dhcp>
-Specify that the virtual image should use DHCP to obtain its networking information.  This option conflicts with --ip.
-
-=item B<--dir>
-Specify the root directory beneath which the image should be saved.  Subdirectories will be created for each virtual image.  If you do not wish to use loopback files instead specify an LVM volume group with --lvm.
-
-=item B<--dist>
-Specify the distribution to install, defaults to 'sarge'.
-
-=item B<--force>
-Force the script to overwrite any existing swap or disk images.  By default the present of an existing image for the same hostname will cause the script to abort.
-
-=item B<--fs>
-Specify the filesystem the image should be given.  Valid options are 'ext3',
-'xfs', or 'reiserfs'.
-
-=item B<--gateway>
-Specify the gateway address for the virtual image, only useful if DHCP is not used.
-
-=item B<--help>
-Show the brief help information.
-
-=item B<--hostname>
-Set the hostname of the new instance.  B<Note> this should ideally be a fully qualified hostname, sine several of the supported distributions will expect a domain name to be present.
-
-=item B<--ide>
-Use IDE style device names for the virtual devices.
-
-=item B<--image>
-Specify whether to use sparse or full images for the disk and swap volumes.
-
-=item B<--initrd>
-Specify the initial ramdisk to be used by the booting Xen instance.
-
-=item B<--ip>
-Set the IP address for the virtual image.  Conflicts with --dhcp.  This argument may be specified multiple times to give your new instance multiple IP addresses.
-
-=item B<--kernel>
-Specify the kernel which should be used for booting the new Xen instance.
-
-=item B<--manual>
-Read the manual, with examples.
-
-=item B<--memory>
-Specify the amount of memory the virtual image should be allocated.  Defaults
-to 128Mb.
-
-=item B<--mirror>
-Specify the mirror to use when installing distributions with the debootstrap tool.  This defaults to http://ftp.us.debian.org/debian
-
-=item B<--netmask>
-Set the netmask the virtual image should use.
-
-=item B<--noswap>
-Do not create swap.
-
-=item B<--passwd>
-Setup a password for the root account of the virtual machine.  Note that specifying this will avoid copying user accounts into the new guest image.  (i.e.  The guest image will only have a root account setup.)
-
-=item B<--role>
-Run a single, specific, role-script once the image has been setup.
-
-=item B<--size>
-Specify the size of the primary drive to give the virtual image.  The size may be suffixed with either Mb, or Gb.
-
-=item B<--swap>
-Specify the size of the virtual swap partition to create.  The size may be
-suffixed with either Mb, or Gb.
-
-=item B<--tar>
-Install a new system by untarring the given file.  This is significantly faster than using --rpmstrap or --debootstrap, but it does require that you have installed a distribution "slowly" at least once.
-
-=item B<--template>
-The Xen configuration file is created in /etc/xen is created by the means of a template file.  By default this will be /etc/xen-tools/xm.tmpl using this argument you can specify an alternative template file to use.
-
-=item B<--version>
-Show the version number and exit.
-
-=item B<--lvm>
-Specify the LVM volume group to store images within.  If you wish to use loopback files instead please specify an output directory with --dir.  LVM and loopback files conflict with each other; choose only one.
-
-=back
-
-=cut
 
 =head1 NOTES
 
@@ -282,6 +242,9 @@ Create a configuration file in /etc/xen so that xm can create the new image.
   If you wish to modify the files which are generated please make your
  changes to that input file.
 
+  Alternatively you can create multiple configuration files and
+ specify the one to use with the --template option.
+
 =cut
 
 
@@ -297,11 +260,12 @@ Create a configuration file in /etc/xen so that xm can create the new image.
  IP address 192.168.1.200, with the gateway address of 192.168.1.1
 
      xen-create-image --size=2Gb --swap=128Mb \
-          --ip=192.168.1.200 --netmask=255.255.255.0
+          --ip=192.168.1.200 \
+          --netmask=255.255.255.0
           --gateway=192.168.1.1 \
           --dir=/home/xen --hostname=vm02.my.flat
 
-  The directory specified for the output will be used to store the files
+  The directory specified for the output will be used to store the volumes
  which are produced.  To avoid clutter each host will have its images
  stored beneath the specified directory, named after the hostname.
 
@@ -323,7 +287,7 @@ Create a configuration file in /etc/xen so that xm can create the new image.
 =head1 LVM EXAMPLES
 
   If you wish to use an LVM volume group instead of a pair of loopback
- images as shown above you can instead use the B<--lvm> argument to
+ images as shown above you can instead use the --lvm argument to
  specify one.
 
      xen-create-image --size=2Gb --swap=128Mb --dhcp \
@@ -334,9 +298,10 @@ Create a configuration file in /etc/xen so that xm can create the new image.
    ${hostname}-swap
    ${hostname}-disk
 
-  This images can be mounted, as you would expect, by a command like this:
+  The disk image may be mounted, as you would expect, with the following
+ command:
 
-    mkdir /mnt/foo
+    mkdir -p /mnt/foo
     mount /dev/myvolumegroup/vm01.my.flat-disk /mnt/foo
 
 =cut
@@ -346,24 +311,47 @@ Create a configuration file in /etc/xen so that xm can create the new image.
 
   The new guest images may be installed in several different ways:
 
-  1.  With the debootstrap command.
-  2.  With the rpmstrap command.
+  1.  Using the debootstrap command, which must be installed and present.
+  2.  Using the rpmstrap command, which must be installed and present.
   3.  By copying an existing installation.
   4.  By untarring a file containing a previous installation.
 
   These different methods can be selected by either the command line
- arguments, or settings in the configuration file.  Only one installation 
- method may be specified.
-
-  After your first installation you have the option of tarring
- up the new system, and specifying that this tarfile should be used
- for future installations of the same distribution.
-
-  Similarly if you were to mount an existing installation of a given
- distribution you could simply copy that filesystem into the new image
- with the --copy option.
+ arguments, or settings in the configuration file.  Only one installation
+ method may be specified at a time; they are mutually-exclusive.
 
 =cut
+
+=head1 INSTALLATION SPEEDUPS
+
+  After performing your first installation you can customize it, or
+ use it untouched, as a new installation source.  By doing this you'll
+ achieve a significant speedup, even above using the debootstrap caching
+ support.
+
+  There are two different ways you can use the initial image as source
+ for a new image:
+
+  1.  By tarring it up and using the tar-file as an installation source.
+  2.  By mounting the disk image of the first system and doing a literal copy.
+
+  Tarring up a pristine, or customised, image will allow you to install
+ with a command such as:
+
+     xen-create-image --size=2Gb --swap=128Mb --dhcp \
+          --lvm=myvolumegroup --hostname=vm01.my.flat \
+          --tar=/path/to/tar.file.tar
+
+  The advantage of the tarfile approach is that you'll not need to
+ keep a disk image mounted if you were to use the --copy argument
+ to create a new image using the old one as source:
+
+     xen-create-image --size=2Gb --swap=128Mb --dhcp \
+          --lvm=myvolumegroup --hostname=vm01.my.flat \
+          --copy=/path/to/copy/from
+
+=cut
+
 
 =head1 DEBOOTSTRAP CACHING
 
@@ -447,7 +435,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.62 2006-08-15 09:19:24 steve Exp $
+ $Id: xen-create-image,v 1.63 2006-08-15 18:04:14 steve Exp $
 
 =cut
 
@@ -876,7 +864,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.62 $';
+       my $REVISION      = '$Revision: 1.63 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
