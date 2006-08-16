@@ -440,7 +440,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.67 2006-08-15 21:34:49 steve Exp $
+ $Id: xen-create-image,v 1.68 2006-08-16 09:40:46 steve Exp $
 
 =cut
 
@@ -493,10 +493,6 @@ my $RELEASE = '2.2';
 
 
 
-#
-#  Check the environment
-#
-checkSystem();
 
 
 #
@@ -518,6 +514,15 @@ if ( -e "/etc/xen-tools/xen-tools.conf" )
 #  Parse the command line arguments.
 #
 parseCommandLineArguments();
+
+
+#
+#  Check the environment - after parsing arguments.
+#
+#  This is required so that the "--help" flag will work even if the script
+# isn't installed.  (For tests/getopt.t)
+#
+checkSystem();
 
 
 #
@@ -898,7 +903,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.67 $';
+       my $REVISION      = '$Revision: 1.68 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
