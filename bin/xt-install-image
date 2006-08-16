@@ -80,7 +80,7 @@ Install the distribution specified by the B<--dist> argument using the debootstr
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.24 2006-08-15 21:30:57 steve Exp $
+ $Id: xt-install-image,v 1.25 2006-08-16 09:42:44 steve Exp $
 
 =cut
 
@@ -112,7 +112,7 @@ my %CONFIG;
 #
 # Release number.
 #
-my $RELEASE = '2.2';
+my $RELEASE = '2.3';
 
 
 #
@@ -237,7 +237,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.24 $';
+       my $REVISION      = '$Revision: 1.25 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {

@@ -57,7 +57,7 @@ xt-create-config - Create a Xen configuration file for a new domain.
  --
  http://www.steve.org.uk/
 
- $Id: xt-create-xen-config,v 1.14 2006-08-15 21:30:07 steve Exp $
+ $Id: xt-create-xen-config,v 1.15 2006-08-16 09:42:44 steve Exp $
 
 =cut
 
@@ -98,7 +98,7 @@ $CONFIG{'template'} = '/etc/xen-tools/xm.tmpl';
 #
 # Release number.
 #
-my $RELEASE = '2.2';
+my $RELEASE = '2.3';
 
 
 
@@ -164,7 +164,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.14 $';
+       my $REVISION      = '$Revision: 1.15 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {

@@ -99,7 +99,7 @@ Specify the LVM volume group where images were previously saved.
  --
  http://www.steve.org.uk/
 
- $Id: xen-delete-image,v 1.13 2006-08-15 21:30:07 steve Exp $
+ $Id: xen-delete-image,v 1.14 2006-08-16 09:42:44 steve Exp $
 
 =cut
 
@@ -134,7 +134,7 @@ my %CONFIG;
 #
 # Release number.
 #
-my $RELEASE = '2.2';
+my $RELEASE = '2.3';
 
 
 
@@ -288,7 +288,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.13 $';
+       my $REVISION      = '$Revision: 1.14 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
