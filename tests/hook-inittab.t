@@ -4,7 +4,7 @@
 #
 # Steve
 # --
-# $Id: hook-inittab.t,v 1.5 2006-06-25 20:02:33 steve Exp $
+# $Id: hook-inittab.t,v 1.6 2006-08-17 12:32:19 steve Exp $
 #
 
 use strict;
@@ -92,7 +92,7 @@ sub testHook
             #  1:2345:respawn:/sbin/getty 38400 console
             #
             ok( $1 eq "1", "We found the first getty line." );
-            ok( $3 eq "console", "Which does use the console driver." );
+            ok( $3 eq "tty1", "Which does uses the correct driver: $3" );
         }
 
         if ( $line =~ /^(.).*getty/ )
