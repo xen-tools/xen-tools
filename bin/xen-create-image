@@ -20,7 +20,9 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --version     Show the version number and exit.
 
 
+
   Size / General options:
+
    --accounts    Copy all non-system accounts to the guest image
 
    --boot        Boot the new instance after creating it.
@@ -29,7 +31,7 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
                 with the debootstrap tool.
 
    --force       Force overwriting existing images.
-                 This will remove existing images, or LVM volumes which match
+                 This will remove existing images or LVM volumes which match
                  those which are liable to be used by the new invocation.
 
    --fs          Specify the filesystem type to use for the new guest.
@@ -70,7 +72,8 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
                  This argument is ignored if you install with a different
                  installation type.
 
-   --copy        Install the new image by copying a previously installed system.
+   --copy        Install a new image by copying a directory recursively,
+                 this is assumed to be a previously installed system.
                  This is much faster than installing from scratch.
 
    --dist        Specify the distribution you wish to install.
@@ -85,42 +88,45 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
                  --dist should be used to specify a distribution rpmstrap
                  understands.
 
-   --tar         Install the new image by untarring the given file.
-                 Similar to --copy this is signficantly faster than installing
-                 via rpmstrap or debootstrap.  (Even with caching.)
+   --tar         Install the new image by untarring the specified file.
+                 Similar to --copy this is signficantly faster than
+                 installing via rpmstrap or debootstrap.
 
-   --template    Specify the template file for Xen configuration file creation
+   --template    Specify which template file to use when creating the
+                 Xen configuration file.
 
 
 
   Networking options:
-   --dhcp        The new instance will fetch its networking details via DHCP.
+   --dhcp        The guest will fetch its networking details via DHCP.
 
    --gateway     Setup the network gateway for the new instance.
 
-   --ip          Setup the IP address of the machine, multiple IPs are allowed.
-                 When specifying multiple IPs the first one is setup as the
-                 "system" IP, and the additional ones are created as aliases.
-                 Note that Xen 3.x only supports a maximum of three IP addresses
-                 per guest.  This option conflicts with --dhcp.
+   --ip          Setup the IP address of the machine, multiple IPs
+                 are allowed.   When specifying more than one IP the
+                 first one is setup as the "system" IP, and the additional
+                 ones are added as aliases.
+                 Note that Xen 3.x supports a maximum of three IP addresses
+                 per guest.
+                 This option conflicts with --dhcp.
 
    --netmask     Setup the netmask for the new instance.
 
   Mandatory options:
 
    --dir         Specify where the output images should go.
-                 Subdirectories will be created for each guest.  If you do not
-                 wish to use loopback images specify --lvm.  (These two options
-                 are mutually exclusive.)
+                 Subdirectories will be created for each guest
+                 If you do not wish to use loopback images specify --lvm.
+                 (These two options are mutually exclusive.)
 
    --lvm         Specify the volume group to save images within.
                  If you do not wish to use LVM specify --dir.
                  (These two options are mutually exclusive.)
 
    --hostname    Set the hostname of the new guest system.
-                 Ideally this will be fully-qualified since several of the hook
-                 scripts will expect to be able to parse a domain name out of
-                 it for various purposes.
+                 Ideally this will be fully-qualified since several
+                 of the hook scripts will expect to be able to parse
+                 a domain name out of it for various purposes.
 
 =cut
 
@@ -241,7 +247,7 @@ Create a configuration file in /etc/xen so that xm can create the new image.
  for Xen will be saved in the directory /etc/xen.
 
   The configuration file is built up using the template file
- B</etc/xen-tools/xm.tmpl> - which is a file processed via
+ /etc/xen-tools/xm.tmpl - which is a file processed via
  the Text::Template perl module.
 
   If you wish to modify the files which are generated please make your
@@ -440,7 +446,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.69 2006-08-16 09:42:44 steve Exp $
+ $Id: xen-create-image,v 1.70 2006-08-17 08:41:32 steve Exp $
 
 =cut
 
@@ -903,7 +909,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.69 $';
+       my $REVISION      = '$Revision: 1.70 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
