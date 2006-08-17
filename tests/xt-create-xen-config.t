@@ -5,7 +5,7 @@
 #
 # Steve
 # --
-# $Id: xt-create-xen-config.t,v 1.3 2006-08-17 21:00:47 steve Exp $
+# $Id: xt-create-xen-config.t,v 1.4 2006-08-17 21:01:46 steve Exp $
 #
 
 
@@ -48,11 +48,7 @@ testOutputContains( "sda1",
                     memory => 128, ip1 => '192.168.1.1', dir => '/tmp' );
 testOutputContains( "/dev/sda1 ro",
                     memory => 128, ip1 => '192.168.1.1', dir => '/tmp' );
-testOutputContains( "sda2",
-                    memory => 128, ip1 => '192.168.1.1', dir => '/tmp' );
 noMentionOf( "hda1",
-             memory => 128, ip1 => '192.168.1.1', dir => '/tmp' );
-noMentionOf( "hda2",
              memory => 128, ip1 => '192.168.1.1', dir => '/tmp' );
 
 
@@ -63,12 +59,6 @@ testOutputContains( "hda1",
                     memory => 128, ip1 => '192.168.1.1', dir => '/tmp', ide => 1 );
 testOutputContains( "/dev/hda1 ro",
                     memory => 128, ip1 => '192.168.1.1', dir => '/tmp', ide => 1 );
-noMentionOf( "sda1",
-             memory => 128, ip1 => '192.168.1.1', dir => '/tmp', ide => 1 );
-testOutputContains( "hda2",
-                    memory => 128, ip1 => '192.168.1.1', dir => '/tmp', ide => 1 );
-noMentionOf( "sda2",
-             memory => 128, ip1 => '192.168.1.1', dir => '/tmp', ide => 1 );
 
 
 
@@ -133,8 +123,6 @@ sub runCreateCommand
     #  Force a hostname
     #
     $params{'hostname'} = 'foo.my.flat';
-#    $params{'image_vbd'} = "/dev/foo";
-#    $params{'device1'}    = 'hda';
     $params{'noswap'} = 1;
 
     #
