@@ -19,11 +19,11 @@ root    = '/dev/{$device}1 ro'
 
 { if ( $noswap ) 
   {
-        $OUT .= "disk    = [ '$image_vbd,$device1,w' ]";
+        $OUT .= "disk    = [ '$image_vbd,$device" . "1,w' ]";
   }
   else
   {
-        $OUT .= "disk    = [ '$image_vbd,$device1,w', '$swap_vbd,$device2,w' ]";
+        $OUT .= "disk    = [ '$image_vbd,$device" . "1,w', '$swap_vbd,$device" . "2,w' ]";
   }
 }
 

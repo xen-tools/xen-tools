@@ -5,7 +5,7 @@
 #
 # Steve
 # --
-# $Id: xt-create-xen-config.t,v 1.2 2006-06-19 20:39:21 steve Exp $
+# $Id: xt-create-xen-config.t,v 1.3 2006-08-17 21:00:47 steve Exp $
 #
 
 
@@ -133,6 +133,9 @@ sub runCreateCommand
     #  Force a hostname
     #
     $params{'hostname'} = 'foo.my.flat';
+#    $params{'image_vbd'} = "/dev/foo";
+#    $params{'device1'}    = 'hda';
+    $params{'noswap'} = 1;
 
     #
     #  Create a temporary directory, and make sure it is present.
