@@ -446,7 +446,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.73 2006-08-17 20:07:05 steve Exp $
+ $Id: xen-create-image,v 1.74 2006-08-17 20:14:48 steve Exp $
 
 =cut
 
@@ -909,7 +909,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.73 $';
+       my $REVISION      = '$Revision: 1.74 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -1155,6 +1155,19 @@ E_O_ERROR
         exit;
 
     }
+
+    #
+    #  Make sure that any specified template file exists.
+    #
+    if ( defined( $CONFIG{'template'} ) )
+    {
+        if ( ! -e $CONFIG{'template'} )
+        {
+            print "The specified template file, $CONFIG{'template'}, does not exist.\n";
+            exit 1;
+        }
+    }
+
 }
 
 
