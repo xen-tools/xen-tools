@@ -1,9 +1,8 @@
 #!/bin/sh
 #
-#  This script does two things:
-#
-#  1. Sets the console type for the first terminal to 'console'.
-#  2. Comments out all virtual terminals which aren't on the first console.
+#  This script comments out all virtual terminals which aren't on the
+# first console - that must remain so that 'xm console ...' works
+# correctly.
 #
 # Steve
 # --
@@ -32,7 +31,7 @@ logMessage Script $0 starting
 #
 # Do the transformation.
 #
-sed -i -e 's/tty[0-9]$/console/g' -e 's/^\([2-6].*:respawn*\)/#\1/' -e 's/^T/#\t/' ${prefix}/etc/inittab
+sed -i -e 's/^\([2-6].*:respawn*\)/#\1/' -e 's/^T/#\t/' ${prefix}/etc/inittab
 
 
 #
