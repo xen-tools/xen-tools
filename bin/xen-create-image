@@ -446,7 +446,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.72 2006-08-17 19:52:14 steve Exp $
+ $Id: xen-create-image,v 1.73 2006-08-17 20:07:05 steve Exp $
 
 =cut
 
@@ -909,7 +909,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.72 $';
+       my $REVISION      = '$Revision: 1.73 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -1517,7 +1517,7 @@ sub createLVMBits
      #  Initialise the partitions with the relevant filesystem.
      #
      createFilesystem( "/dev/$CONFIG{'lvm'}/$CONFIG{'hostname'}-disk" );
-     createSwap( "/dev/$CONFIG{'lvm'}/$CONFIG{'hostname'}-swap" );
+     createSwap( "/dev/$CONFIG{'lvm'}/$CONFIG{'hostname'}-swap" ) unless ( $CONFIG{'noswap'} );
 }
 
 
