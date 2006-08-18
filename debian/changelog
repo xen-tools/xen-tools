@@ -1,3 +1,17 @@
+xen-tools (2.3-1) unstable; urgency=high
+
+  * Urgency set to high because the software will not work correctly unless
+    using a specific version of debootstrap.
+    - Updated manpages to avoid word-wrapping.
+    - Updated --noswap option such that a LVM swap volume isn't created.
+    - Reverted the usage of '--keep-debootstrap-dir' since that is a 
+      "recent" thing.  Will switch to keeping a global logfile for error
+      purposes.
+      (Closes: #383589)
+  * Switched myself to maintainer, and Radu to be uploader after discussion.
+
+ -- Steve Kemp <skx@debian.org>  Fri, 18 Aug 2006 09:54:32 +0000
+
 xen-tools (2.3-0) unstable; urgency=low
 
   * New upstream release:
