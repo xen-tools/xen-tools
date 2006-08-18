@@ -8,6 +8,7 @@ xen-tools (2.3-1) unstable; urgency=high
       "recent" thing.  Will switch to keeping a global logfile for error
       purposes.
       (Closes: #383589)
+    - File given as '--template' argument must exist.
   * Switched myself to maintainer, and Radu to be uploader after discussion.
 
  -- Steve Kemp <skx@debian.org>  Fri, 18 Aug 2006 09:54:32 +0000
