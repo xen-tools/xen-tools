@@ -446,7 +446,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.78 2006-08-18 13:10:37 steve Exp $
+ $Id: xen-create-image,v 1.79 2006-08-18 13:14:14 steve Exp $
 
 =cut
 
@@ -542,6 +542,18 @@ testRootUser();
 #  Check our arguments
 #
 checkArguments();
+
+#
+#  Make sure we have a log directory
+#
+mkdir( "/var/log/xen-tools", 0777 ) if ( ! -d "/var/log/xen-tools" );
+
+#
+#  Trash any existing logfile.
+open( TRASH, ">", "/var/log/xen-tools/$CONFIG{'hostname'}.log" );
+print TRASH "";
+close(TRASH);
+
 
 
 #
@@ -770,6 +782,7 @@ sub setupDefaultOptions
     $CONFIG{'mount_fs_ext3'}      = '-t ext3';
     $CONFIG{'mount_fs_xfs'}       = '-t xfs';
     $CONFIG{'mount_fs_reiserfs'}  = '-t reiserfs';
+
 }
 
 
@@ -926,7 +939,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.78 $';
+       my $REVISION      = '$Revision: 1.79 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -1941,10 +1954,8 @@ sub logprint
     print $text;
 
     #
-    #  Make sure we have a log directory
+    #  Log.
     #
-    mkdir( "/var/log/xen-tools", 0777 ) if ( ! -d "/var/log/xen-tools" );
-
     if ( $CONFIG{'hostname'} )
     {
         open( LOGFILE, ">>", "/var/log/xen-tools/$CONFIG{'hostname'}.log" )
