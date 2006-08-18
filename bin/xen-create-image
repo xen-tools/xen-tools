@@ -446,7 +446,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.75 2006-08-17 20:26:23 steve Exp $
+ $Id: xen-create-image,v 1.76 2006-08-18 12:07:46 steve Exp $
 
 =cut
 
@@ -525,8 +525,8 @@ parseCommandLineArguments();
 #
 #  Check the environment - after parsing arguments.
 #
-#  This is required so that the "--help" flag will work even if the script
-# isn't installed.  (For tests/getopt.t)
+#  This is required so that the "--help" flag will work even if our support
+# scripts are not installed.
 #
 checkSystem();
 
@@ -566,13 +566,18 @@ if ( $CONFIG{'dir'} )
 
     createLoopbackImages();
 }
-
-#
-#  Create and format the LVM partitions if we're using LVM.
-#
-if ( $CONFIG{'lvm'} )
+elsif ( $CONFIG{'lvm'} )
 {
+    #
+    #  Create our LVM partitions.
+    #
     createLVMBits();
+}
+else
+{
+    # Can't happen:  Neither loopback nor LVM selected
+    print "Error:  Neither loopback nor LVM is selected.\n";
+    exit;
 }
 
 
@@ -589,13 +594,24 @@ installSystem();
 
 
 #
-#  If that worked call xt-customise-image to setup networking, and
-# run distro-specific hooks.
+#  Make sure the installation succeeded.
+#
+if ( ! -x $MOUNT_POINT . "/bin/ls" )
+{
+    print "System installation failed.  Aborting\n";
+    exit;
+}
+
+
+
+#
+#  Call xt-customise-image to setup networking, and run distro-specific hooks.
 #
 runCustomisationHooks();
 
+
 #
-#  If the user specified role script then run it
+#  Run the user specified role script, if any.
 #
 runRoleScript();
 
@@ -604,6 +620,7 @@ runRoleScript();
 #  Create the Xen configuration file.
 #
 runXenConfigCreation();
+
 
 #
 #  Setup the password if the user wanted that.
@@ -909,7 +926,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.75 $';
+       my $REVISION      = '$Revision: 1.76 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
