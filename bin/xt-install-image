@@ -80,7 +80,7 @@ Install the distribution specified by the B<--dist> argument using the debootstr
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.27 2006-08-18 13:09:24 steve Exp $
+ $Id: xt-install-image,v 1.28 2006-08-18 13:10:37 steve Exp $
 
 =cut
 
@@ -237,7 +237,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.27 $';
+       my $REVISION      = '$Revision: 1.28 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -510,20 +510,9 @@ sub runCommand
     $CONFIG{'verbose'} && print "Executing : $cmd\n";
 
     #
-    #  Hide output unless running with --debug.
+    #  Copy stderr to stdout, so we can see it, and make sure we log it.
     #
-    if ( $CONFIG{'verbose'} )
-    {
-       #
-       #  Copy stderr to stdout, so we can see it.
-       #
-       $cmd .= " 2>&1";
-    }
-    else
-    {
-       $cmd .= " >/dev/null 2>/dev/null" ;
-    }
-
+    $cmd .= " 2>&1 | tee --append /var/log/xen-tools/$CONFIG{'hostname'}.log";
 
     #
     #  Run it.

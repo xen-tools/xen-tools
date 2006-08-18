@@ -446,7 +446,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.77 2006-08-18 13:09:24 steve Exp $
+ $Id: xen-create-image,v 1.78 2006-08-18 13:10:37 steve Exp $
 
 =cut
 
@@ -926,7 +926,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.77 $';
+       my $REVISION      = '$Revision: 1.78 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -1978,7 +1978,7 @@ sub runCommand
     $CONFIG{'verbose'} && print "Executing : $cmd\n";
 
     #
-    #  Copy stderr to stdout, so we can see it, and make sure we &logprint it.
+    #  Copy stderr to stdout, so we can see it, and make sure we log it.
     #
     $cmd .= " 2>&1 | tee --append /var/log/xen-tools/$CONFIG{'hostname'}.log";
 
