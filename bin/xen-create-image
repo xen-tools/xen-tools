@@ -446,7 +446,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.76 2006-08-18 12:07:46 steve Exp $
+ $Id: xen-create-image,v 1.77 2006-08-18 13:09:24 steve Exp $
 
 =cut
 
@@ -576,7 +576,7 @@ elsif ( $CONFIG{'lvm'} )
 else
 {
     # Can't happen:  Neither loopback nor LVM selected
-    print "Error:  Neither loopback nor LVM is selected.\n";
+    logprint( "Error:  Neither loopback nor LVM is selected.\n");
     exit;
 }
 
@@ -598,7 +598,7 @@ installSystem();
 #
 if ( ! -x $MOUNT_POINT . "/bin/ls" )
 {
-    print "System installation failed.  Aborting\n";
+    logprint( "System installation failed.  Aborting\n");
     exit;
 }
 
@@ -631,7 +631,7 @@ setupRootPassword() if ( $CONFIG{'passwd'} );
 #
 #  Report success.
 #
-print "All done\n";
+logprint( "All done\n");
 
 
 #
@@ -690,8 +690,8 @@ sub checkSystem
     {
         if  ( ! -x "/usr/bin/" . $bin )
         {
-            print "The script '$bin' was not found.\n";
-            print "Aborting\n\n";
+            logprint("The script '$bin' was not found.\n");
+            logprint( "Aborting\n\n" );
             exit;
         }
     }
@@ -926,14 +926,14 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.76 $';
+       my $REVISION      = '$Revision: 1.77 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
            $REVISION = $1;
        }
 
-       print "xen-create-image release $RELEASE - CVS: $REVISION\n";
+       logprint( "xen-create-image release $RELEASE - CVS: $REVISION\n" );
        exit;
 
     }
@@ -966,7 +966,7 @@ sub parseCommandLineArguments
     }
     elsif ( $count > 1 )
     {
-        print <<E_O_ERROR;
+        my $err =<<E_O_ERROR;
 
   Please specify an installation method using only *one* of the following
  command line options:
@@ -980,6 +980,8 @@ sub parseCommandLineArguments
  file /etc/xen-tools/xen-tools.conf.)
 
 E_O_ERROR
+
+        logprint( $err );
     }
     else
     {
@@ -1018,7 +1020,7 @@ sub testRootUser
 {
     if ( $EFFECTIVE_USER_ID != 0 )
     {
-       print <<E_O_ROOT;
+        my $err =<<E_O_ROOT;
 
   In order to use this script you must be running with root privileges.
 
@@ -1026,7 +1028,8 @@ sub testRootUser
 
 E_O_ROOT
 
-       exit;
+        logprint( $err );
+        exit;
     }
 }
 
@@ -1047,7 +1050,7 @@ sub checkArguments
     #
     if ( ! defined( $CONFIG{'dist'} ) )
     {
-       print "The '--dist' argument is mandatory\n";
+       logprint( "The '--dist' argument is mandatory\n" );
        exit 1;
     }
 
@@ -1056,7 +1059,7 @@ sub checkArguments
     #
     if ( ! defined( $CONFIG{'hostname'} ) )
     {
-        print "The '--hostname' argument is mandatory.\n";
+        logprint( "The '--hostname' argument is mandatory.\n" );
         exit 1;
     }
 
@@ -1080,7 +1083,7 @@ sub checkArguments
 
     if ( ! -d $dir )
     {
-       print <<E_OR;
+       my $err =<<E_OR;
 
   We're trying to configure an installation of $CONFIG{'dist'} in
  $CONFIG{'dir'} - but there is no hook directory for us to use.
@@ -1091,6 +1094,7 @@ sub checkArguments
 
   Aborting.
 E_OR
+       logprint( $err );
        exit 1;
     }
 
@@ -1103,7 +1107,7 @@ E_OR
         if ( ( $CONFIG{'image'} ne "sparse" ) &&
              ( $CONFIG{'image'} ne "full" ) )
         {
-            print "Image type must be 'sparse' or 'full'\n";
+            logprint( "Image type must be 'sparse' or 'full'\n" );
             exit;
         }
     }
@@ -1114,7 +1118,7 @@ E_OR
     if ( $CONFIG{'lvm'} )
     {
         $CONFIG{'image'} = "full";
-        print "Switching to 'full' images rather than 'sparse', since you're using LVM\n";
+        logprint( "Switching to 'full' images rather than 'sparse', since you're using LVM\n" );
     }
 
 
@@ -1125,9 +1129,9 @@ E_OR
          length( $CONFIG{'kernel'} )  &&
          ! -e $CONFIG{'kernel'} )
     {
-        print "The kernel image we're trying to use does not exist.\n";
-        print "The image is - $CONFIG{'kernel'}\n";
-        print "Aborting\n";
+        logprint( "The kernel image we're trying to use does not exist.\n" );
+        logprint( "The image is - $CONFIG{'kernel'}\n" );
+        logprint( "Aborting\n" );
         exit;
     }
 
@@ -1135,9 +1139,9 @@ E_OR
          length( $CONFIG{'initrd'} )  &&
          ! -e $CONFIG{'initrd'} )
     {
-        print "The initial ramdisk we're trying to use does not exist.\n";
-        print "The image is - $CONFIG{'initrd'}\n";
-        print "Aborting\n";
+        logprint( "The initial ramdisk we're trying to use does not exist.\n" );
+        logprint( "The image is - $CONFIG{'initrd'}\n" );
+        logprint( "Aborting\n" );
         exit;
     }
 
@@ -1155,7 +1159,7 @@ E_OR
 
     if ( $count > 1 )
     {
-        print <<E_O_ERROR;
+        my $err =<<E_O_ERROR;
 
   Please specify an installation method using one of the following
  command line options:
@@ -1169,6 +1173,7 @@ E_OR
  file /etc/xen-tools/xen-tools.conf.)
 
 E_O_ERROR
+        logprint( $err );
         exit;
 
     }
@@ -1180,7 +1185,7 @@ E_O_ERROR
     {
         if ( ! -e $CONFIG{'template'} )
         {
-            print "The specified template file, $CONFIG{'template'}, does not exist.\n";
+            logprint( "The specified template file, $CONFIG{'template'}, does not exist.\n" );
             exit 1;
         }
     }
@@ -1208,8 +1213,8 @@ sub checkFilesPresent
     {
         if ( ! -x $file )
         {
-            print "The following binary is required to run this tool\n";
-            print "\t$file\n";
+            logprint( "The following binary is required to run this tool\n" );
+            logprint( "\t$file\n");
             exit;
         }
     }
@@ -1225,9 +1230,9 @@ sub checkFilesPresent
         {
             if ( ! -x $file )
             {
-                print "The following binary is required to run this tool\n";
-                print "\t$file\n";
-                print "(This is only required for LVM volumes, which you've selected)\n";
+                logprint( "The following binary is required to run this tool\n");
+                logprint( "\t$file\n" );
+                logprint( "(This is only required for LVM volumes, which you've selected)\n" );
                 exit;
             }
         }
@@ -1250,28 +1255,28 @@ sub showSummery
     #
     # Show the user what to expect.
     #
-    print "\nGeneral Infomation\n";
-    print "--------------------\n";
-    print "Hostname       :  $CONFIG{'hostname'}\n";
-    print "Distribution   :  $CONFIG{'dist'}\n";
-    print "Fileystem Type :  $CONFIG{'fs'}\n";
+    logprint( "\nGeneral Infomation\n" );
+    logprint( "--------------------\n" );
+    logprint( "Hostname       :  $CONFIG{'hostname'}\n" );
+    logprint( "Distribution   :  $CONFIG{'dist'}\n" );
+    logprint( "Fileystem Type :  $CONFIG{'fs'}\n" );
 
-    print "\nSize Information\n";
-    print "----------------\n";
-    print "Image size     :  $CONFIG{'size'}\n";
-    print "Swap size      :  $CONFIG{'swap'}\n" unless ( $CONFIG{'noswap' } );
-    print "Image type     :  $CONFIG{'image'}\n";
-    print "Memory size    :  $CONFIG{'memory'}\n";
-    print "Kernel path    :  $CONFIG{'kernel'}\n";
+    logprint( "\nSize Information\n" );
+    logprint( "----------------\n" );
+    logprint( "Image size     :  $CONFIG{'size'}\n") ;
+    logprint( "Swap size      :  $CONFIG{'swap'}\n" ) unless ( $CONFIG{'noswap' } );
+    logprint( "Image type     :  $CONFIG{'image'}\n" );
+    logprint( "Memory size    :  $CONFIG{'memory'}\n" );
+    logprint( "Kernel path    :  $CONFIG{'kernel'}\n" );
 
     if ( defined( $CONFIG{'initrd'} ) &&
          length( $CONFIG{'initrd'} ) )
     {
-        print "initrd path    :  $CONFIG{'initrd'}\n";
+        logprint( "initrd path    :  $CONFIG{'initrd'}\n" );
     }
 
-    print "\nNetworking Information\n";
-    print "----------------------\n";
+    logprint( "\nNetworking Information\n" );
+    logprint( "----------------------\n" );
 
     #
     # Show each IP address added.
@@ -1281,14 +1286,14 @@ sub showSummery
 
     foreach my $i ( @$ips )
     {
-       print "IP Address $count   : $i\n";
+       logprint( "IP Address $count   : $i\n" );
        $count += 1;
     }
 
-    $CONFIG{'dhcp'}      && print "IP Address     : DHCP\n";
-    $CONFIG{'netmask'}   && print "Netmask        : $CONFIG{'netmask'}\n";
-    $CONFIG{'gateway'}   && print "Gateway        : $CONFIG{'gateway'}\n";
-    $CONFIG{'p2p'}       && print "Point to Point : $CONFIG{'p2p'}\n";
+    $CONFIG{'dhcp'}      && logprint( "IP Address     : DHCP\n" );
+    $CONFIG{'netmask'}   && logprint( "Netmask        : $CONFIG{'netmask'}\n" );
+    $CONFIG{'gateway'}   && logprint( "Gateway        : $CONFIG{'gateway'}\n" );
+    $CONFIG{'p2p'}       && logprint( "Point to Point : $CONFIG{'p2p'}\n" );
     print "\n";
 
 }
@@ -1313,11 +1318,11 @@ sub testLoopbackModule
 
         if ( $modules !~ m/loop/ )
         {
-            print "WARNING\n";
-            print "-------\n";
-            print "Loopback module not loaded and you're using loopback images\n";
-            print "Run the following to load the module:\n\n";
-            print "modprobe loop loop_max=255\n\n";
+            logprint( "WARNING\n" );
+            logprint( "-------\n" );
+            logprint( "Loopback module not loaded and you're using loopback images\n" );
+            logprint( "Run the following to load the module:\n\n" );
+            logprint( "modprobe loop loop_max=255\n\n" );
         }
     }
 }
@@ -1364,16 +1369,16 @@ sub createLoopbackImages
     #
     if ( ( -e $disk ) && ! $CONFIG{'force'} )
     {
-       print "The disk image already exists.  Aborting.\n";
-       print "Specify '--force' to overwrite, or remove the following file\n";
-       print $disk . "\n";
+       logprint( "The disk image already exists.  Aborting.\n" );
+       logprint( "Specify '--force' to overwrite, or remove the following file\n" );
+       logprint( $disk . "\n" );
        exit;
     }
     if ( ( -e $swap ) && ! $CONFIG{'force'} )
     {
-       print "The swap image already exists.  Aborting.\n";
-       print "Specify '--force' to overwrite, or remove the following file\n";
-       print $swap . "\n";
+       logprint( "The swap image already exists.  Aborting.\n" );
+       logprint( "Specify '--force' to overwrite, or remove the following file\n" );
+       logprint( $swap . "\n" );
        exit;
     }
 
@@ -1410,31 +1415,31 @@ sub createLoopbackImages
     #
     unless( $CONFIG{'noswap'} )
     {
-        print "\nCreating swap image: $swap\n";
+        logprint( "\nCreating swap image: $swap\n" );
         my $swap_cmd = "/bin/dd if=/dev/zero of=$swap bs=1024k count=$swap_size";
         runCommand( $swap_cmd );
-        print "Done\n";
+        logprint( "Done\n" );
     }
 
 
     #
     #  Use dd to create the disk image.
     #
-    print "\nCreating disk image: $disk\n";
+    logprint( "\nCreating disk image: $disk\n" );
     my $image_cmd;
     if ( $CONFIG{'image'} eq "sparse" )
     {
-        $CONFIG{'verbose'} && print "Creating sparse image\n";
+        $CONFIG{'verbose'} && logprint( "Creating sparse image\n" );
         $image_cmd = "/bin/dd if=/dev/zero of=$disk bs=$disk_size count=0 seek=1024";
     }
     else
     {
-        $CONFIG{'verbose'} && print "Creating full-sized image\n";
+        $CONFIG{'verbose'} && logprint( "Creating full-sized image\n" );
         $image_cmd = "/bin/dd if=/dev/zero of=$disk bs=$disk_size count=1024";
     }
 
     runCommand( $image_cmd );
-    print "Done\n";
+    logprint( "Done\n" );
 
 
     #
@@ -1456,9 +1461,9 @@ sub createLoopbackImages
 
 sub createLVMBits
 {
-     #  The two volumes we will need to use..
-     my $disk = $CONFIG{'hostname'} . "-disk" ;
-     my $swap = $CONFIG{'hostname'} . "-swap" ;
+    #  The two volumes we will need to use..
+    my $disk = $CONFIG{'hostname'} . "-disk" ;
+    my $swap = $CONFIG{'hostname'} . "-swap" ;
 
     #
     #  Check whether the disk volume exists already, and if so abort
@@ -1474,8 +1479,8 @@ sub createLVMBits
         }
         else
         {
-            print "The LVM disk image already exists.  Aborting.\n";
-            print "Specify '--force' to delete and recreate\n";
+            logprint( "The LVM disk image already exists.  Aborting.\n" );
+            logprint( "Specify '--force' to delete and recreate\n" );
             exit;
         }
     }
@@ -1496,8 +1501,8 @@ sub createLVMBits
         }
         else
         {
-            print "The LVM swap image already exists.  Aborting.\n";
-            print "Specify '--force' to delete and recreate\n";
+            logprint( "The LVM swap image already exists.  Aborting.\n" );
+            logprint( "Specify '--force' to delete and recreate\n" );
             exit;
         }
     }
@@ -1543,11 +1548,12 @@ sub createLVMBits
     runCommand( $disk_cmd );
     runCommand( $swap_cmd ) unless( $CONFIG{'noswap'} );
 
-     #
-     #  Initialise the partitions with the relevant filesystem.
-     #
-     createFilesystem( "/dev/$CONFIG{'lvm'}/$CONFIG{'hostname'}-disk" );
-     createSwap( "/dev/$CONFIG{'lvm'}/$CONFIG{'hostname'}-swap" ) unless ( $CONFIG{'noswap'} );
+    #
+    #  Initialise the partitions with the relevant filesystem.
+    #
+    createFilesystem( "/dev/$CONFIG{'lvm'}/$CONFIG{'hostname'}-disk" );
+    createSwap( "/dev/$CONFIG{'lvm'}/$CONFIG{'hostname'}-swap" ) unless ( $CONFIG{'noswap'} );
+
 }
 
 
@@ -1581,25 +1587,25 @@ sub createFilesystem
 
        if ( ! -x $binary )
        {
-           print "The binary '$binary' required to create the filesystem $CONFIG{'fs'} is missing\n";
+           logprint( "The binary '$binary' required to create the filesystem $CONFIG{'fs'} is missing\n" );
            exit;
        }
     }
     else
     {
-       print "The filesystem creation hash is bogus for filesystem : $CONFIG{'fs'}\n";
+       logprint( "The filesystem creation hash is bogus for filesystem : $CONFIG{'fs'}\n" );
        exit;
     }
 
     #
     #  OK we have the command and the filesystem.  Create it.
     #
-    print "\nCreating $CONFIG{'fs'} filesystem on $image\n";
+    logprint( "\nCreating $CONFIG{'fs'} filesystem on $image\n" );
 
     $command .= $image;
 
     runCommand( $command );
-    print "Done\n";
+    logprint( "Done\n" );
 }
 
 
@@ -1647,8 +1653,8 @@ sub mountImage
     }
     else
     {
-       print "I don't know what to mount!\n";
-       print "Please specify '--dir' or '--lvm'\n";
+       logprint( "I don't know what to mount!\n" );
+       logprint( "Please specify '--dir' or '--lvm'\n" );
        exit;
     }
 
@@ -1695,7 +1701,7 @@ sub mountImage
 sub installSystem
 {
 
-    print "\nInstalling your system with ";
+    logprint( "\nInstalling your system with " );
 
     #
     #  Basic command
@@ -1713,23 +1719,23 @@ sub installSystem
     if ( $CONFIG{'copy'} )
     {
        $cmd .= " --copy=$CONFIG{'copy'}";
-       print "copy from $CONFIG{'copy'}\n";
+       logprint( "copy from $CONFIG{'copy'}\n" );
     }
     if ( $CONFIG{'debootstrap'} )
     {
        $cmd .= " --debootstrap";
        $cmd .= " --mirror=$CONFIG{'mirror'}";
-       print "debootstrap mirror $CONFIG{'mirror'}\n";
+       logprint( "debootstrap mirror $CONFIG{'mirror'}\n" );
     }
     if ( $CONFIG{'rpmstrap'} )
     {
        $cmd .= " --rpmstrap";
-       print "rpmstrap\n";
+       logprint( "rpmstrap\n");
     }
     if ( $CONFIG{'tar'} )
     {
        $cmd .= " --tar=$CONFIG{'tar'}";
-       print "tarfile $CONFIG{'tar'}\n";
+       logprint( "tarfile $CONFIG{'tar'}\n" );
     }
 
 
@@ -1743,7 +1749,7 @@ sub installSystem
 
     runCommand( $cmd );
 
-    print "Done\n";
+    logprint( "Done\n" );
 }
 
 
@@ -1799,11 +1805,11 @@ sub runCustomisationHooks
     #
     if ( $CONFIG{'verbose'} )
     {
-       print "Customization Script Environment:\n";
-       print "---------------------------------\n";
+       logprint( "Customization Script Environment:\n" );
+       logprint( "---------------------------------\n" );
        foreach my $key ( sort keys %ENV )
        {
-           print "\t'" . $key . "' = '" . $ENV{$key} . "'\n";
+           logprint( "\t'" . $key . "' = '" . $ENV{$key} . "'\n" );
        }
     }
 
@@ -1816,9 +1822,9 @@ sub runCustomisationHooks
     {
        $customize .= " --verbose";
     }
-    print "\nRunning hooks\n";
+    logprint( "\nRunning hooks\n" );
     runCommand( $customize );
-    print "Done\n";
+    logprint( "Done\n" );
 }
 
 
@@ -1839,7 +1845,7 @@ sub runRoleScript
 
     if ( !defined( $role ) )
     {
-       print "\nNo role script specified.  Skipping\n";
+       logprint( "\nNo role script specified.  Skipping\n" );
        return;
     }
 
@@ -1847,12 +1853,12 @@ sub runRoleScript
 
     if ( -x $file )
     {
-       print "\nRunning role script $file for role '$role'\n";
+       logprint( "\nRunning role script $file for role '$role'\n" );
     }
     else
     {
-       print "\nRole script not executable : $file for role '$role'\n";
-       print "Ignoring\n";
+       logprint( "\nRole script not executable : $file for role '$role'\n" );
+       logprint( "Ignoring\n" );
        return;
     }
 
@@ -1864,7 +1870,7 @@ sub runRoleScript
     #
     runCommand( $file . " " . $MOUNT_POINT );
 
-    print "Done\n";
+    logprint( "Done\n" );
 }
 
 
@@ -1891,9 +1897,9 @@ sub runXenConfigCreation
         $command .= " --template=" . $CONFIG{'template'};
     }
 
-    print "\nCreating Xen configuration file\n";
+    logprint( "\nCreating Xen configuration file\n" );
     runCommand( $command );
-    print "Done\n";
+    logprint( "Done\n" );
 }
 
 
@@ -1908,7 +1914,7 @@ sub runXenConfigCreation
 
 sub setupRootPassword
 {
-    print "Setting up root password\n";
+    logprint( "Setting up root password\n" );
 
     if ( -x $MOUNT_POINT . "/usr/bin/passwd" )
     {
@@ -1916,7 +1922,35 @@ sub setupRootPassword
     }
     else
     {
-        print "/usr/bin/passwd on the new system doesn't exist...\n";
+        logprint( "/usr/bin/passwd on the new system doesn't exist...\n" );
+    }
+}
+
+
+
+=begin doc
+
+  Print the given string both to our screen, and to the logfile.
+
+=cut
+
+sub logprint
+{
+    my ( $text ) = (@_);
+
+    print $text;
+
+    #
+    #  Make sure we have a log directory
+    #
+    mkdir( "/var/log/xen-tools", 0777 ) if ( ! -d "/var/log/xen-tools" );
+
+    if ( $CONFIG{'hostname'} )
+    {
+        open( LOGFILE, ">>", "/var/log/xen-tools/$CONFIG{'hostname'}.log" )
+          or return;
+        print LOGFILE $text;
+        close( LOGFILE );
     }
 }
 
@@ -1944,43 +1978,25 @@ sub runCommand
     $CONFIG{'verbose'} && print "Executing : $cmd\n";
 
     #
-    #  Hide output unless running with --verbose.
+    #  Copy stderr to stdout, so we can see it, and make sure we &logprint it.
     #
-    if ( $CONFIG{'verbose'} )
-    {
-       #
-       #  Copy stderr to stdout, so we can see it.
-       #
-       $cmd .= " 2>&1";
-    }
-    else
-    {
-       $cmd .= " >/dev/null 2>/dev/null" ;
-    }
+    $cmd .= " 2>&1 | tee --append /var/log/xen-tools/$CONFIG{'hostname'}.log";
 
     #
     #  Run it.
     #
     my $output = `$cmd`;
 
-    #
-    # All done.
-    #
-    $CONFIG{'verbose'} && print "Output\n";
-    $CONFIG{'verbose'} && print "======\n";
-    $CONFIG{'verbose'} && print $output . "\n";
-    $CONFIG{'verbose'} && print "Finished : $cmd\n";
 
+    $CONFIG{'verbose'} && print "Finished : $cmd\n";
 
     if ( $? != 0 )
     {
-       print "Running command '$cmd' failed.\n";
-       print "Aborting\n";
+       logprint( "Running command '$cmd' failed.\n" );
+       logpring( "Aborting\n" );
        exit;
     }
 
-
-    return( $output );
 }
 
 
@@ -2007,5 +2023,12 @@ sub END
        {
            runCommand( "umount $MOUNT_POINT" );
        }
+    }
+
+    if ( ( defined( $CONFIG{'hostname'} ) ) &&
+         ( -e "/var/log/xen-tools/$CONFIG{'hostname'}.log" ) )
+    {
+        print "\n\nLogfile produced at:\n";
+        print "\t /var/log/xen-tools/$CONFIG{'hostname'}.log\n";
     }
 }

@@ -80,7 +80,7 @@ Install the distribution specified by the B<--dist> argument using the debootstr
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.26 2006-08-18 08:57:28 steve Exp $
+ $Id: xt-install-image,v 1.27 2006-08-18 13:09:24 steve Exp $
 
 =cut
 
@@ -237,7 +237,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.26 $';
+       my $REVISION      = '$Revision: 1.27 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -425,15 +425,6 @@ sub installDebootstrapImage
     #        if the command files it will be displayed.
     #
     runCommand( $command );
-
-    #
-    #  Since we used the '--keep-debootstrap-dir' argument we'll have
-    # a /debootstrap/ directory maintained on the new guest.
-    #
-    #  If we got this far then the debootstrap command invokation succeeded
-    # and we can remove it.
-    #
-    system( "/bin/rm", "-rf", $CONFIG{'location'} . "/debootstrap" );
 
 
     #
