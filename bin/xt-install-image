@@ -80,7 +80,7 @@ Install the distribution specified by the B<--dist> argument using the debootstr
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.28 2006-08-18 13:10:37 steve Exp $
+ $Id: xt-install-image,v 1.29 2006-08-18 13:11:48 steve Exp $
 
 =cut
 
@@ -237,7 +237,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.28 $';
+       my $REVISION      = '$Revision: 1.29 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -505,7 +505,7 @@ sub runCommand
     my ( $cmd ) = (@_ );
 
     #
-    #  Header.
+    #  Command start.
     #
     $CONFIG{'verbose'} && print "Executing : $cmd\n";
 
@@ -523,37 +523,12 @@ sub runCommand
     {
        print "Running command '$cmd' failed.\n";
        print "Aborting\n";
-
-       #
-       #  Show output from debootstrap
-       #
-       #
-       #  If the user installed via debootstrap show the log.
-       #
-       if ( ( $CONFIG{'debootstrap'} ) &&
-            ( -e $CONFIG{'location'} . "/debootstrap/debootstrap.log" ) &&
-            ( $cmd =~ /debootstrap/ ) )
-       {
-           print "\nDebootstrap Output:\n";
-           open( LOG, "<", "$CONFIG{'location'}/debootstrap/debootstrap.log" );
-           while( <LOG> )
-           {
-               print;
-           }
-           close( LOG );
-           print "\n\n";
-       }
-
        exit;
     }
 
-
     #
-    # All done.
+    #  Command finished.
     #
-    $CONFIG{'verbose'} && print "Output\n";
-    $CONFIG{'verbose'} && print "======\n";
-    $CONFIG{'verbose'} && print $output . "\n";
     $CONFIG{'verbose'} && print "Finished : $cmd\n";
 
     return( $output );
