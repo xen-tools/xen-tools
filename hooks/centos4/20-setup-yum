@@ -25,6 +25,13 @@ fi
 #
 logMessage Script $0 starting
 
+
+#
+#  DNS is probably required to run "yum update".
+#
+cp /etc/resolv.conf ${prefix}/etc
+
+
 #
 # Transform yum so that it works.
 #

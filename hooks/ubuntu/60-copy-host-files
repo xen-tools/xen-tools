@@ -27,7 +27,6 @@ logMessage Script $0 starting
 #
 # Copy "required" files from our host.
 #
-cp /etc/resolv.conf ${prefix}/etc
 cp /etc/timezone    ${prefix}/etc
 
 #
@@ -41,7 +40,7 @@ if [ -e /etc/sudoers ]; then
   #
   #  Copy file and fixup permissions.
   #
-  cp /etc/resolv.conf ${prefix}/etc
+  cp /etc/sudoers ${prefix}/etc
   chown root:root ${prefix}/etc/sudoers
   chmod 440       ${prefix}/etc/sudoers
 

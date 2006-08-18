@@ -26,6 +26,11 @@ fi
 logMessage Script $0 starting
 
 
+#
+# You'll probably need DNS to run "apt-get update".
+#
+cp /etc/resolv.conf ${prefix}/etc
+
 
 #
 # Attempt to auto-magically detect the use of a Proxy for apt-get, and
