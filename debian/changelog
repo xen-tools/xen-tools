@@ -1,3 +1,5 @@
+xen-tools (2.4-1) unstable; urgency=low
+
   * New upstream release.
     - Don't setup ramdisk in xm.tmpl if one isn't being used.
       (Closes: #383703)
@@ -9,6 +11,8 @@
     - Allow the MAC address to be set for the first network interface,
       regardless of DHCP/static addressing.
       (Closes: #383492)
+
+ -- Steve Kemp <skx@debian.org>  Tue, 22 Aug 2006 10:00:00 +0000
 
 xen-tools (2.3-1) unstable; urgency=high
 
