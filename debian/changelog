@@ -4,6 +4,8 @@
     - xen-delete-image will not complain if a swap volume doesn't exist.
       It will also remove the new installation logfile.
       (Closes: #383736)
+    - Improved documentation on custom variables in the Xen configuration
+      file in the manpage for xt-create-xen-config
 
 xen-tools (2.3-1) unstable; urgency=high
 
