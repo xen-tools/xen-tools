@@ -8,7 +8,11 @@
 #  Kernel + memory size
 #
 kernel  = '{$kernel}'
-ramdisk = '{$initrd}'
+{ if ( $initrd )
+  {
+    $OUT.= "ramdisk = '$initrd'\n";
+  }
+}
 memory  = '{$memory}'
 
 

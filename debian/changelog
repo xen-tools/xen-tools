@@ -1,3 +1,7 @@
+  * New upstream release.
+    - Don't setup ramdisk in xm.tmpl if one isn't being used.
+      (Closes: #383703)
+
 xen-tools (2.3-1) unstable; urgency=high
 
   * Urgency set to high because the software will not work correctly unless
