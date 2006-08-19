@@ -54,10 +54,10 @@ Specify the LVM volume group where images were previously saved.
 =head1 DESCRIPTION
 
   xen-delete-image is a simple script which allows you to delete
- Xen instances which have previously been created by B<xen-create-image>.
+ Xen instances which have previously been created by xen-create-image.
 
   You must be root to run this script as it removes the Xen configuration
- file from /etc/xen.
+ file from /etc/xen and potentially removes LVM volumes.
 
   (When invoked with the '--test' flag the script will continue running,
  but will fail to remove anything which the user does not have permission
@@ -88,6 +88,9 @@ Specify the LVM volume group where images were previously saved.
   This will remove the volumes 'foo-disk', 'foo-swap', 'bar-disk',
  and 'bar-swap'.
 
+  Note that if the images were created with "--noswap" then the swap
+ volumes will not be present, so will not need to be deleted.
+
   The Xen configuration files will also be removed.
 
 =cut
@@ -99,7 +102,7 @@ Specify the LVM volume group where images were previously saved.
  --
  http://www.steve.org.uk/
 
- $Id: xen-delete-image,v 1.14 2006-08-16 09:42:44 steve Exp $
+ $Id: xen-delete-image,v 1.15 2006-08-19 07:54:39 steve Exp $
 
 =cut
 
@@ -266,9 +269,9 @@ sub readConfigurationFile
 
 sub parseCommandLineArguments
 {
-    my $HELP       = 0;
-    my $MANUAL       = 0;
-    my $VERSION       = 0;
+    my $HELP    = 0;
+    my $MANUAL  = 0;
+    my $VERSION = 0;
 
     #  Parse options.
     #
@@ -288,7 +291,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.14 $';
+       my $REVISION      = '$Revision: 1.15 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -358,11 +361,17 @@ sub deleteXenImage
     my ($hostname) = ( @_ );
 
     #
-    #  Delete the configuration file.
+    #  Delete the Xen configuration file, and the installation logfile
+    # if it exists.
     #
-    if ( -e "/etc/xen/" . $hostname . ".cfg" )
+    foreach my $file ( "/etc/xen/$hostname.cfg",
+                       "/var/log/xen-tools/$hostname.log" )
     {
-       unlink( "/etc/xen/" . $hostname . ".cfg" );
+        if ( -e $file )
+        {
+            $CONFIG{'verbose'} && print "Removing $file\n";
+            unlink( $file );
+        }
     }
 
 
@@ -424,11 +433,19 @@ sub deleteXenImage
        #
        #  TODO: Check we're not mounted.
        #
-       my $swap = "lvremove /dev/$CONFIG{'lvm'}/$hostname-swap --force";
-       my $disk = "lvremove /dev/$CONFIG{'lvm'}/$hostname-disk --force";
 
-       runCommand( $swap );
-       runCommand( $disk );
+       if ( -e "/dev/$CONFIG{'lvm'}/$hostname-swap" )
+       {
+           $CONFIG{'verbose'} && print "Removing LVM swap volume\n";
+           runCommand( "lvremove /dev/$CONFIG{'lvm'}/$hostname-swap --force" );
+       }
+
+       if ( -e "/dev/$CONFIG{'lvm'}/$hostname-disk" )
+       {
+           $CONFIG{'verbose'} && print "Removing LVM disk volume\n";
+           runCommand( "lvremove /dev/$CONFIG{'lvm'}/$hostname-disk --force" );
+       }
+
     }
     else
     {

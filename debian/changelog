@@ -1,6 +1,9 @@
   * New upstream release.
     - Don't setup ramdisk in xm.tmpl if one isn't being used.
       (Closes: #383703)
+    - xen-delete-image will not complain if a swap volume doesn't exist.
+      It will also remove the new installation logfile.
+      (Closes: #383736)
 
 xen-tools (2.3-1) unstable; urgency=high
 
