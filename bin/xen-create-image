@@ -446,7 +446,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.80 2006-08-18 13:16:55 steve Exp $
+ $Id: xen-create-image,v 1.81 2006-08-19 13:40:16 steve Exp $
 
 =cut
 
@@ -901,6 +901,7 @@ sub parseCommandLineArguments
               "gateway=s",    \$CONFIG{'gateway'},
               "hostname=s",   \$CONFIG{'hostname'},
               "ip=s@",        \$CONFIG{'ip'},
+              "mac=s",        \$CONFIG{'mac'},
               "netmask=s",    \$CONFIG{'netmask'},
               "p2p=s",        \$CONFIG{'p2p'},
 
@@ -939,7 +940,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.80 $';
+       my $REVISION      = '$Revision: 1.81 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -1294,16 +1295,52 @@ sub showSummery
     #
     # Show each IP address added.
     #
+    # Note we only allow the first IP address to have a MAC address specified.
+    #
     my $ips = $CONFIG{'ip'};
+    my $mac = $CONFIG{'mac'};
     my $count = 1;
 
+    #
+    #  Print out each network address, and if there is a mac address
+    # associated with it then use it too.
+    #
     foreach my $i ( @$ips )
     {
-       logprint( "IP Address $count   : $i\n" );
-       $count += 1;
+        my $m = undef;
+
+        if ( ( $count == 1 ) && ( defined( $mac ) ) )
+        {
+            $m = $mac;
+        }
+
+        logprint( "IP Address $count   : $i" );
+        if ( defined( $m ) )
+        {
+            logprint( " [MAC: $m]" );
+        }
+        logprint( "\n" );
+
+        $count += 1;
     }
 
-    $CONFIG{'dhcp'}      && logprint( "IP Address     : DHCP\n" );
+    #
+    # mac address setting still works even for DHCP, but in that
+    # case only the first one works.
+    #
+    if ( $CONFIG{'dhcp'} )
+    {
+        if ( defined( $CONFIG{'mac'} ) )
+        {
+
+            logprint( "IP Address     : DHCP [MAC: $CONFIG{'mac'}]\n" );
+        }
+        else
+        {
+            logprint( "IP Address     : DHCP\n" );
+        }
+    }
+
     $CONFIG{'netmask'}   && logprint( "Netmask        : $CONFIG{'netmask'}\n" );
     $CONFIG{'gateway'}   && logprint( "Gateway        : $CONFIG{'gateway'}\n" );
     $CONFIG{'p2p'}       && logprint( "Point to Point : $CONFIG{'p2p'}\n" );

@@ -43,11 +43,28 @@ name    = '{$hostname}'
 { if ( $dhcp )
   {
     $OUT .= "dhcp = 'dhcp'\n";
-    $OUT .= "vif  = [ '' ]";
+
+    # Setup the mac address, if present.
+    my $m = '';
+    if ( $mac )
+    { 
+      $m = "mac=$mac"
+    }
+
+    $OUT .= "vif  = [ '$m' ]";
   }    
   else
   {
-    $OUT .= "vif  = [ 'ip=$ip1' ]";
+    #
+    # Setup the mac address, if present.
+    #
+    my $m = '';
+    if ( $mac )
+    { 
+      $m = "mac=$mac"
+    }
+
+    $OUT .= "vif  = [ 'ip=$ip1,$m' ]";
   }
 }
 

@@ -6,6 +6,9 @@
       (Closes: #383736)
     - Improved documentation on custom variables in the Xen configuration
       file in the manpage for xt-create-xen-config
+    - Allow the MAC address to be set for the first network interface,
+      regardless of DHCP/static addressing.
+      (Closes: #383492)
 
 xen-tools (2.3-1) unstable; urgency=high
 
