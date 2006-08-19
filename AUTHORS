@@ -17,9 +17,6 @@ Contributions
   Edd Dumbill <edd [at] com.usefulinc>
    - Contributed APT sources.list file for Ubuntus Dapper release.
 
-  Henning Sprang <henning_sprang [at] de.gmx>
-   - Many suggestions and useful Debian bug reports.
-
   Sven Hertge <sven [at] de.svenhartge>
    - Bugfix for Debian/Gentoo package installation.
 
@@ -27,5 +24,8 @@ Contributions
    - Supplied many small tweaks, bugfixes, and suggestions. 
    - Radu is also the Debian package maintainer and has CVS commit access.
  
+  Henning Sprang <henning_sprang [at] de.gmx>
+   - Many suggestions and useful Debian bug reports.
+
   Gergely Tamas <dice [at] hu.kfki.mfa>
    - Added patch to make initrd setup optional.
