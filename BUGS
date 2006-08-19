@@ -13,10 +13,14 @@ Reporting Bugs
 Known Bugs
 ----------
 
-  None currently known, but the Debian bug tracker might contain
- some reported since the previous release:
+  The Debian bug tracker might contains a list of all currently
+ open issues with the software:
 
         http://bugs.debian.org/xen-tools
+
+  If you're running the code on a Debian host system then reporting 
+ bugs against the Debian package is a good thing to do; by doing so
+ you allow others to view issues, and I check the bug-page regularly.
 
 Steve
 -- 
