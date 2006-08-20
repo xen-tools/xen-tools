@@ -1,0 +1,15 @@
+#
+#  Watchfile for xen-tools.
+#
+#
+#  uscan version number - not the version of the software.
+#
+version=3
+
+
+#
+#  The link to the download location, followed by the regular expression
+# to match release tarballs.
+#
+http://xen-tools.org/software/xen-tools/releases.html \
+   xen-tools-([\d\.]+)\.tar\.gz

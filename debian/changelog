@@ -11,6 +11,7 @@ xen-tools (2.4-1) unstable; urgency=low
     - Allow the MAC address to be set for the first network interface,
       regardless of DHCP/static addressing.
       (Closes: #383492)
+  * Added watch file.
 
  -- Steve Kemp <skx@debian.org>  Tue, 22 Aug 2006 10:00:00 +0000
 
