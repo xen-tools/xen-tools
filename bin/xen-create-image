@@ -446,7 +446,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.81 2006-08-19 13:40:16 steve Exp $
+ $Id: xen-create-image,v 1.82 2006-08-20 01:15:25 steve Exp $
 
 =cut
 
@@ -508,12 +508,9 @@ setupDefaultOptions();
 
 
 #
-#  Read the global configuration file if it exists.
+#  Read the global configuration file.
 #
-if ( -e "/etc/xen-tools/xen-tools.conf" )
-{
-    readConfigurationFile( "/etc/xen-tools/xen-tools.conf" );
-}
+readConfigurationFile( "/etc/xen-tools/xen-tools.conf" );
 
 
 #
@@ -549,7 +546,8 @@ checkArguments();
 mkdir( "/var/log/xen-tools", 0777 ) if ( ! -d "/var/log/xen-tools" );
 
 #
-#  Trash any existing logfile.
+#  Trash any existing for this run logfile.
+#
 open( TRASH, ">", "/var/log/xen-tools/$CONFIG{'hostname'}.log" );
 print TRASH "";
 close(TRASH);
@@ -557,9 +555,9 @@ close(TRASH);
 
 
 #
-#  Check we have installed binaries.
+#  Check we have binaries installed which we expect to use.
 #
-checkFilesPresent();
+checkBinariesPresent();
 
 
 #
@@ -574,8 +572,15 @@ showSummery();
 #
 if ( $CONFIG{'dir'} )
 {
+    #
+    #  Test to see if "loop" module is loaded.  This is probably
+    # not required, except for paranoia.
+    #
     testLoopbackModule();
 
+    #
+    #  Create disk + swap images.
+    #
     createLoopbackImages();
 }
 elsif ( $CONFIG{'lvm'} )
@@ -617,7 +622,8 @@ if ( ! -x $MOUNT_POINT . "/bin/ls" )
 
 
 #
-#  Call xt-customise-image to setup networking, and run distro-specific hooks.
+#  Call xt-customise-image to setup networking, and run any
+# distributuion-specific hooks.
 #
 runCustomisationHooks();
 
@@ -671,6 +677,8 @@ if ( $CONFIG{'boot'} )
     {
         # Child.
         system( "$CONFIG{'xm'} create $CONFIG{'hostname'}.cfg >/dev/null 2>/dev/null" );
+
+        logprint( "Started new Xen instance.\n" );
     }
 }
 
@@ -688,7 +696,7 @@ exit;
  script.
 
   This means that the the companion scripts xt-* are present on the
- host.
+ host and executable.
 
 =end doc
 
@@ -700,7 +708,7 @@ sub checkSystem
 
     foreach my $bin ( @required )
     {
-        if  ( ! -x "/usr/bin/" . $bin )
+        if ( ! -x "/usr/bin/" . $bin )
         {
             logprint("The script '$bin' was not found.\n");
             logprint( "Aborting\n\n" );
@@ -713,7 +721,7 @@ sub checkSystem
 
 =begin doc
 
-  Setup the default options we'd expect into our global CONFIG hash.
+  Setup the default options we'd expect into our global configuration hash.
 
 =end doc
 
@@ -799,47 +807,51 @@ sub setupDefaultOptions
 sub readConfigurationFile
 {
     my ($file) = ( @_ );
-    my $line = "";
 
+    # Don't read the file if it doesn't exist.
+    return if ( ! -e $file );
+
+
+    my $line = "";
 
     open( FILE, "<", $file ) or die "Cannot read file '$file' - $!";
 
     while (defined($line = <FILE>) )
     {
         chomp $line;
-       if ($line =~ s/\\$//)
-       {
-           $line .= <FILE>;
-           redo unless eof(FILE);
-       }
+        if ($line =~ s/\\$//)
+        {
+            $line .= <FILE>;
+            redo unless eof(FILE);
+        }
 
-       # Skip lines beginning with comments
-       next if ( $line =~ /^([ \t]*)\#/ );
+        # Skip lines beginning with comments
+        next if ( $line =~ /^([ \t]*)\#/ );
 
-       # Skip blank lines
-       next if ( length( $line ) < 1 );
+        # Skip blank lines
+        next if ( length( $line ) < 1 );
 
-       # Strip trailing comments.
-       if ( $line =~ /(.*)\#(.*)/ )
-       {
-           $line = $1;
-       }
+        # Strip trailing comments.
+        if ( $line =~ /(.*)\#(.*)/ )
+        {
+            $line = $1;
+        }
 
-       # Find variable settings
-       if ( $line =~ /([^=]+)=([^\n]+)/ )
-       {
-           my $key = $1;
-           my $val = $2;
+        # Find variable settings
+        if ( $line =~ /([^=]+)=([^\n]+)/ )
+        {
+            my $key = $1;
+            my $val = $2;
 
-           # Strip leading and trailing whitespace.
-           $key =~ s/^\s+//;
-           $key =~ s/\s+$//;
-           $val =~ s/^\s+//;
-           $val =~ s/\s+$//;
+            # Strip leading and trailing whitespace.
+            $key =~ s/^\s+//;
+            $key =~ s/\s+$//;
+            $val =~ s/^\s+//;
+            $val =~ s/\s+$//;
 
-           # Store value.
-           $CONFIG{ $key } = $val;
-       }
+            # Store value.
+            $CONFIG{ $key } = $val;
+        }
     }
 
     close( FILE );
@@ -879,60 +891,60 @@ sub parseCommandLineArguments
     #  Parse options.
     #
     GetOptions(
-              # Mandatory
-              "dist=s",      \$CONFIG{'dist'},
+               # Mandatory
+               "dist=s",       \$CONFIG{'dist'},
 
-              # Size options.
-              "size=s",       \$CONFIG{'size'},
-              "swap=s",       \$CONFIG{'swap'},
-              "noswap",       \$CONFIG{'noswap'},
-              "image=s",      \$CONFIG{'image'},
-              "memory=s",     \$CONFIG{'memory'},
+               # Size options.
+               "size=s",       \$CONFIG{'size'},
+               "swap=s",       \$CONFIG{'swap'},
+               "noswap",       \$CONFIG{'noswap'},
+               "image=s",      \$CONFIG{'image'},
+               "memory=s",     \$CONFIG{'memory'},
 
-              # Locations
-              "dir=s",        \$install{'dir'},
-              "kernel=s",     \$CONFIG{'kernel'},
-              "initrd=s",     \$CONFIG{'initrd'},
-              "mirror=s",     \$CONFIG{'mirror'},
-              "lvm=s",        \$install{'lvm'},
+               # Locations
+               "dir=s",        \$install{'dir'},
+               "kernel=s",     \$CONFIG{'kernel'},
+               "initrd=s",     \$CONFIG{'initrd'},
+               "mirror=s",     \$CONFIG{'mirror'},
+               "lvm=s",        \$install{'lvm'},
 
-              # Networking options
-              "dhcp",         \$CONFIG{'dhcp'},
-              "gateway=s",    \$CONFIG{'gateway'},
-              "hostname=s",   \$CONFIG{'hostname'},
-              "ip=s@",        \$CONFIG{'ip'},
-              "mac=s",        \$CONFIG{'mac'},
-              "netmask=s",    \$CONFIG{'netmask'},
-              "p2p=s",        \$CONFIG{'p2p'},
+               # Networking options
+               "dhcp",         \$CONFIG{'dhcp'},
+               "gateway=s",    \$CONFIG{'gateway'},
+               "hostname=s",   \$CONFIG{'hostname'},
+               "ip=s@",        \$CONFIG{'ip'},
+               "mac=s",        \$CONFIG{'mac'},
+               "netmask=s",    \$CONFIG{'netmask'},
+               "p2p=s",        \$CONFIG{'p2p'},
 
                # Exclusive
                #
                #  NOTE:  We set the local variable here, not the global.
                #
-              "copy=s",       \$install{'copy'},
-              "debootstrap",  \$install{'debootstrap'},
-              "rpmstrap",     \$install{'rpmstrap'},
-              "tar=s",        \$install{'tar'},
+               "copy=s",       \$install{'copy'},
+               "debootstrap",  \$install{'debootstrap'},
+               "rpmstrap",     \$install{'rpmstrap'},
+               "tar=s",        \$install{'tar'},
 
-              # Misc. options
-              "accounts",     \$CONFIG{'accounts'},
-              "arch=s",       \$CONFIG{'arch'},
-              "fs=s",         \$CONFIG{'fs'},
-              "boot",         \$CONFIG{'boot'},
-              "cache=s",      \$CONFIG{'cache'},
-              "ide",          \$CONFIG{'ide'},
-              "passwd",       \$CONFIG{'passwd'},
-              "role=s",       \$CONFIG{'role'},
-              "force",        \$CONFIG{'force'},
-              "template=s",   \$CONFIG{'template'},
+               # Misc. options
+               "accounts",     \$CONFIG{'accounts'},
+               "arch=s",       \$CONFIG{'arch'},
+               "fs=s",         \$CONFIG{'fs'},
+               "boot",         \$CONFIG{'boot'},
+               "cache=s",      \$CONFIG{'cache'},
+               "ide",          \$CONFIG{'ide'},
+               "passwd",       \$CONFIG{'passwd'},
+               "role=s",       \$CONFIG{'role'},
+               "force",        \$CONFIG{'force'},
+               "template=s",   \$CONFIG{'template'},
 
-              # Help options
-              "debug",        \$CONFIG{'verbose'},
-              "help",         \$HELP,
-              "manual",       \$MANUAL,
-              "verbose",      \$CONFIG{'verbose'},
-              "version",      \$VERSION
-             );
+               # Help options
+               "debug",        \$CONFIG{'verbose'},
+               "help",         \$HELP,
+               "manual",       \$MANUAL,
+               "verbose",      \$CONFIG{'verbose'},
+               "version",      \$VERSION
+              );
 
     pod2usage(1) if $HELP;
     pod2usage(-verbose => 2 ) if $MANUAL;
@@ -940,17 +952,16 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.81 $';
+        my $REVISION      = '$Revision: 1.82 $';
+        if ( $REVISION =~ /1.([0-9.]+) / )
+        {
+            $REVISION = $1;
+        }
 
-       if ( $REVISION =~ /1.([0-9.]+) / )
-       {
-           $REVISION = $1;
-       }
-
-       logprint( "xen-create-image release $RELEASE - CVS: $REVISION\n" );
-       exit;
-
+        logprint( "xen-create-image release $RELEASE - CVS: $REVISION\n" );
+        exit;
     }
+
 
     #
     #  If we have had one of the local installation methods specified,
@@ -1000,7 +1011,7 @@ E_O_ERROR
     else
     {
         # count == 0;
-        #OK.
+        # OK.
     }
 
 
@@ -1097,7 +1108,7 @@ sub checkArguments
 
     if ( ! -d $dir )
     {
-       my $err =<<E_OR;
+        my $err =<<E_OR;
 
   We're trying to configure an installation of $CONFIG{'dist'} in
  $CONFIG{'dir'} - but there is no hook directory for us to use.
@@ -1108,8 +1119,8 @@ sub checkArguments
 
   Aborting.
 E_OR
-       logprint( $err );
-       exit 1;
+        logprint( $err );
+        exit 1;
     }
 
 
@@ -1132,7 +1143,6 @@ E_OR
     if ( $CONFIG{'lvm'} )
     {
         $CONFIG{'image'} = "full";
-        logprint( "Switching to 'full' images rather than 'sparse', since you're using LVM\n" );
     }
 
 
@@ -1210,18 +1220,18 @@ E_O_ERROR
 
 =begin doc
 
-  Check that we have some required files present.
+  Check that we have some required binaries present.
 
 =end doc
 
 =cut
 
-sub checkFilesPresent
+sub checkBinariesPresent
 {
     #
     #  Files we demand are present in all cases.
     #
-    my @required = qw ( /usr/sbin/debootstrap /bin/dd /bin/mount /sbin/mkswap );
+    my @required = qw ( /usr/sbin/debootstrap /bin/cp /bin/dd /bin/mount /sbin/mkswap );
 
     foreach my $file ( @required )
     {
@@ -1238,7 +1248,7 @@ sub checkFilesPresent
     #
     if ( $CONFIG{'lvm'} )
     {
-        my @lvm = qw ( /sbin/lvcreate );
+        my @lvm = qw ( /sbin/lvcreate /sbin/lvremove );
 
         foreach my $file ( @lvm )
         {
@@ -1286,7 +1296,7 @@ sub showSummery
     if ( defined( $CONFIG{'initrd'} ) &&
          length( $CONFIG{'initrd'} ) )
     {
-        logprint( "initrd path    :  $CONFIG{'initrd'}\n" );
+        logprint( "Initrd path    :  $CONFIG{'initrd'}\n" );
     }
 
     logprint( "\nNetworking Information\n" );
@@ -1297,8 +1307,8 @@ sub showSummery
     #
     # Note we only allow the first IP address to have a MAC address specified.
     #
-    my $ips = $CONFIG{'ip'};
-    my $mac = $CONFIG{'mac'};
+    my $ips   = $CONFIG{'ip'};
+    my $mac   = $CONFIG{'mac'};
     my $count = 1;
 
     #
@@ -1332,7 +1342,6 @@ sub showSummery
     {
         if ( defined( $CONFIG{'mac'} ) )
         {
-
             logprint( "IP Address     : DHCP [MAC: $CONFIG{'mac'}]\n" );
         }
         else
@@ -1444,11 +1453,11 @@ sub createLoopbackImages
     #
     if ( $disk_size =~ /^(\d+)Gb*$/i )
     {
-       $disk_size = $1 * 1024 . "M";
+        $disk_size = $1 * 1024 . "M";
     }
     if ( $swap_size =~ /^(\d+)Gb*$/i )
     {
-       $swap_size = $1 * 1024 . "M";
+        $swap_size = $1 * 1024 . "M";
     }
 
     #
@@ -1457,7 +1466,7 @@ sub createLoopbackImages
     $disk_size =~ s/Mb*$/k/i;
     if ( $swap_size =~ /^(\d+)Mb*$/i )
     {
-       $swap_size = $1;
+        $swap_size = $1;
     }
 
 
@@ -1525,6 +1534,7 @@ sub createLVMBits
         # Delete if forcing
         if ( $CONFIG{'force'} )
         {
+            logprint( "Removing $lvm_disk - since we're forcing the install\n" );
             runCommand( "lvremove --force $lvm_disk" );
         }
         else
@@ -1547,6 +1557,7 @@ sub createLVMBits
         # Delete if forcing
         if ( $CONFIG{'force'} )
         {
+            logprint( "Removing $lvm_swap - since we're forcing the install\n" );
             runCommand( "lvremove --force $lvm_swap" );
         }
         else
@@ -1569,11 +1580,11 @@ sub createLVMBits
     #
     if ( $disk_size =~ /^(\d+)Gb*$/i )
     {
-       $disk_size = $1 * 1024 . "M";
+        $disk_size = $1 * 1024 . "M";
     }
     if ( $swap_size =~ /^(\d+)Gb*$/i )
     {
-       $swap_size = $1 * 1024 . "M";
+        $swap_size = $1 * 1024 . "M";
     }
 
     #
@@ -1582,7 +1593,7 @@ sub createLVMBits
     $disk_size =~ s/Mb*$/k/i;
     if ( $swap_size =~ /^(\d+)Mb*$/i )
     {
-       $swap_size = $1;
+        $swap_size = $1;
     }
 
 
@@ -1725,11 +1736,11 @@ sub mountImage
     #
     if ( $CONFIG{'lvm'} )
     {
-       $mount_cmd = "mount $mount_type $image $MOUNT_POINT";
+        $mount_cmd = "mount $mount_type $image $MOUNT_POINT";
     }
     else
     {
-       $mount_cmd = "mount $mount_type -o loop $image $MOUNT_POINT";
+        $mount_cmd = "mount $mount_type -o loop $image $MOUNT_POINT";
     }
     runCommand( $mount_cmd );
 
@@ -1750,7 +1761,6 @@ sub mountImage
 
 sub installSystem
 {
-
     logprint( "\nInstalling your system with " );
 
     #
@@ -1768,24 +1778,24 @@ sub installSystem
     #
     if ( $CONFIG{'copy'} )
     {
-       $cmd .= " --copy=$CONFIG{'copy'}";
-       logprint( "copy from $CONFIG{'copy'}\n" );
+        $cmd .= " --copy=$CONFIG{'copy'}";
+        logprint( "copy from $CONFIG{'copy'}\n" );
     }
     if ( $CONFIG{'debootstrap'} )
     {
-       $cmd .= " --debootstrap";
-       $cmd .= " --mirror=$CONFIG{'mirror'}";
-       logprint( "debootstrap mirror $CONFIG{'mirror'}\n" );
+        $cmd .= " --debootstrap";
+        $cmd .= " --mirror=$CONFIG{'mirror'}";
+        logprint( "debootstrap mirror $CONFIG{'mirror'}\n" );
     }
     if ( $CONFIG{'rpmstrap'} )
     {
-       $cmd .= " --rpmstrap";
-       logprint( "rpmstrap\n");
+        $cmd .= " --rpmstrap";
+        logprint( "rpmstrap\n");
     }
     if ( $CONFIG{'tar'} )
     {
-       $cmd .= " --tar=$CONFIG{'tar'}";
-       logprint( "tarfile $CONFIG{'tar'}\n" );
+        $cmd .= " --tar=$CONFIG{'tar'}";
+        logprint( "tarfile $CONFIG{'tar'}\n" );
     }
 
 
@@ -1794,11 +1804,10 @@ sub installSystem
     #
     if ( $CONFIG{'verbose'} )
     {
-       $cmd .= " --verbose";
+        $cmd .= " --verbose";
     }
 
     runCommand( $cmd );
-
     logprint( "Done\n" );
 }
 
@@ -1823,10 +1832,10 @@ sub runCustomisationHooks
     #
     foreach my $key ( keys %CONFIG )
     {
-       if ( defined( $CONFIG{$key} ) )
-       {
-           $ENV{$key} = $CONFIG{$key};
-       }
+        if ( defined( $CONFIG{$key} ) )
+        {
+            $ENV{$key} = $CONFIG{$key};
+        }
     }
 
     #
@@ -1844,8 +1853,8 @@ sub runCustomisationHooks
 
     foreach my $i ( @$ips )
     {
-       $ENV{'ip' . $count } = $i;
-       $count += 1;
+        $ENV{'ip' . $count } = $i;
+        $count += 1;
     }
     $ENV{'ip_count'} = ($count - 1);
 
@@ -1855,12 +1864,12 @@ sub runCustomisationHooks
     #
     if ( $CONFIG{'verbose'} )
     {
-       logprint( "Customization Script Environment:\n" );
-       logprint( "---------------------------------\n" );
-       foreach my $key ( sort keys %ENV )
-       {
-           logprint( "\t'" . $key . "' = '" . $ENV{$key} . "'\n" );
-       }
+        logprint( "Customization Script Environment:\n" );
+        logprint( "---------------------------------\n" );
+        foreach my $key ( sort keys %ENV )
+        {
+            logprint( "\t'" . $key . "' = '" . $ENV{$key} . "'\n" );
+        }
     }
 
 
@@ -1870,7 +1879,7 @@ sub runCustomisationHooks
     my $customize = "xt-customize-image --dist=$CONFIG{'dist'} --location=$MOUNT_POINT";
     if ( $CONFIG{'verbose'} )
     {
-       $customize .= " --verbose";
+        $customize .= " --verbose";
     }
     logprint( "\nRunning hooks\n" );
     runCommand( $customize );
@@ -1895,28 +1904,30 @@ sub runRoleScript
 
     if ( !defined( $role ) )
     {
-       logprint( "\nNo role script specified.  Skipping\n" );
-       return;
+        logprint( "\nNo role script specified.  Skipping\n" );
+        return;
     }
 
     my $file = $roleDir . $role;
 
     if ( -x $file )
     {
-       logprint( "\nRunning role script $file for role '$role'\n" );
+        logprint( "\nRunning role script '$file' for role '$role'\n" );
     }
     else
     {
-       logprint( "\nRole script not executable : $file for role '$role'\n" );
-       logprint( "Ignoring\n" );
-       return;
+        logprint( "\nRole script not executable : $file for role '$role'\n" );
+        logprint( "Ignoring\n" );
+        return;
     }
 
 
     #
     #  Our environment is already setup because of the call to
-    # runCustomisationHooks.  So we just need to run the script
-    # with the mountpoint.
+    # runCustomisationHooks.
+    #
+    #  We just need to run the script with the mountpoint as its
+    # single argument.
     #
     runCommand( $file . " " . $MOUNT_POINT );
 
@@ -2040,9 +2051,9 @@ sub runCommand
 
     if ( $? != 0 )
     {
-       logprint( "Running command '$cmd' failed.\n" );
-       logpring( "Aborting\n" );
-       exit;
+        logprint( "Running command '$cmd' failed.\n" );
+        logpring( "Aborting\n" );
+        exit;
     }
 
 }
