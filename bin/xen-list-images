@@ -41,7 +41,7 @@ Show the version number and exit.
  Xen images which have been created.
 
   This works by iterating over all files matching the pattern
- B</etc/xen/*.cfg> which is what the B<xen-create-image> script would
+ /etc/xen/*.cfg which is what the xen-create-image script would
  create.
 
   For each instance which has been created we'll display the name,
@@ -67,7 +67,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-list-images,v 1.12 2006-08-16 09:42:44 steve Exp $
+ $Id: xen-list-images,v 1.13 2006-08-20 01:24:16 steve Exp $
 
 =cut
 
@@ -114,10 +114,7 @@ my $RELEASE = '2.3';
 #
 #  Read the global configuration file if it exists.
 #
-if ( -e "/etc/xen-tools/xen-tools.conf" )
-{
-    readConfigurationFile( "/etc/xen-tools/xen-tools.conf" );
-}
+readConfigurationFile( "/etc/xen-tools/xen-tools.conf" );
 
 
 #
@@ -165,48 +162,49 @@ sub readConfigurationFile
 {
     my ($file) = ( @_ );
 
+    # Don't read the file if it doesn't exist.
+    return if ( ! -e $file );
+
     open( FILE, "<", $file ) or die "Cannot read file '$file' - $!";
 
-    my $line       = "";
 
-    while (defined($line = <FILE>) )
+    while (defined(my $line = <FILE>) )
     {
         chomp $line;
-       if ($line =~ s/\\$//)
-       {
-           $line .= <FILE>;
-           redo unless eof(FILE);
-       }
+        if ($line =~ s/\\$//)
+        {
+            $line .= <FILE>;
+            redo unless eof(FILE);
+        }
 
-       # Skip lines beginning with comments
-       next if ( $line =~ /^([ \t]*)\#/ );
+        # Skip lines beginning with comments
+        next if ( $line =~ /^([ \t]*)\#/ );
 
-       # Skip blank lines
-       next if ( length( $line ) < 1 );
+        # Skip blank lines
+        next if ( length( $line ) < 1 );
 
-       # Strip trailing comments.
-       if ( $line =~ /(.*)\#(.*)/ )
-       {
-           $line = $1;
-       }
+        # Strip trailing comments.
+        if ( $line =~ /(.*)\#(.*)/ )
+        {
+            $line = $1;
+        }
 
-       # Find variable settings
-       if ( $line =~ /([^=]+)=([^\n]+)/ )
-       {
-           my $key = $1;
-           my $val = $2;
+        # Find variable settings
+        if ( $line =~ /([^=]+)=([^\n]+)/ )
+        {
+            my $key = $1;
+            my $val = $2;
 
-           # Strip leading and trailing whitespace.
-           $key =~ s/^\s+//;
-           $key =~ s/\s+$//;
-           $val =~ s/^\s+//;
-           $val =~ s/\s+$//;
+            # Strip leading and trailing whitespace.
+            $key =~ s/^\s+//;
+            $key =~ s/\s+$//;
+            $val =~ s/^\s+//;
+            $val =~ s/\s+$//;
 
-           # Store value.
-           $CONFIG{ $key } = $val;
-       }
+            # Store value.
+            $CONFIG{ $key } = $val;
+        }
     }
-
     close( FILE );
 }
 
@@ -230,10 +228,10 @@ sub parseCommandLineArguments
     #  Parse options.
     #
     GetOptions(
-              "test=s",     \$CONFIG{'prefix'},
-              "help",       \$HELP,
-              "manual",     \$MANUAL,
-              "version",    \$VERSION
+               "test=s",     \$CONFIG{'prefix'},
+               "help",       \$HELP,
+               "manual",     \$MANUAL,
+               "version",    \$VERSION
              );
 
     pod2usage(1) if $HELP;
@@ -242,16 +240,14 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.12 $';
+        my $REVISION      = '$Revision: 1.13 $';
+        if ( $REVISION =~ /1.([0-9.]+) / )
+        {
+            $REVISION = $1;
+        }
 
-       if ( $REVISION =~ /1.([0-9.]+) / )
-       {
-           $REVISION = $1;
-       }
-
-       print "xen-list-images release $RELEASE - CVS: $REVISION\n";
-       exit;
-
+        print "xen-list-images release $RELEASE - CVS: $REVISION\n";
+        exit;
     }
 }
 
@@ -305,6 +301,7 @@ sub displayInstance
     #
     my $dhcp = 0;
     my $ip   = '';
+    my $mac  = '';
     my $name = '';
     my $mem  = 0;
 
@@ -326,13 +323,16 @@ sub displayInstance
         {
             $ip = $1;
         }
+        if ( $line =~ /mac=['\"]([^'\"]+)['\"]/ )
+        {
+            $mac = " [MAC: $1]";
+        }
     }
 
     print "Name: $name\n";
     print "Memory: $mem\n";
-    print "IP: $ip\n" if length( $ip );
-    print "DHCP\n" if $dhcp;
-
+    print "IP: "  . $ip . $mac . "\n" if length( $ip );
+    print "DHCP" . $mac . "\n" if $dhcp;
 }
 
 
