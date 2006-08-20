@@ -96,7 +96,7 @@ xt-create-config - Create a Xen configuration file for a new guest
  --
  http://www.steve.org.uk/
 
- $Id: xt-create-xen-config,v 1.16 2006-08-19 08:19:27 steve Exp $
+ $Id: xt-create-xen-config,v 1.17 2006-08-20 01:19:56 steve Exp $
 
 =cut
 
@@ -189,13 +189,13 @@ sub parseCommandLineArguments
     #  Parse options.
     #
     GetOptions(
-              "output=s",   \$CONFIG{'output'},
-              "template=s", \$CONFIG{'template'},
-              "verbose",    \$CONFIG{'verbose'},
-              "help",       \$HELP,
-              "manual",     \$MANUAL,
-              "version",    \$VERSION
-             );
+               "output=s",   \$CONFIG{'output'},
+               "template=s", \$CONFIG{'template'},
+               "verbose",    \$CONFIG{'verbose'},
+               "help",       \$HELP,
+               "manual",     \$MANUAL,
+               "version",    \$VERSION
+              );
 
     pod2usage(1) if $HELP;
     pod2usage(-verbose => 2 ) if $MANUAL;
@@ -203,8 +203,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.16 $';
-
+       my $REVISION      = '$Revision: 1.17 $';
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
            $REVISION = $1;
@@ -212,7 +211,6 @@ sub parseCommandLineArguments
 
        print "xt-create-xen-config release $RELEASE - CVS: $REVISION\n";
        exit;
-
     }
 }
 
@@ -233,8 +231,8 @@ sub checkArguments
     #
     if ( ! defined( $CONFIG{'output'} ) )
     {
-       print "The '--output' argument is mandatory\n";
-       exit 1;
+        print "The '--output' argument is mandatory\n";
+        exit 1;
     }
 
     #
@@ -298,7 +296,7 @@ sub createXenConfig
     my $device = 'sda';
     if ( defined( $ENV{'ide'} ) )
     {
-       $device = 'hda';
+        $device = 'hda';
     }
     $ENV{'device'} = $device;
 
@@ -308,7 +306,7 @@ sub createXenConfig
     #
     if ( $ENV{'memory'} =~ /([0-9]+)/ )
     {
-       $ENV{'memory'} = $1;
+        $ENV{'memory'} = $1;
     }
 
 
@@ -320,13 +318,13 @@ sub createXenConfig
 
     if ( $ENV{'lvm'} )
     {
-       $image_vbd = "phy:$ENV{'lvm'}/$ENV{'hostname'}-disk";
-       $swap_vbd  = "phy:$ENV{'lvm'}/$ENV{'hostname'}-swap";
+        $image_vbd = "phy:$ENV{'lvm'}/$ENV{'hostname'}-disk";
+        $swap_vbd  = "phy:$ENV{'lvm'}/$ENV{'hostname'}-swap";
     }
     else
     {
-       $image_vbd = "file:$ENV{'dir'}/domains/$ENV{'hostname'}/disk.img";
-       $swap_vbd  = "file:$ENV{'dir'}/domains/$ENV{'hostname'}/swap.img";
+        $image_vbd = "file:$ENV{'dir'}/domains/$ENV{'hostname'}/disk.img";
+        $swap_vbd  = "file:$ENV{'dir'}/domains/$ENV{'hostname'}/swap.img";
     }
     $ENV{'image_vbd'} = $image_vbd;
     $ENV{'swap_vbd'}  = $swap_vbd;
