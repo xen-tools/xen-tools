@@ -7,7 +7,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.74 2006-08-16 09:42:44 steve Exp $
+# $Id: Makefile,v 1.75 2006-08-20 01:04:58 steve Exp $
 
 
 #
@@ -32,7 +32,6 @@ nop:
 	@echo " diff          = Run a 'cvs diff'."
 	@echo " install       = Install the software"
 	@echo " manpages      = Make manpages beneath man/"
-	@echo " manpages-html = Make HTML manpages beneath man/"
 	@echo " release       = Make a release tarball"
 	@echo " uninstall     = Remove the software"
 	@echo " update        = Update from the CVS repository."
@@ -166,14 +165,7 @@ manpages:
 
 
 #
-#  Generate HTML versions of our manpages.  Steve-Specific?
-#
-manpages-html:
-	for i in xen-*; do pod2html $$i > man/$$i.html; done
-
-
-#
-#  Make a new release tarball.
+#  Make a new release tarball, and make a GPG signature.
 #
 release: test update-version update-modules clean changelog
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)
