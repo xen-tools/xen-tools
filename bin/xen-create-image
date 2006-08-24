@@ -446,7 +446,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.84 2006-08-22 20:06:42 steve Exp $
+ $Id: xen-create-image,v 1.85 2006-08-24 12:43:06 steve Exp $
 
 =cut
 
@@ -952,7 +952,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.84 $';
+        my $REVISION      = '$Revision: 1.85 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1228,10 +1228,11 @@ E_O_ERROR
 
 sub checkBinariesPresent
 {
+
     #
     #  Files we demand are present in all cases.
     #
-    my @required = qw ( /usr/sbin/debootstrap /bin/cp /bin/dd /bin/mount /sbin/mkswap );
+    my @required = qw ( /bin/mount /sbin/mkswap );
 
     foreach my $file ( @required )
     {
@@ -1239,15 +1240,27 @@ sub checkBinariesPresent
         {
             logprint( "The following binary is required to run this tool\n" );
             logprint( "\t$file\n");
-            exit;
+            exit 1;
         }
     }
 
     #
-    #  LVM specific binaries
+    # Image type specific binaries
     #
-    if ( $CONFIG{'lvm'} )
+    if ( defined( $CONFIG{'dir'} ) )
     {
+        # loopback image
+        if ( ! -x '/bin/dd' )
+	{
+            logprint( "The following binary is required to run this tool\n" );
+	    logprint( "\t/bin/dd\n");
+	    logprint( "(This only required for loopback images, which you've selected)\n" );
+	    exit 1;
+	}
+    }
+    else
+    {
+        # lvm image
         my @lvm = qw ( /sbin/lvcreate /sbin/lvremove );
 
         foreach my $file ( @lvm )

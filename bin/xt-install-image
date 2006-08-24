@@ -80,7 +80,7 @@ Install the distribution specified by the B<--dist> argument using the debootstr
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.32 2006-08-22 20:06:42 steve Exp $
+ $Id: xt-install-image,v 1.33 2006-08-24 12:43:06 steve Exp $
 
 =cut
 
@@ -135,6 +135,15 @@ checkArguments();
 if ( $CONFIG{'copy'} )
 {
     #
+    # Make sure we have the cp binary present.
+    #
+    if ( ! -x '/bin/cp' )
+    {
+        print "You've chosen to use the copy method, but /bin/cp is not installed.\n";
+        exit;
+    }
+
+    #
     #  Run a command to copy an installed system into the new root.
     #
     runCommand( "/bin/cp -a $CONFIG{'copy'}/* $CONFIG{'location'}" );
@@ -142,16 +151,43 @@ if ( $CONFIG{'copy'} )
 elsif ( $CONFIG{'tar'} )
 {
     #
+    # Make sure we have the tar binary present.
+    #
+    if ( ! -x '/bin/tar' )
+    {
+        print "You've chosen to use the tar method, but /bin/tar is not installed.\n";
+        exit 1;
+    }
+
+    #
     #  Run a command to copy an installed system into the new root.
     #
     runCommand( "cd $CONFIG{'location'} && tar -xvf $CONFIG{'tar'}" );
 }
 elsif ( $CONFIG{'debootstrap'} )
 {
+    #
+    # Make sure we have the debootstrap binary present.
+    #
+    if ( ! -x '/usr/sbin/debootstrap' )
+    {
+        print "You've chosen to use the debootstrap program, but it isn't installed.\n";
+        exit 1;
+    }
+
     installDebootstrapImage();
 }
 elsif ( $CONFIG{'rpmstrap'} )
 {
+    #
+    #  Make sure we have the rpmstrap binary present.
+    #
+    if ( ! -x '/usr/bin/rpmstrap' )
+    {
+        print "You've chosen to use the rpmstrap program, but it isn't installed.\n";
+        exit 1;
+    }
+
     installRPMStrapImage();
 }
 else
@@ -239,7 +275,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.32 $';
+        my $REVISION      = '$Revision: 1.33 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -451,15 +487,6 @@ sub installDebootstrapImage
 
 sub installRPMStrapImage
 {
-
-    #
-    #  Make sure we have the rpmstrap binary present.
-    #
-    if ( ! -x '/usr/bin/rpmstrap' )
-    {
-        print "You've chosen to use the rpmstrap program, but it isn't installed.\n";
-        exit;
-    }
 
     #
     #  Propogate the verbosity setting.
