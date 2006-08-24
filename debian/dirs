@@ -1,3 +1,4 @@
 /etc/xen-tools
+/etc/xen-tools/role.d
 /etc/xen-tools/skel
 /usr/lib/xen-tools

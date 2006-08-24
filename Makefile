@@ -7,7 +7,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.76 2006-08-22 20:06:42 steve Exp $
+# $Id: Makefile,v 1.77 2006-08-24 20:33:07 steve Exp $
 
 
 #
@@ -84,8 +84,8 @@ diff:
 install-etc:
 	-mkdir -p ${prefix}/etc/xen-tools
 	-if [ -d ${prefix}/etc/xen-tools/hook.d ]; then mv ${prefix}/etc/xen-tools/hook.d/  ${prefix}/etc/xen-tools/hook.d.obsolete ; fi
-	-if [ -d ${prefix}/etc/xen-tools/role.d ]; then mv ${prefix}/etc/xen-tools/role.d/  ${prefix}/etc/xen-tools/role.d.obsolete ; fi
 	-mkdir -p ${prefix}/etc/xen-tools/skel/
+	-mkdir -p ${prefix}/etc/xen-tools/role.d/
 	cp etc/xen-tools.conf ${prefix}/etc/xen-tools/
 	cp etc/xm.tmpl        ${prefix}/etc/xen-tools/
 	-mkdir -p             ${prefix}/etc/bash_completion.d
@@ -118,25 +118,20 @@ install-bin:
 #  Install hooks
 #
 install-hooks:
-	mkdir -p ${prefix}/usr/lib/xen-tools/centos4.d/role.d
-	cp -R hooks/centos4/role.d/* ${prefix}/usr/lib/xen-tools/centos4.d/role.d
+	mkdir -p ${prefix}/usr/lib/xen-tools/centos4.d/
 	cp -R hooks/centos4/*-* ${prefix}/usr/lib/xen-tools/centos4.d
-	mkdir -p ${prefix}/usr/lib/xen-tools/debian.d/role.d
-	cp -R hooks/debian/role.d/* ${prefix}/usr/lib/xen-tools/debian.d/role.d/
+	mkdir -p ${prefix}/usr/lib/xen-tools/debian.d/
 	cp -R hooks/debian/*-* ${prefix}/usr/lib/xen-tools/debian.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d sarge.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d etch.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d sid.d
-	mkdir -p ${prefix}/usr/lib/xen-tools/fedora.d/role.d
-	cp -R hooks/fedora/role.d/* ${prefix}/usr/lib/xen-tools/fedora.d/role.d
+	mkdir -p ${prefix}/usr/lib/xen-tools/fedora.d/
 	cp -R hooks/fedora/*-* ${prefix}/usr/lib/xen-tools/fedora.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora.d stentz.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s ubuntu.d dapper.d
-	mkdir -p ${prefix}/usr/lib/xen-tools/gentoo.d/role.d
-	cp -R hooks/gentoo/role.d/* ${prefix}/usr/lib/xen-tools/gentoo.d/role.d
+	mkdir -p ${prefix}/usr/lib/xen-tools/gentoo.d/
 	cp -R hooks/gentoo/*-* ${prefix}/usr/lib/xen-tools/gentoo.d
-	mkdir -p ${prefix}/usr/lib/xen-tools/ubuntu.d/role.d
-	cp -R hooks/ubuntu/role.d/* ${prefix}/usr/lib/xen-tools/ubuntu.d/role.d
+	mkdir -p ${prefix}/usr/lib/xen-tools/ubuntu.d/
 	cp -R hooks/ubuntu/*-* ${prefix}/usr/lib/xen-tools/ubuntu.d
 	cp hooks/common.sh ${prefix}/usr/lib/xen-tools
 	@-find ${prefix}/usr/lib/xen-tools -name 'CVS' -exec rm -rf \{\} \;

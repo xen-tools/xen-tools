@@ -55,6 +55,9 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --role        Run a specific role command post-install.
                  These role scripts are discussed in the manpage later.
 
+   ---roledir    Specify the directory which contains the role scripts.
+                 This defaults to /etc/xen-tools/role.d/
+
    --size        Set the size of the primary disk image.
 
    --swap        Set the size of the swap partition.
@@ -390,12 +393,11 @@ Create a configuration file in /etc/xen so that xm can create the new image.
 
 =head1 ROLES
 
-  Each supported distribution has a hook directory which has been
- described already.  If that directory contains the subdirectory 'role.d'
- then roles support is available.
+  Currently there are some roles scripts included which work for
+ the Debian Sarge and Etch distrubtions only.   They are included
+ primarily as examples of the kind of things you could accomplish.
 
-  Currently there are some roles scripts included for the Debian
- distribution, these are intended primarily as examples:
+  The supplied scripts are:
 
 =over 8
 
@@ -414,8 +416,14 @@ Install an X11 server, using VNC and XDM
 =back
 
   If you'd like to include your own role scripts you'll need to
- create $dist.d/role.d/foo - then specify "--role=foo" when you're
- creating your new instance.
+ create a file in /etc/xen-tools/role.d, and then specify the
+ name of that file with "--role=filename".
+
+  For example the script /etc/xen-tools/role.d/gdm would be used
+ by executing with "--role=gdm".
+
+  Role scripts are invoked with a single argument -  the directory
+ where the installed system is mounted.
 
 =cut
 
@@ -446,7 +454,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.86 2006-08-24 16:26:36 steve Exp $
+ $Id: xen-create-image,v 1.87 2006-08-24 20:33:07 steve Exp $
 
 =cut
 
@@ -756,6 +764,7 @@ sub setupDefaultOptions
     $CONFIG{'fs'}          = 'ext3';
     $CONFIG{'force'}       = 0;
     $CONFIG{'template'}    = '';
+    $CONFIG{'roledir'}     = '/etc/xen-tools/role.d';
 
     #
     #  Installation methods
@@ -934,6 +943,7 @@ sub parseCommandLineArguments
                "ide",          \$CONFIG{'ide'},
                "passwd",       \$CONFIG{'passwd'},
                "role=s",       \$CONFIG{'role'},
+               "roledir=s",    \$CONFIG{'roledir'},
                "force",        \$CONFIG{'force'},
                "template=s",   \$CONFIG{'template'},
 
@@ -951,7 +961,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.86 $';
+        my $REVISION      = '$Revision: 1.87 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1213,6 +1223,18 @@ E_O_ERROR
         }
     }
 
+
+    #
+    #  If we've got a role directory specified then it must exist.
+    #
+    if ( defined( $CONFIG{'roledir'} ) && length( $CONFIG{'roledir'} ) )
+    {
+        if ( ! -d $CONFIG{'roledir'} )
+        {
+            logprint( "The specified role directory '$CONFIG{'roledir'}' does not exist\n" );
+            exit 1;
+        }
+    }
 }
 
 
@@ -1911,7 +1933,7 @@ sub runCustomisationHooks
 
 sub runRoleScript
 {
-    my $roleDir = '/usr/lib/xen-tools/' . $CONFIG{'dist'} . '.d/role.d/' ;
+    my $roleDir = $CONFIG{'role_dir'};
     my $role    = $CONFIG{'role'};
 
     if ( !defined( $role ) )
@@ -1920,7 +1942,10 @@ sub runRoleScript
         return;
     }
 
-    my $file = $roleDir . $role;
+    #
+    #  The complete path to the role script
+    #
+    my $file = $roleDir . "/" . $role;
 
     if ( -x $file )
     {

@@ -1,3 +1,10 @@
+
+  * Install roles system-wide into /etc/xen-tools/role.d/
+    This is certainly the last time this will move, since this is
+    the second time.  New command line argument '--roledir' allows
+    you to specify an alternative location.  (Also valid in the config file.)
+    (Closes: #383822)
+
 xen-tools (2.4-1) unstable; urgency=low
 
   * New upstream release.
