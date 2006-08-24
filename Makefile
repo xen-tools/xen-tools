@@ -7,7 +7,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.77 2006-08-24 20:33:07 steve Exp $
+# $Id: Makefile,v 1.78 2006-08-24 20:35:31 steve Exp $
 
 
 #
@@ -118,6 +118,7 @@ install-bin:
 #  Install hooks
 #
 install-hooks:
+	for i in roles/* ; do if [ -f $$i ]; then cp $$i ${prefix}/etc/xen-tools/role.d; fi ; done
 	mkdir -p ${prefix}/usr/lib/xen-tools/centos4.d/
 	cp -R hooks/centos4/*-* ${prefix}/usr/lib/xen-tools/centos4.d
 	mkdir -p ${prefix}/usr/lib/xen-tools/debian.d/
