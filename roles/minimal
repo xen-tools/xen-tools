@@ -14,38 +14,26 @@ prefix=$1
 
 
 #
-#  This function installs a single package into the chroot, forcing
-# the installation to be non-interactive.
+#  Source our common functions - this will let us install a Debian package.
 #
-function install_package
-{
-    package=$1
-    
-    DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes --force-yes install $package
-
-}
+if [ -e /usr/lib/xen-tools/common.sh ]; then
+    . /usr/lib/xen-tools/common.sh
+else
+    echo "Installation problem"
+fi
 
 
-#
-#  This function removes the given package.
-#
-function remove_package
-{
-    package=$1
-
-    chroot ${prefix} /usr/bin/dpkg --purge ${package}
-}
 
 
 #
 #  Install some new packages - do this first to avoid dependency errors.
 #
-install_package syslog-ng 
-install_package deborphan
-install_package less
-install_package screen
-install_package sudo
-install_package vim
+installDebianPackage ${prefix} syslog-ng 
+installDebianPackage ${prefix} deborphan
+installDebianPackage ${prefix} less
+installDebianPackage ${prefix} screen
+installDebianPackage ${prefix} sudo
+installDebianPackage ${prefix} vim
 
 
 #
@@ -53,28 +41,28 @@ install_package vim
 #
 
 # PPP stuff.
-remove_package pppconfig
-remove_package pppoeconf
-remove_package pppoe
-remove_package ppp
-remove_package libpcap0.7
+removeDebianPackage ${prefix} pppconfig
+removeDebianPackage ${prefix} pppoeconf
+removeDebianPackage ${prefix} pppoe
+removeDebianPackage ${prefix} ppp
+removeDebianPackage ${prefix} libpcap0.7
 
 # Editors
-remove_package nano
-remove_package ed
-remove_package nvi
+removeDebianPackage ${prefix} nano
+removeDebianPackage ${prefix} ed
+removeDebianPackage ${prefix} nvi
 
 # Syslog
-remove_package klogd
-remove_package sysklogd
+removeDebianPackage ${prefix} klogd
+removeDebianPackage ${prefix} sysklogd
 
 # manpages
-remove_package manpages  
-remove_package man-db 
-remove_package info
+removeDebianPackage ${prefix} manpages  
+removeDebianPackage ${prefix} man-db 
+removeDebianPackage ${prefix} info
 
 # misc
-remove_package tasksel
-remove_package pciutils
-remove_package fdutils
-remove_package cpio
+removeDebianPackage ${prefix} tasksel
+removeDebianPackage ${prefix} pciutils
+removeDebianPackage ${prefix} fdutils
+removeDebianPackage ${prefix} cpio

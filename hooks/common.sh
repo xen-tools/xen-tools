@@ -79,6 +79,38 @@ function installDebianPackage
 
 
 #
+#  Remove a Debian package.
+#
+function removeDebianPackage
+{
+    prefix=$1
+    package=$2
+
+    #
+    # Log our options
+    #
+    logMessage "Purging Debian package ${package} from prefix ${prefix}"
+
+    #
+    #  We require a package + prefix
+    #
+    assert $LINENO "${package}"
+    assert $LINENO "${prefix}"
+
+    #
+    # Prefix must be a directory.
+    #
+    assert $LINENO -d ${prefix}
+
+    #
+    # Purge the package
+    #
+    chroot ${prefix} /usr/bin/dpkg --purge ${package}
+
+}
+
+
+#
 #  Install a CentOS4 package via yum
 #
 function installCentOS4Package
