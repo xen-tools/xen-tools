@@ -454,7 +454,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.88 2006-08-25 10:59:08 steve Exp $
+ $Id: xen-create-image,v 1.89 2006-08-27 21:29:23 steve Exp $
 
 =cut
 
@@ -961,7 +961,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.88 $';
+        my $REVISION      = '$Revision: 1.89 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1272,12 +1272,12 @@ sub checkBinariesPresent
     {
         # loopback image
         if ( ! -x '/bin/dd' )
-	{
+        {
             logprint( "The following binary is required to run this tool\n" );
-	    logprint( "\t/bin/dd\n");
-	    logprint( "(This only required for loopback images, which you've selected)\n" );
-	    exit 1;
-	}
+            logprint( "\t/bin/dd\n");
+            logprint( "(This only required for loopback images, which you've selected)\n" );
+            exit 1;
+        }
     }
     else
     {
