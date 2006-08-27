@@ -1,9 +1,13 @@
+xen-tools (2.5-1) unstable; urgency=low
 
   * Install roles system-wide into /etc/xen-tools/role.d/
     This is certainly the last time this will move, since this is
     the second time.  New command line argument '--roledir' allows
     you to specify an alternative location.  (Also valid in the config file.)
     (Closes: #383822)
+  * Correctly setup "${noswap}" for the hook scripts.
+
+ -- Steve Kemp <skx@debian.org>  Sun, 27 Aug 2006 22:33:20 +0000
 
 xen-tools (2.4-1) unstable; urgency=low
 
