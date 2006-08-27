@@ -25,10 +25,6 @@ if [ -d "/etc/xen-tools/hook.d" ]; then
 	rmdir "/etc/xen-tools/hook.d" 2>/dev/null || 
 	         echo "The directory /etc/xen-tools/hook.d is no longer used. You can safely remove it."
 fi
-if [ -d "/etc/xen-tools/role.d" ]; then
-	rmdir "/etc/xen-tools/role.d" 2>/dev/null || 
-	         echo "The directory /etc/xen-tools/role.d is no longer used. You can safely remove it."
-fi
 
 #DEBHELPER#
 exit 0

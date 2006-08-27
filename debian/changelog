@@ -1,3 +1,9 @@
+xen-tools (2.5-2) unstable; urgency=low
+
+  * Don't complation about /etc/xen-tools/role.d/ any more.
+
+ -- Steve Kemp <skx@debian.org>  Sun, 27 Aug 2006 22:39:45 +0000
+
 xen-tools (2.5-1) unstable; urgency=low
 
   * Install roles system-wide into /etc/xen-tools/role.d/
