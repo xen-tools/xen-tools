@@ -7,7 +7,7 @@
 #
 # Steve
 # --
-# $Id: getopt.t,v 1.2 2006-06-22 15:01:53 steve Exp $
+# $Id: getopt.t,v 1.3 2006-09-10 21:04:20 steve Exp $
 
 
 use strict;
@@ -136,6 +136,6 @@ sub testFile
     #
     foreach my $argument ( @documented )
     {
-        is( $accepted{$argument}, 1, "Option '--$argument' accepted" );
+        is( $accepted{$argument}, 1, "Option '--$argument' accepted: $file" );
     }
 }
