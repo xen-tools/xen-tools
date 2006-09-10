@@ -454,7 +454,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.91 2006-08-27 21:31:30 steve Exp $
+ $Id: xen-create-image,v 1.92 2006-09-10 18:22:42 steve Exp $
 
 =cut
 
@@ -961,7 +961,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.91 $';
+        my $REVISION      = '$Revision: 1.92 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1788,6 +1788,9 @@ sub mountImage
   Install the system, by invoking the xt-install-system script.
 
   The script will be given the appropriate arguments from our environment.
+ This means that it will be given one of "--debootstrap", "--rpmstrap",
+ "--tar", and "--copy".  There will also be other options passed on
+ as appropriate.
 
 =end doc
 
@@ -1841,6 +1844,18 @@ sub installSystem
         $cmd .= " --verbose";
     }
 
+    #
+    #  Propogate --arche
+    #
+    if ( $CONFIG{'arch'} )
+    {
+        $cmd .= " --arch=$CONFIG{'arch'}";
+    }
+
+
+    #
+    #  Run the command.
+    #
     runCommand( $cmd );
     logprint( "Done\n" );
 }
