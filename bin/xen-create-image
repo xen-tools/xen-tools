@@ -81,6 +81,7 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --copy-cmd    This allows you to specify the command actually used for
                  installation when using "--copy"
+                 NOTE This option is *only* valid in the configuration file.
 
    --dist        Specify the distribution you wish to install.
 
@@ -100,6 +101,7 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --tar-cmd     This allows you to specify the command actually used for
                  installation when using "--tar".
+                 NOTE This option is *only* valid in the configuration file.
 
    --template    Specify which template file to use when creating the
                  Xen configuration file.
@@ -460,7 +462,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.93 2006-09-10 21:04:20 steve Exp $
+ $Id: xen-create-image,v 1.94 2006-09-10 21:05:03 steve Exp $
 
 =cut
 
@@ -968,7 +970,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.93 $';
+        my $REVISION      = '$Revision: 1.94 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
