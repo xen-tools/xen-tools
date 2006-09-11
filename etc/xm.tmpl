@@ -61,10 +61,11 @@ name    = '{$hostname}'
     my $m = '';
     if ( $mac )
     { 
-      $m = "mac=$mac"
+      $m = ",mac=$mac"
     }
 
-    $OUT .= "vif  = [ 'ip=$ip1,$m' ]";
+    $OUT .= "vif  = [ 'ip=$ip1"; 
+    $OUT .= "$m' ]";
   }
 }
 
