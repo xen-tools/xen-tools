@@ -1,3 +1,12 @@
+xen-tools (2.6-1) unstable; urgency=low
+
+  * Allow the user to modify the commands used when installing with
+    --copy or --tar.
+  * Add --numeric-owner to the command used by --tar by default.
+    (Closes: #385024)
+
+ -- Steve Kemp <skx@debian.org>  Mon, 11 Sep 2006 17:00:21 +0000
+
 xen-tools (2.5-2) unstable; urgency=low
 
   * Don't complation about /etc/xen-tools/role.d/ any more.
