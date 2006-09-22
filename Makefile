@@ -7,7 +7,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.80 2006-09-11 15:57:57 steve Exp $
+# $Id: Makefile,v 1.81 2006-09-22 17:13:36 steve Exp $
 
 
 #
@@ -130,6 +130,7 @@ install-hooks:
 	cp -R hooks/fedora/*-* ${prefix}/usr/lib/xen-tools/fedora.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora.d stentz.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s ubuntu.d dapper.d
+	-cd ${prefix}/usr/lib/xen-tools/ && ln -s ubuntu.d edgy.d
 	mkdir -p ${prefix}/usr/lib/xen-tools/gentoo.d/
 	cp -R hooks/gentoo/*-* ${prefix}/usr/lib/xen-tools/gentoo.d
 	mkdir -p ${prefix}/usr/lib/xen-tools/ubuntu.d/
