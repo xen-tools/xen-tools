@@ -462,7 +462,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.95 2006-09-11 15:57:57 steve Exp $
+ $Id: xen-create-image,v 1.96 2006-10-07 08:38:02 steve Exp $
 
 =cut
 
@@ -675,9 +675,13 @@ logprint( "All done\n");
 if ( $CONFIG{'boot'} )
 {
     #
-    #  Unmount.
+    #  Unmount the image and any subsequent mounts.
     #
-    runCommand( "umount $MOUNT_POINT" );
+    unMountImage( $MOUNT_POINT );
+
+    #
+    #  Mark us as unmounted.
+    #
     $MOUNT_POINT = undef;
 
     #
@@ -970,7 +974,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.95 $';
+        my $REVISION      = '$Revision: 1.96 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -2126,6 +2130,62 @@ sub runCommand
 
 =begin doc
 
+  Unmount any mount-points which are below the given path.
+
+  The mountpoints are chosen by looking at /proc/mounts which
+ might not be portable, but works for me.  (tm).
+
+=end doc
+
+=cut
+
+sub unMountImage
+{
+    my ( $point ) = ( @_ );
+
+    #
+    #  Open /proc/mount and get a list of currently mounted paths
+    # which begin with our mount point.
+    #
+    my @points;
+
+    open( MOUNTED, "<", "/proc/mounts" )
+      or die "Failed to open mount list";
+    foreach my $line (<MOUNTED> )
+    {
+        #
+        #  Split into the device and mountpoint.
+        #
+        my ( $device, $path ) = split( / /, $line );
+
+        if ( $path =~ /\Q$point\E/ )
+        {
+            push @points, $path;
+        }
+    }
+    close( MOUNTED );
+
+    #
+    #  Now we have a list of mounts.  We need to move the
+    # longest first, we can do this by sorting and reversing.
+    #
+    #  (ie. We unmount the children, then the parent.)
+    #
+    @points = sort @points;
+    @points = reverse @points;
+
+    foreach my $path ( @points )
+    {
+        $CONFIG{'verbose'} && print "Unmounting : $path\n";
+        runCommand( "umount $path" );
+    }
+
+    $MOUNT_POINT = undef;
+}
+
+
+=begin doc
+
   If we still have the temporary image mounted then make sure
  it is unmounted before we terminate.
 
@@ -2137,14 +2197,10 @@ sub END
 {
     if ( defined( $MOUNT_POINT ) )
     {
-       #
-       # Run mount to see if this is still mounted.
-       #
-       my $mount = `/bin/mount`;
-       if ( $mount =~ /$MOUNT_POINT/)
-       {
-           runCommand( "umount $MOUNT_POINT" );
-       }
+        #
+        #  Unmount the image, taking care to remove any child mounts too.
+        #
+        unMountImage( $MOUNT_POINT );
     }
 
     if ( ( defined( $CONFIG{'hostname'} ) ) &&
