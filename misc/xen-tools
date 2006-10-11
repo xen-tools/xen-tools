@@ -18,7 +18,7 @@
 # --
 # http://www.steve.org.uk
 #
-# $Id: xen-tools,v 1.35 2006-10-11 16:40:55 steve Exp $
+# $Id: xen-tools,v 1.36 2006-10-11 16:42:07 steve Exp $
 #
 
 
@@ -58,7 +58,7 @@ _xen_create_image()
     
     #
     # Complete the initial part of the IP in the configuration file.
-    ip=`grep ^gateway /etc/xen-tools/xen-tools.conf | awk -F'= '  '{print $2}'`
+    ip=`grep ^gateway /etc/xen-tools/xen-tools.conf 2>/dev/null | awk -F'= '  '{print $2}'`
 
     #
     # Available distributions, by which we mean distributions which
@@ -73,7 +73,7 @@ _xen_create_image()
     #
     # Volume group completion
     #
-    vgs=`vgdisplay 2>/dev/null | grep Name | awk '{print $3}'`
+    vgs=`vgdisplay 2>/dev/null | grep Name 2>/dev/null | awk '{print $3}'`
 
     #
     # EVMS container completion
@@ -115,7 +115,7 @@ _xen_create_image()
 	    return 0
 	    ;;
 	--role)
-	    roles=$(for x in `ls -1 /usr/lib/xen-tools/*.d/role.d/ 2>/dev/null | grep -v \/`; do echo ${x} ; done )
+	    roles=$(for x in `ls -1 /usr/lib/xen-tools/*.d/role.d/ 2>/dev/null | grep -v \/ 2>/dev/null`; do echo ${x} ; done )
 	    COMPREPLY=( $( compgen -W '${roles}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
 	    return 0
 	    ;;
@@ -144,7 +144,7 @@ _xen_delete_image()
     #
     # Volume Group completion
     #
-    vgs=`vgdisplay 2>/dev/null | grep Name | awk '{print $3}'`
+    vgs=`vgdisplay 2>/dev/null | grep Name 2>/dev/null | awk '{print $3}'`
 
     #
     # EVMS container completion
@@ -199,7 +199,7 @@ _xen_update_image()
     #
     # Volume group completion
     #
-    vgs=`vgdisplay 2>/dev/null | grep Name | awk '{print $3}'`
+    vgs=`vgdisplay 2>/dev/null | grep Name 2>/dev/null | awk '{print $3}'`
 
     #
     # EVMS container completion
@@ -243,7 +243,7 @@ _xen_list_images()
     #
     # Volume group completion
     #
-    vgs=`vgdisplay 2>/dev/null | grep Name | awk '{print $3}'`
+    vgs=`vgdisplay 2>/dev/null | grep Name 2>/dev/null | awk '{print $3}'`
 
     #
     # EVMS container completion
