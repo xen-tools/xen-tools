@@ -124,7 +124,7 @@ Specify the EVMS container where images were previously saved.
  --
  http://www.steve.org.uk/
 
- $Id: xen-delete-image,v 1.19 2006-10-11 16:40:54 steve Exp $
+ $Id: xen-delete-image,v 1.20 2006-10-11 16:52:53 steve Exp $
 
 =cut
 
@@ -314,7 +314,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.19 $';
+       my $REVISION      = '$Revision: 1.20 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -344,29 +344,31 @@ sub checkArguments
     #
     if ( $CONFIG{'test'} )
     {
-        $CONFIG{'lvm'} = undef;
+        $CONFIG{'lvm'}  = undef;
         $CONFIG{'evms'} = undef;
     }
 
     #
-    #  Make sure we have either a volume, or a root.
+    #  Make sure we got one and only one installation method.
     #
-    if ( ( $CONFIG{'lvm'} && $CONFIG{'dir'} ) || ( $CONFIG{'lvm'} && $CONFIG{'evms'} ) || ( $CONFIG{'evms'} && $CONFIG{'dir'} ) )
+    my $count = 0;
+    foreach my $type ( qw/dir lvm evms/ )
     {
-       print "Please use only one of: a volume group, an EVMS container, or a directory name\n";
-       exit;
+        $count += 1 if defined( $CONFIG{$type} );
     }
 
-
     #
-    #  Make sure we have at least one of the lvm or root specified.
+    #  Show a decent error for when either zero or more than one options
+    # were selected.
     #
-    if ( (!defined( $CONFIG{'dir'} ) ) && ( !defined( $CONFIG{'lvm'} ) ) && ( !defined( $CONFIG{'evms'} ) ) )
+    if ( $count != 1 )
     {
-       print "Please specify either a directory root, an LVM volume group, or an EVMS container\n";
+       print "Please select one and only one of the installation methods:\n";
+       print " --dir\n";
+       print " --evms\n";
+       print " --lvm\n";
        exit;
     }
-
 }
 
 
@@ -497,8 +499,8 @@ sub deleteXenImage
     }
     else
     {
-       print "Error - neither --dir nor --evms nor --lvm.\n";
-       print "Can't happen\n";
+       print "Error:  No installation type specified\n";
+       print "Can't happen!\n";
        print "Hostname : $hostname\n";
        exit;
     }
