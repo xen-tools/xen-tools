@@ -127,12 +127,16 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --dir         Specify where the output images should go.
                  Subdirectories will be created for each guest
-                 If you do not wish to use loopback images specify --lvm.
-                 (These two options are mutually exclusive.)
+                 If you do not wish to use loopback images specify --lvm
+                 or --evms.  (These three options are mutually exclusive.)
 
    --lvm         Specify the volume group to save images within.
-                 If you do not wish to use LVM specify --dir.
-                 (These two options are mutually exclusive.)
+                 If you do not wish to use LVM specify --dir or --evms.
+                 (These three options are mutually exclusive.)
+
+   --evms        Specify the container to save images within, i.e. '--evms
+                 lvm2/mycontainer'.  If you do not wish to use EVMS specify
+                 --dir or --lvm.  (These three options are mutually exclusive.)
 
    --hostname    Set the hostname of the new guest system.
                  Ideally this will be fully-qualified since several
@@ -208,6 +212,16 @@ Create a configuration file in /etc/xen so that xm can create the new image.
   # specify the name of the volume group to use.
   #
   # lvm = myvolume
+
+  #
+  #  EVMS users should disable the dir setting above and instead specify
+  # a container.  For example, if you have an lvm2 container named box,
+  # put lvm2/box.  This is how it is named in the evms interface.
+  #
+  #  Warning... this has not been tested with anything but lvm2 but should
+  # be generalizable.
+  #
+  # evms= lvm2/myvolume
 
   #
   #  Disk and Sizing options.
@@ -306,7 +320,7 @@ Create a configuration file in /etc/xen so that xm can create the new image.
 =cut
 
 
-=head1 LVM EXAMPLES
+=head1 LVM EXAMPLE
 
   If you wish to use an LVM volume group instead of a pair of loopback
  images as shown above you can instead use the --lvm argument to
@@ -325,6 +339,28 @@ Create a configuration file in /etc/xen so that xm can create the new image.
 
     mkdir -p /mnt/foo
     mount /dev/myvolumegroup/vm01.my.flat-disk /mnt/foo
+
+=cut
+
+=head1 EVMS EXAMPLE
+
+  If you wish to use an EVMS storage container instead of a pair of loopback
+ images as shown above you can instead use the --evms argument to
+ specify one.  The below example assumes an lvm2 container.
+
+     xen-create-image --size=2Gb --swap=128Mb --dhcp \
+          --evms=lvm2/myvolumegroup --hostname=vm01.my.flat
+
+  The given storage container will have two new EVMS volumes created within it:
+
+   ${hostname}-swap
+   ${hostname}-disk
+
+  The disk image may be mounted, as you would expect, with the following
+ command:
+
+    mkdir -p /mnt/foo
+    mount /dev/evms/vm01.my.flat-disk /mnt/foo
 
 =cut
 
@@ -462,7 +498,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.96 2006-10-07 08:38:02 steve Exp $
+ $Id: xen-create-image,v 1.97 2006-10-11 16:40:54 steve Exp $
 
 =cut
 
@@ -606,10 +642,17 @@ elsif ( $CONFIG{'lvm'} )
     #
     createLVMBits();
 }
+elsif ( $CONFIG{'evms'} )
+{
+    #
+    #  Create our evms partitions.
+    #
+    createEVMSBits();
+}
 else
 {
-    # Can't happen:  Neither loopback nor LVM selected
-    logprint( "Error:  Neither loopback nor LVM is selected.\n");
+    # Can't happen we didn't get an installation type.
+    logprint( "Error:  No recognised installation type.\n" );
     exit;
 }
 
@@ -621,7 +664,7 @@ mountImage();
 
 
 #
-#  Call xt-install-image to do the install.
+#  Call xt-install-image to perform the actual install.
 #
 installSystem();
 
@@ -901,6 +944,7 @@ sub parseCommandLineArguments
     my %install;
     $install{'debootstrap'} = 0;
     $install{'rpmstrap'}    = 0;
+    $install{'evms'}        = undef;
     $install{'copy'}        = undef;
     $install{'tar'}         = undef;
     $install{'dir'}         = undef;
@@ -922,6 +966,7 @@ sub parseCommandLineArguments
 
                # Locations
                "dir=s",        \$install{'dir'},
+               "evms=s",       \$install{'evms'},
                "kernel=s",     \$CONFIG{'kernel'},
                "initrd=s",     \$CONFIG{'initrd'},
                "mirror=s",     \$CONFIG{'mirror'},
@@ -974,7 +1019,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.96 $';
+        my $REVISION      = '$Revision: 1.97 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1039,18 +1084,26 @@ E_O_ERROR
 
     #
     #  Now do a similar thing so that the command line setting of
-    # '--lvm=x' and '--dir=x' override anything in the configuration
-    # file.
+    # '--lvm', '--evms' and '--dir=x' override anything in the
+    # configuration file.
     #
     if ( $install{'dir'} )
     {
-        $CONFIG{'lvm'} = undef;
-        $CONFIG{'dir'} = $install{'dir'};
+        $CONFIG{'dir'}  = $install{'dir'};
+        $CONFIG{'evms'} = undef;
+        $CONFIG{'lvm'}  = undef;
+    }
+    if ( $install{'evms'} )
+    {
+        $CONFIG{'dir'}  = undef;
+        $CONFIG{'evms'} = $install{'evms'};
+        $CONFIG{'lvm'}  = undef;
     }
     if ( $install{'lvm'} )
     {
-        $CONFIG{'dir'} = undef;
-        $CONFIG{'lvm'} = $install{'lvm'};
+        $CONFIG{'dir'}  = undef;
+        $CONFIG{'evms'} = undef;
+        $CONFIG{'lvm'}  = $install{'lvm'};
     }
 }
 
@@ -1160,13 +1213,13 @@ E_OR
     }
 
     #
-    #  If using LVM images cannot be sparse
+    #  If using LVM or EVMS then the images may not be sparse
     #
-    if ( $CONFIG{'lvm'} )
+    if ( $CONFIG{'lvm'} ||
+         $CONFIG{'evms'} )
     {
         $CONFIG{'image'} = "full";
     }
-
 
     #
     #  The kernel + initrd images should exist.
@@ -1292,9 +1345,27 @@ sub checkBinariesPresent
             exit 1;
         }
     }
+    elsif ( defined( $CONFIG{'evms'} ) )
+    {
+        #
+        # EVMS-specific binaries.
+        #
+        my @evms = qw ( /sbin/evms /bin/echo );
+
+        foreach my $file ( @evms )
+        {
+            if ( ! -x $file )
+            {
+                logprint( "The following binary is required to run this tool\n");
+                logprint( "\t$file\n" );
+                logprint( "(This is only required for EVMS volumes, which you've selected)\n" );
+                exit;
+            }
+        }
+    }
     else
     {
-        # lvm image
+        # LVM-specific binaries.
         my @lvm = qw ( /sbin/lvcreate /sbin/lvremove );
 
         foreach my $file ( @lvm )
@@ -1668,6 +1739,181 @@ sub createLVMBits
 
 =begin doc
 
+  This function is responsible for creating two new logical volumes within
+ a given EVMS container group (which at the moment is either LVM or LVM2), but
+ should be compatible with any further extentions of evms.
+
+=end doc
+
+=cut
+
+sub createEVMSBits
+{
+    #  The two volumes we will need to use..
+    my $disk = $CONFIG{'hostname'} . "-disk" ;
+    my $swap = $CONFIG{'hostname'} . "-swap" ;
+
+    #
+    #  Check whether the disk volume exists already, and if so abort
+    #  unless '--force' is specified.  This is two steps with evms,
+    #  because two things need to be checked, the volume and the object.
+    #
+
+    # Check whether the EVMS volume already exists, abort unless '--force' is specified.
+    my $evms_volume_disk = "/dev/evms/$CONFIG{'hostname'}-disk";
+    if ( -e $evms_volume_disk )
+    {
+        # Delete if forcing
+        if ( $CONFIG{'force'} )
+        {
+            logprint( "Removing $evms_volume_disk - since we're forcing the install\n" );
+            runCommand( "echo Delete : $evms_volume_disk | evms" );
+        }
+        else
+        {
+            logprint( "The EVMS volume $evms_volume_disk already exists.  Aborting.\n" );
+            logprint( "Specify '--force' to delete and recreate\n" );
+            exit;
+        }
+    }
+
+    #
+    # Check whether the EVMS object exists, abort unless '--force' 
+    # is specified.
+    #
+    # Note: $evms_object_disk is not specified directly as a device
+    #
+    my $evms_object_disk = "$CONFIG{'evms'}/$CONFIG{'hostname'}-disk";
+    if ( -e $evms_object_disk )
+    {
+        # Delete if forcing
+        if ( $CONFIG{'force'} )
+        {
+            logprint( "Removing $evms_object_disk - since we're forcing the install\n" );
+            runCommand( "echo Delete : $evms_object_disk | evms" );
+        }
+        else
+        {
+            logprint( "The EVMS object $evms_object_disk already exists.  Aborting.\n" );
+            logprint( "Specify '--force' to delete and recreate\n" );
+            exit;
+        }
+    }
+
+
+    #
+    #  Check whether the swap object and EVMS volume exists already, and
+    # if so abort unless '--force' is specified.
+    #
+    #
+    # Check whether the EVMS volume for swap already exists, abort
+    # unless '--force' is specified.
+    #
+    my $evms_volume_swap = "/dev/evms/$CONFIG{'hostname'}-swap";
+    if ( -e $evms_volume_swap )
+    {
+        # Delete if forcing
+        if ( $CONFIG{'force'} )
+        {
+            logprint( "Removing $evms_volume_swap - since we're forcing the install\n" );
+            runCommand( "echo Delete : $evms_volume_swap | evms" );
+        }
+        else
+        {
+            logprint( "The EVMS volume $evms_volume_swap image already exists.  Aborting.\n" );
+            logprint( "Specify '--force' to delete and recreate\n" );
+            exit;
+        }
+    }
+    # Check whether the evms object for swap exists, abort unless '--force' is specified.
+    # note that $evms_object_swap is not specified directly as a device
+    my $evms_object_swap = "$CONFIG{'evms'}/$CONFIG{'hostname'}-swap";
+    if ( -e $evms_object_swap )
+    {
+        # Delete if forcing
+        if ( $CONFIG{'force'} )
+        {
+            logprint( "Removing $evms_object_swap - since we're forcing the install\n" );
+            runCommand( "echo Delete : $evms_object_swap | evms" );
+        }
+        else
+        {
+            logprint( "The EVMS object $evms_object_swap image already exists.  Aborting.\n" );
+            logprint( "Specify '--force' to delete and recreate\n" );
+            exit;
+        }
+    }
+
+
+    #
+    #  Modify the sizes to something reasonable
+    #
+    my $disk_size = $CONFIG{'size'};
+    my $swap_size = $CONFIG{'swap'};
+
+    #
+    # Convert Gb -> Mb for the disk image size, and swap size.
+    #
+    if ( $disk_size =~ /^(\d+)Gb*$/i )
+    {
+        $disk_size = $1 * 1024 . "M";
+    }
+    if ( $swap_size =~ /^(\d+)Gb*$/i )
+    {
+        $swap_size = $1 * 1024 . "M";
+    }
+
+    #
+    #  Final adjustments to sizing.
+    #
+    $disk_size =~ s/Mb*$/k/i;
+    if ( $swap_size =~ /^(\d+)Mb*$/i )
+    {
+        $swap_size = $1;
+    }
+
+
+    #
+    # The commands to create the objects and volumes.
+    #
+    #create the object
+    my $disk_cmd_object = "echo allocate : $CONFIG{'evms'}/Freespace, size=$CONFIG{'size'}, name=$disk | evms";
+		# these will be piped to evms, but gotta check it first
+		## /sbin/lvcreate $CONFIG{'evms'} -L $CONFIG{'size'}M -n $disk";
+    #create the EVMS volume
+    my $disk_cmd_volume = "echo create : Volume, $CONFIG{'evms'}/$disk, name=$disk | evms";
+		##/sbin/lvcreate $CONFIG{'evms'} -L $CONFIG{'swap'} -n $swap";
+
+    #repeat the same steps for the swap partition
+    my $swap_cmd_object = "echo allocate : $CONFIG{'evms'}/Freespace, size=$CONFIG{'swap'}, name=$swap | evms";
+		# these will be piped to evms, but gotta check it first
+		## /sbin/lvcreate $CONFIG{'evms'} -L $CONFIG{'size'}M -n $disk";
+    #create the EVMS volume
+    my $swap_cmd_volume = "echo create : Volume, $CONFIG{'evms'}/$swap, name=$swap | evms";
+		##/sbin/lvcreate $CONFIG{'evms'} -L $CONFIG{'swap'} -n $swap";
+
+
+    #
+    # Create the volumes
+    #
+    runCommand( $disk_cmd_object );
+    runCommand( $disk_cmd_volume );
+
+    runCommand( $swap_cmd_object ) unless( $CONFIG{'noswap'} );
+    runCommand( $swap_cmd_volume ) unless( $CONFIG{'noswap'} );
+
+    #
+    #  Initialise the partitions with the relevant filesystem.
+    #
+    createFilesystem( "/dev/evms/$CONFIG{'hostname'}-disk" );
+    createSwap( "/dev/evms/$CONFIG{'hostname'}-swap" ) unless ( $CONFIG{'noswap'} );
+
+}
+
+
+
+=begin doc
+
   Format the given image in the users choice of filesystem.
 
 =end doc
@@ -1755,6 +2001,10 @@ sub mountImage
     {
        $image = "/dev/" . $CONFIG{'lvm'} . "/" . $CONFIG{'hostname'} . '-disk';
     }
+    elsif ( $CONFIG{'evms'} )
+    {
+       $image = "/dev/evms/" . $CONFIG{'hostname'} . '-disk';
+    }
     elsif ( $CONFIG{'dir'} )
     {
        $image = $CONFIG{'dir'} . '/domains/' . $CONFIG{'hostname'} . "/disk.img" ;
@@ -1762,7 +2012,7 @@ sub mountImage
     else
     {
        logprint( "I don't know what to mount!\n" );
-       logprint( "Please specify '--dir' or '--lvm'\n" );
+       logprint( "Please specify '--dir' or '--lvm' or '--evms'\n" );
        exit;
     }
 
@@ -1784,6 +2034,10 @@ sub mountImage
     if ( $CONFIG{'lvm'} )
     {
         $mount_cmd = "mount $mount_type $image $MOUNT_POINT";
+    }
+    elsif ( $CONFIG{'evms'} )
+    {
+       $mount_cmd = "mount $mount_type $image $MOUNT_POINT";
     }
     else
     {

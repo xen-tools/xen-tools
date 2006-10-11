@@ -16,6 +16,7 @@ xen-update-image - Update the software installed upon offline Xen images.
   General Options:
    --dir       Specify the directory which contains the image(s).
    --lvm       Specify the LVM volume group which contains the image(s).
+   --evms      Specify the EVMS container which contains the image(s).
 
 =cut
 
@@ -39,6 +40,9 @@ Show the version number and exit.
 
 =item B<--lvm>
 Specify the LVM volume group which contains the image(s).
+
+=item B<--evms>
+Specify the EVMS container which contains the image(s).
 
 =back
 
@@ -82,7 +86,7 @@ Specify the LVM volume group which contains the image(s).
  --
  http://www.steve.org.uk/
 
- $Id: xen-update-image,v 1.12 2006-09-11 15:57:57 steve Exp $
+ $Id: xen-update-image,v 1.13 2006-10-11 16:40:54 steve Exp $
 
 =cut
 
@@ -223,6 +227,30 @@ sub updateXenImage
             return;
         }
     }
+    elsif ( $CONFIG{'evms'} )
+    {
+        # The EVMS volume  -- note, unlike LVM, you don't need the $CONFIG{'evms'} 
+        # to see it and mount the volume. $CONFIG{'evms'} is only used for manipulating
+        # the underlying object.  Still, I don't want to mess with the parse code and
+        # make it confusing - otherwise --evms takes an argument everywhere but here, 
+        # which will confuse users.  The better solution is to make it so that --evms can 
+        # take a following container, but doesn't require it.  For the moment, it is 
+        # better to leave it as it is, take a container, and then ignore it.
+
+        # The best way to do it is to just read it out of the configuration file, 
+        # tell the user what you got and where you got it from, and not bother the user
+        # with picking --dir or --lvm or --evms at all, but infer it from the config
+        # file's disk = parameter.  xen-delete-image might work the same way, but 
+        # it could be *slightly* more dangerous in the context of deleting.
+        $img = "/dev/evms/$name-disk";
+
+        # make sure it exists.
+        if ( ! -e $img )
+        {
+            print "EVMS volume '$img' for host '$name' not found\n";
+            return;
+        }
+    }
     else
     {
         die "Can't happen?\n";
@@ -344,6 +372,7 @@ sub parseCommandLineArguments
     GetOptions(
               "dir=s",      \$CONFIG{'dir'},
               "lvm=s",      \$CONFIG{'lvm'},
+              "evms=s",      \$CONFIG{'evms'},
               "help",       \$HELP,
               "manual",     \$MANUAL,
               "version",    \$VERSION
@@ -354,7 +383,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.12 $';
+       my $REVISION      = '$Revision: 1.13 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -383,9 +412,9 @@ sub checkArguments
     #
     #  Make sure we have either a volume, or a root.
     #
-    if ( $CONFIG{'lvm'} && $CONFIG{'dir'} )
+    if ( ( $CONFIG{'lvm'} && $CONFIG{'dir'} ) || ( $CONFIG{'lvm'} && $CONFIG{'evms'} ) || ( $CONFIG{'evms'} && $CONFIG{'dir'} ) )
     {
-       print "Please only specify a volume group or a directory name - not both\n";
+       print "Please use only one of: a volume group, an EVMS container, or a directory name\n";
        exit;
     }
 
@@ -393,9 +422,9 @@ sub checkArguments
     #
     #  Make sure we have at least one of the lvm or root specified.
     #
-    if ( (!defined( $CONFIG{'dir'} ) ) && ( !defined( $CONFIG{'lvm'} ) ) )
+    if ( (!defined( $CONFIG{'dir'} ) ) && ( !defined( $CONFIG{'lvm'} ) ) && ( !defined( $CONFIG{'evms'} ) ) )
     {
-       print "Please specify either a directory root, or an LVM volume group\n";
+       print "Please specify either a directory root, an LVM volume group, or an EVMS container\n";
        exit;
     }
 }

@@ -11,6 +11,9 @@ Contributions
 
   Listed alphabetically by surname.
 
+  Ray Anthracite <ray [at] com.rayanthracite>
+   - Added support for EVMS installation types.
+
   Justin Azoff <JAzoff [at] edu.albany.uamail>
    - Added LVM support to xen-create-image.
 

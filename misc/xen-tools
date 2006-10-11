@@ -18,7 +18,7 @@
 # --
 # http://www.steve.org.uk
 #
-# $Id: xen-tools,v 1.34 2006-08-19 13:40:58 steve Exp $
+# $Id: xen-tools,v 1.35 2006-10-11 16:40:55 steve Exp $
 #
 
 
@@ -53,7 +53,7 @@ _xen_create_image()
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
     prev=${COMP_WORDS[COMP_CWORD-1]}
-    opts='--accounts --broadcast --boot --cache --debootstrap --dhcp --dir --dist --force --fs --gateway --help --hostname --ide --image --initrd --ip --kernel --lvm --mac --manual --memory --mirror --noswap --p2p --passwd --role --rpmstrap --size --swap --version --verbose'
+    opts='--accounts --broadcast --boot --cache --debootstrap --dhcp --dir --dist --evms --force --fs --gateway --help --hostname --ide --image --initrd --ip --kernel --lvm --mac --manual --memory --mirror --noswap --p2p --passwd --role --rpmstrap --size --swap --version --verbose'
     
     
     #
@@ -75,6 +75,11 @@ _xen_create_image()
     #
     vgs=`vgdisplay 2>/dev/null | grep Name | awk '{print $3}'`
 
+    #
+    # EVMS container completion
+    #    
+    evmscontainers=`evms_query containers 2>/dev/null`
+
     case "$prev" in
 	--cache)
 	    COMPREPLY=( $( compgen -W 'yes no'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
@@ -90,6 +95,10 @@ _xen_create_image()
 	    ;;
 	--dist)
 	    COMPREPLY=( $( compgen -W '${dists}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+	    return 0
+	    ;;
+	--evms)
+	    COMPREPLY=( $( compgen -W '${evmscontainers}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
 	    return 0
 	    ;;
 	--fs)
@@ -138,15 +147,24 @@ _xen_delete_image()
     vgs=`vgdisplay 2>/dev/null | grep Name | awk '{print $3}'`
 
     #
+    # EVMS container completion
+    #    
+    evmscontainers=`evms_query containers 2>/dev/null`
+
+    #
     # Complete the options + all available hostnames.
     #
-    opts="--dir --help --lvm --manual --test --version ${names}"
+    opts="--dir --evms --help --lvm --manual --test --version ${names}"
 
     case "${prev}" in
         --dir)
 	    _filedir -d
 	    return 0
             ;;
+	--evms)
+	    COMPREPLY=( $( compgen -W '${evmscontainers}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+	    return 0
+	    ;;
 	--lvm)
 	    COMPREPLY=( $( compgen -W '${vgs}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
 	    return 0
@@ -183,7 +201,12 @@ _xen_update_image()
     #
     vgs=`vgdisplay 2>/dev/null | grep Name | awk '{print $3}'`
 
-    opts="--dir --help --manual --version --lvm"
+    #
+    # EVMS container completion
+    #
+    evmscontainers=`evms_query containers 2>/dev/null`
+
+    opts="--dir --evms --help --manual --version --lvm"
 
     case "${prev}" in
         --dir)
@@ -215,18 +238,28 @@ _xen_list_images()
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
-    opts="--dir --help --manual --test --version --lvm"
+    opts="--dir --evms --help --manual --test --version --lvm"
 
     #
     # Volume group completion
     #
     vgs=`vgdisplay 2>/dev/null | grep Name | awk '{print $3}'`
 
+    #
+    # EVMS container completion
+    #
+    evmscontainers=`evms_query containers 2>/dev/null`
+
+
     case "${prev}" in
         --dir)
 	    _filedir -d
 	    return 0
             ;;
+	--evms)
+	    COMPREPLY=( $( compgen -W '${evmscontainers}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+	    return 0
+	    ;;	
 	--lvm)
 	    COMPREPLY=( $( compgen -W '${vgs}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
 	    return 0

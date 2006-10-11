@@ -17,6 +17,7 @@ xen-delete-image - Delete previously created Xen instances.
   General options:
    --dir      Specify the output directory where images were previously saved.
    --lvm      Specify the LVM volume to use.
+   --evms     Specify the EVMS container to use.
 
   Testing options:
    --test     Don't complain if we're not invoked by root.
@@ -46,6 +47,9 @@ Show the version number and exit.
 =item B<--lvm>
 Specify the LVM volume group where images were previously saved.
 
+=item B<--evms>
+Specify the EVMS container where images were previously saved.
+
 =back
 
 =cut
@@ -57,7 +61,7 @@ Specify the LVM volume group where images were previously saved.
  Xen instances which have previously been created by xen-create-image.
 
   You must be root to run this script as it removes the Xen configuration
- file from /etc/xen and potentially removes LVM volumes.
+ file from /etc/xen and potentially removes LVM and EVMS volumes.
 
   (When invoked with the '--test' flag the script will continue running,
  but will fail to remove anything which the user does not have permission
@@ -96,13 +100,31 @@ Specify the LVM volume group where images were previously saved.
 =cut
 
 
+=head1 EVMS EXAMPLE
+
+  Assuming that you have the container 'mycontainer' containing three
+ Xen instances 'foo', 'bar', and 'baz' the first two may be deleted via:
+
+    xen-delete-image --evms=lvm2/mycontainer foo bar
+
+  This will remove the volumes 'foo-disk', 'foo-swap', 'bar-disk',
+ and 'bar-swap'.
+
+  Note that if the images were created with "--noswap" then the swap
+ volumes will not be present, so will not need to be deleted.
+
+  The Xen configuration files will also be removed.
+
+=cut
+
+
 =head1 AUTHOR
 
  Steve
  --
  http://www.steve.org.uk/
 
- $Id: xen-delete-image,v 1.18 2006-09-11 15:57:57 steve Exp $
+ $Id: xen-delete-image,v 1.19 2006-10-11 16:40:54 steve Exp $
 
 =cut
 
@@ -278,6 +300,7 @@ sub parseCommandLineArguments
     GetOptions(
               "dir=s",      \$CONFIG{'dir'},
               "lvm=s",      \$CONFIG{'lvm'},
+              "evms=s",      \$CONFIG{'evms'},
               "test",       \$CONFIG{'test'},
               "verbose",    \$CONFIG{'verbose'},
               "help",       \$HELP,
@@ -291,7 +314,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.18 $';
+       my $REVISION      = '$Revision: 1.19 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -322,14 +345,15 @@ sub checkArguments
     if ( $CONFIG{'test'} )
     {
         $CONFIG{'lvm'} = undef;
+        $CONFIG{'evms'} = undef;
     }
 
     #
     #  Make sure we have either a volume, or a root.
     #
-    if ( $CONFIG{'lvm'} && $CONFIG{'dir'} )
+    if ( ( $CONFIG{'lvm'} && $CONFIG{'dir'} ) || ( $CONFIG{'lvm'} && $CONFIG{'evms'} ) || ( $CONFIG{'evms'} && $CONFIG{'dir'} ) )
     {
-       print "Please only use a volume group or a directory name - not both\n";
+       print "Please use only one of: a volume group, an EVMS container, or a directory name\n";
        exit;
     }
 
@@ -337,9 +361,9 @@ sub checkArguments
     #
     #  Make sure we have at least one of the lvm or root specified.
     #
-    if ( (!defined( $CONFIG{'dir'} ) ) && ( !defined( $CONFIG{'lvm'} ) ) )
+    if ( (!defined( $CONFIG{'dir'} ) ) && ( !defined( $CONFIG{'lvm'} ) ) && ( !defined( $CONFIG{'evms'} ) ) )
     {
-       print "Please specify either a directory root, or an LVM volume group\n";
+       print "Please specify either a directory root, an LVM volume group, or an EVMS container\n";
        exit;
     }
 
@@ -447,9 +471,33 @@ sub deleteXenImage
        }
 
     }
+    elsif ( defined( $CONFIG{'evms'} ) )
+    {
+       #
+       #  EVMS volumes
+       #
+       #
+       #  TODO: Check we're not mounted.
+       #
+
+       if ( -e "/dev/evms/$hostname-swap" )
+       {
+           $CONFIG{'verbose'} && print "Removing EVMS swap volume\n";
+           runCommand( "echo Delete : /dev/evms/$hostname-swap | evms" );
+           runCommand( "echo Delete : $CONFIG{'evms'}/$hostname-swap | evms" );
+       }
+
+       if ( -e "/dev/evms/$hostname-disk" )
+       {
+           $CONFIG{'verbose'} && print "Removing EVMS disk volume\n";
+           runCommand( "echo Delete : /dev/evms/$hostname-disk | evms" );
+           runCommand( "echo Delete : $CONFIG{'evms'}/$hostname-disk | evms" );
+       }
+
+    }
     else
     {
-       print "Error - neither --dir nor --lvm.\n";
+       print "Error - neither --dir nor --evms nor --lvm.\n";
        print "Can't happen\n";
        print "Hostname : $hostname\n";
        exit;

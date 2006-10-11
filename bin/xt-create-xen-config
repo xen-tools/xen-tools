@@ -96,7 +96,7 @@ xt-create-config - Create a Xen configuration file for a new guest
  --
  http://www.steve.org.uk/
 
- $Id: xt-create-xen-config,v 1.20 2006-09-11 15:57:57 steve Exp $
+ $Id: xt-create-xen-config,v 1.21 2006-10-11 16:40:54 steve Exp $
 
 =cut
 
@@ -203,7 +203,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.20 $';
+       my $REVISION      = '$Revision: 1.21 $';
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
            $REVISION = $1;
@@ -320,6 +320,11 @@ sub createXenConfig
     {
         $image_vbd = "phy:$ENV{'lvm'}/$ENV{'hostname'}-disk";
         $swap_vbd  = "phy:$ENV{'lvm'}/$ENV{'hostname'}-swap";
+    }
+    elsif ( $ENV{'evms'} )
+    {
+        $image_vbd = "phy:/dev/evms/$ENV{'hostname'}-disk";
+        $swap_vbd  = "phy:/dev/evms/$ENV{'hostname'}-swap";
     }
     else
     {
