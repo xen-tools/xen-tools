@@ -1,3 +1,11 @@
+xen-tools (2.6-2) unstable; urgency=low
+
+  * New maintainer (Closes: #390904)
+  * Fixed sysvinit's /lib/init/rw being mounted on debootstrap, leading to the
+    deletion of the image content on creation (Closes: #391501)
+
+ -- Roland Stigge <stigge@antcom.de>  Sat,  7 Oct 2006 12:58:30 +0200
+
 xen-tools (2.6-1) unstable; urgency=low
 
   * Allow the user to modify the commands used when installing with
