@@ -498,7 +498,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.97 2006-10-11 16:40:54 steve Exp $
+ $Id: xen-create-image,v 1.98 2006-10-12 23:02:35 steve Exp $
 
 =cut
 
@@ -591,6 +591,7 @@ testRootUser();
 #  Check our arguments
 #
 checkArguments();
+
 
 #
 #  Make sure we have a log directory
@@ -1019,7 +1020,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.97 $';
+        my $REVISION      = '$Revision: 1.98 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1077,8 +1078,12 @@ E_O_ERROR
     }
     else
     {
+        #
         # count == 0;
         # OK.
+        #
+        #  That means that the configuration file is ok.
+        #
     }
 
 
@@ -1139,6 +1144,11 @@ E_O_ROOT
 
   Test that the command line arguments we were given make sense.
 
+  Here we make sure that mutually exclusive options are not selected
+ for the installation method, etc.
+
+  We also warn when some variables are not set.
+
 =end doc
 
 =cut
@@ -1164,7 +1174,7 @@ sub checkArguments
     }
 
     #
-    #  FAKE:
+    #  NOTE: FAKE!
     #
     if ( $CONFIG{'dist'} eq 'fedora-core4' )
     {
@@ -1215,11 +1225,8 @@ E_OR
     #
     #  If using LVM or EVMS then the images may not be sparse
     #
-    if ( $CONFIG{'lvm'} ||
-         $CONFIG{'evms'} )
-    {
-        $CONFIG{'image'} = "full";
-    }
+    $CONFIG{'image'} = "full" if ( $CONFIG{'lvm'} ||
+                                   $CONFIG{'evms'} );
 
     #
     #  The kernel + initrd images should exist.
@@ -1256,7 +1263,7 @@ E_OR
         }
     }
 
-    if ( $count > 1 )
+    if ( $count != 1 )
     {
         my $err =<<E_O_ERROR;
 
@@ -1280,13 +1287,12 @@ E_O_ERROR
     #
     #  Make sure that any specified template file exists.
     #
-    if ( ( defined( $CONFIG{'template'} ) ) && length( $CONFIG{'template'} ) )
+    if ( ( defined( $CONFIG{'template'} ) ) &&
+         ( length( $CONFIG{'template'}  ) ) &&
+         ( ! -e $CONFIG{'template'} ) )
     {
-        if ( ! -e $CONFIG{'template'} )
-        {
-            logprint( "The specified template file, $CONFIG{'template'}, does not exist.\n" );
-            exit 1;
-        }
+        logprint( "The specified template file, $CONFIG{'template'}, does not exist.\n" );
+        exit 1;
     }
 
 
@@ -1300,6 +1306,40 @@ E_O_ERROR
             logprint( "The specified role directory '$CONFIG{'roledir'}' does not exist\n" );
             exit 1;
         }
+    }
+
+
+    #
+    #  The user must choose either DHCP *or* Static IP.  not both
+    #
+    if ( $CONFIG{'dhcp'} && $CONFIG{'ip'} )
+    {
+        logprint( "Please choose either DHCP or static usage, not both!\n" );
+        exit 1;
+    }
+
+    #
+    #  The user must specify one or the other.
+    #
+    if ( ( !$CONFIG{'dhcp'} ) && ( !$CONFIG{'ip'} ) )
+    {
+        logprint( "Please choose one of:\n" );
+        logprint( " --dhcp\n" );
+        logprint( " --ip xx.xx.xx.xx\n" );
+        exit 1;
+    }
+
+    #
+    #  If we're using static addresses warn if there are variables
+    # missing
+    #
+    if ( $CONFIG{'ip'} )
+    {
+        logprint( "WARNING:  No gateway address specified!\n" )
+          unless( defined( $CONFIG{'gateway'} ) );
+
+        logprint( "WARNING:  No netmaks address specified!\n" )
+          unless( defined( $CONFIG{'netmask'} ) );
     }
 }
 
