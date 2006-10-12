@@ -1,7 +1,7 @@
 Source: xen-tools
 Section: utils
 Priority: extra
-Maintainer: Steve Kemp <skx@debian.org>
+Maintainer: Roland Stigge <stigge@antcom.de>
 Uploaders: Radu Spineanu <radu@debian.org>
 Build-Depends: debhelper (>= 4.0.0), libtest-pod-perl, libtext-template-perl
 Standards-Version: 3.7.2
