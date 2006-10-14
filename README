@@ -9,6 +9,7 @@ Mailing Lists:
     http://lists.cvsrepository.org/
 
 
+
 xen-tools
 ---------
 
@@ -100,5 +101,5 @@ xen-update-image
 
 Steve
 --
-$Id: README,v 1.37 2006-06-27 10:27:35 steve Exp $
+$Id: README,v 1.38 2006-10-14 09:19:19 radu Exp $
 
