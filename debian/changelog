@@ -1,3 +1,15 @@
+xen-tools (2.7-2) unstable; urgency=low
+
+  * Fixed 2.6-2 changelog entry. 
+
+ -- Radu Spineanu <radu@debian.org>  Sat, 14 Oct 2006 02:21:25 +0300
+
+xen-tools (2.7-1) unstable; urgency=low
+
+  * New upstream release 
+
+ -- Radu Spineanu <radu@debian.org>  Sat, 14 Oct 2006 02:16:20 +0300
+
 xen-tools (2.6-2) unstable; urgency=low
 
   * New maintainer (Closes: #390904)
