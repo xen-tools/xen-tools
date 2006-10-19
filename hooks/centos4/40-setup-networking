@@ -35,7 +35,7 @@ mkdir -p ${prefix}/etc/sysconfig/network-scripts/
 #
 #  Test for static vs. DHCP
 #
-if [[ -z "${dhcp}" ]]; then
+if [ -z "${dhcp}" ]; then
     
     #
     #  Setup the initial interface

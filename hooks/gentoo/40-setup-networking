@@ -34,7 +34,7 @@ mkdir -p ${prefix}/etc/conf.d
 #
 #  A function to setup DHCP for our new image.
 #
-function setupDynamicNetworking
+setupDynamicNetworking ()
 {
     #
     # The host is using DHCP.
@@ -55,7 +55,7 @@ E_O_DHCP
 #
 #  A function to setup static IP addresses for our new image.
 #
-function  setupStaticNetworking
+setupStaticNetworking ()
 {
     #
     #  if $p2p is set then add a "pointtopoint" setting.
@@ -104,7 +104,7 @@ E_O_STATIC
 #
 #  Call the relevant function
 #
-if [[ -z "${dhcp}" ]]; then
+if [ -z "${dhcp}" ]; then
     logMessage "Setting up static networking"
     setupStaticNetworking
 

@@ -39,7 +39,7 @@ echo ${hostname} > ${prefix}/etc/mailname
 #  Fixup the /etc/hosts file upon the new image for
 # machines with static IPs
 #
-if [[ -z "${dhcp}" ]]; then
+if [ -z "${dhcp}" ]; then
 
     # Non-IPv6 stuff.
     grep -v '\(::\|IPv6\)' /etc/hosts > ${prefix}/etc/hosts
@@ -56,7 +56,7 @@ fi
 #
 #  Allow the host system to know the IP address of our new guest.
 #
-if [[ -z "${dhcp}" ]]; then
+if [ -z "${dhcp}" ]; then
 
     if ( grep ${hostname} /etc/hosts > /dev/null ) ; then
 

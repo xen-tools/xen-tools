@@ -16,7 +16,7 @@
 #
 #  If we're running verbosely show a message, otherwise swallow it.
 #
-function logMessage
+logMessage ()
 {
     message="$*"
 
@@ -35,10 +35,15 @@ function logMessage
 #
 assert ()
 {
-    line=$1;
-    shift;
+    lineno="?"
 
-    if ! [ $* ] ; then
+    if [ -n "${LINENO}" ]; then
+    	# our shell defines variable LINENO, great!
+	lineno=$1
+	shift
+    fi
+
+    if [ ! $* ] ; then
         echo "assert failed: $0:$lineno [$*]"
 	exit
     fi
@@ -48,7 +53,7 @@ assert ()
 #
 #  Install a Debian package via apt-get.
 #
-function installDebianPackage
+installDebianPackage ()
 {
     prefix=$1
     package=$2
@@ -81,7 +86,7 @@ function installDebianPackage
 #
 #  Remove a Debian package.
 #
-function removeDebianPackage
+removeDebianPackage ()
 {
     prefix=$1
     package=$2
@@ -113,7 +118,7 @@ function removeDebianPackage
 #
 #  Install a CentOS4 package via yum
 #
-function installCentOS4Package
+installCentOS4Package ()
 {
     prefix=$1
     package=$2
@@ -146,7 +151,7 @@ function installCentOS4Package
 #
 # TODO: STUB
 #
-function installGentooPackage
+installGentooPackage ()
 {
     prefix=$1
     package=$2
