@@ -29,12 +29,10 @@ logMessage Script $0 starting
 #
 #  Disable the startup scripts from all runlevels.
 #
-chmod -x ${prefix}/etc/init.d/hwclock.sh
-chmod -x ${prefix}/etc/init.d/hwclockfirst.sh
-
-
+chroot ${prefix} /usr/sbin/update-rc.d -f hwclock.sh remove
 
 #
 # Log our finish
 #
 logMessage Script $0 finished.
+
