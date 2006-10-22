@@ -39,3 +39,7 @@ Contributions
 
   Gergely Tamas <dice [at] hu.kfki.mfa>
    - Added patch to make initrd setup optional.
+
+  Ward Vandewege <ward [at] be.pong>
+   - Made several updates for Ubuntu support.
+
