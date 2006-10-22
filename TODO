@@ -13,7 +13,9 @@ TODO
   4. Roll-back in case of errors? 
      #383029
 
+  5. Install into dedicated partitions.
+
 Steve
 --
-$Id: TODO,v 1.23 2006-08-15 18:53:11 steve Exp $
+$Id: TODO,v 1.24 2006-10-22 18:10:48 steve Exp $
 
