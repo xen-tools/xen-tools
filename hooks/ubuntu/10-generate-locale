@@ -1,0 +1,37 @@
+#!/bin/sh
+#
+#  This script generates a default en_US.UTF-8 locale.
+#
+# Ward
+# --
+
+
+
+prefix=$1
+
+
+#
+#  Source our common functions
+#
+if [ -e /usr/lib/xen-tools/common.sh ]; then
+    . /usr/lib/xen-tools/common.sh
+else
+    . ./hooks/common.sh
+fi
+
+
+#
+# Log our start
+#
+logMessage Script $0 starting
+
+
+#
+#  Now that the sources have been setup make sure the system is up to date.
+#
+chroot ${prefix} /usr/sbin/locale-gen en_US.UTF-8
+
+#
+#  Log our finish
+#
+logMessage Script $0 finished
