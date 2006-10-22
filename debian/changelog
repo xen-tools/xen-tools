@@ -1,3 +1,19 @@
+xen-tools (2.7-4) unstable; urgency=low
+
+  * debian/control: Priority: extra (because of debootstrap and
+    libtext-template-perl)
+
+ -- Roland Stigge <stigge@antcom.de>  Sat, 21 Oct 2006 17:21:05 +0200
+
+xen-tools (2.7-3) unstable; urgency=low
+
+  * debian/control:
+    - Priority: optional (following override, was: extra)
+    - Recommends: perl-doc (Closes: #393472)
+    - Recommends: xen-hypervisor
+
+ -- Roland Stigge <stigge@antcom.de>  Sat, 21 Oct 2006 14:58:28 +0200
+
 xen-tools (2.7-2) unstable; urgency=low
 
   * Fixed 2.6-2 changelog entry. 
