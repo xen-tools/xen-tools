@@ -80,7 +80,7 @@ Install the distribution specified by the B<--dist> argument using the debootstr
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.37 2006-10-12 23:08:21 steve Exp $
+ $Id: xt-install-image,v 1.38 2006-10-22 19:03:42 steve Exp $
 
 =cut
 
@@ -151,8 +151,7 @@ if ( $CONFIG{'copy'} )
     }
 
     #
-    #  Find the copy command from the configuration file,
-    # with a suitable default if one isn't found.
+    #  Find the copy command to run from the configuration file.
     #
     my $cmd = $CONFIG{'copy-cmd'} ;
     if ( !defined( $cmd ) )
@@ -185,8 +184,7 @@ elsif ( $CONFIG{'tar'} )
     }
 
     #
-    #  Find the copy command from the configuration file,
-    # with a suitable default if one isn't found.
+    #  Find the tar command to run from the configuration file.
     #
     my $cmd = $CONFIG{'tar-cmd'} ;
     if ( !defined( $cmd ) )
@@ -379,7 +377,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.37 $';
+        my $REVISION      = '$Revision: 1.38 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -565,7 +563,7 @@ sub installDebootstrapImage
 
 
     #
-    #  Cache from host -> new installation if we've got caching
+    #  Cache from the new installation -> the host if we've got caching
     # enabled.
     #
     if ( $CONFIG{'cache'} eq "yes" )
@@ -608,6 +606,7 @@ sub installRPMStrapImage
     {
         $EXTRA .= " --arch $CONFIG{'arch'}";
     }
+
     #
     #  The command we're going to run.
     #
