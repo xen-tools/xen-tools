@@ -96,7 +96,7 @@ xt-create-config - Create a Xen configuration file for a new guest
  --
  http://www.steve.org.uk/
 
- $Id: xt-create-xen-config,v 1.22 2006-10-12 23:08:21 steve Exp $
+ $Id: xt-create-xen-config,v 1.23 2006-10-24 09:22:22 steve Exp $
 
 =cut
 
@@ -137,7 +137,7 @@ $CONFIG{'template'} = '/etc/xen-tools/xm.tmpl';
 #
 # Release number.
 #
-my $RELEASE = '2.7';
+my $RELEASE = '2.8';
 
 
 
@@ -203,7 +203,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.22 $';
+       my $REVISION      = '$Revision: 1.23 $';
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
            $REVISION = $1;

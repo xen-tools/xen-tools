@@ -124,7 +124,7 @@ Specify the EVMS container where images were previously saved.
  --
  http://www.steve.org.uk/
 
- $Id: xen-delete-image,v 1.21 2006-10-12 23:08:21 steve Exp $
+ $Id: xen-delete-image,v 1.22 2006-10-24 09:22:22 steve Exp $
 
 =cut
 
@@ -159,7 +159,7 @@ my %CONFIG;
 #
 # Release number.
 #
-my $RELEASE = '2.7';
+my $RELEASE = '2.8';
 
 
 
@@ -314,7 +314,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.21 $';
+       my $REVISION      = '$Revision: 1.22 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
