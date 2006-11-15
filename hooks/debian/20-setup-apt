@@ -1,6 +1,7 @@
 #!/bin/sh
 #
-#  This script sets up the /etc/apt/sources.list for APT.
+#  This script sets up the /etc/apt/sources.list for APT, and it disables
+# TLS where appropriate.
 #
 # Steve
 # --
@@ -86,6 +87,27 @@ E_O_APT
 #  Now that the sources have been setup make sure the system is up to date.
 #
 chroot ${prefix} /usr/bin/apt-get update
+
+
+
+#
+# For sid or etch systems we install libc6-xen
+#
+# For sarge we don't have that option, so we disable TLS.
+#
+case "${dist}" in
+    etch|sid)
+        logMessage "Installing xen-aware libc6"
+
+        installDebianPackage ${prefix} libc6-xen
+        ;;
+    *)
+        logMessage "Disabling TLS"
+        mv ${prefix}/lib/tls ${prefix}/lib/tls.disabled
+        mkdir ${prefix}/lib/tls
+        ;;
+esac
+
 
 
 #
