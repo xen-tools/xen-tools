@@ -95,18 +95,25 @@ chroot ${prefix} /usr/bin/apt-get update
 #
 # For sarge we don't have that option, so we disable TLS.
 #
-case "${dist}" in
-    etch|sid)
-        logMessage "Installing xen-aware libc6"
+if [ "`uname -m`" = "x86_64" ]; then
 
-        installDebianPackage ${prefix} libc6-xen
-        ;;
-    *)
-        logMessage "Disabling TLS"
-        mv ${prefix}/lib/tls ${prefix}/lib/tls.disabled
-        mkdir ${prefix}/lib/tls
-        ;;
-esac
+    logMessage "Ignoring TLS since we're a 64 bit host."
+
+else
+
+    case "${dist}" in
+	etch|sid)
+            logMessage "Installing xen-aware libc6"
+	    
+            installDebianPackage ${prefix} libc6-xen
+            ;;
+	*)
+            logMessage "Disabling TLS"
+            mv ${prefix}/lib/tls ${prefix}/lib/tls.disabled
+            mkdir ${prefix}/lib/tls
+            ;;
+    esac
+fi
 
 
 
