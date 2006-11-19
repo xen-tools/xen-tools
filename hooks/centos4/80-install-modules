@@ -32,7 +32,7 @@ logMessage Script $0 starting
 # really copy the *correct* modules, but we don't know what they are.
 #
 mkdir -p ${prefix}/lib/modules
-cp -R /lib/modules/*/ ${prefix}/lib/modules
+cp -au /lib/modules/*/ ${prefix}/lib/modules
 
 
 #
