@@ -31,7 +31,7 @@ logMessage ()
 #  Test the given condition is true, and if not abort.
 #
 #  Sample usage:
-#    assert $LINENO "${verbose}"
+#    assert "$LINENO" "${verbose}"
 #
 assert ()
 {
@@ -66,13 +66,13 @@ installDebianPackage ()
     #
     #  We require a package + prefix
     #
-    assert $LINENO "${package}"
-    assert $LINENO "${prefix}"
+    assert "$LINENO" "${package}"
+    assert "$LINENO" "${prefix}"
 
     #
     # Prefix must be a directory.
     #
-    assert $LINENO -d ${prefix}
+    assert "$LINENO" -d ${prefix}
 
     #
     # Install the package
@@ -99,13 +99,13 @@ removeDebianPackage ()
     #
     #  We require a package + prefix
     #
-    assert $LINENO "${package}"
-    assert $LINENO "${prefix}"
+    assert "$LINENO" "${package}"
+    assert "$LINENO" "${prefix}"
 
     #
     # Prefix must be a directory.
     #
-    assert $LINENO -d ${prefix}
+    assert "$LINENO" -d ${prefix}
 
     #
     # Purge the package
@@ -131,13 +131,13 @@ installCentOS4Package ()
     #
     #  We require a package + prefix
     #
-    assert $LINENO "${package}"
-    assert $LINENO "${prefix}"
+    assert "$LINENO" "${package}"
+    assert "$LINENO" "${prefix}"
 
     #
     # Prefix must be a directory.
     #
-    assert $LINENO -d ${prefix}
+    assert "$LINENO" -d ${prefix}
 
     #
     # Install the package
