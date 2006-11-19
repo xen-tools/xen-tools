@@ -102,12 +102,12 @@ if [ "`uname -m`" = "x86_64" ]; then
 else
 
     case "${dist}" in
-	etch|sid)
+        etch|sid)
             logMessage "Installing xen-aware libc6"
-	    
+    
             installDebianPackage ${prefix} libc6-xen
             ;;
-	*)
+        *)
             logMessage "Disabling TLS"
             mv ${prefix}/lib/tls ${prefix}/lib/tls.disabled
             mkdir ${prefix}/lib/tls

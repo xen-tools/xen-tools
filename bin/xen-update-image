@@ -86,7 +86,7 @@ Specify the EVMS container which contains the image(s).
  --
  http://www.steve.org.uk/
 
- $Id: xen-update-image,v 1.15 2006-10-24 09:22:22 steve Exp $
+ $Id: xen-update-image,v 1.16 2006-11-19 19:41:34 steve Exp $
 
 =cut
 
@@ -121,7 +121,7 @@ my %CONFIG;
 #
 # Release number.
 #
-my $RELEASE = '2.8';
+my $RELEASE = '2.9';
 
 
 #
@@ -383,7 +383,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.15 $';
+       my $REVISION      = '$Revision: 1.16 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
