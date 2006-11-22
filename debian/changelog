@@ -1,3 +1,25 @@
+xen-tools (2.8-2) unstable; urgency=low
+
+  * Support Upstart in hook 30-fix-inittab (Closes: #399153)
+  * hooks/common.sh: Applied Petter Reinholdtsen's
+       assert "$LINENO" ""
+    changes, the rest was already fixed in 2.8-1 (Closes: #399286)
+  * Only copy modules if newer in 80-install-modules (Closes: #399196)
+  * Fix installation of libc6-xen from right source (Closes: #397784)
+  * Activate hook disable-tls only if 32 bit architecture (Closes: #397933)
+  * Add hook disable-tls for Ubuntu (Closes: #399274)
+  * bin/xen-create-image: Fixed documentation: --untar => --tar
+    (Closes: #398769)
+  * debian/rules: Moved the cfengine hook to roles (Closes: #399152)
+
+ -- Roland Stigge <stigge@antcom.de>  Sun, 19 Nov 2006 13:48:46 +0100
+
+xen-tools (2.8-1) unstable; urgency=low
+
+  * New upstream release 
+
+ -- Radu Spineanu <radu@debian.org>  Wed,  8 Nov 2006 00:35:40 +0200
+
 xen-tools (2.7-4) unstable; urgency=low
 
   * debian/control: Priority: extra (because of debootstrap and
