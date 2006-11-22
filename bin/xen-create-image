@@ -504,7 +504,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.105 2006-11-22 09:02:44 steve Exp $
+ $Id: xen-create-image,v 1.106 2006-11-22 19:55:20 steve Exp $
 
 =cut
 
@@ -785,6 +785,27 @@ sub checkSystem
             exit;
         }
     }
+
+    #
+    #  Make sure that we have Text::Template installed - this
+    # will be used by `xt-create-xen-config` and if that fails then
+    # running is pointless.
+    #
+    my $test = "use Text::Template";
+    eval( $test );
+    if ( ( $@ ) && ( ! $CONFIG{'force'} ) )
+    {
+        print <<E_O_ERROR;
+
+  Aborting:  The Text::Template perl module isn't installed or available.
+
+  Specify '--force' to skip this check and continue regardless.
+
+E_O_ERROR
+        exit;
+    }
+
+
 }
 
 
@@ -1026,7 +1047,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.105 $';
+        my $REVISION      = '$Revision: 1.106 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
