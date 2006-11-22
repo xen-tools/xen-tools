@@ -504,7 +504,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.104 2006-11-22 08:59:11 steve Exp $
+ $Id: xen-create-image,v 1.105 2006-11-22 09:02:44 steve Exp $
 
 =cut
 
@@ -1026,7 +1026,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.104 $';
+        my $REVISION      = '$Revision: 1.105 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -2400,6 +2400,11 @@ sub logprint
 sub runCommand
 {
     my ( $cmd ) = (@_ );
+
+    #
+    #  Set a local if we don't have one.
+    #
+    $ENV{'LC_ALL'} = "C" unless( $ENV{'LC_ALL'} );
 
     #
     #  Header.
