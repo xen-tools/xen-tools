@@ -30,6 +30,9 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --cache       Cache .deb files on the host when installing the new guest
                 with the debootstrap tool.
 
+   --config      Read the specified file in addition to the global
+                configuration file.
+
    --force       Force overwriting existing images.
                  This will remove existing images or LVM volumes which match
                  those which are liable to be used by the new invocation.
@@ -504,7 +507,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.106 2006-11-22 19:55:20 steve Exp $
+ $Id: xen-create-image,v 1.107 2006-11-28 17:47:27 steve Exp $
 
 =cut
 
@@ -575,6 +578,23 @@ readConfigurationFile( "/etc/xen-tools/xen-tools.conf" );
 #  Parse the command line arguments.
 #
 parseCommandLineArguments();
+
+#
+#  If we received a configuration file then read it.
+#
+if ( $CONFIG{'config'} )
+{
+    my $path = $CONFIG{'config'};
+
+    # If not fully-qualified then read from /etc/xen-tools.
+    if ( $path !~ /^[\/]/ )
+    {
+        $path = "/etc/xen-tools/" . $path;
+    }
+
+    # Read the file, if it exists.
+    readConfigurationFile( $path ) if ( -e $path );
+}
 
 
 #
@@ -1026,6 +1046,7 @@ sub parseCommandLineArguments
                "fs=s",         \$CONFIG{'fs'},
                "boot",         \$CONFIG{'boot'},
                "cache=s",      \$CONFIG{'cache'},
+               "config=s",     \$CONFIG{'config'},
                "ide",          \$CONFIG{'ide'},
                "passwd",       \$CONFIG{'passwd'},
                "role=s",       \$CONFIG{'role'},
@@ -1047,7 +1068,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.106 $';
+        my $REVISION      = '$Revision: 1.107 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
