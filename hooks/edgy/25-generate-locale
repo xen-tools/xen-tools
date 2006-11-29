@@ -27,9 +27,12 @@ logMessage Script $0 starting
 
 
 #
-#  Now that the sources have been setup make sure the system is up to date.
+# Install the English language pack.
 #
-chroot ${prefix} /usr/sbin/locale-gen en_US.UTF-8
+#  NOTE:  Failure to support your favourite language is *not* a bug.
+#
+installDebianPackage language-pack-en
+
 
 #
 #  Log our finish
