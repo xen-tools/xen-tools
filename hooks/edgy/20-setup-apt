@@ -4,7 +4,7 @@
 #
 # Steve
 # --
-# $Id: 20-setup-apt,v 1.1 2006-11-29 11:52:58 steve Exp $
+# $Id: 20-setup-apt,v 1.2 2006-11-29 20:58:44 steve Exp $
 
 
 
@@ -82,6 +82,21 @@ E_O_APT
 #  Now that the sources have been setup make sure the system is up to date.
 #
 chroot ${prefix} /usr/bin/apt-get update
+
+
+#
+#  Now fixup TLS on non-64bit systems.
+#
+if [ "`uname -m`" = "x86_64" ]; then
+
+    logMessage "Ignoring TLS since we're a 64 bit host."
+
+else
+
+    logMessage "Installing libc6-xen"
+    installDebianPackage ${prefix} libc6-xen
+fi
+
 
 #
 #  Log our finish
