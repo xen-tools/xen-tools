@@ -4,7 +4,7 @@
 #
 # Steve
 # --
-# $Id: hook-inittab.t,v 1.7 2006-11-19 19:41:36 steve Exp $
+# $Id: hook-inittab.t,v 1.8 2006-11-29 11:57:47 steve Exp $
 #
 
 use strict;
@@ -34,7 +34,7 @@ foreach my $dir ( glob( "hooks/*" ) )
     {
         my $dist = $1;
 
-        next if ( $dist =~ /ubuntu/i );
+        next if ( $dist =~ /(edgy|dapper)/i );
 
         testHook( $dist );
     }
@@ -60,13 +60,13 @@ sub testHook
     ok( -d $dir, "Temporary directory created OK" );
     ok( -e $dir . "/etc/inittab", "/etc/inittab copied correctly." );
 
-    ok( -e "hooks/$dist/30-fix-inittab", "$dist inittab fixing hook exists" );
-    ok( -x "hooks/$dist/30-fix-inittab", "$dist inittab fixing hook is executable" );
+    ok( -e "hooks/$dist/30-disable-gettys", "$dist inittab fixing hook exists" );
+    ok( -x "hooks/$dist/30-disable-gettys", "$dist inittab fixing hook is executable" );
 
     #
     #  Call the hook
     #
-    `hooks/$dist/30-fix-inittab $dir`;
+    `hooks/$dist/30-disable-gettys $dir`;
 
     #
     #  Now we read the new file, and make sure it looks like we expect.
