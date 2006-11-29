@@ -507,7 +507,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.107 2006-11-28 17:47:27 steve Exp $
+ $Id: xen-create-image,v 1.108 2006-11-29 19:18:07 steve Exp $
 
 =cut
 
@@ -1068,7 +1068,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.107 $';
+        my $REVISION      = '$Revision: 1.108 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -2143,7 +2143,7 @@ sub mountImage
 
 =begin doc
 
-  Install the system, by invoking the xt-install-system script.
+  Install the system, by invoking the xt-install-image script.
 
   The script will be given the appropriate arguments from our environment.
  This means that it will be given one of "--debootstrap", "--rpmstrap",
@@ -2162,6 +2162,11 @@ sub installSystem
     #  Basic command
     #
     my $cmd = "/usr/bin/xt-install-image --hostname=$CONFIG{'hostname'} --location=$MOUNT_POINT --dist=$CONFIG{'dist'}";
+
+    #
+    #  Do we have a per-image configuration file?
+    #
+    $cmd .= " --config=$CONFIG{'config'}" if ( defined( $CONFIG{'config'} ) );
 
     #
     #  Add on the current cache setting
