@@ -18,7 +18,7 @@
 # --
 # http://www.steve.org.uk
 #
-# $Id: xen-tools,v 1.37 2006-11-29 19:25:52 steve Exp $
+# $Id: xen-tools,v 1.38 2006-11-29 19:27:18 steve Exp $
 #
 
 
@@ -53,7 +53,7 @@ _xen_create_image()
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
     prev=${COMP_WORDS[COMP_CWORD-1]}
-    opts='--accounts --broadcast --boot --cache --debootstrap --dhcp --dir --dist --evms --force --fs --gateway --help --hostname --ide --image --initrd --ip --kernel --lvm --mac --manual --memory --mirror --noswap --p2p --passwd --role --rpmstrap --size --swap --version --verbose'
+    opts='--accounts --broadcast --boot --cache --config --debootstrap --dhcp --dir --dist --evms --force --fs --gateway --help --hostname --ide --image --initrd --ip --kernel --lvm --mac --manual --memory --mirror --noswap --p2p --passwd --role --rpmstrap --size --swap --version --verbose'
     
     
     #
@@ -85,8 +85,8 @@ _xen_create_image()
 	    COMPREPLY=( $( compgen -W 'yes no'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
 	    return 0
 	    ;;
-	--image)
-	    COMPREPLY=( $( compgen -W 'sparse full'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+	--config)
+	    _filedir 
 	    return 0
 	    ;;
 	--dir)
@@ -103,6 +103,10 @@ _xen_create_image()
 	    ;;
 	--fs)
 	    COMPREPLY=( $( compgen -W 'xfs ext3 reiserfs'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+	    return 0
+	    ;;
+	--image)
+	    COMPREPLY=( $( compgen -W 'sparse full'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
 	    return 0
 	    ;;
 	--ip)
@@ -362,7 +366,7 @@ _xt-install-image()
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
     prev=${COMP_WORDS[COMP_CWORD-1]}
-    opts='--copy --cache --debootstrap --dist --help --location --manual --mirror --rpmstrap --tar --verbose --version'
+    opts='--copy --cache --config --debootstrap --dist --help --location --manual --mirror --rpmstrap --tar --verbose --version'
     
     
     #
@@ -376,6 +380,10 @@ _xt-install-image()
     case "$prev" in
 	--cache)
 	    COMPREPLY=( $( compgen -W 'yes no'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+	    return 0
+	    ;;
+	--config)
+	    _filedir 
 	    return 0
 	    ;;
 	--copy)
