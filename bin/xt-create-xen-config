@@ -96,7 +96,7 @@ xt-create-config - Create a Xen configuration file for a new guest
  --
  http://www.steve.org.uk/
 
- $Id: xt-create-xen-config,v 1.24 2006-11-19 19:41:34 steve Exp $
+ $Id: xt-create-xen-config,v 1.25 2006-11-29 23:35:20 steve Exp $
 
 =cut
 
@@ -203,14 +203,14 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.24 $';
-       if ( $REVISION =~ /1.([0-9.]+) / )
-       {
-           $REVISION = $1;
-       }
+        my $REVISION      = '$Revision: 1.25 $';
+        if ( $REVISION =~ /1.([0-9.]+) / )
+        {
+            $REVISION = $1;
+        }
 
-       print "xt-create-xen-config release $RELEASE - CVS: $REVISION\n";
-       exit;
+        print "xt-create-xen-config release $RELEASE - CVS: $REVISION\n";
+        exit;
     }
 }
 
@@ -286,7 +286,7 @@ sub createXenConfig
     #
     #  The template we're going to read from.
     #
-    my $template = new Text::Template( TYPE => 'FILE',
+    my $template = new Text::Template( TYPE   => 'FILE',
                                        SOURCE => $CONFIG{'template'} );
 
 
@@ -354,7 +354,7 @@ sub createXenConfig
     #
     #  The template file gets a complete copy of our configuration values.
     #
-    my $result = $template->fill_in(HASH => \%vars);
+    my $result = $template->fill_in( HASH => \%vars );
 
     #
     #  Write the output of processing the template file, if it succeeds.
