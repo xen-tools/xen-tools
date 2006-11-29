@@ -66,7 +66,7 @@ xt-customize-image - Customize a freshly installed copy of GNU/Linux
  --
  http://www.steve.org.uk/
 
- $Id: xt-customize-image,v 1.22 2006-11-19 19:41:34 steve Exp $
+ $Id: xt-customize-image,v 1.23 2006-11-29 23:29:48 steve Exp $
 
 =cut
 
@@ -165,7 +165,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.22 $';
+       my $REVISION      = '$Revision: 1.23 $';
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
            $REVISION = $1;
@@ -311,7 +311,7 @@ sub runDistributionHooks
             }
 
             #
-            # Complete path to the file.
+            # Complete command we're going to execute.
             #
             my $cmd = $hooks . $name . " $CONFIG{'location'}";
 

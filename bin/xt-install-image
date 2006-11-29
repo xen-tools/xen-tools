@@ -82,7 +82,7 @@ Untar a .tar file into the new installation location.  This tarfile is assumed t
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.41 2006-11-29 19:17:55 steve Exp $
+ $Id: xt-install-image,v 1.42 2006-11-29 23:29:48 steve Exp $
 
 =cut
 
@@ -289,7 +289,8 @@ exit 0;
 
 =begin doc
 
-  read the global configuration file /etc/xen-tools/xen-tools.conf
+  Read the specified configuration file, and update our global configuration
+ hash with the values found in it.
 
 =end doc
 
@@ -398,7 +399,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.41 $';
+        my $REVISION      = '$Revision: 1.42 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
