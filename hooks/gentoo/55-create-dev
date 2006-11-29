@@ -27,6 +27,16 @@ fi
 logMessage Script $0 starting
 
 
+
+#
+# Early termination if we have a couple of common devices present
+# should speed up installs which use --copy/--tar
+#
+if ( test `ls -1 ${prefix}/dev | wc -l` -gt 10 ); then
+    logMessage "Terminating because there appear to be files in /dev already"
+fi
+
+
 #
 #  Make the device nodes.
 #
