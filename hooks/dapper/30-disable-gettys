@@ -28,18 +28,8 @@ logMessage Script $0 starting
 #
 # Switch off the gettys for everything other than tty1.
 #
+sed -i -e 's/^\([2-6].*:respawn*\)/#\1/' -e 's/^T/#\t/' ${prefix}/etc/inittab
 
-# SYSV based init scripts
-if [ -f ${prefix}/etc/inittab ]; then
-    logMessage SYSV init system detected. Fixing-up inittab.
-    sed -i -e 's/^\([2-6].*:respawn*\)/#\1/' -e 's/^T/#\t/' ${prefix}/etc/inittab
-fi
-
-# Upstart based init systems 
-if [ -f ${prefix}/etc/event.d/tty2 ]; then
-    logMessage Upstart init system detected. Disabling tty control files.
-    rm ${prefix}/etc/event.d/tty[^1]
-fi
 
 #
 #  Log our finish

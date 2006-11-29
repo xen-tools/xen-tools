@@ -7,7 +7,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.84 2006-11-19 19:41:34 steve Exp $
+# $Id: Makefile,v 1.85 2006-11-29 11:52:55 steve Exp $
 
 
 #
@@ -129,12 +129,12 @@ install-hooks:
 	mkdir -p ${prefix}/usr/lib/xen-tools/fedora.d/
 	cp -R hooks/fedora/*-* ${prefix}/usr/lib/xen-tools/fedora.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora.d stentz.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s ubuntu.d dapper.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s ubuntu.d edgy.d
 	mkdir -p ${prefix}/usr/lib/xen-tools/gentoo.d/
 	cp -R hooks/gentoo/*-* ${prefix}/usr/lib/xen-tools/gentoo.d
-	mkdir -p ${prefix}/usr/lib/xen-tools/ubuntu.d/
-	cp -R hooks/ubuntu/*-* ${prefix}/usr/lib/xen-tools/ubuntu.d
+	mkdir -p ${prefix}/usr/lib/xen-tools/edgy.d/
+	cp -R hooks/edgy/*-* ${prefix}/usr/lib/xen-tools/edgy.d/
+	mkdir -p ${prefix}/usr/lib/xen-tools/dapper.d/
+	cp -R hooks/dapper/*-* ${prefix}/usr/lib/xen-tools/dapper.d/
 	cp hooks/common.sh ${prefix}/usr/lib/xen-tools
 	@-find ${prefix}/usr/lib/xen-tools -name 'CVS' -exec rm -rf \{\} \;
 
