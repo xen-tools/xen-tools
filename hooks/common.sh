@@ -75,9 +75,19 @@ installDebianPackage ()
     assert "$LINENO" -d ${prefix}
 
     #
+    # Disable the start-stop-daemon
+    #
+    disableStartStopDaemon
+
+    #
     # Install the package
     #
     DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes --force-yes install ${package}
+
+    #
+    # Re-enable the start-stop-daemon
+    #
+    enableStartStopDaemon
 
 }
 
@@ -102,6 +112,8 @@ echo \"Warning: Fake start-stop-daemon called, doing nothing\"" >
    logMessage "Start Stop Daemon disabled off."
 }
  
+
+
 #
 # Enable the start-stop-daemon
 #

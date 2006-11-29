@@ -35,12 +35,6 @@ logMessage Script $0 starting
 installDebianPackage ${prefix} ssh
 
 
-#
-#  Make sure sshd isn't running, this will cause our unmounting of the
-# disk image to fail..
-#
-chroot ${prefix} /etc/init.d/ssh stop
-
 
 #
 #  Log our finish
