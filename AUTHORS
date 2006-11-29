@@ -31,9 +31,9 @@ Contributions
    - Better portability for non-bash shells.
 
   Radu Spineanu <radu [at] org.debian>
-   - Supplied many small tweaks, bugfixes, and suggestions. 
+   - Supplied many small tweaks, bugfixes, and suggestions.
    - Radu is also the Debian package maintainer and has CVS commit access.
- 
+
   Henning Sprang <henning_sprang [at] de.gmx>
    - Many suggestions and useful Debian bug reports.
 
@@ -43,3 +43,5 @@ Contributions
   Ward Vandewege <ward [at] be.pong>
    - Made several updates for Ubuntu support.
 
+  Wilson Neil <neil [at] uk.co.aldur>
+   - Several suggestions and code for disabling start-stop-daemon
