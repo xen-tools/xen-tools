@@ -18,7 +18,7 @@
 # --
 # http://www.steve.org.uk
 #
-# $Id: xen-tools,v 1.36 2006-10-11 16:42:07 steve Exp $
+# $Id: xen-tools,v 1.37 2006-11-29 19:25:52 steve Exp $
 #
 
 
@@ -154,7 +154,7 @@ _xen_delete_image()
     #
     # Complete the options + all available hostnames.
     #
-    opts="--dir --evms --help --lvm --manual --test --version ${names}"
+    opts="--dir --evms --help --hostname --lvm --manual --test --version ${names}"
 
     case "${prev}" in
         --dir)
@@ -165,6 +165,11 @@ _xen_delete_image()
 	    COMPREPLY=( $( compgen -W '${evmscontainers}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
 	    return 0
 	    ;;
+        --hostname)
+            names=`_find_xen_images`
+            COMPREPLY=( $(compgen -W "${names}" -- ${cur}) )
+	    return 0
+            ;;
 	--lvm)
 	    COMPREPLY=( $( compgen -W '${vgs}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
 	    return 0
