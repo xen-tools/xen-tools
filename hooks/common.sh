@@ -84,6 +84,46 @@ installDebianPackage ()
 
 
 #
+# Disable the start-stop-daemon
+#
+disableStartStopDaemon ()
+{
+   local prefix="$1"
+   assert "$LINENO" "${prefix}"
+   local daemonfile="${prefix}/sbin/start-stop-daemon"
+
+   mv "${daemonfile}" "${daemonfile}.REAL"
+   echo \
+"#!/bin/sh
+echo
+echo \"Warning: Fake start-stop-daemon called, doing nothing\"" >
+"${daemonfile}"
+   chmod 755 "${daemonfile}"
+   logMessage "Start Stop Daemon disabled off."
+}
+ 
+#
+# Enable the start-stop-daemon
+#
+enableStartStopDaemon ()
+{
+   local prefix=$1
+   assert "$LINENO" "${prefix}"
+   local daemonfile="${prefix}/sbin/start-stop-daemon"
+
+   #
+   #  If the disabled file is present then enable it.
+   #
+   if [ -e "${daemonfile}.REAL" ]; then
+       mv "${daemonfile}.REAL" "${daemonfile}"
+       logMessage "Start Stop Daemon enabled on."
+   fi
+
+}
+ 
+
+
+#
 #  Remove a Debian package.
 #
 removeDebianPackage ()
