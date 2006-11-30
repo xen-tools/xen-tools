@@ -21,7 +21,7 @@ logMessage ()
     message="$*"
 
     if [ ! -z "${verbose}" ]; then
-	echo $message
+        echo $message
     fi
 }
 
@@ -38,14 +38,14 @@ assert ()
     lineno="?"
 
     if [ -n "${LINENO}" ]; then
-    	# our shell defines variable LINENO, great!
-	lineno=$1
-	shift
+        # our shell defines variable LINENO, great!
+        lineno=$1
+        shift
     fi
 
     if [ ! $* ] ; then
         echo "assert failed: $0:$lineno [$*]"
-	exit
+        exit
     fi
 }
 
@@ -103,11 +103,9 @@ disableStartStopDaemon ()
    local daemonfile="${prefix}/sbin/start-stop-daemon"
 
    mv "${daemonfile}" "${daemonfile}.REAL"
-   echo \
-"#!/bin/sh
-echo
-echo \"Warning: Fake start-stop-daemon called, doing nothing\"" >
-"${daemonfile}"
+   echo '#!/bin/sh' > "${daemonfile}"
+   echo "echo \"Warning: Fake start-stop-daemon called, doing nothing\"" >> "${daemonfile}"
+
    chmod 755 "${daemonfile}"
    logMessage "Start Stop Daemon disabled off."
 }
