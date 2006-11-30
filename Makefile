@@ -7,7 +7,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.85 2006-11-29 11:52:55 steve Exp $
+# $Id: Makefile,v 1.86 2006-11-30 10:28:26 steve Exp $
 
 
 #
@@ -76,6 +76,13 @@ commit: test
 #
 diff:
 	cvs diff --unified 2>/dev/null
+
+
+#
+#  Make sure our hooks are executable
+#
+fixup-perms:
+	for i in hooks/*/*-*; do chmod 755 $$i; done
 
 
 #
@@ -150,7 +157,7 @@ install-manpages: manpages
 #
 #  Install everything.
 #
-install: install-bin install-etc install-hooks install-manpages
+install: fixup-perms install-bin install-etc install-hooks install-manpages
 
 
 #
@@ -164,7 +171,7 @@ manpages:
 #
 #  Make a new release tarball, and make a GPG signature.
 #
-release: test update-version update-modules clean changelog
+release: test fixup-perms update-version update-modules clean changelog
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)
 	rm -f $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz
 	cp -R . $(DIST_PREFIX)/$(BASE)-$(VERSION)
