@@ -4,7 +4,7 @@
 #
 # Steve
 # --
-# $Id: hook-inittab.t,v 1.8 2006-11-29 11:57:47 steve Exp $
+# $Id: hook-inittab.t,v 1.9 2006-12-03 12:16:45 radu Exp $
 #
 
 use strict;
@@ -34,7 +34,7 @@ foreach my $dir ( glob( "hooks/*" ) )
     {
         my $dist = $1;
 
-        next if ( $dist =~ /(edgy|dapper)/i );
+        next if ( $dist =~ /(edgy|dapper|ubuntu)/i );
 
         testHook( $dist );
     }

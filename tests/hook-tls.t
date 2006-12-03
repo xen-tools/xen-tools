@@ -4,7 +4,7 @@
 #
 # Steve
 # --
-# $Id: hook-tls.t,v 1.7 2006-11-29 18:01:55 steve Exp $
+# $Id: hook-tls.t,v 1.8 2006-12-03 12:16:45 radu Exp $
 #
 
 use strict;
@@ -28,7 +28,7 @@ foreach my $dir ( glob( "hooks/*" ) )
     {
         my $dist = $1;
 
-        testTLSDisabling( $dist ) unless ( $dist =~ /(dapper|edgy|debian)/i );
+        testTLSDisabling( $dist ) unless ( $dist =~ /(dapper|edgy|ubuntu|debian)/i );
     }
 }
 
