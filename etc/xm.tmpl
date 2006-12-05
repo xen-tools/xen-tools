@@ -7,7 +7,12 @@
 #
 #  Kernel + memory size
 #
-kernel  = '{$kernel}'
+{ if ( $kernel )
+  {
+    $OUT.= "kernel = '$kernel'\n";
+  }
+}
+
 { if ( $initrd )
   {
     $OUT.= "ramdisk = '$initrd'\n";

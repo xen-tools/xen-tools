@@ -507,7 +507,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.109 2006-11-29 23:29:48 steve Exp $
+ $Id: xen-create-image,v 1.110 2006-12-05 15:04:31 steve Exp $
 
 =cut
 
@@ -846,7 +846,7 @@ sub setupDefaultOptions
     #
     $CONFIG{'dir'}         = '';
     $CONFIG{'xm'}          = '/usr/sbin/xm';
-    $CONFIG{'kernel'}      = '/boot/vmlinuz-2.6.16-1-xen-686';
+    $CONFIG{'kernel'}      = '';
     $CONFIG{'initrd'}      = '';
 
     #
@@ -1069,7 +1069,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.109 $';
+        my $REVISION      = '$Revision: 1.110 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1278,29 +1278,6 @@ E_OR
                                    $CONFIG{'evms'} );
 
     #
-    #  The kernel + initrd images should exist.
-    #
-    if ( defined( $CONFIG{'kernel'} ) &&
-         length( $CONFIG{'kernel'} )  &&
-         ! -e $CONFIG{'kernel'} )
-    {
-        logprint( "The kernel image we're trying to use does not exist.\n" );
-        logprint( "The image is - $CONFIG{'kernel'}\n" );
-        logprint( "Aborting\n" );
-        exit;
-    }
-
-    if ( defined( $CONFIG{'initrd'} ) &&
-         length( $CONFIG{'initrd'} )  &&
-         ! -e $CONFIG{'initrd'} )
-    {
-        logprint( "The initial ramdisk we're trying to use does not exist.\n" );
-        logprint( "The image is - $CONFIG{'initrd'}\n" );
-        logprint( "Aborting\n" );
-        exit;
-    }
-
-    #
     #  Make sure we have one, and only one, installation method.
     #
     my $count = 0;
@@ -1498,10 +1475,13 @@ sub showSummery
     logprint( "Swap size      :  $CONFIG{'swap'}\n" ) unless ( $CONFIG{'noswap' } );
     logprint( "Image type     :  $CONFIG{'image'}\n" );
     logprint( "Memory size    :  $CONFIG{'memory'}\n" );
-    logprint( "Kernel path    :  $CONFIG{'kernel'}\n" );
 
-    if ( defined( $CONFIG{'initrd'} ) &&
-         length( $CONFIG{'initrd'} ) )
+    if ( defined( $CONFIG{'kernel'} ) && length( $CONFIG{'kernel'} ) )
+    {
+        logprint( "Kernel path    :  $CONFIG{'kernel'}\n" );
+    }
+
+    if ( defined( $CONFIG{'initrd'} ) && length( $CONFIG{'initrd'} ) )
     {
         logprint( "Initrd path    :  $CONFIG{'initrd'}\n" );
     }
