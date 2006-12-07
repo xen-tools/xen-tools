@@ -1,0 +1,27 @@
+#!/bin/sh
+
+set -e
+
+#
+# Skip, if we are not in "configure" state
+#
+
+if [ "$1" != "upgrade" ]; then
+        exit 0
+fi
+
+#
+# 2.x -> 3.x
+#
+if [ -L "/usr/lib/xen-tools/dapper.d" ]; then
+        rm /usr/lib/xen-tools/dapper.d
+fi
+if [ -L "/usr/lib/xen-tools/edgy.d" ]; then
+        rm /usr/lib/xen-tools/edgy.d
+fi
+if [ -d "/usr/lib/xen-tools/ubuntu.d" ]; then
+	rm -r /usr/lib/xen-tools/ubuntu.d
+fi
+
+#DEBHELPER#
+exit 0
