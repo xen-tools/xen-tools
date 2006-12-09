@@ -52,6 +52,9 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --memory      Setup the amount of memory allocated to the new instance.
 
+   --no-install  Don't install a guest system, just setup the disks/volumes
+                 and create the configuration file for Xen.
+
    --passwd      Ask for a root password during setup.
                  This is done interactively.
 
@@ -507,7 +510,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.111 2006-12-09 17:37:27 steve Exp $
+ $Id: xen-create-image,v 1.112 2006-12-09 17:51:27 steve Exp $
 
 =cut
 
@@ -700,27 +703,44 @@ mountImage();
 
 
 #
-#  Call xt-install-image to perform the actual install.
+#  Export our environment for the hooks/role script we might be
+# running later.
 #
-installSystem();
+#  Do this unconditionally now, so that we're all setup to run
+# a hook even if we're not installing a system.
+#
+exportEnvironment();
 
 
 #
-#  Make sure the installation succeeded.
+#  If we're installing then do so, and test that it worked with
+# a binary name that is reasonably likely to exist under any
+# distribution of GNU/Linux.
 #
-if ( ! -x $MOUNT_POINT . "/bin/ls" )
+if ( ! $CONFIG{'no-install'} )
 {
-    logprint( "System installation failed.  Aborting\n");
-    exit;
+    #
+    #  Install the system.
+    #
+    installSystem();
+
+    #
+    #  Did that work?
+    #
+    if ( ! -x $MOUNT_POINT . "/bin/ls" )
+    {
+        logprint( "System installation failed.  Aborting\n");
+        exit;
+    }
+
+    #
+    #  Now customize the installation - setting up networking, etc.
+    #
+    runCustomisationHooks();
 }
 
 
 
-#
-#  Call xt-customise-image to setup networking, and run any
-# distributuion-specific hooks.
-#
-runCustomisationHooks();
 
 
 #
@@ -875,6 +895,7 @@ sub setupDefaultOptions
     $CONFIG{'dist'}        = 'sarge';
     $CONFIG{'fs'}          = 'ext3';
     $CONFIG{'force'}       = 0;
+    $CONFIG{'no-install'}  = 0;
     $CONFIG{'template'}    = '';
     $CONFIG{'roledir'}     = '/etc/xen-tools/role.d';
 
@@ -1058,6 +1079,7 @@ sub parseCommandLineArguments
                "cache=s",      \$CONFIG{'cache'},
                "config=s",     \$CONFIG{'config'},
                "ide",          \$CONFIG{'ide'},
+               "no-install",   \$CONFIG{'no-install'},
                "passwd",       \$CONFIG{'passwd'},
                "role=s",       \$CONFIG{'role'},
                "roledir=s",    \$CONFIG{'roledir'},
@@ -1078,7 +1100,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.111 $';
+        my $REVISION      = '$Revision: 1.112 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -2217,6 +2239,32 @@ sub installSystem
 
 =begin doc
 
+  Export our configuratione variables as a series of environmental
+ variables.
+
+  This is required so that our hook and role scripts can easily
+ read the settings without access to the command line / configuration
+ file we were invoked with.
+
+=end doc
+
+=cut
+
+sub exportEnvironment
+{
+    foreach my $key ( keys %CONFIG )
+    {
+        if ( defined( $CONFIG{$key} ) )
+        {
+            $ENV{$key} = $CONFIG{$key};
+        }
+    }
+}
+
+
+
+=begin doc
+
   Run the xt-customise-system script to customize our fresh installation.
 
   Before we do this we must pass all the relevent options into our
@@ -2228,17 +2276,6 @@ sub installSystem
 
 sub runCustomisationHooks
 {
-
-    #
-    #  Setup the environment for the child processes.
-    #
-    foreach my $key ( keys %CONFIG )
-    {
-        if ( defined( $CONFIG{$key} ) )
-        {
-            $ENV{$key} = $CONFIG{$key};
-        }
-    }
 
     #
     # Now update the environment for each defined IP address.
