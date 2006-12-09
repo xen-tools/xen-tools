@@ -18,7 +18,7 @@
 # --
 # http://www.steve.org.uk
 #
-# $Id: xen-tools,v 1.38 2006-11-29 19:27:18 steve Exp $
+# $Id: xen-tools,v 1.39 2006-12-09 19:52:28 steve Exp $
 #
 
 
@@ -53,7 +53,7 @@ _xen_create_image()
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
     prev=${COMP_WORDS[COMP_CWORD-1]}
-    opts='--accounts --broadcast --boot --cache --config --debootstrap --dhcp --dir --dist --evms --force --fs --gateway --help --hostname --ide --image --initrd --ip --kernel --lvm --mac --manual --memory --mirror --noswap --p2p --passwd --role --rpmstrap --size --swap --version --verbose'
+    opts='--accounts --broadcast --boot --cache --config --debootstrap --dhcp --dir --dist --evms --force --fs --gateway --help --hostname --ide --image --initrd --ip --kernel --lvm --mac --manual --memory --mirror --no-install --noswap --p2p --passwd --role --rpmstrap --size --swap --version --verbose'
     
     
     #
