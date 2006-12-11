@@ -7,7 +7,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.88 2006-12-03 12:16:44 radu Exp $
+# $Id: Makefile,v 1.89 2006-12-11 12:53:15 radu Exp $
 
 
 #
@@ -79,11 +79,14 @@ diff:
 
 
 #
-#  Make sure our hooks are executable
+#  Fix hooks and configuration files permissions
 #
 fixup-perms:
 	for i in hooks/*/*-*; do chmod 755 $$i; done
-
+	chmod 755 hooks/common.sh
+	chmod 644 etc/xen-tools.conf
+	chmod 644 etc/xm.tmpl
+	chmod 644 misc/*
 
 #
 #  Install files to /etc/

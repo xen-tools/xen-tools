@@ -1,3 +1,4 @@
+#!/bin/sh
 #
 #  Common shell functions which may be used by any hook script
 #
