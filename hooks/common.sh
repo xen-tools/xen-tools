@@ -78,7 +78,7 @@ installDebianPackage ()
     #
     # Disable the start-stop-daemon
     #
-    disableStartStopDaemon
+    disableStartStopDaemon ${prefix}
 
     #
     # Install the package
@@ -88,7 +88,7 @@ installDebianPackage ()
     #
     # Re-enable the start-stop-daemon
     #
-    enableStartStopDaemon
+    enableStartStopDaemon ${prefix}
 
 }
 
