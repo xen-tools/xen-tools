@@ -63,10 +63,14 @@ if [ -z "${dhcp}" ]; then
         logMessage Host already has IP address for the host ${hostname}.
 
     else
+        #
+        #  Short host name.
+        #
+        name=`echo ${hostname} | awk -F. '{print $1}'`
 
-        logMessage Adding ${hostname} to /etc/hosts on the host
+        logMessage Adding ${hostname} and ${name} to /etc/hosts on the host
 
-        echo "${ip1}    ${hostname}" >> /etc/hosts
+        echo "${ip1}    ${name}    ${hostname}" >> /etc/hosts
 
         #
         #  If we've updated the /etc/hosts file on the host machine

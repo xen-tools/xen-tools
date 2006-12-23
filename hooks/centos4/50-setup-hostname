@@ -64,9 +64,15 @@ if [ -z "${dhcp}" ]; then
 
     else
 
-        logMessage Adding ${hostname} to /etc/hosts on the host
+        #
+        #  Short host name.
+        #
+        name=`echo ${hostname} | awk -F. '{print $1}'`
 
-        echo "${ip1}    ${hostname}" >> /etc/hosts
+        logMessage Adding ${hostname} and ${name} to /etc/hosts on the host
+
+        echo "${ip1}    ${name}    ${hostname}" >> /etc/hosts
+
 
         #
         #  If we've updated the /etc/hosts file on the host machine
