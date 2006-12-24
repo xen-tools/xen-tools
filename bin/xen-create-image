@@ -510,7 +510,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.113 2006-12-11 22:12:39 steve Exp $
+ $Id: xen-create-image,v 1.114 2006-12-24 16:44:44 steve Exp $
 
 =cut
 
@@ -1100,7 +1100,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.113 $';
+        my $REVISION      = '$Revision: 1.114 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -2577,18 +2577,32 @@ sub unMountImage
 
 sub END
 {
+    #
+    #  Unmount the image if it is still mounted.
+    #
     if ( defined( $MOUNT_POINT ) )
     {
-        #
-        #  Unmount the image, taking care to remove any child mounts too.
-        #
         unMountImage( $MOUNT_POINT );
     }
 
+    #
+    #  Here we print out the status message when finishing.
+    #
+    #  NOTE:  We undef the hostname, so that this will only print
+    # once.
+    #
+    #  This is *necessary* because otherwise when this script
+    # uses fork() to boot a new xen instance it will run this
+    # section twice and we don't want that.
+    #
+    #
     if ( ( defined( $CONFIG{'hostname'} ) ) &&
          ( -e "/var/log/xen-tools/$CONFIG{'hostname'}.log" ) )
     {
         print "\n\nLogfile produced at:\n";
         print "\t /var/log/xen-tools/$CONFIG{'hostname'}.log\n";
+
+        # HACK:
+        undef $CONFIG{'hostname'};
     }
 }
