@@ -41,7 +41,7 @@ linux_modules_package="linux-modules-$(uname -r)"
 #  Attempt to install that package.  This will either work on an Etch
 # system, or fail on a Sarge/custom kernel.
 #
-if chroot ${prefix} apt-cache policy ${linux_modules_package} 2>/dev/null; then
+if chroot ${prefix} /usr/bin/apt-cache policy ${linux_modules_package} 2>/dev/null; then
 
         #
         # If it worked then we can install the package.
