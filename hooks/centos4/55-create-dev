@@ -35,6 +35,7 @@ logMessage Script $0 starting
 #
 if ( test `ls -1 ${prefix}/dev | wc -l` -gt 10 ); then
     logMessage "Terminating because there appear to be files in /dev already"
+    exit
 fi
 
 
