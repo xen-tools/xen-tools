@@ -58,6 +58,12 @@ foreach my $account ( sort keys( %host ) )
     {
         print "Adding: $account\n";
         addAccount( $account );
+
+        #
+        #  Find any groups the user is member of on the host
+        # and add them on the guest system
+        #
+        addGroups( $account );
     }
 }
 
@@ -141,4 +147,31 @@ sub addAccount
         }
     }
     close( SHADOW );
+}
+
+
+
+#
+#  Find the groups a user is member of on the host, and add them to
+# those groups on the new guest.
+#
+sub addGroups
+{
+    my( $username ) = ( @_ );
+
+    #
+    #  Get the groups.
+    #
+    my $groups = `groups $username`;
+    # split off the usernmame.
+    if ( $groups =~ /^([^:]+):(.*)/ )
+    {
+        $groups = $2;
+        print "User: $username is member of the groups: $groups\n";
+    }
+
+    foreach my $g ( split( / /, $groups ) )
+    {
+        system( "chroot $prefix /usr/sbin/adduser $username $group" );
+    }
 }
