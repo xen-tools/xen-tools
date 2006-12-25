@@ -55,6 +55,8 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --no-install  Don't install a guest system, just setup the disks/volumes
                  and create the configuration file for Xen.
 
+   --no-hooks    Don't run any hooks after the image is created.
+
    --passwd      Ask for a root password during setup.
                  This is done interactively.
 
@@ -510,7 +512,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.116 2006-12-25 12:23:06 steve Exp $
+ $Id: xen-create-image,v 1.117 2006-12-25 12:25:40 steve Exp $
 
 =cut
 
@@ -736,7 +738,10 @@ if ( ! $CONFIG{'no-install'} )
     #
     #  Now customize the installation - setting up networking, etc.
     #
-    runCustomisationHooks();
+    unless( $CONFIG{'no-hooks'} )
+    {
+        runCustomisationHooks();
+    }
 }
 
 
@@ -896,6 +901,7 @@ sub setupDefaultOptions
     $CONFIG{'fs'}          = 'ext3';
     $CONFIG{'force'}       = 0;
     $CONFIG{'no-install'}  = 0;
+    $CONFIG{'no-hooks'}    = 0;
     $CONFIG{'template'}    = '';
     $CONFIG{'roledir'}     = '/etc/xen-tools/role.d';
 
@@ -1080,6 +1086,7 @@ sub parseCommandLineArguments
                "config=s",     \$CONFIG{'config'},
                "ide",          \$CONFIG{'ide'},
                "no-install",   \$CONFIG{'no-install'},
+               "no-hooks",     \$CONFIG{'no-hooks'},
                "passwd",       \$CONFIG{'passwd'},
                "role=s",       \$CONFIG{'role'},
                "roledir=s",    \$CONFIG{'roledir'},
@@ -1100,7 +1107,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.116 $';
+        my $REVISION      = '$Revision: 1.117 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
