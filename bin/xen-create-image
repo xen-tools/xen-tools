@@ -510,7 +510,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.115 2006-12-25 12:18:12 steve Exp $
+ $Id: xen-create-image,v 1.116 2006-12-25 12:23:06 steve Exp $
 
 =cut
 
@@ -1100,7 +1100,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.115 $';
+        my $REVISION      = '$Revision: 1.116 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -2427,6 +2427,25 @@ sub runRoleScript
 
 sub runXenConfigCreation
 {
+    #
+    #  Configuration file we'll create
+    #
+    my $file = '/etc/xen/' . $ENV{'hostname'} . '.cfg';
+
+    #
+    #  Abort if it exists.
+    #
+    if ( -e $file )
+    {
+        unless( $CONFIG{'force'} )
+        {
+            logprint( "The Xen configuration file $file exists\n" );
+            logprint( "Specify --force to force overwriting it.\n" );
+            logprint( "Aborting\n" );
+            exit;
+        }
+    }
+
 
     my $command = '/usr/bin/xt-create-xen-config --output=/etc/xen';
 
