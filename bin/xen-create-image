@@ -510,7 +510,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.114 2006-12-24 16:44:44 steve Exp $
+ $Id: xen-create-image,v 1.115 2006-12-25 12:18:12 steve Exp $
 
 =cut
 
@@ -1100,7 +1100,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.114 $';
+        my $REVISION      = '$Revision: 1.115 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1718,6 +1718,25 @@ sub createLoopbackImages
     runCommand( $image_cmd );
     logprint( "Done\n" );
 
+    #
+    #  Make sure the volumes exist.
+    #
+    if ( ! -e $swap )
+    {
+        unless( $CONFIG{'noswap'} )
+        {
+            logprint( "The disk image creation failed to create $swap.\n" );
+            logprint( "aborting\n" );
+            exit;
+        }
+    }
+
+    if ( ! -e $disk )
+    {
+        logprint( "The disk image creation failed to create $disk.\n" );
+        logprint( "aborting\n" );
+        exit;
+    }
 
     #
     #  Finally create the filesystem + swap
@@ -1826,6 +1845,23 @@ sub createLVMBits
     #
     runCommand( $disk_cmd );
     runCommand( $swap_cmd ) unless( $CONFIG{'noswap'} );
+
+    #
+    # Make sure that worked.
+    #
+    if ( ! -e $lvm_disk )
+    {
+        logprint( "The LVM disk image creation failed to create $lvm_disk.\n" );
+        logprint( "aborting\n" );
+        exit;
+    }
+    if ( ! -e $lvm_swap )
+    {
+        logprint( "The LVM disk image creation failed to create $swap.\n" );
+        logprint( "aborting\n" );
+        exit;
+    }
+
 
     #
     #  Initialise the partitions with the relevant filesystem.
