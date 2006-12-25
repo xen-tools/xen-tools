@@ -172,6 +172,6 @@ sub addGroups
 
     foreach my $g ( split( / /, $groups ) )
     {
-        system( "chroot $prefix /usr/sbin/adduser $username $group" );
+        system( "chroot $prefix /usr/sbin/adduser $username $g" );
     }
 }
