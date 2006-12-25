@@ -172,6 +172,10 @@ sub addGroups
 
     foreach my $g ( split( / /, $groups ) )
     {
+        # Make sure the group exists.
+        system( "chroot $prefix /usr/sbin/addgroup $g" );
+
+        # add the user to it.
         system( "chroot $prefix /usr/sbin/adduser $username $g" );
     }
 }
