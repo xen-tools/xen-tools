@@ -512,7 +512,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.118 2006-12-25 21:41:55 steve Exp $
+ $Id: xen-create-image,v 1.119 2006-12-25 22:39:35 steve Exp $
 
 =cut
 
@@ -791,8 +791,8 @@ if ( $CONFIG{'boot'} )
     #
     #  Start the image
     #
-    my $pid = fork();
-    if ( $pid )
+    $CONFIG{'pid'} = fork();
+    if ( $CONFIG{'pid'} )
     {
         # Parent.
         exit;
@@ -902,6 +902,7 @@ sub setupDefaultOptions
     $CONFIG{'force'}       = 0;
     $CONFIG{'no-install'}  = 0;
     $CONFIG{'no-hooks'}    = 0;
+    $CONFIG{'pid'}         = 0;
     $CONFIG{'template'}    = '';
     $CONFIG{'roledir'}     = '/etc/xen-tools/role.d';
 
@@ -1107,7 +1108,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.118 $';
+        my $REVISION      = '$Revision: 1.119 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -2650,21 +2651,15 @@ sub END
     #
     #  Here we print out the status message when finishing.
     #
-    #  NOTE:  We undef the hostname, so that this will only print
-    # once.
-    #
-    #  This is *necessary* because otherwise when this script
-    # uses fork() to boot a new xen instance it will run this
-    # section twice and we don't want that.
-    #
+    #  NOTE:  We use the $CONFIG{'pid'} here to control whether the
+    # message is displayed - since this avoids it from being displayed
+    # twice when --boot is used.
     #
     if ( ( defined( $CONFIG{'hostname'} ) ) &&
-         ( -e "/var/log/xen-tools/$CONFIG{'hostname'}.log" ) )
+         ( -e "/var/log/xen-tools/$CONFIG{'hostname'}.log" ) &&
+         ( ! $CONFIG{'pid'} ) )
     {
         print "\n\nLogfile produced at:\n";
         print "\t /var/log/xen-tools/$CONFIG{'hostname'}.log\n";
-
-        # HACK:
-        undef $CONFIG{'hostname'};
     }
 }
