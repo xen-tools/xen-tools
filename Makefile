@@ -7,7 +7,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.90 2006-12-11 22:12:39 steve Exp $
+# $Id: Makefile,v 1.91 2006-12-25 22:56:44 steve Exp $
 
 
 #
@@ -86,7 +86,7 @@ fixup-perms:
 	chmod 755 hooks/common.sh
 	chmod 644 etc/xen-tools.conf
 	chmod 644 etc/xm.tmpl
-	chmod 644 misc/*
+	chmod 644 misc/xm misc/xen-tools misc/README
 
 #
 #  Install files to /etc/
