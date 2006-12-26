@@ -67,7 +67,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-list-images,v 1.20 2006-12-11 22:12:39 steve Exp $
+ $Id: xen-list-images,v 1.21 2006-12-26 00:55:58 steve Exp $
 
 =cut
 
@@ -107,7 +107,7 @@ $CONFIG{'prefix'} = "/etc/xen";
 #
 # Release number.
 #
-my $RELEASE = '3.0';
+my $RELEASE = '3.1';
 
 
 
@@ -240,7 +240,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.20 $';
+        my $REVISION      = '$Revision: 1.21 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
