@@ -23,6 +23,9 @@ Contributions
   Sven Hertge <sven [at] de.svenhartge>
    - Bugfix for Debian/Gentoo package installation.
 
+  Joey Hess <joeyh [at] org.debian>
+   - Provided sample code for module copying and several useful bug reports
+
   Kirk Ismay <captain [at] com.netidea>
    - Added hook for automatic cfengine installation.
 
