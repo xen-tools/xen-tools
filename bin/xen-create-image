@@ -512,7 +512,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.121 2007-01-05 14:05:44 steve Exp $
+ $Id: xen-create-image,v 1.122 2007-01-05 16:07:47 steve Exp $
 
 =cut
 
@@ -832,7 +832,7 @@ sub checkSystem
 
     foreach my $bin ( @required )
     {
-        if ( ! -x "/usr/bin/" . $bin )
+        if ( ! defined( findBinary( $bin ) ) )
         {
             logprint("The script '$bin' was not found.\n");
             logprint( "Aborting\n\n" );
@@ -879,7 +879,7 @@ sub setupDefaultOptions
     # Paths and files.
     #
     $CONFIG{'dir'}         = '';
-    $CONFIG{'xm'}          = '/usr/sbin/xm';
+    $CONFIG{'xm'}          = findBinary( "xm" );
     $CONFIG{'kernel'}      = '';
     $CONFIG{'initrd'}      = '';
 
@@ -924,9 +924,9 @@ sub setupDefaultOptions
     #         filesystem, even if it exists.  This script must detect
     #         prior existance itself.
     #
-    $CONFIG{'make_fs_ext3'}      = '/sbin/mkfs.ext3 -F ';
-    $CONFIG{'make_fs_xfs'}       = '/sbin/mkfs.xfs -f -d name=';
-    $CONFIG{'make_fs_reiserfs'}  = '/sbin/mkfs.reiserfs -f -q ';
+    $CONFIG{'make_fs_ext3'}      = 'mkfs.ext3 -F ';
+    $CONFIG{'make_fs_xfs'}       = 'mkfs.xfs -f -d name=';
+    $CONFIG{'make_fs_reiserfs'}  = 'mkfs.reiserfs -f -q ';
 
     #
     #  Flags to pass to "mount" to mount our image.
@@ -1108,7 +1108,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.121 $';
+        my $REVISION      = '$Revision: 1.122 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1424,11 +1424,11 @@ sub checkBinariesPresent
     #
     #  Files we demand are present in all cases.
     #
-    my @required = qw ( /bin/mount /sbin/mkswap );
+    my @required = qw ( mount mkswap );
 
     foreach my $file ( @required )
     {
-        if ( ! -x $file )
+        if ( ! defined( findBinary( $file ) ) )
         {
             logprint( "The following binary is required to run this tool\n" );
             logprint( "\t$file\n");
@@ -1442,10 +1442,10 @@ sub checkBinariesPresent
     if ( defined( $CONFIG{'dir'} ) )
     {
         # loopback image
-        if ( ! -x '/bin/dd' )
+        if ( ! defined( findBinary( "dd" ) ) )
         {
             logprint( "The following binary is required to run this tool\n" );
-            logprint( "\t/bin/dd\n");
+            logprint( "\tdd\n");
             logprint( "(This only required for loopback images, which you've selected)\n" );
             exit 1;
         }
@@ -1455,11 +1455,11 @@ sub checkBinariesPresent
         #
         # EVMS-specific binaries.
         #
-        my @evms = qw ( /sbin/evms /bin/echo );
+        my @evms = qw ( evms echo );
 
         foreach my $file ( @evms )
         {
-            if ( ! -x $file )
+            if ( ! defined( findBinary( $file ) ) )
             {
                 logprint( "The following binary is required to run this tool\n");
                 logprint( "\t$file\n" );
@@ -1471,11 +1471,11 @@ sub checkBinariesPresent
     else
     {
         # LVM-specific binaries.
-        my @lvm = qw ( /sbin/lvcreate /sbin/lvremove );
+        my @lvm = qw ( lvcreate lvremove );
 
         foreach my $file ( @lvm )
         {
-            if ( ! -x $file )
+            if ( !defined( findBinary( $file ) ) )
             {
                 logprint( "The following binary is required to run this tool\n");
                 logprint( "\t$file\n" );
@@ -1701,7 +1701,7 @@ sub createLoopbackImages
     unless( $CONFIG{'noswap'} )
     {
         logprint( "\nCreating swap image: $swap\n" );
-        my $swap_cmd = "/bin/dd if=/dev/zero of=$swap bs=1024k count=$swap_size";
+        my $swap_cmd = "dd if=/dev/zero of=$swap bs=1024k count=$swap_size";
         runCommand( $swap_cmd );
         logprint( "Done\n" );
     }
@@ -1715,12 +1715,12 @@ sub createLoopbackImages
     if ( $CONFIG{'image'} eq "sparse" )
     {
         $CONFIG{'verbose'} && logprint( "Creating sparse image\n" );
-        $image_cmd = "/bin/dd if=/dev/zero of=$disk bs=$disk_size count=0 seek=1024";
+        $image_cmd = "dd if=/dev/zero of=$disk bs=$disk_size count=0 seek=1024";
     }
     else
     {
         $CONFIG{'verbose'} && logprint( "Creating full-sized image\n" );
-        $image_cmd = "/bin/dd if=/dev/zero of=$disk bs=$disk_size count=1024";
+        $image_cmd = "dd if=/dev/zero of=$disk bs=$disk_size count=1024";
     }
 
     runCommand( $image_cmd );
@@ -1845,8 +1845,8 @@ sub createLVMBits
     #
     # The commands to create the volumes.
     #
-    my $disk_cmd = "/sbin/lvcreate $CONFIG{'lvm'} -L $CONFIG{'size'}M -n $disk";
-    my $swap_cmd = "/sbin/lvcreate $CONFIG{'lvm'} -L $CONFIG{'swap'} -n $swap";
+    my $disk_cmd = "lvcreate $CONFIG{'lvm'} -L $CONFIG{'size'}M -n $disk";
+    my $swap_cmd = "lvcreate $CONFIG{'lvm'} -L $CONFIG{'swap'} -n $swap";
 
     #
     # Create the volumes
@@ -2029,15 +2029,12 @@ sub createEVMSBits
 
     #
     # these will be piped to evms, but gotta check it first
-    ## /sbin/lvcreate $CONFIG{'evms'} -L $CONFIG{'size'}M -n $disk";
-    #create the EVMS volume
     #
     my $disk_cmd_volume = "echo create : Volume, $CONFIG{'evms'}/$disk, name=$disk | evms";
-    ##/sbin/lvcreate $CONFIG{'evms'} -L $CONFIG{'swap'} -n $swap";
+
     #repeat the same steps for the swap partition
     my $swap_cmd_object = "echo allocate : $CONFIG{'evms'}/Freespace, size=$CONFIG{'swap'}, name=$swap | evms";
-    # these will be piped to evms, but gotta check it first
-    ## /sbin/lvcreate $CONFIG{'evms'} -L $CONFIG{'size'}M -n $disk";
+
     #create the EVMS volume
     my $swap_cmd_volume = "echo create : Volume, $CONFIG{'evms'}/$swap, name=$swap | evms";
     ##/sbin/lvcreate $CONFIG{'evms'} -L $CONFIG{'swap'} -n $swap";
@@ -2126,7 +2123,7 @@ sub createSwap
 {
     my ( $path ) = ( @_ );
 
-    runCommand( "/sbin/mkswap $path" );
+    runCommand( "mkswap $path" );
 }
 
 
@@ -2220,7 +2217,7 @@ sub installSystem
     #
     #  Basic command
     #
-    my $cmd = "/usr/bin/xt-install-image --hostname=$CONFIG{'hostname'} --location=$MOUNT_POINT --dist=$CONFIG{'dist'}";
+    my $cmd = "xt-install-image --hostname=$CONFIG{'hostname'} --location=$MOUNT_POINT --dist=$CONFIG{'dist'}";
 
     #
     #  Do we have a per-image configuration file?
@@ -2458,7 +2455,7 @@ sub runXenConfigCreation
     }
 
 
-    my $command = '/usr/bin/xt-create-xen-config --output=/etc/xen';
+    my $command = 'xt-create-xen-config --output=/etc/xen';
 
     if ( ( defined( $CONFIG{'template'} ) ) &&
          ( -e $CONFIG{'template'} ) )
@@ -2521,6 +2518,37 @@ sub logprint
         print LOGFILE $text;
         close( LOGFILE );
     }
+}
+
+
+
+=begin doc
+
+  Find the location of the specified binary on the curent user's PATH.
+
+  Return undef if the named binary isn't found.
+
+=end doc
+
+=cut
+
+sub findBinary
+{
+    my( $bin ) = (@_);
+
+    # strip any path which might be present.
+    $bin  = $2 if ( $bin  =~ /(.*)[\/\\](.*)/ );
+
+    foreach my $entry ( split( /:/, $ENV{'PATH'} ) )
+    {
+        # guess of location.
+        my $guess = $entry . "/" . $bin;
+
+        # return it if it exists and is executable
+        return $guess if ( -e $guess && -x $guess );
+    }
+
+    return undef;
 }
 
 
