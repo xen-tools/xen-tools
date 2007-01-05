@@ -33,6 +33,9 @@ Contributions
    - Improved binary detection and good suggestions.
    - Better portability for non-bash shells.
 
+  Felipe Scarel <fbscarel [at] com.gmail>
+   - Bugfix for --no-swap + LVM
+
   Radu Spineanu <radu [at] org.debian>
    - Supplied many small tweaks, bugfixes, and suggestions.
    - Radu is also the Debian package maintainer and has CVS commit access.
