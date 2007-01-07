@@ -35,20 +35,20 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --force       Force overwriting existing images.
                  This will remove existing images or LVM volumes which match
-                 those which are liable to be used by the new invocation.
+                those which are liable to be used by the new invocation.
 
    --fs          Specify the filesystem type to use for the new guest.
                  Valid choices are 'ext3', 'reiserfs', or 'xfs'.
 
    --image       Specify whether to create "sparse" or "full" disk images.
                  Full images are mandatory when using LVM, so this setting
-                 is ignored in that case.
+                is ignored in that case.
 
    --initrd      Specify the initial ramdisk
                  If an image is specified it must exist.
 
    --kernel      Set the path to the kernel to use for domU.
-                 This image must exist on the host system.
+                 If a kernel is specified it must exist.
 
    --memory      Setup the amount of memory allocated to the new instance.
 
@@ -58,10 +58,10 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --no-hooks    Don't run any hooks after the image is created.
 
    --passwd      Ask for a root password during setup.
-                 This is done interactively.
+                 NOTE:  This is done interactively.
 
    --role        Run a specific role command post-install.
-                 These role scripts are discussed in the manpage later.
+                These role scripts are discussed later in this manpage.
 
    --roledir     Specify the directory which contains the role scripts.
                  This defaults to /etc/xen-tools/role.d/
@@ -72,14 +72,14 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --noswap      Do not create a swap partition.
                  When this option is used the system will not have a swap
-                 entry added to its /etc/fstab file either.
+                entry added to its /etc/fstab file either.
 
-   --ide         Use IDE names for virtual devices (hda not sda)
+   --ide         Use IDE names for virtual devices (i.e. hda not sda)
 
 
   Installation options:
 
-   --arch        Pass the given architecture to debootstrap or rpm strap.
+   --arch        Pass the given architecture to debootstrap or rpmstrap.
                  This argument is ignored if you install with a different
                  installation type.
 
@@ -89,7 +89,7 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --copy-cmd    This allows you to specify the command actually used for
                  installation when using "--copy"
-                 NOTE This option is *only* valid in the configuration file.
+                 NOTE:  This option is *only* valid in the configuration file.
 
    --dist        Specify the distribution you wish to install.
 
@@ -109,7 +109,7 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --tar-cmd     This allows you to specify the command actually used for
                  installation when using "--tar".
-                 NOTE This option is *only* valid in the configuration file.
+                 NOTE:  This option is *only* valid in the configuration file.
 
    --template    Specify which template file to use when creating the
                  Xen configuration file.
@@ -117,17 +117,19 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
 
   Networking options:
-   --dhcp        The guest will fetch its networking details via DHCP.
+
+   --dhcp        The guest will be configured to fetch its networking 
+                details via DHCP.
 
    --gateway     Setup the network gateway for the new instance.
 
    --ip          Setup the IP address of the machine, multiple IPs
-                 are allowed.   When specifying more than one IP the
-                 first one is setup as the "system" IP, and the additional
-                 ones are added as aliases.
+                are allowed.   When specifying more than one IP the
+                first one is setup as the "system" IP, and the additional
+                ones are added as aliases.
                  Note that Xen 3.x supports a maximum of three IP addresses
-                 per guest.
-                 This option conflicts with --dhcp.
+                per guest.
+                This option conflicts with --dhcp.
 
    --mac         Specify the MAC address to use for a given interface.
                  This is only valid for the first IP address specified, or
@@ -137,24 +139,26 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --netmask     Setup the netmask for the new instance.
 
+
+
   Mandatory options:
 
    --dir         Specify where the output images should go.
                  Subdirectories will be created for each guest
                  If you do not wish to use loopback images specify --lvm
-                 or --evms.  (These three options are mutually exclusive.)
+                or --evms.  (These three options are mutually exclusive.)
 
    --lvm         Specify the volume group to save images within.
                  If you do not wish to use LVM specify --dir or --evms.
-                 (These three options are mutually exclusive.)
+                (These three options are mutually exclusive.)
 
    --evms        Specify the container to save images within, i.e. '--evms
-                 lvm2/mycontainer'.  If you do not wish to use EVMS specify
-                 --dir or --lvm.  (These three options are mutually exclusive.)
+                lvm2/mycontainer'.  If you do not wish to use EVMS specify
+                --dir or --lvm.  (These three options are mutually exclusive.)
 
    --hostname    Set the hostname of the new guest system.
                  Ideally this will be fully-qualified since several
-                 of the hook scripts will expect to be able to parse
+                of the hook scripts will expect to be able to parse
                  a domain name out of it for various purposes.
 
 =cut
@@ -162,7 +166,8 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
 =head1 NOTES
 
-  This script is a simple wrapper around three external tools
+  This script is a wrapper around three distinct external tools which
+ complete various aspects of the new system installation.
 
 =over 8
 
@@ -178,7 +183,7 @@ Create a configuration file in /etc/xen so that xm can create the new image.
 =back
 
   The result of invoking these three scripts, and some minor glue between
- them is a simple means of creating new Xen guest domains.
+ them, is a simple means of creating new Xen guest domains.
 
 =cut
 
@@ -512,7 +517,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.122 2007-01-05 16:07:47 steve Exp $
+ $Id: xen-create-image,v 1.123 2007-01-07 02:59:35 steve Exp $
 
 =cut
 
@@ -1108,7 +1113,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.122 $';
+        my $REVISION      = '$Revision: 1.123 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1163,15 +1168,49 @@ sub parseCommandLineArguments
 E_O_ERROR
 
         logprint( $err );
+
+        exit;
     }
     else
     {
         #
         # count == 0;
-        # OK.
         #
-        #  That means that the configuration file is ok.
+        #  That means that the method should be supplied in the configuration
+        # file.
         #
+        #  If it isn't we'll abort here.
+        #
+        $count = 0;
+        foreach my $key ( qw/debootstrap rpmstrap copy tar/ )
+        {
+            if ( $CONFIG{$key} )
+            {
+                $count += 1;
+            }
+        }
+        if ( $count < 1 )
+        {
+
+            my $err =<<E_O_ERROR;
+
+  Please specify an installation method using only *one* of the following
+ command line options:
+
+   --debootstrap     =  Install the system using the deboostrap command.
+   --rpmstrap        =  Install the system using the rpmstrap command.
+   --copy /path      =  Install by copying the specified directory recursively.
+   --tar file.tar    =  Install by untarring the given file.
+
+  (You could specify one of these options as the default in the configuration
+ file /etc/xen-tools/xen-tools.conf.)
+
+E_O_ERROR
+
+            logprint( $err );
+
+            exit;
+        }
     }
 
 
@@ -2086,7 +2125,7 @@ sub createFilesystem
        my $binary = $1;
        my $args   = $2;
 
-       if ( ! -x $binary )
+       if ( ! defined( findBinary( $binary ) ) )
        {
            logprint( "The binary '$binary' required to create the filesystem $CONFIG{'fs'} is missing\n" );
            exit;
