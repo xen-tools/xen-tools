@@ -7,13 +7,13 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.92 2006-12-26 00:55:56 steve Exp $
+# $Id: Makefile,v 1.93 2007-01-14 21:17:51 steve Exp $
 
 
 #
 #  Only used to build distribution tarballs.
 #
-DIST_PREFIX = /tmp
+DIST_PREFIX = ${TMP}
 VERSION     = 3.1
 BASE        = xen-tools
 
@@ -178,7 +178,7 @@ manpages:
 #
 #  Make a new release tarball, and make a GPG signature.
 #
-release: test fixup-perms update-version update-modules clean changelog
+release: fixup-perms update-version update-modules clean changelog
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)
 	rm -f $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz
 	cp -R . $(DIST_PREFIX)/$(BASE)-$(VERSION)
