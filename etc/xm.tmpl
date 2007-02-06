@@ -1,53 +1,48 @@
 #
-#  Configuration file for the Xen instance {$hostname}, created on
-# { scalar localtime }.
+# Configuration file for the Xen instance {$hostname}, created
+# by xen-tools {$xen_tools_version} on { scalar localtime }.
 #
-
 
 #
 #  Kernel + memory size
 #
 { if ( $kernel )
   {
-    $OUT.= "kernel = '$kernel'\n";
+    $OUT.= "kernel      = '$kernel'";
   }
 }
-
 { if ( $initrd )
   {
-    $OUT.= "ramdisk = '$initrd'\n";
+    $OUT.= "ramdisk     = '$initrd'";
   }
 }
-memory  = '{$memory}'
-
+memory      = '{$memory}'
 
 #
 #  Disk device(s).
 #
-root    = '/dev/{$device}1 ro'
-
+root        = '/dev/{$device}1 ro'
 { if ( $noswap ) 
   {
-        $OUT .= "disk    = [ '$image_vbd,$device" . "1,w' ]";
+        $OUT .= "disk        = [ '$image_vbd,$device" . "1,w' ]";
   }
   else
   {
-        $OUT .= "disk    = [ '$image_vbd,$device" . "1,w', '$swap_vbd,$device" . "2,w' ]";
+        $OUT .= "disk        = [ '$image_vbd,$device" . "1,w', '$swap_vbd,$device" . "2,w' ]";
   }
 }
 
 #
 #  Hostname
 #
-name    = '{$hostname}'
-
+name        = '{$hostname}'
 
 #
 #  Networking
 #
 { if ( $dhcp )
   {
-    $OUT .= "dhcp = 'dhcp'\n";
+    $OUT .= "dhcp        = 'dhcp'\n";
 
     # Setup the mac address, if present.
     my $m = '';
@@ -56,7 +51,7 @@ name    = '{$hostname}'
       $m = "mac=$mac"
     }
 
-    $OUT .= "vif  = [ '$m' ]";
+    $OUT .= "vif         = [ '$m' ]";
   }    
   else
   {
@@ -69,7 +64,7 @@ name    = '{$hostname}'
       $m = ",mac=$mac"
     }
 
-    $OUT .= "vif  = [ 'ip=$ip1"; 
+    $OUT .= "vif         = [ 'ip=$ip1"; 
     $OUT .= "$m' ]";
   }
 }
@@ -80,3 +75,4 @@ name    = '{$hostname}'
 on_poweroff = 'destroy'
 on_reboot   = 'restart'
 on_crash    = 'restart'
+
