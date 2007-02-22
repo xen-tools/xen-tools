@@ -517,7 +517,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.123 2007-01-07 02:59:35 steve Exp $
+ $Id: xen-create-image,v 1.124 2007-02-22 19:15:25 steve Exp $
 
 =cut
 
@@ -1113,7 +1113,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.123 $';
+        my $REVISION      = '$Revision: 1.124 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1904,12 +1904,12 @@ sub createLVMBits
     }
     if ( ! -e $lvm_swap )
     {
-	unless( $CONFIG{'noswap'} )
-	{
-	        logprint( "The LVM disk image creation failed to create $swap.\n" );
-	        logprint( "aborting\n" );
-	        exit;
-	}
+        unless( $CONFIG{'noswap'} )
+        {
+                logprint( "The LVM disk image creation failed to create $swap.\n" );
+                logprint( "aborting\n" );
+                exit;
+        }
     }
 
 
