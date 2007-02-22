@@ -10,10 +10,17 @@ xt-create-config - Create a Xen configuration file for a new guest
 
   xt-create-config [options]
 
+  General Options:
+    --admins     Specify some administrator accounts which should be
+                created for use by the xen-shell.
+
+    --template   Specify the template file to use when creating the
+                Xen configuration file.
+
   Help Options:
-   --help     Show this scripts help information.
-   --manual   Read this scripts manual.
-   --version  Show the version number and exit.
+   --help        Show this scripts help information.
+   --manual      Read this scripts manual.
+   --version     Show the version number and exit.
 
   Debugging Options:
    --verbose  Be verbose in our execution.
@@ -96,7 +103,7 @@ xt-create-config - Create a Xen configuration file for a new guest
  --
  http://www.steve.org.uk/
 
- $Id: xt-create-xen-config,v 1.30 2007-02-06 20:38:21 steve Exp $
+ $Id: xt-create-xen-config,v 1.31 2007-02-22 19:39:03 steve Exp $
 
 =cut
 
@@ -161,6 +168,17 @@ createXenConfig();
 
 
 #
+#  If we've been given any administrators then set them up.
+#
+if ( $CONFIG{'admins'} )
+{
+    setupAdminUsers();
+}
+
+
+
+
+#
 #  Exit cleanly - any errors which have already occurred will result
 # in "exit 1".
 #
@@ -189,6 +207,7 @@ sub parseCommandLineArguments
     #  Parse options.
     #
     GetOptions(
+               "admins=s",   \$CONFIG{'admins'},
                "output=s",   \$CONFIG{'output'},
                "template=s", \$CONFIG{'template'},
                "verbose",    \$CONFIG{'verbose'},
@@ -203,7 +222,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.30 $';
+        my $REVISION      = '$Revision: 1.31 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -387,4 +406,53 @@ sub createXenConfig
     #
     close( FILE );
 
+}
+
+
+
+
+=begin doc
+
+  This routine is designed to ensure that any users specified with
+ the --admins flag are setup as administrators of the new instance.
+
+=end doc
+
+=cut
+
+sub setupAdminUsers
+{
+    #
+    #  Find the path to the xen-login-shell
+    #
+    my $shell = undef;
+    $shell = "/usr/bin/xen-login-shell" if ( -x "/usr/bin/xen-login-shell" );
+    $shell = "/usr/local/bin/xen-login-shell" if ( -x "/usr/bin/local/xen-login-shell" );
+
+    return if ( !defined( $shell ) );
+
+    #
+    #  For each user make sure they exist, and setup the
+    # login shell for them.
+    #
+    foreach my $user ( split( /,/, $CONFIG{'admins'} ) )
+    {
+        # Strip leading and trailing whitespace.
+        $user =~ s/^\s+//;
+        $user =~ s/\s+$//;
+
+        # Does the user exist?
+        if ( getpwnam($user) )
+        {
+            # Change shell.
+            $CONFIG{'verbose'} && print "Changing shell for $user: $shell\n";
+            system( "chsh", "-s", $shell, $user );
+        }
+        else
+        {
+            # Add a new user.
+            $CONFIG{'verbose'} && print "Adding new user: $user\n";
+            system( "useradd", "-s", $shell, $user );
+        }
+    }
 }

@@ -76,3 +76,9 @@ on_poweroff = 'destroy'
 on_reboot   = 'restart'
 on_crash    = 'restart'
 
+
+{ if ( $admins )
+  {
+    $OUT .= "xen_shell = '$admins'\n";
+  }
+}

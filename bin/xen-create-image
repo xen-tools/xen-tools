@@ -25,6 +25,9 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --accounts    Copy all non-system accounts to the guest image
 
+   --admins      Specify that some administrators should be created for
+                this image, using xen-shell.
+
    --boot        Boot the new instance after creating it.
 
    --cache       Cache .deb files on the host when installing the new guest
@@ -517,7 +520,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.124 2007-02-22 19:15:25 steve Exp $
+ $Id: xen-create-image,v 1.125 2007-02-22 19:39:02 steve Exp $
 
 =cut
 
@@ -865,6 +868,28 @@ E_O_ERROR
     }
 
 
+    #
+    #  Make sure that xen-shell is installed if we've got an --admin
+    # flag specified
+    #
+    if ( $CONFIG{'admins'} )
+    {
+        my $shell = undef;
+        $shell = "/usr/bin/xen-login-shell" if ( -x "/usr/bin/xen-login-shell" );
+        $shell = "/usr/local/bin/xen-login-shell" if ( -x "/usr/bin/local/xen-login-shell" );
+
+        if ( !defined( $shell ) )
+        {
+            print <<EOF;
+
+  You've specified administrator accounts for use with the xen-shell,
+ however that doesn't appear to be installed.
+
+  Aborting.
+EOF
+            exit;
+        }
+    }
 }
 
 
@@ -1085,6 +1110,7 @@ sub parseCommandLineArguments
 
                # Misc. options
                "accounts",     \$CONFIG{'accounts'},
+               "admins=s",     \$CONFIG{'admins'},
                "arch=s",       \$CONFIG{'arch'},
                "fs=s",         \$CONFIG{'fs'},
                "boot",         \$CONFIG{'boot'},
@@ -1113,7 +1139,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.124 $';
+        my $REVISION      = '$Revision: 1.125 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -2496,10 +2522,21 @@ sub runXenConfigCreation
 
     my $command = 'xt-create-xen-config --output=/etc/xen';
 
+    #
+    #  Add the template if specified
+    #
     if ( ( defined( $CONFIG{'template'} ) ) &&
          ( -e $CONFIG{'template'} ) )
     {
         $command .= " --template=" . $CONFIG{'template'};
+    }
+
+    #
+    #  Add the admins, if any.
+    #
+    if ( defined( $CONFIG{'admins'} ) )
+    {
+        $command .= " --admins=$CONFIG{'admins'}";
     }
 
     logprint( "\nCreating Xen configuration file\n" );
