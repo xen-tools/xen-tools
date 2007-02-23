@@ -30,7 +30,7 @@ xt-install-image - Install a fresh copy of GNU/Linux into a directory
 
   Installation Options:
    --install-method Specify the installation method to use.
-   --install-soruce Specify the installation source to use.
+   --install-source Specify the installation source to use.
 
   All other options from xen-create-image will be passed as environmental
  variables.
@@ -80,7 +80,7 @@ Untar a .tar file into the new installation location.  This tarfile is assumed t
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.45 2007-02-23 15:37:05 steve Exp $
+ $Id: xt-install-image,v 1.46 2007-02-23 15:41:21 steve Exp $
 
 =cut
 
@@ -395,7 +395,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.45 $';
+        my $REVISION      = '$Revision: 1.46 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
