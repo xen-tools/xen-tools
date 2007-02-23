@@ -1,3 +1,13 @@
+xen-tools (3.2-1) unstable; urgency=low
+
+  * New upstream release v3.2
+    - Installation argument changes so that --copy, --debootstrap, --rpmstrap, 
+      and --tar have been replaced with --install-method.
+    - Updated command completion.
+    - New installation method, using an image-server.
+
+ -- Unreleased.
+
 xen-tools (3.1-1) unstable; urgency=low
 
   * New upstream release v3.1.
