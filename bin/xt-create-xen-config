@@ -103,7 +103,7 @@ xt-create-config - Create a Xen configuration file for a new guest
  --
  http://www.steve.org.uk/
 
- $Id: xt-create-xen-config,v 1.32 2007-02-22 19:42:49 steve Exp $
+ $Id: xt-create-xen-config,v 1.33 2007-02-23 08:15:02 steve Exp $
 
 =cut
 
@@ -121,6 +121,7 @@ The LICENSE file contains the full text of the license.
 
 
 use strict;
+use English;
 use Env;
 use Getopt::Long;
 use Pod::Usage;
@@ -222,7 +223,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.32 $';
+        my $REVISION      = '$Revision: 1.33 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -423,6 +424,11 @@ sub createXenConfig
 sub setupAdminUsers
 {
     #
+    #  If we're not root we can't modify users.
+    #
+    return if ( $EFFECTIVE_USER_ID != 0 );
+
+    #
     #  Find the path to the xen-login-shell
     #
     my $shell = undef;
@@ -440,6 +446,9 @@ sub setupAdminUsers
         # Strip leading and trailing whitespace.
         $user =~ s/^\s+//;
         $user =~ s/\s+$//;
+
+        # Ignore root
+        next if ( $user =~ /^root$/i );
 
         # Does the user exist?
         if ( getpwnam($user) )
