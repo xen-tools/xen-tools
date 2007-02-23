@@ -18,7 +18,7 @@
 # --
 # http://www.steve.org.uk
 #
-# $Id: xen-tools,v 1.41 2007-02-23 15:37:06 steve Exp $
+# $Id: xen-tools,v 1.42 2007-02-23 22:05:19 steve Exp $
 #
 
 
@@ -53,7 +53,7 @@ _xen_create_image()
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
     prev=${COMP_WORDS[COMP_CWORD-1]}
-    opts='--admins --accounts --broadcast --boot --cache --config --dhcp --dir --dist --evms --force --fs --gateway --help --hostname --ide --image --install-method --install-source --initrd --ip --kernel --lvm --mac --manual --memory --mirror --no-hooks --no-install --noswap --p2p --passwd --role --size --swap --version --verbose'
+    opts='--accounts --admins --arch --boot --cache --config --dhcp --dir --dist--evms --force --fs --gateway --help --hostname --ide --image --initrd --install-method --install-source --ip --kernel --lvm --mac --manual --memory --mirror --netmask --no-hooks --no-install --noswap --passwd --role --roledir --size --swap --template --verbose --version'
     
     
     #
@@ -219,13 +219,21 @@ _xen_update_image()
     #
     evmscontainers=`evms_query containers 2>/dev/null`
 
-    opts="--dir --evms --help --manual --version --lvm"
+    opts="--dir --evms --help --lvm --manual --version"
 
     case "${prev}" in
         --dir)
 	    _filedir -d
 	    return 0
             ;;
+	--evms)
+	    COMPREPLY=( $( compgen -W '${evmscontainers}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+	    return 0
+	    ;;
+	--lvm)
+	    COMPREPLY=( $( compgen -W '${vgs}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+	    return 0
+	    ;;
     esac
 
     if [[ ${cur} == -* ]]; then
@@ -251,33 +259,7 @@ _xen_list_images()
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
-    opts="--dir --evms --help --manual --test --version --lvm"
-
-    #
-    # Volume group completion
-    #
-    vgs=`vgdisplay 2>/dev/null | grep Name 2>/dev/null | awk '{print $3}'`
-
-    #
-    # EVMS container completion
-    #
-    evmscontainers=`evms_query containers 2>/dev/null`
-
-
-    case "${prev}" in
-        --dir)
-	    _filedir -d
-	    return 0
-            ;;
-	--evms)
-	    COMPREPLY=( $( compgen -W '${evmscontainers}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
-	    return 0
-	    ;;	
-	--lvm)
-	    COMPREPLY=( $( compgen -W '${vgs}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
-	    return 0
-	    ;;
-    esac
+    opts="--help --manual --test --version"
 
     if [[ ${cur} == -* ]]; then
         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
@@ -298,7 +280,7 @@ _xt-create-xen-config()
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
     prev=${COMP_WORDS[COMP_CWORD-1]}
-    opts='--help --manual --output --template --verbose --version'
+    opts='--admins --help --manual --output --template --verbose --version'
     
     
     case "$prev" in
@@ -331,7 +313,7 @@ _xt-customize-image()
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
     prev=${COMP_WORDS[COMP_CWORD-1]}
-    opts='--dist --help --location --manual --output --verbose --version'
+    opts='--dist --help --location --manual --verbose --version'
     
     #
     # Available distributions, from rpmstrap
@@ -341,12 +323,12 @@ _xt-customize-image()
     fi
     
     case "$prev" in
-	--location)
-	    _filedir -d
-	    return 0
-	    ;;
 	--dist)
 	    COMPREPLY=( $( compgen -W '${dists} sid sarge etch'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+	    return 0
+	    ;;
+	--location)
+	    _filedir -d
 	    return 0
 	    ;;
     esac
@@ -370,7 +352,7 @@ _xt-install-image()
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
     prev=${COMP_WORDS[COMP_CWORD-1]}
-    opts='--cache --config --dist --help --install-source --install-method --location --manual --mirror  --verbose --version'
+    opts='--cache --config --dist --help --install-method --install-source --location --manual --mirror  --verbose --version'
     
     
     #
@@ -390,10 +372,6 @@ _xt-install-image()
 	    _filedir 
 	    return 0
 	    ;;
-	--copy)
-	    _filedir -d
-	    return 0
-	    ;;
 	--dist)
 	    COMPREPLY=( $( compgen -W '${dists} sid sarge etch'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
 	    return 0
@@ -404,10 +382,6 @@ _xt-install-image()
 	    ;;
 	--location)
 	    _filedir -d
-	    return 0
-	    ;;
-	--tar)
-	    _filedir 'tar'
 	    return 0
 	    ;;
     esac
