@@ -15,11 +15,9 @@ TODO
 
   5. Install into dedicated partitions.
 
-  6. Support arbitary installation methods.
-
-  7. Add role-arguments.
+  6. Add role-arguments.
 
 Steve
 --
-$Id: TODO,v 1.25 2007-02-22 17:33:44 steve Exp $
+$Id: TODO,v 1.26 2007-02-23 18:59:20 steve Exp $
 
