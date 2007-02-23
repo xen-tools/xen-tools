@@ -18,9 +18,7 @@ build-stamp: configure-stamp
 clean:
 	dh_testdir
 	dh_testroot
-	
 	make clean
-	
 	rm -f build-stamp configure-stamp
 	dh_clean 
 
@@ -43,6 +41,7 @@ binary-arch: build install
 	dh_testdir
 	dh_testroot
 	dh_install
+	dh_installexamples debian/examples/setup-kernel-initrd
 	dh_installchangelogs ChangeLog
 	dh_installdocs
 	dh_compress

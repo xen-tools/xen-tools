@@ -1,0 +1,80 @@
+#!/bin/sh
+#
+#  Attempt to setup the kernel= + initrd= lines in the xen-tools configuration
+# file.
+#
+# Steve
+# --
+
+
+#
+#  Find a kernel
+#
+kernel=` ls -1 /boot | grep ^vm  |grep -v syms| grep xen | head -n 1`
+
+if [ ! -z "${kernel}" ]; then
+
+    #
+    # it worked - update the configuration file.
+    perl -pi.bak -e "s/^\s*kernel\s*=(.*)/kernel = \/boot\/${kernel}/" /etc/xen-tools/xen-tools.conf
+
+else
+
+    #
+    # failed.  but the user can fixup 
+    :
+fi
+
+
+#
+# Find a ramdisk
+#
+ramdisk=` ls -1 /boot | grep ^init | grep xen | head -n 1`
+
+if [ ! -z "${ramdisk}" ]; then
+
+    #
+    # it worked - update the configuration file.
+    #
+    perl -pi.bak -e "s/^\s*initrd\s*=(.*)/initrd = \/boot\/${ramdisk}/" /etc/xen-tools/xen-tools.conf
+else
+
+    # failed.  user can fixup
+    :
+fi
+
+
+
+
+
+#
+#  If we found a kernel and an initial ramdisk then modify the configuration
+# files under /etc/xen
+#
+if [ ! -z "${ramdisk}" ] ; then
+
+    if [ ! -z "${kernel}" ]; then
+
+        #
+        #  Process each file
+        #
+        for i in /etc/xen/*.cfg; do
+
+            if [ -e $i ]; then
+                
+                cp $i $i.bak
+
+                #
+                #  Upgrade kernel
+                #
+                perl -pi -e "s/^\s*kernel\s*=(.*)/kernel = '\/boot\/${kernel}'/" $i
+
+                #
+                #  Upgrade ramdisk
+                #
+                perl -pi -e "s/^\s*ramdisk\s*=(.*)/ramdisk = '\/boot\/${ramdisk}'/" $i
+            fi
+
+        done
+    fi
+fi
