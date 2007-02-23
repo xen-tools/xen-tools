@@ -1,80 +1,89 @@
 #!/bin/sh
 #
-#  Attempt to setup the kernel= + initrd= lines in the xen-tools configuration
-# file.
+#  This script is designed to setup the kernel and ramdisk inside
+# the xen-tools configuration file; and also update any stored values
+# in any pre-generated Xen guests.
+#
+#  This is useful if you have upgraded your Xen kernel.
 #
 # Steve
 # --
+# $Id: setup-kernel-initrd,v 1.2 2007-02-23 23:52:05 steve Exp $
+#
+
+
 
 
 #
-#  Find a kernel
+#  Find the kernel to use, and the ramdisk, unless they are specified
+# in the environment.
 #
-kernel=` ls -1 /boot | grep ^vm  |grep -v syms| grep xen | head -n 1`
+if [ -z "${kernel}" ]; then
+    kernel=` ls -1 /boot | grep ^vm  |grep -v syms| grep xen | head -n 1`
+    kernel="/boot/${kernel}"
 
-if [ ! -z "${kernel}" ]; then
-
-    #
-    # it worked - update the configuration file.
-    perl -pi.bak -e "s/^\s*kernel\s*=(.*)/kernel = \/boot\/${kernel}/" /etc/xen-tools/xen-tools.conf
-
-else
-
-    #
-    # failed.  but the user can fixup 
-    :
+fi
+if [ -z "${ramdisk}" ]; then
+    ramdisk=` ls -1 /boot | grep ^init | grep xen | head -n 1`
+    ramdisk="/boot/${ramdisk}"
 fi
 
 
 #
-# Find a ramdisk
+#  Abort if we didn't find a kernel / ramdisk
 #
-ramdisk=` ls -1 /boot | grep ^init | grep xen | head -n 1`
-
-if [ ! -z "${ramdisk}" ]; then
-
-    #
-    # it worked - update the configuration file.
-    #
-    perl -pi.bak -e "s/^\s*initrd\s*=(.*)/initrd = \/boot\/${ramdisk}/" /etc/xen-tools/xen-tools.conf
-else
-
-    # failed.  user can fixup
-    :
+if [ -z "${kernel}" ]; then
+    echo "Failed to find Xen kernel."
+    exit
+fi
+if [ -z "${ramdisk}" ]; then
+    echo "Failed to find Xen ramdisk."
+    exit
 fi
 
 
+#
+#  Show what we're going to do - and prompt for confirmation.
+#
+cat <<EOF
+
+  Updating xen-tools configuration file, and all Xen guests with:
+
+    kernel  : ${kernel}
+    ramdisk : ${ramdisk}
+
+  Press enter to continue, or Ctrl-c to abort.
+
+EOF
+read
 
 
 
 #
-#  If we found a kernel and an initial ramdisk then modify the configuration
-# files under /etc/xen
+#  Update the xen-tools configuration file.
 #
-if [ ! -z "${ramdisk}" ] ; then
+perl -pi -e "s|^\s*kernel\s*=(.*)|kernel = ${kernel}|" /etc/xen-tools/xen-tools.conf
+perl -pi -e "s|^\s*initrd\s*=(.*)|initrd = ${ramdisk}|" /etc/xen-tools/xen-tools.conf
 
-    if [ ! -z "${kernel}" ]; then
 
-        #
-        #  Process each file
-        #
-        for i in /etc/xen/*.cfg; do
 
-            if [ -e $i ]; then
+
+
+#
+#  Now modify each of the Xen guest configuration files beneath /etc/xen.
+#
+for i in /etc/xen/*.cfg; do
+    
+    # test that the file exists - ie. glob succeeded.
+    if [ -e $i ]; then
                 
-                cp $i $i.bak
+        #
+        #  Upgrade kernel + ramdisk
+        #
+        perl -pi -e "s|^\s*kernel\s*=(.*)|kernel = '${kernel}'|" $i
+        perl -pi -e "s|^\s*ramdisk\s*=(.*)|ramdisk = '${ramdisk}'|" $i
 
-                #
-                #  Upgrade kernel
-                #
-                perl -pi -e "s/^\s*kernel\s*=(.*)/kernel = '\/boot\/${kernel}'/" $i
-
-                #
-                #  Upgrade ramdisk
-                #
-                perl -pi -e "s/^\s*ramdisk\s*=(.*)/ramdisk = '\/boot\/${ramdisk}'/" $i
-            fi
-
-        done
     fi
-fi
+
+done
+
