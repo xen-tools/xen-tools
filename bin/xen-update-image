@@ -62,7 +62,7 @@ Show the version number and exit.
       apt-get upgrade
 
   NOTE If the image is already running within Xen this will cause
- corruption otherwise it will allow you to update your image without 
+ corruption otherwise it will allow you to update your image without
  booting it.
 
 =cut
@@ -87,7 +87,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-update-image,v 1.20 2007-02-23 18:58:26 steve Exp $
+ $Id: xen-update-image,v 1.21 2007-02-23 21:47:48 steve Exp $
 
 =cut
 
@@ -230,18 +230,18 @@ sub updateXenImage
     }
     elsif ( $CONFIG{'evms'} )
     {
-        # The EVMS volume  -- note, unlike LVM, you don't need the $CONFIG{'evms'} 
+        # The EVMS volume  -- note, unlike LVM, you don't need the $CONFIG{'evms'}
         # to see it and mount the volume. $CONFIG{'evms'} is only used for manipulating
         # the underlying object.  Still, I don't want to mess with the parse code and
-        # make it confusing - otherwise --evms takes an argument everywhere but here, 
-        # which will confuse users.  The better solution is to make it so that --evms can 
-        # take a following container, but doesn't require it.  For the moment, it is 
+        # make it confusing - otherwise --evms takes an argument everywhere but here,
+        # which will confuse users.  The better solution is to make it so that --evms can
+        # take a following container, but doesn't require it.  For the moment, it is
         # better to leave it as it is, take a container, and then ignore it.
 
-        # The best way to do it is to just read it out of the configuration file, 
+        # The best way to do it is to just read it out of the configuration file,
         # tell the user what you got and where you got it from, and not bother the user
         # with picking --dir or --lvm or --evms at all, but infer it from the config
-        # file's disk = parameter.  xen-delete-image might work the same way, but 
+        # file's disk = parameter.  xen-delete-image might work the same way, but
         # it could be *slightly* more dangerous in the context of deleting.
         $img = "/dev/evms/$name-disk";
 
@@ -259,7 +259,7 @@ sub updateXenImage
 
     #
     #  Mount the image.
-    # 
+    #
     my $mount_cmd = "mount -t auto -o loop $img $tmp";
     `$mount_cmd`;
 
@@ -384,7 +384,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.20 $';
+        my $REVISION      = '$Revision: 1.21 $';
 
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
@@ -409,23 +409,25 @@ sub parseCommandLineArguments
 
 sub checkArguments
 {
-
     #
-    #  Make sure we have either a volume, or a root.
+    #  Make sure we got one and only one installation method.
     #
-    if ( ( $CONFIG{'lvm'} && $CONFIG{'dir'} ) || ( $CONFIG{'lvm'} && $CONFIG{'evms'} ) || ( $CONFIG{'evms'} && $CONFIG{'dir'} ) )
+    my $count = 0;
+    foreach my $type ( qw/dir lvm evms/ )
     {
-        print "Please use only one of: a volume group, an EVMS container, or a directory name\n";
-        exit;
+        $count += 1 if defined( $CONFIG{$type} );
     }
 
-
     #
-    #  Make sure we have at least one of the lvm or root specified.
+    #  Show a decent error for when either zero or more than one options
+    # were selected.
     #
-    if ( (!defined( $CONFIG{'dir'} ) ) && ( !defined( $CONFIG{'lvm'} ) ) && ( !defined( $CONFIG{'evms'} ) ) )
+    if ( $count != 1 )
     {
-        print "Please specify either a directory root, an LVM volume group, or an EVMS container\n";
-        exit;
+       print "Please select one and only one of the installation methods:\n";
+       print " --dir\n";
+       print " --evms\n";
+       print " --lvm\n";
+       exit;
     }
 }
