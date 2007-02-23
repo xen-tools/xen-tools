@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 #  Configure the new image to be a minimal image, by removing
-# a packages I don't care about - and installing some alternatives.
+# packages I don't care about - and installing new ones I prefer.
 #
 # Steve
 # --
