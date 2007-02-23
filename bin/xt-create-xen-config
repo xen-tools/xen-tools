@@ -103,7 +103,7 @@ xt-create-config - Create a Xen configuration file for a new guest
  --
  http://www.steve.org.uk/
 
- $Id: xt-create-xen-config,v 1.33 2007-02-23 08:15:02 steve Exp $
+ $Id: xt-create-xen-config,v 1.34 2007-02-23 13:35:29 steve Exp $
 
 =cut
 
@@ -163,18 +163,20 @@ checkArguments();
 
 
 #
-#  Create the Xen configuration file.
-#
-createXenConfig();
-
-
-#
 #  If we've been given any administrators then set them up.
 #
 if ( $ENV{'admins'} )
 {
     setupAdminUsers();
 }
+
+
+#
+#  Create the Xen configuration file.
+#
+createXenConfig();
+
+
 
 
 
@@ -223,7 +225,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.33 $';
+        my $REVISION      = '$Revision: 1.34 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -429,6 +431,11 @@ sub setupAdminUsers
     return if ( $EFFECTIVE_USER_ID != 0 );
 
     #
+    #  If we don't have a sudoers file then we'll also ignore this.
+    #
+    return if ( ! -e "/etc/sudoers" );
+
+    #
     #  Find the path to the xen-login-shell
     #
     my $shell = undef;
@@ -436,6 +443,7 @@ sub setupAdminUsers
     $shell = "/usr/local/bin/xen-login-shell" if ( -x "/usr/bin/local/xen-login-shell" );
 
     return if ( !defined( $shell ) );
+
 
     #
     #  For each user make sure they exist, and setup the
@@ -463,5 +471,13 @@ sub setupAdminUsers
             $CONFIG{'verbose'} && print "Adding new user: $user\n";
             system( "useradd", "-s", $shell, $user );
         }
+
+        #
+        #  Add the entry to /etc/sudoers.
+        #
+        open( SUDOERS, ">>", "/etc/sudoers" ) or warn "Failed to add user to sudoers file : $user - $!";
+        print SUDOERS "$user ALL = NOPASSWD: /usr/sbin/xm, /usr/bin/xen-create-image\n";
+        close( SUDOERS );
+
     }
 }
