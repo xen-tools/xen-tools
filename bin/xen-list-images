@@ -55,8 +55,6 @@ Show the version number and exit.
   It should be possible to determine the disk(s) used by the images,
  and then display their sizes.
 
-  Along with the memory allocated, etc.
-
 =cut
 
 
@@ -67,7 +65,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-list-images,v 1.22 2007-02-23 18:58:26 steve Exp $
+ $Id: xen-list-images,v 1.23 2007-02-23 21:45:09 steve Exp $
 
 =cut
 
@@ -240,7 +238,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.22 $';
+        my $REVISION      = '$Revision: 1.23 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
