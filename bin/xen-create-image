@@ -498,7 +498,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.127 2007-02-23 18:58:26 steve Exp $
+ $Id: xen-create-image,v 1.128 2007-02-23 21:56:27 steve Exp $
 
 =cut
 
@@ -517,6 +517,7 @@ The LICENSE file contains the full text of the license.
 use strict;
 use English;
 use Env;
+use File::Path qw/ mkpath /;
 use File::Temp qw/ tempdir /;
 use Getopt::Long;
 use Pod::Usage;
@@ -1110,7 +1111,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.127 $';
+        my $REVISION      = '$Revision: 1.128 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1608,15 +1609,21 @@ sub createLoopbackImages
     #
     #  Make sure we have the relevant output directory.
     #
-    if (  ! -d $CONFIG{'dir'} . "/domains/" )
+    my $output = $CONFIG{'dir'} . "/domains/" . $CONFIG{'hostname'};
+
+    if ( ! -d $output )
     {
-        mkdir $CONFIG{'dir'} . '/domains', 0777
-          || die "Cannot create $CONFIG{'dir'}/domains - $!";
-    }
-    if ( ! -d $CONFIG{'dir'} . "/domains/" . $CONFIG{'hostname'} )
-    {
-        mkdir $CONFIG{'dir'}. '/domains/' . $CONFIG{'hostname'}, 0777
-          || die "Cannot create $CONFIG{'dir'}/domains/$CONFIG{'hostname'} - $!" ;
+        #
+        #  Catch errors with eval.
+        #
+        eval
+        {
+            mkpath( $output, 0, 0755 );
+        };
+        if ( $@ )
+        {
+            die "Cannot create directory tree $output - $@";
+        }
     }
 
 
@@ -1666,7 +1673,7 @@ sub createLoopbackImages
         $swap_size = $1;
     }
 
-
+    #
     #  Use dd to create the swap
     #
     unless( $CONFIG{'noswap'} )
