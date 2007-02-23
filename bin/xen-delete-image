@@ -88,7 +88,7 @@ Show the version number and exit.
 
     xen-delete-image --dir=/home/xen --hostname=foo --hostname=bar
 
-  (The matching Xen configuration files beneat /etc/xen will also be
+  (The matching Xen configuration files beneath /etc/xen will also be
  removed.)
 
 =cut
@@ -136,7 +136,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-delete-image,v 1.28 2007-02-23 18:58:26 steve Exp $
+ $Id: xen-delete-image,v 1.29 2007-02-23 21:42:20 steve Exp $
 
 =cut
 
@@ -335,7 +335,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.28 $';
+       my $REVISION      = '$Revision: 1.29 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
