@@ -26,6 +26,10 @@ BEGIN{ use_ok( 'File::Find' ); }
 require_ok( 'File::Find' );
 
 
+BEGIN{ use_ok( 'File::Path' ); }
+require_ok( 'File::Path' );
+
+
 BEGIN{ use_ok( 'File::Temp' ); }
 require_ok( 'File::Temp' );
 
