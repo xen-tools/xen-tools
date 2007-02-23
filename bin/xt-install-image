@@ -80,7 +80,7 @@ Untar a .tar file into the new installation location.  This tarfile is assumed t
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.46 2007-02-23 15:41:21 steve Exp $
+ $Id: xt-install-image,v 1.47 2007-02-23 18:56:41 steve Exp $
 
 =cut
 
@@ -113,6 +113,46 @@ my %CONFIG;
 # Release number.
 #
 my $RELEASE = '3.1';
+
+
+#
+# Dispatch table mapping installation types to their names.
+#
+# The names are the methods, and the hash keys are:
+#
+#  sub           The routine to execute.
+#  needBinary    If set the name of an executable we need to exist.
+#  needFile      Defined if we need an install-source file specified.
+#  needDirectory Defined if we need an install-source directory specified.
+#
+#
+my %dispatch =
+  (
+   "copy" =>
+     {
+               sub    => \&do_copy,
+        needBinary    => "/bin/cp",
+        needDirectory => 1,
+     },
+   "debootstrap" =>
+     {
+               sub => \&do_debootstrap,
+        needBinary => "/usr/sbin/debootstrap",
+     },
+   "rpmstrap" =>
+     {
+               sub => \&do_rpmstrap,
+        needBinary => "/usr/bin/rpmstrap",
+     },
+   "tar" =>
+     {
+               sub => \&do_tar,
+        needBinary => "/bin/tar",
+          needFile => 1,
+     }
+);
+
+
 
 
 
@@ -153,135 +193,99 @@ checkArguments();
 
 
 #
-#  Install the new system.
+#  Now lookup our installation type and dispatch control to it.
 #
-#  Simplest cases first.
-#
-if ( lc($CONFIG{'install-method'}) eq "copy" )
+if ( defined( $CONFIG{'install-method'} ) &&
+      length( $CONFIG{'install-method'} ) )
 {
+
     #
-    # Make sure we have the cp binary present.
+    #  Get the entry from the dispatch table.
     #
-    if ( ! -x '/bin/cp' )
+    my $installer = $dispatch{ lc($CONFIG{'install-method'}) };
+
+    if ( defined( $installer ) )
     {
-        print "You've chosen to use the copy method, but /bin/cp is not installed.\n";
-        exit;
+        #
+        #  If we found it.
+        #
+
+        # Do we need to test for a binary.
+        if  ( ( $installer->{'needBinary'} ) &&
+              ( ! -x $installer->{'needBinary'} ) )
+        {
+            print "The following required binary for the installation was not found\n";
+            print "\t" . $installer->{'needBinary'} . "\n";
+            exit 1;
+        }
+
+        # Do we need a directory specified as the installation source?
+        if ( ( $installer->{'needDirectory'} ) &&
+             ( ! $CONFIG{'install-source'} || ! -d $CONFIG{'install-source'} ) )
+        {
+            print "Please specify the source directory with --install-source\n";
+            if ( $CONFIG{'install-source'} )
+            {
+                print "The specified directory $CONFIG{'install-source'} does not exist.\n";
+            }
+            exit 1;
+        }
+
+        # Do we need a file specified as the installation source?
+        if ( ( $installer->{'needFile'} ) &&
+             ( ! $CONFIG{'install-source'} || ! -e $CONFIG{'install-source'} ) )
+        {
+            print "Please specify the source file with --install-source\n";
+
+            if ( $CONFIG{'install-source'} )
+            {
+                print "The specified file $CONFIG{'install-source'} does not exist.\n";
+            }
+            exit 1;
+        }
+
+
+        #
+        #  Now we can call the appropriate handler.
+        #
+        $installer->{'sub'}->();
+
+        #
+        #  Did the operation succeed?
+        #
+        #  Test that we have some "standard" files present.
+        #
+        foreach my $file ( qw( /bin/ls /bin/cp ) )
+        {
+            if ( ! -x $CONFIG{'location'} . $file )
+            {
+                print "The installation of the new system has failed.\n";
+                print "\n";
+                print "The system is missing the common file: $file\n";
+                exit 1;
+            }
+        }
+
+        #
+        #  All done.
+        #
+        exit 0;
     }
-
-    #
-    #  Find the copy command to run from the configuration file.
-    #
-    my $cmd = $CONFIG{'copy-cmd'} ;
-    if ( !defined( $cmd ) )
+    else
     {
-        print "Falling back to default copy command\n";
-        $cmd = '/bin/cp -a $src/* $dest';   # Note: single quotes.
-    }
-
-    #
-    #  Expand the source and the destination.
-    #
-    $cmd =~ s/\$src/$CONFIG{'install-source'}/g;
-    $cmd =~ s/\$dest/$CONFIG{'location'}/g;
-
-    #
-    #  Run the copy command.
-    #
-    runCommand( $cmd );
-
-}
-elsif ( lc($CONFIG{'install-method'}) eq "tar" )
-{
-    #
-    # Make sure we have the tar binary present.
-    #
-    if ( ! -x '/bin/tar' )
-    {
-        print "You've chosen to use the tar method, but /bin/tar is not installed.\n";
+        print "The installation method specified is invalid.\n";
         exit 1;
     }
-
-    #
-    #  Find the tar command to run from the configuration file.
-    #
-    my $cmd = $CONFIG{'tar-cmd'} ;
-    if ( !defined( $cmd ) )
-    {
-        print "Falling back to default tar command\n";
-        $cmd = '/bin/tar --numeric-owner -xvf $src';  # Note: single quotes.
-    }
-
-    #
-    #  Expand the tarfile.
-    #
-    $cmd =~ s/\$src/$CONFIG{'install-source'}/g;
-
-    #
-    #  Run a command to copy an installed system into the new root.
-    #
-    runCommand( "cd $CONFIG{'location'} && $cmd" );
-}
-elsif ( lc($CONFIG{'install-method'}) eq "debootstrap" )
-{
-    #
-    # Make sure we have the debootstrap binary present.
-    #
-    if ( ! -x '/usr/sbin/debootstrap' )
-    {
-        print "You've chosen to use the debootstrap program, but it isn't installed.\n";
-        exit 1;
-    }
-
-    installDebootstrapImage();
-}
-elsif ( lc($CONFIG{'install-method'}) eq "rpmstrap" )
-{
-    #
-    #  Make sure we have the rpmstrap binary present.
-    #
-    if ( ! -x '/usr/bin/rpmstrap' )
-    {
-        print "You've chosen to use the rpmstrap program, but it isn't installed.\n";
-        exit 1;
-    }
-
-    installRPMStrapImage();
 }
 else
 {
-    #
-    # error
-    #
-    print "No recognised installation method was discovered.";
-    print "Aborting\n";
+    print "An installation method is mandatory\n";
     exit 1;
 }
 
 
-#
-#  At this point we should have a freshly installed system.
-#
-#  However errors have been known to happen ;)
-#
-#  Test that we have some standard files present.
-#
-foreach my $file ( qw( /bin/ls /bin/cp ) )
-{
-    if ( ! -x $CONFIG{'location'} . $file )
-    {
-        print "The installation of the new system appears to have failed.\n";
-        print "\n";
-        print "There is no '$file' installed in the new installation directory\n";
-        exit 1;
-    }
-}
 
 
-#
-#  Exit cleanly - any errors which have already occurred will result
-# in "exit 1".
-#
-exit 0;
 
 
 
@@ -395,7 +399,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.46 $';
+        my $REVISION      = '$Revision: 1.47 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -474,34 +478,16 @@ E_OR
         exit 1;
     }
 
+
+    #
+    #  Test that we received a valid installation type.
+    #
     my $valid = 0;
     if ( defined( $CONFIG{'install-method'} ) )
     {
-        foreach my $recognised ( qw/ copy debootstrap rpmstrap tar / )
+        foreach my $recognised ( keys %dispatch )
         {
             $valid = 1 if ( lc($CONFIG{'install-method'}) eq lc($recognised) );
-        }
-
-        #
-        #  If we have "copy" or "tar" make sure we have a source.
-        #
-        if ( lc($CONFIG{'install-method'}) eq "copy" )
-        {
-            # not defined.
-            $valid = 0 if (!defined( $CONFIG{'install-source'} ) );
-
-            # defined but not a directory.
-            $valid = 0 if (defined( $CONFIG{'install-source'} ) &&
-                           (! -d $CONFIG{'install-source'} ) )
-        }
-        if ( lc($CONFIG{'install-method'}) eq "tar" )
-        {
-            # not defined.
-            $valid = 0 if (!defined( $CONFIG{'install-source'} ) );
-
-            # defined but not a file.
-            $valid = 0 if (defined( $CONFIG{'install-source'} ) &&
-                           (! -e $CONFIG{'install-source'} ) )
         }
     }
     else
@@ -527,111 +513,6 @@ EOF
 
 }
 
-
-
-
-=begin doc
-
-  Install a new image of Debian using 'debootstrap'.
-
-=end doc
-
-=cut
-
-sub installDebootstrapImage
-{
-    #
-    #  Cache from host -> new installation if we've got caching
-    # enabled.
-    #
-    if ( $CONFIG{'cache'} eq "yes" )
-    {
-        print "\nCopying files from host to image.\n";
-        runCommand( "mkdir -p $CONFIG{'location'}/var/cache/apt/archives" );
-        copyDebFiles( "/var/cache/apt/archives", "$CONFIG{'location'}/var/cache/apt/archives" );
-        print( "Done\n" );
-    }
-
-    #
-    #  Propogate --verbose appropriately.
-    #
-    my $EXTRA = '';
-    if ( $CONFIG{'verbose'} )
-    {
-        $EXTRA = ' --verbose';
-    }
-
-    #
-    #  Propogate the --arch argument
-    #
-    if ( $CONFIG{'arch'} )
-    {
-        $EXTRA .= " --arch $CONFIG{'arch'}"
-    }
-
-
-    #
-    #  This is the command we'll run
-    #
-    my $command = "/usr/sbin/debootstrap $EXTRA $CONFIG{'dist'} $CONFIG{'location'} $CONFIG{'mirror'}";
-
-    #
-    #  Run the command.
-    #
-    runCommand( $command );
-
-
-    #
-    #  Cache from the new installation -> the host if we've got caching
-    # enabled.
-    #
-    if ( $CONFIG{'cache'} eq "yes" )
-    {
-        print "\nCopying files from new installation to host.\n";
-        copyDebFiles( "$CONFIG{'location'}/var/cache/apt/archives",
-                      "/var/cache/apt/archives" );
-        print( "Done\n" );
-    }
-
-
-}
-
-
-
-=begin doc
-
-  Install a new distribution of GNU/Linux using the rpmstrap tool.
-
-=end doc
-
-=cut
-
-sub installRPMStrapImage
-{
-
-    #
-    #  Propogate the verbosity setting.
-    #
-    my $EXTRA='';
-    if ( $CONFIG{'verbose'} )
-    {
-        $EXTRA .= " --verbose";
-    }
-
-    #
-    #  Propogate any arch setting we might have.
-    #
-    if ( $CONFIG{'arch'} )
-    {
-        $EXTRA .= " --arch $CONFIG{'arch'}";
-    }
-
-    #
-    #  The command we're going to run.
-    #
-    my $command = "rpmstrap $EXTRA $CONFIG{'dist'} $CONFIG{'location'}";
-    runCommand( $command );
-}
 
 
 
@@ -720,4 +601,190 @@ sub copyDebFiles
     }
 
     print "Done\n";
+}
+
+
+
+
+
+###
+#
+#  Installation functions follow.
+#
+###
+
+
+
+
+=begin doc
+
+  Install a new image of a distribution using `cp`.
+
+=end doc
+
+=cut
+
+sub do_copy
+{
+    #
+    #  Find the copy command to run from the configuration file.
+    #
+    my $cmd = $CONFIG{'copy-cmd'} ;
+    if ( !defined( $cmd ) )
+    {
+        print "Falling back to default copy command\n";
+        $cmd = '/bin/cp -a $src/* $dest';   # Note: single quotes.
+    }
+
+    #
+    #  Expand the source and the destination.
+    #
+    $cmd =~ s/\$src/$CONFIG{'install-source'}/g;
+    $cmd =~ s/\$dest/$CONFIG{'location'}/g;
+
+    #
+    #  Run the copy command.
+    #
+    runCommand( $cmd );
+}
+
+
+
+
+=begin doc
+
+  Install a new image of Debian using 'debootstrap'.
+
+=end doc
+
+=cut
+
+sub do_debootstrap
+{
+    #
+    #  Cache from host -> new installation if we've got caching
+    # enabled.
+    #
+    if ( $CONFIG{'cache'} eq "yes" )
+    {
+        print "\nCopying files from host to image.\n";
+        runCommand( "mkdir -p $CONFIG{'location'}/var/cache/apt/archives" );
+        copyDebFiles( "/var/cache/apt/archives", "$CONFIG{'location'}/var/cache/apt/archives" );
+        print( "Done\n" );
+    }
+
+    #
+    #  Propogate --verbose appropriately.
+    #
+    my $EXTRA = '';
+    if ( $CONFIG{'verbose'} )
+    {
+        $EXTRA = ' --verbose';
+    }
+
+    #
+    #  Propogate the --arch argument
+    #
+    if ( $CONFIG{'arch'} )
+    {
+        $EXTRA .= " --arch $CONFIG{'arch'}"
+    }
+
+
+    #
+    #  This is the command we'll run
+    #
+    my $command = "/usr/sbin/debootstrap $EXTRA $CONFIG{'dist'} $CONFIG{'location'} $CONFIG{'mirror'}";
+
+    #
+    #  Run the command.
+    #
+    runCommand( $command );
+
+
+    #
+    #  Cache from the new installation -> the host if we've got caching
+    # enabled.
+    #
+    if ( $CONFIG{'cache'} eq "yes" )
+    {
+        print "\nCopying files from new installation to host.\n";
+        copyDebFiles( "$CONFIG{'location'}/var/cache/apt/archives",
+                      "/var/cache/apt/archives" );
+        print( "Done\n" );
+    }
+
+
+}
+
+
+
+
+=begin doc
+
+  Install a new distribution of GNU/Linux using the rpmstrap tool.
+
+=end doc
+
+=cut
+
+sub do_rpmstrap
+{
+
+    #
+    #  Propogate the verbosity setting.
+    #
+    my $EXTRA='';
+    if ( $CONFIG{'verbose'} )
+    {
+        $EXTRA .= " --verbose";
+    }
+
+    #
+    #  Propogate any arch setting we might have.
+    #
+    if ( $CONFIG{'arch'} )
+    {
+        $EXTRA .= " --arch $CONFIG{'arch'}";
+    }
+
+    #
+    #  The command we're going to run.
+    #
+    my $command = "rpmstrap $EXTRA $CONFIG{'dist'} $CONFIG{'location'}";
+    runCommand( $command );
+}
+
+
+
+
+=begin doc
+
+  Install a new image of a distribution using `tar`.
+
+=end doc
+
+=cut
+
+sub do_tar
+{
+    #
+    #  Find the tar command to run from the configuration file.
+    #
+    my $cmd = $CONFIG{'tar-cmd'} ;
+    if ( !defined( $cmd ) )
+    {
+        print "Falling back to default tar command\n";
+        $cmd = '/bin/tar --numeric-owner -xvf $src';  # Note: single quotes.
+    }
+
+    #
+    #  Expand the tarfile.
+    #
+    $cmd =~ s/\$src/$CONFIG{'install-source'}/g;
+
+    #
+    #  Run a command to copy an installed system into the new root.
+    #
+    runCommand( "cd $CONFIG{'location'} && $cmd" );
 }
