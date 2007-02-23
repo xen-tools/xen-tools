@@ -80,14 +80,14 @@ Untar a .tar file into the new installation location.  This tarfile is assumed t
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.47 2007-02-23 18:56:41 steve Exp $
+ $Id: xt-install-image,v 1.48 2007-02-23 18:58:26 steve Exp $
 
 =cut
 
 
 =head1 LICENSE
 
-Copyright (c) 2005-2006 by Steve Kemp.  All rights reserved.
+Copyright (c) 2005-2007 by Steve Kemp.  All rights reserved.
 
 This module is free software;
 you can redistribute it and/or modify it under
@@ -399,7 +399,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.47 $';
+        my $REVISION      = '$Revision: 1.48 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;

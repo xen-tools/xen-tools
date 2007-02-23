@@ -136,14 +136,14 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-delete-image,v 1.27 2006-12-26 00:55:58 steve Exp $
+ $Id: xen-delete-image,v 1.28 2007-02-23 18:58:26 steve Exp $
 
 =cut
 
 
 =head1 LICENSE
 
-Copyright (c) 2005-2006 by Steve Kemp.  All rights reserved.
+Copyright (c) 2005-2007 by Steve Kemp.  All rights reserved.
 
 This module is free software;
 you can redistribute it and/or modify it under
@@ -335,7 +335,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.27 $';
+       my $REVISION      = '$Revision: 1.28 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
