@@ -37,6 +37,13 @@ Requirements
  of the most common installation methods - although you could get by without
  them if you were prepared to work at it.
 
+  If you wish to create new Xen instances which may be controlled by
+ users via a login shell you should also install the xen-shell package
+ which is available from:
+
+          http://xen-tools.org/software/xen-shell/
+
+
 
 The Scripts
 -----------
@@ -101,5 +108,5 @@ xen-update-image
 
 Steve
 --
-$Id: README,v 1.38 2006-10-14 09:19:19 radu Exp $
+$Id: README,v 1.39 2007-02-23 13:30:13 steve Exp $
 
