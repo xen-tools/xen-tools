@@ -1,13 +1,14 @@
 #
-#  Utility makefile for people working with xen-tools, this contains
-# a lot of targets useful for people working on the code from the 
-# CVS repository - but it also contains other useful targets.
+#  Utility makefile for people working with xen-tools.
+#
+#  The targets are intended to be useful for people who are using
+# the CVS repository - but it also contains other useful targets.
 #
 # Steve
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.93 2007-01-14 21:17:51 steve Exp $
+# $Id: Makefile,v 1.94 2007-02-23 21:58:12 steve Exp $
 
 
 #
