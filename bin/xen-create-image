@@ -82,40 +82,21 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
   Installation options:
 
-   --arch        Pass the given architecture to debootstrap or rpmstrap.
-                 This argument is ignored if you install with a different
-                 installation type.
+   --arch            Pass the given architecture to debootstrap or rpmstrap.
+                    This argument is ignored if you install with a different
+                    installation type.
 
-   --copy        Install a new image by copying a directory recursively,
-                 this is assumed to be a previously installed system.
-                 This is much faster than installing from scratch.
+   --dist            Specify the distribution you wish to install.
 
-   --copy-cmd    This allows you to specify the command actually used for
-                 installation when using "--copy"
-                 NOTE:  This option is *only* valid in the configuration file.
+   --install-method  Specify the installation method to use.
 
-   --dist        Specify the distribution you wish to install.
+   --install-source  Specify the source path to use when installing via
+                    a copy or tarball installation.
 
-   --debootstrap Use debootstrap to install the guest system.
-                 --dist should be used to specify a distribution debootstrap
-                 understands.
+   --mirror          Setup the mirror to use when installing via debootstrap.
 
-   --mirror      Setup the mirror to use when installing via debootstrap.
-
-   --rpmstrap    Use rpmstrap to install the guest distribution.
-                 --dist should be used to specify a distribution rpmstrap
-                 understands.
-
-   --tar         Install the new image by untarring the specified file.
-                 Similar to --copy this is signficantly faster than
-                 installing via rpmstrap or debootstrap.
-
-   --tar-cmd     This allows you to specify the command actually used for
-                 installation when using "--tar".
-                 NOTE:  This option is *only* valid in the configuration file.
-
-   --template    Specify which template file to use when creating the
-                 Xen configuration file.
+   --template        Specify which template file to use when creating the
+                    Xen configuration file.
 
 
 
@@ -268,12 +249,9 @@ Create a configuration file in /etc/xen so that xm can create the new image.
   netmask   = 255.255.255.0
 
   #
-  # Installation options.
+  # Installation method, one of "copy", "debootstrap", "rpmstrap", "tar".
   #
-  # copy = /path/to/pristine/image
-  debootstrap = 1
-  # rpmstrap = 1
-  # tar = /path/to/img.tar
+  install-method = debootstrap
 
 =for example end
 
@@ -420,7 +398,7 @@ Create a configuration file in /etc/xen so that xm can create the new image.
 
      xen-create-image --size=2Gb --swap=128Mb --dhcp \
           --lvm=myvolumegroup --hostname=vm01.my.flat \
-          --tar=/path/to/tar.file.tar
+          --install-method=tar --install-source=/path/to/tar.file.tar
 
   The advantage of the tarfile approach is that you'll not need to
  keep a disk image mounted if you were to use the --copy argument
@@ -428,7 +406,7 @@ Create a configuration file in /etc/xen so that xm can create the new image.
 
      xen-create-image --size=2Gb --swap=128Mb --dhcp \
           --lvm=myvolumegroup --hostname=vm01.my.flat \
-          --copy=/path/to/copy/from
+          --install-method=copy --install-source=/path/to/copy/from
 
 =cut
 
@@ -520,7 +498,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.125 2007-02-22 19:39:02 steve Exp $
+ $Id: xen-create-image,v 1.126 2007-02-23 15:37:05 steve Exp $
 
 =cut
 
@@ -702,6 +680,7 @@ else
 {
     # Can't happen we didn't get an installation type.
     logprint( "Error:  No recognised installation type.\n" );
+    logprint( "Please specify either a directory, lvm, or evms volume to use.\n");
     exit;
 }
 
@@ -937,12 +916,9 @@ sub setupDefaultOptions
     $CONFIG{'roledir'}     = '/etc/xen-tools/role.d';
 
     #
-    #  Installation methods
+    #  Installation method defaults to "debootstrap".
     #
-    $CONFIG{'rpmstrap'}    = 0;
-    $CONFIG{'debootstrap'} = 0;
-    $CONFIG{'copy'}        = '';
-    $CONFIG{'tar'}         = '';
+    $CONFIG{'install-method'} = 'debootstrap';
 
     #
     #  The program to run to create a filesystem.
@@ -1058,11 +1034,7 @@ sub parseCommandLineArguments
     # file.
     #
     my %install;
-    $install{'debootstrap'} = 0;
-    $install{'rpmstrap'}    = 0;
     $install{'evms'}        = undef;
-    $install{'copy'}        = undef;
-    $install{'tar'}         = undef;
     $install{'dir'}         = undef;
     $install{'lvm'}         = undef;
 
@@ -1101,12 +1073,11 @@ sub parseCommandLineArguments
                #
                #  NOTE:  We set the local variable here, not the global.
                #
-               "copy=s",       \$install{'copy'},
-               "copy-cmd=s",   \$CONFIG{'copy-cmd'},   # NOP - IGNORED.
-               "debootstrap",  \$install{'debootstrap'},
-               "rpmstrap",     \$install{'rpmstrap'},
-               "tar=s",        \$install{'tar'},
-               "tar-cmd=s",    \$CONFIG{'tar-cmd'},   # NOP - IGNORED.
+               "copy=s",            \$install{'copy'},
+               "copy-cmd=s",        \$CONFIG{'copy-cmd'},   # NOP - IGNORED.
+               "install-method=s",  \$CONFIG{'install-method'},
+               "install-source=s",  \$CONFIG{'install-source'},
+               "tar-cmd=s",         \$CONFIG{'tar-cmd'},   # NOP - IGNORED.
 
                # Misc. options
                "accounts",     \$CONFIG{'accounts'},
@@ -1139,7 +1110,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.125 $';
+        my $REVISION      = '$Revision: 1.126 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1151,99 +1122,8 @@ sub parseCommandLineArguments
 
 
     #
-    #  If we have had one of the local installation methods specified,
-    # and *only* one of them the we'll reset the global option(s) which
-    # came from the configuration file.
-    #
-    #  Count the number which wer supplied
-    #
-    my $count = 0;
-    foreach my $key ( qw/debootstrap rpmstrap copy tar/ )
-    {
-        if ( $install{$key} )
-        {
-            $count += 1;
-        }
-    }
-
-    #
-    #  If we had exactly one specified then we can proceed.
-    #
-    if ( $count == 1 )
-    {
-        foreach my $key ( qw/debootstrap rpmstrap copy tar/ )
-        {
-            $CONFIG{$key} = $install{$key};
-        }
-    }
-    elsif ( $count > 1 )
-    {
-        my $err =<<E_O_ERROR;
-
-  Please specify an installation method using only *one* of the following
- command line options:
-
-   --debootstrap     =  Install the system using the deboostrap command.
-   --rpmstrap        =  Install the system using the rpmstrap command.
-   --copy /path      =  Install by copying the specified directory recursively.
-   --tar file.tar    =  Install by untarring the given file.
-
-  (You could specify one of these options as the default in the configuration
- file /etc/xen-tools/xen-tools.conf.)
-
-E_O_ERROR
-
-        logprint( $err );
-
-        exit;
-    }
-    else
-    {
-        #
-        # count == 0;
-        #
-        #  That means that the method should be supplied in the configuration
-        # file.
-        #
-        #  If it isn't we'll abort here.
-        #
-        $count = 0;
-        foreach my $key ( qw/debootstrap rpmstrap copy tar/ )
-        {
-            if ( $CONFIG{$key} )
-            {
-                $count += 1;
-            }
-        }
-        if ( $count < 1 )
-        {
-
-            my $err =<<E_O_ERROR;
-
-  Please specify an installation method using only *one* of the following
- command line options:
-
-   --debootstrap     =  Install the system using the deboostrap command.
-   --rpmstrap        =  Install the system using the rpmstrap command.
-   --copy /path      =  Install by copying the specified directory recursively.
-   --tar file.tar    =  Install by untarring the given file.
-
-  (You could specify one of these options as the default in the configuration
- file /etc/xen-tools/xen-tools.conf.)
-
-E_O_ERROR
-
-            logprint( $err );
-
-            exit;
-        }
-    }
-
-
-    #
-    #  Now do a similar thing so that the command line setting of
-    # '--lvm', '--evms' and '--dir=x' override anything in the
-    # configuration file.
+    #  Now make ensure that the command line setting of '--lvm', '--evms'
+    # and '--dir=x' override anything specified in the configuration file.
     #
     if ( $install{'dir'} )
     {
@@ -1264,6 +1144,8 @@ E_O_ERROR
         $CONFIG{'lvm'}  = $install{'lvm'};
     }
 }
+
+
 
 
 =begin doc
@@ -1381,38 +1263,62 @@ E_OR
     $CONFIG{'image'} = "full" if ( $CONFIG{'lvm'} ||
                                    $CONFIG{'evms'} );
 
+
+
     #
-    #  Make sure we have one, and only one, installation method.
+    #  Make sure that our installation method is specified.
     #
-    my $count = 0;
-    foreach my $key ( qw/debootstrap rpmstrap copy tar/ )
+    my $valid = 0;
+    if ( defined( $CONFIG{'install-method'} ) )
     {
-        if ( $CONFIG{$key} )
+        foreach my $recognised ( qw/ copy debootstrap rpmstrap tar / )
         {
-            $count += 1;
+            $valid = 1 if ( lc($CONFIG{'install-method'}) eq lc($recognised) );
+        }
+
+        #
+        #  If we have "copy" or "tar" make sure we have a source.
+        #
+        if ( lc($CONFIG{'install-method'}) eq "copy" )
+        {
+            # not defined.
+            $valid = 0 if (!defined( $CONFIG{'install-source'} ) );
+
+            # defined but not a directory.
+            $valid = 0 if (defined( $CONFIG{'install-source'} ) &&
+                           (! -d $CONFIG{'install-source'} ) )
+        }
+        if ( lc($CONFIG{'install-method'}) eq "tar" )
+        {
+            # not defined.
+            $valid = 0 if (!defined( $CONFIG{'install-source'} ) );
+
+            # defined but not a file.
+            $valid = 0 if (defined( $CONFIG{'install-source'} ) &&
+                           (! -e $CONFIG{'install-source'} ) )
         }
     }
-
-    if ( $count != 1 )
+    else
     {
-        my $err =<<E_O_ERROR;
-
-  Please specify an installation method using one of the following
- command line options:
-
-   --debootstrap     =  Install the system using the deboostrap command.
-   --rpmstrap        =  Install the system using the rpmstrap command.
-   --copy /path      =  Install by copying the specified directory recursively.
-   --tar file.tar    =  Install by untarring the given file.
-
-  (You could specify one of these options as the default in the configuration
- file /etc/xen-tools/xen-tools.conf.)
-
-E_O_ERROR
-        logprint( $err );
-        exit;
-
+        $valid = 1;
     }
+
+    if ( !$valid )
+    {
+        print <<EOF;
+  Please specify the installation method to use.
+
+  For example:
+
+     --install-method=copy        --install-source=/some/path
+     --install-method=debootstrap
+     --install-method=rpmstrap
+     --install-method=tar         --install-source=/some/file.tar
+
+EOF
+        exit;
+    }
+
 
     #
     #  Make sure that any specified template file exists.
@@ -2267,9 +2173,6 @@ sub mountImage
   Install the system, by invoking the xt-install-image script.
 
   The script will be given the appropriate arguments from our environment.
- This means that it will be given one of "--debootstrap", "--rpmstrap",
- "--tar", and "--copy".  There will also be other options passed on
- as appropriate.
 
 =end doc
 
@@ -2282,7 +2185,12 @@ sub installSystem
     #
     #  Basic command
     #
-    my $cmd = "xt-install-image --hostname=$CONFIG{'hostname'} --location=$MOUNT_POINT --dist=$CONFIG{'dist'}";
+    my $cmd = "xt-install-image --hostname=$CONFIG{'hostname'} --location=$MOUNT_POINT --dist=$CONFIG{'dist'} --install-method=$CONFIG{'install-method'}";
+
+    #
+    #  Add on the install source if required.
+    #
+    $cmd .= " --install-source=$CONFIG{'install-source'}" if ( defined( $CONFIG{'install-source'} ) );
 
     #
     #  Do we have a per-image configuration file?
@@ -2290,34 +2198,14 @@ sub installSystem
     $cmd .= " --config=$CONFIG{'config'}" if ( defined( $CONFIG{'config'} ) );
 
     #
+    #  Add on the mirror, if defined
+    #
+    $cmd .= " --mirror=$CONFIG{'mirror'}" if ( defined( $CONFIG{'mirror'} ) );
+
+    #
     #  Add on the current cache setting
     #
     $cmd .= " --cache=$CONFIG{'cache'}" if length( $CONFIG{'cache'} );
-
-    #
-    #  Installation method
-    #
-    if ( $CONFIG{'copy'} )
-    {
-        $cmd .= " --copy=$CONFIG{'copy'}";
-        logprint( "copy from $CONFIG{'copy'}\n" );
-    }
-    if ( $CONFIG{'debootstrap'} )
-    {
-        $cmd .= " --debootstrap";
-        $cmd .= " --mirror=$CONFIG{'mirror'}";
-        logprint( "debootstrap mirror $CONFIG{'mirror'}\n" );
-    }
-    if ( $CONFIG{'rpmstrap'} )
-    {
-        $cmd .= " --rpmstrap";
-        logprint( "rpmstrap\n");
-    }
-    if ( $CONFIG{'tar'} )
-    {
-        $cmd .= " --tar=$CONFIG{'tar'}";
-        logprint( "tarfile $CONFIG{'tar'}\n" );
-    }
 
 
     #
@@ -2335,6 +2223,13 @@ sub installSystem
     {
         $cmd .= " --arch=$CONFIG{'arch'}";
     }
+
+
+    #
+    #  Show the user what they are installing
+    #
+    logprint( "Installation method: $CONFIG{'install-method'}\n" );
+    logprint( "(Source: $CONFIG{'install-source'})\n" ) if defined( $CONFIG{'install-source'} );
 
 
     #

@@ -18,7 +18,7 @@
 # --
 # http://www.steve.org.uk
 #
-# $Id: xen-tools,v 1.40 2006-12-25 12:25:40 steve Exp $
+# $Id: xen-tools,v 1.41 2007-02-23 15:37:06 steve Exp $
 #
 
 
@@ -53,7 +53,7 @@ _xen_create_image()
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
     prev=${COMP_WORDS[COMP_CWORD-1]}
-    opts='--accounts --broadcast --boot --cache --config --debootstrap --dhcp --dir --dist --evms --force --fs --gateway --help --hostname --ide --image --initrd --ip --kernel --lvm --mac --manual --memory --mirror --no-hooks --no-install --noswap --p2p --passwd --role --rpmstrap --size --swap --version --verbose'
+    opts='--admins --accounts --broadcast --boot --cache --config --dhcp --dir --dist --evms --force --fs --gateway --help --hostname --ide --image --install-method --install-source --initrd --ip --kernel --lvm --mac --manual --memory --mirror --no-hooks --no-install --noswap --p2p --passwd --role --size --swap --version --verbose'
     
     
     #
@@ -107,6 +107,10 @@ _xen_create_image()
 	    ;;
 	--image)
 	    COMPREPLY=( $( compgen -W 'sparse full'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+	    return 0
+	    ;;
+	--install-method)
+	    COMPREPLY=( $( compgen -W 'copy debootstrap rpmstrap tar'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
 	    return 0
 	    ;;
 	--ip)
@@ -366,7 +370,7 @@ _xt-install-image()
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
     prev=${COMP_WORDS[COMP_CWORD-1]}
-    opts='--copy --cache --config --debootstrap --dist --help --location --manual --mirror --rpmstrap --tar --verbose --version'
+    opts='--cache --config --dist --help --install-source --install-method --location --manual --mirror  --verbose --version'
     
     
     #
@@ -392,6 +396,10 @@ _xt-install-image()
 	    ;;
 	--dist)
 	    COMPREPLY=( $( compgen -W '${dists} sid sarge etch'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+	    return 0
+	    ;;
+	--install-method)
+	    COMPREPLY=( $( compgen -W 'copy debootstrap rpmstrap tar'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
 	    return 0
 	    ;;
 	--location)

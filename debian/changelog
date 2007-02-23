@@ -1,4 +1,4 @@
---------  unreleased
+xen-tools (3.1-1) unstable; urgency=low
 
   * New upstream release v3.1.
     - Installation of packages in hooks works. (Closes: #402889, #404518)
@@ -9,17 +9,17 @@
     - Fixed typo in error handling. (Closes: #404509)
     - When copying user accounts copy groups too. (Closes: #404521)
 
--- whoever updates it.
+ -- Steve Kemp <skx@debian.org>  Fri,  23 Feb 2007 13:36:28 +0000
 
 xen-tools (3.0-1) unstable; urgency=low
 
+ -- Radu Spineanu <radu@debian.org>  Wed,  13 Dec 2006 11:17:28 +0000
   [ Steve Kemp ]
   * New upstream release of 3.0
     - Tests that config files exists.  (Closes: #402328)
     - New option to create image but not install.  (Closes: #383057, #402315)
     - Made "etch" the default target to install.  (Closes: #399705)
 
- -- Radu Spineanu <radu@debian.org>  Wed,  13 Dec 2006 11:17:28 +0000
 
 xen-tools (3.0~beta1-2) unstable; urgency=low
 

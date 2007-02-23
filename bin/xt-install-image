@@ -11,28 +11,26 @@ xt-install-image - Install a fresh copy of GNU/Linux into a directory
   xt-install-image [options]
 
   Help Options:
-   --help         Show this scripts help information.
-   --manual       Read this scripts manual.
-   --version      Show the version number and exit.
+   --help           Show this scripts help information.
+   --manual         Read this scripts manual.
+   --version        Show the version number and exit.
 
   Debugging Options:
-   --verbose      Be verbose in our execution.
+   --verbose        Be verbose in our execution.
 
   Mandatory Options:
-   --location     The location to use for the new installation
-   --dist         The name of the distribution which has been installed.
+   --location       The location to use for the new installation
+   --dist           The name of the distribution which has been installed.
 
   Misc Options:
-   --arch         Pass the given arch setting to debootstrap or rpmstrap.
-   --config       Read the specified config file in addition to the global
-                  configuration file.
-   --mirror       The mirror to use when installing with 'debootstrap'.
+   --arch           Pass the given arch setting to debootstrap or rpmstrap.
+   --config         Read the specified config file in addition to the global
+                    configuration file.
+   --mirror         The mirror to use when installing with 'debootstrap'.
 
   Installation Options:
-   --tar          Untar the given file.
-   --debootstrap  Install a new system via the debootstrap tool
-   --rpmstrap     Install a new system via the rpmstrap.
-   --copy         Copy the given directory recursively.
+   --install-method Specify the installation method to use.
+   --install-soruce Specify the installation source to use.
 
   All other options from xen-create-image will be passed as environmental
  variables.
@@ -59,17 +57,17 @@ xt-install-image - Install a fresh copy of GNU/Linux into a directory
 
 =over 8
 
-=item B<--debootstrap>
+=item B<debootstrap>
 Install the distribution specified by the B<--dist> argument using the debootstrap.  If you use this option you must specify a mirror with B<--mirror>.
 
-=item B<--copy>
-Copy the given directory recursively.  This local directory is assumed to contain a complete installation.
+=item B<copy>
+Copy the given directory recursively.  This local directory is assumed to contain a complete installation.  Specify the directory to copy with the B<--install-source> argument.
 
-=item B<--rpmstrap>
+=item B<rpmstrap>
 Install the distribution specified by B<--dist> using the rpmstrap command.
 
-=item B<--tar>
-Untar a .tar file into the new installation location.  This tarfile is assumed to contain a complete archived system.
+=item B<tar>
+Untar a .tar file into the new installation location.  This tarfile is assumed to contain a complete archived system.   Specify the directory to copy with the B<--install-source> argument.
 
 =back
 
@@ -82,7 +80,7 @@ Untar a .tar file into the new installation location.  This tarfile is assumed t
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.44 2006-12-26 00:55:58 steve Exp $
+ $Id: xt-install-image,v 1.45 2007-02-23 15:37:05 steve Exp $
 
 =cut
 
@@ -159,7 +157,7 @@ checkArguments();
 #
 #  Simplest cases first.
 #
-if ( $CONFIG{'copy'} )
+if ( lc($CONFIG{'install-method'}) eq "copy" )
 {
     #
     # Make sure we have the cp binary present.
@@ -183,7 +181,7 @@ if ( $CONFIG{'copy'} )
     #
     #  Expand the source and the destination.
     #
-    $cmd =~ s/\$src/$CONFIG{'copy'}/g;
+    $cmd =~ s/\$src/$CONFIG{'install-source'}/g;
     $cmd =~ s/\$dest/$CONFIG{'location'}/g;
 
     #
@@ -192,7 +190,7 @@ if ( $CONFIG{'copy'} )
     runCommand( $cmd );
 
 }
-elsif ( $CONFIG{'tar'} )
+elsif ( lc($CONFIG{'install-method'}) eq "tar" )
 {
     #
     # Make sure we have the tar binary present.
@@ -216,14 +214,14 @@ elsif ( $CONFIG{'tar'} )
     #
     #  Expand the tarfile.
     #
-    $cmd =~ s/\$src/$CONFIG{'tar'}/g;
+    $cmd =~ s/\$src/$CONFIG{'install-source'}/g;
 
     #
     #  Run a command to copy an installed system into the new root.
     #
     runCommand( "cd $CONFIG{'location'} && $cmd" );
 }
-elsif ( $CONFIG{'debootstrap'} )
+elsif ( lc($CONFIG{'install-method'}) eq "debootstrap" )
 {
     #
     # Make sure we have the debootstrap binary present.
@@ -236,7 +234,7 @@ elsif ( $CONFIG{'debootstrap'} )
 
     installDebootstrapImage();
 }
-elsif ( $CONFIG{'rpmstrap'} )
+elsif ( lc($CONFIG{'install-method'}) eq "rpmstrap" )
 {
     #
     #  Make sure we have the rpmstrap binary present.
@@ -374,11 +372,9 @@ sub parseCommandLineArguments
                "dist=s",         \$CONFIG{'dist'},
                "hostname=s",     \$CONFIG{'hostname'},
 
-               # Exclusive.
-               "tar=s",          \$CONFIG{'tar'},
-               "copy=s",         \$CONFIG{'copy'},
-               "rpmstrap",       \$CONFIG{'rpmstrap'},
-               "debootstrap",    \$CONFIG{'debootstrap'},
+               # Installation method
+               "install-method=s",  \$CONFIG{'install-method'},
+               "install-source=s",  \$CONFIG{'install-source'},
 
                # Misc
                "arch=s",         \$CONFIG{'arch'},
@@ -399,7 +395,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.44 $';
+        my $REVISION      = '$Revision: 1.45 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -478,54 +474,55 @@ E_OR
         exit 1;
     }
 
-
-    ##
-    # Now check the mutually distinct arguments
-    ##
-    my $count = 0;
-    foreach my $key ( qw(copy debootstrap rpmstrap tar ) )
+    my $valid = 0;
+    if ( defined( $CONFIG{'install-method'} ) )
     {
-        if ( defined( $CONFIG{$key} ) )
+        foreach my $recognised ( qw/ copy debootstrap rpmstrap tar / )
         {
-            $count += 1;
+            $valid = 1 if ( lc($CONFIG{'install-method'}) eq lc($recognised) );
+        }
+
+        #
+        #  If we have "copy" or "tar" make sure we have a source.
+        #
+        if ( lc($CONFIG{'install-method'}) eq "copy" )
+        {
+            # not defined.
+            $valid = 0 if (!defined( $CONFIG{'install-source'} ) );
+
+            # defined but not a directory.
+            $valid = 0 if (defined( $CONFIG{'install-source'} ) &&
+                           (! -d $CONFIG{'install-source'} ) )
+        }
+        if ( lc($CONFIG{'install-method'}) eq "tar" )
+        {
+            # not defined.
+            $valid = 0 if (!defined( $CONFIG{'install-source'} ) );
+
+            # defined but not a file.
+            $valid = 0 if (defined( $CONFIG{'install-source'} ) &&
+                           (! -e $CONFIG{'install-source'} ) )
         }
     }
-
-    #
-    # If count == 0 we had no recognised installation method.
-    #
-    if ( $count == 0 )
+    else
     {
-        print <<EOF;
- You did not specify an installation method.
-
- One of the following must be given.  (Run "xt-install-image --manual" for details)
-
-   --copy
-   --debootstrap
-   --rpmstrap
-   --tar
-
- Aborting.
-EOF
-
-        exit 1;
+        $valid = 1;
     }
-    elsif ( $count > 1 )
+
+    if ( !$valid )
     {
         print <<EOF;
- You specify multiple installation methods.
+  Please specify the installation method to use.
 
- Only one of the following must be given:
+  For example:
 
-   --copy
-   --debootstrap
-   --rpmstrap
-   --tar
+     --install-method=copy        --install-source=/some/path
+     --install-method=debootstrap
+     --install-method=rpmstrap
+     --install-method=tar         --install-source=/some/file.tar
 
- Aborting.
 EOF
-        exit 1;
+        exit;
     }
 
 }
