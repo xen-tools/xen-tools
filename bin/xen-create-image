@@ -36,6 +36,8 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --config      Read the specified file in addition to the global
                 configuration file.
 
+   --copy-cmd    Not used.
+
    --force       Force overwriting existing images.
                  This will remove existing images or LVM volumes which match
                 those which are liable to be used by the new invocation.
@@ -72,6 +74,8 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
                  This defaults to /etc/xen-tools/role.d/
 
    --size        Set the size of the primary disk image.
+
+   --tar-cmd     Not used.
 
    --swap        Set the size of the swap partition.
 
@@ -500,7 +504,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.131 2007-02-25 19:07:48 steve Exp $
+ $Id: xen-create-image,v 1.132 2007-02-25 19:11:03 steve Exp $
 
 =cut
 
@@ -1086,7 +1090,6 @@ sub parseCommandLineArguments
                #
                #  NOTE:  We set the local variable here, not the global.
                #
-               "copy=s",            \$install{'copy'},
                "copy-cmd=s",        \$CONFIG{'copy-cmd'},   # NOP - IGNORED.
                "install-method=s",  \$CONFIG{'install-method'},
                "install-source=s",  \$CONFIG{'install-source'},
@@ -1123,7 +1126,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.131 $';
+        my $REVISION      = '$Revision: 1.132 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -2681,7 +2684,7 @@ sub END
     #  Did we fail?  If so then we should remove the broken installation,
     # unless "--keep" was specified.
     #
-    if ( $FAILED && ( ! $CONFIG{'keep'} ) )
+    if ( $FAIL && ( ! $CONFIG{'keep'} ) )
     {
         #
         #  Run the command
