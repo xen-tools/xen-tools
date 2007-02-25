@@ -11,7 +11,9 @@ xen-tools (3.2-1) unstable; urgency=low
     image.  (Close: #401206)
   * Setup correct security sources for apt-get.
     (Closes: #407543)
-
+  * Automatically cleanup if installation fails.
+    (Closes: #383029)
+	
  -- Steve Kemp <skx@debian.org>  Fri,  23 Feb 2007 13:36:28 +0000
 
 xen-tools (3.1-1) unstable; urgency=low

@@ -50,6 +50,8 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --initrd      Specify the initial ramdisk
                  If an image is specified it must exist.
 
+   --keep        Don't delete our images if installation fails.
+
    --kernel      Set the path to the kernel to use for domU.
                  If a kernel is specified it must exist.
 
@@ -498,7 +500,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.130 2007-02-25 12:45:13 steve Exp $
+ $Id: xen-create-image,v 1.131 2007-02-25 19:07:48 steve Exp $
 
 =cut
 
@@ -540,6 +542,14 @@ my %CONFIG;
 #
 #
 my $MOUNT_POINT = undef;
+
+
+#
+#  This flag is set upon failure, after images have been created.
+#
+#  It is used so that we can automatically "rollback" upon failure.
+#
+my $FAIL = 0;
 
 
 
@@ -682,6 +692,7 @@ else
     # Can't happen we didn't get an installation type.
     logprint( "Error:  No recognised installation type.\n" );
     logprint( "Please specify either a directory, lvm, or evms volume to use.\n");
+    $FAIL = 1;
     exit;
 }
 
@@ -720,6 +731,7 @@ if ( ! $CONFIG{'no-install'} )
     if ( ! -x $MOUNT_POINT . "/bin/ls" )
     {
         logprint( "System installation failed.  Aborting\n");
+        $FAIL = 1;
         exit;
     }
 
@@ -1111,7 +1123,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.130 $';
+        my $REVISION      = '$Revision: 1.131 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -2130,6 +2142,7 @@ sub mountImage
     {
        logprint( "I don't know what to mount!\n" );
        logprint( "Please specify '--dir' or '--lvm' or '--evms'\n" );
+       $FAIL = 1;
        exit;
     }
 
@@ -2407,6 +2420,7 @@ sub runXenConfigCreation
             logprint( "The Xen configuration file $file exists\n" );
             logprint( "Specify --force to force overwriting it.\n" );
             logprint( "Aborting\n" );
+            $FAIL = 1;
             exit;
         }
     }
@@ -2564,6 +2578,7 @@ sub runCommand
     {
         logprint( "Running command '$cmd' failed.\n" );
         logprint( "Aborting\n" );
+        $FAIL = 1;
         exit;
     }
 
@@ -2660,5 +2675,19 @@ sub END
     {
         print "\n\nLogfile produced at:\n";
         print "\t /var/log/xen-tools/$CONFIG{'hostname'}.log\n";
+    }
+
+    #
+    #  Did we fail?  If so then we should remove the broken installation,
+    # unless "--keep" was specified.
+    #
+    if ( $FAILED && ( ! $CONFIG{'keep'} ) )
+    {
+        #
+        #  Run the command
+        #
+        $CONFIG{'verbose'} && logprint( "Removing failed install: $CONFIG{'hostname'}\n" );
+
+        system( "xen-delete-image --hostname=$CONFIG{'hostname'}" );
     }
 }
