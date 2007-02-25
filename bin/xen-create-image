@@ -498,7 +498,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.129 2007-02-23 22:45:17 steve Exp $
+ $Id: xen-create-image,v 1.130 2007-02-25 12:45:13 steve Exp $
 
 =cut
 
@@ -1111,7 +1111,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.129 $';
+        my $REVISION      = '$Revision: 1.130 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1272,31 +1272,22 @@ E_OR
     my $valid = 0;
     if ( defined( $CONFIG{'install-method'} ) )
     {
-        foreach my $recognised ( qw/ copy debootstrap rpmstrap tar / )
+        foreach my $recognised ( qw/ copy debootstrap image-server rpmstrap tar / )
         {
             $valid = 1 if ( lc($CONFIG{'install-method'}) eq lc($recognised) );
         }
 
         #
-        #  If we have "copy" or "tar" make sure we have a source.
+        #  If we have "copy", "image-server", or "tar" method
+        # then make sure we have a source.
         #
-        if ( lc($CONFIG{'install-method'}) eq "copy" )
+        if ( ( lc($CONFIG{'install-method'}) eq "copy" )         ||
+             ( lc($CONFIG{'install-method'}) eq "image-server" ) ||
+             ( lc($CONFIG{'install-method'}) eq "tar" ) )
         {
             # not defined.
             $valid = 0 if (!defined( $CONFIG{'install-source'} ) );
 
-            # defined but not a directory.
-            $valid = 0 if (defined( $CONFIG{'install-source'} ) &&
-                           (! -d $CONFIG{'install-source'} ) )
-        }
-        if ( lc($CONFIG{'install-method'}) eq "tar" )
-        {
-            # not defined.
-            $valid = 0 if (!defined( $CONFIG{'install-source'} ) );
-
-            # defined but not a file.
-            $valid = 0 if (defined( $CONFIG{'install-source'} ) &&
-                           (! -e $CONFIG{'install-source'} ) )
         }
     }
     else
@@ -1307,7 +1298,8 @@ E_OR
     if ( !$valid )
     {
         print <<EOF;
-  Please specify the installation method to use.
+  Please specify the installation method to use, along with a source
+ if that is required.
 
   For example:
 

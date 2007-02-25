@@ -18,7 +18,7 @@
 # --
 # http://www.steve.org.uk
 #
-# $Id: xen-tools,v 1.42 2007-02-23 22:05:19 steve Exp $
+# $Id: xen-tools,v 1.43 2007-02-25 12:45:13 steve Exp $
 #
 
 
@@ -110,7 +110,7 @@ _xen_create_image()
 	    return 0
 	    ;;
 	--install-method)
-	    COMPREPLY=( $( compgen -W 'copy debootstrap rpmstrap tar'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+	    COMPREPLY=( $( compgen -W 'copy debootstrap image-server rpmstrap tar'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
 	    return 0
 	    ;;
 	--ip)

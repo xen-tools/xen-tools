@@ -80,7 +80,7 @@ Untar a .tar file into the new installation location.  This tarfile is assumed t
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.48 2007-02-23 18:58:26 steve Exp $
+ $Id: xt-install-image,v 1.49 2007-02-25 12:45:13 steve Exp $
 
 =cut
 
@@ -138,6 +138,11 @@ my %dispatch =
      {
                sub => \&do_debootstrap,
         needBinary => "/usr/sbin/debootstrap",
+     },
+   "image-server" =>
+     {
+               sub => \&do_image_server,
+           needURL => 1,
      },
    "rpmstrap" =>
      {
@@ -243,6 +248,16 @@ if ( defined( $CONFIG{'install-method'} ) &&
             }
             exit 1;
         }
+
+        # Do we need an URL specified as the installation source?
+        if ( ( $installer->{'needURL'} ) &&
+             ( ! $CONFIG{'install-source'} ||
+               ( $CONFIG{'install-source'} !~ /^http/i ) ) )
+        {
+            print "Please specify the image server URL with --install-source\n";
+            exit 1;
+        }
+
 
 
         #
@@ -399,7 +414,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.48 $';
+        my $REVISION      = '$Revision: 1.49 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -715,6 +730,24 @@ sub do_debootstrap
     }
 
 
+}
+
+
+
+
+=begin doc
+
+  Install a system using the image-server.
+
+  Note:  NON-Advertised ....
+
+=end doc
+
+=cut
+
+sub do_image_server
+{
+    die 'Not @work.';
 }
 
 
