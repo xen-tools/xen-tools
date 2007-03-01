@@ -80,7 +80,7 @@ Untar a .tar file into the new installation location.  This tarfile is assumed t
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.49 2007-02-25 12:45:13 steve Exp $
+ $Id: xt-install-image,v 1.50 2007-03-01 10:12:59 steve Exp $
 
 =cut
 
@@ -414,7 +414,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.49 $';
+        my $REVISION      = '$Revision: 1.50 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -747,7 +747,129 @@ sub do_debootstrap
 
 sub do_image_server
 {
-    die 'Not @work.';
+    #
+    #  Load the modules we require.
+    #
+    my $test = 'use LWP::UserAgent; use CGI;';
+
+    #
+    #  Test loading the module, if it fails then
+    # we must abort.  We don't want to insist the module
+    # is installed since that adds to the dependencies
+    # which users will not require for the typical installation
+    # method(s).
+    #
+    eval( $test );
+    if ( $@ )
+    {
+        die "The module LDP::UserAgent wasn't found...\n";
+    }
+
+
+    #
+    #  The number of attempts to request the image from our
+    # image server, and the time to sleep between them.
+    #
+    my $attempts = 30;
+    my $sleep    = 30;
+
+
+    #
+    #  Build up the request we're going to send.
+    #
+    my $request = $CONFIG{'install-source'} . "/create.cgi?submit=1";
+
+    foreach my $k ( keys %ENV )
+    {
+        # Skip values which aren't defined.
+        next unless defined $ENV{$k};
+
+        # CGI encode.
+        my $val = CGI::escapeHTML( $ENV{$k} );
+
+        # Add on to the request
+        $request .= "&$k=$val";
+    }
+
+
+    #
+    #  Create a new user agent.
+    #
+    my $ua = LWP::UserAgent->new;
+    $ua->timeout(10);
+    $ua->env_proxy;
+
+    #
+    #  Do the creation step
+    #
+    my $response = $ua->get( $request );
+    if ($response->is_success)
+    {
+        my $content = $response->content;
+
+        if ( $content =~ /fetch.cgi\?session=([^"]+)"/ )
+        {
+            my $session = $1;
+            my $new     = $CONFIG{'install-source'};
+            $new       .= "/fetch.cgi?session=$session";
+            my $attempt = 1;
+
+            # Make sure we don't wait indefinitely.
+            while( $attempt < $attempts )
+            {
+                $CONFIG{'verbose'} && print "Request: [$attempt/$CONFIG{'attempts'}]\n";
+
+                #
+                #  Make a request to see if our tar file is ready yet.
+                #
+                $response = $ua->head( $new );
+                if ( $response->is_success )
+                {
+
+                    #
+                    #  Get the headers
+                    #
+                    my $header  = $response->headers();
+                    my $type    = $header->{'content-type'};
+
+                    #
+                    # OK our file is correct.
+                    #
+                    if ( $type =~ /tar/ )
+                    {
+                        #
+                        #  Download it to the installation root.
+                        #
+                        $ua->get( $new,
+                                  ":content_file" => $CONFIG{'location'} . "/$session.tar"
+                                );
+
+                        #
+                        #  If it worked .. then untar, remove, and return.
+                        #
+                        system( "cd $CONFIG{'location'} && tar --numeric-owner -xf $session.tar && rm -f $CONFIG{'location'}/$session.tar" );
+                        return 1;
+                    }
+                }
+
+                sleep( $sleep );
+                $attempt += 1;
+
+            }
+            print ( "ERROR:  Timeout waiting for image to be ready." );
+            return 0;
+        }
+        else
+        {
+            print( "ERROR:  Failed to find session.  Received this:\n$content\n" );
+            return 0;
+        }
+    }
+    else
+    {
+        print( "ERROR: Submitting the image create request failed:\n" . $response->status_line );
+        return 0;
+    }
 }
 
 
