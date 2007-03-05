@@ -80,7 +80,7 @@ Untar a .tar file into the new installation location.  This tarfile is assumed t
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.51 2007-03-01 10:17:50 steve Exp $
+ $Id: xt-install-image,v 1.52 2007-03-05 14:52:01 steve Exp $
 
 =cut
 
@@ -414,7 +414,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.51 $';
+        my $REVISION      = '$Revision: 1.52 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -784,12 +784,14 @@ sub do_image_server
     #
     $request .= "&arch=xen";
     $request .= "&root_device=/dev/sda";
-    $request .= "&ip1=" . $ENV{'ip'};
+    $request .= "&ip1="      . $ENV{'ip'};
+    $request .= "&dist="     . CGI::escapeHTML( $CONFIG{'dist'} );
+    $request .= "&hostname=" . CGI::escapeHTML( $CONFIG{'hostname'} );
 
     #
     #  We only care about some keys
     #
-    foreach my $k ( qw/ dhcp broadcast gateway hostname netmask  / )
+    foreach my $k ( qw/ dhcp broadcast gateway netmask  / )
     {
         # Skip values which aren't defined.
         next unless defined $ENV{$k};
@@ -827,7 +829,7 @@ sub do_image_server
             # Make sure we don't wait indefinitely.
             while( $attempt < $attempts )
             {
-                $CONFIG{'verbose'} && print "Request: [$attempt/$CONFIG{'attempts'}]\n";
+                $CONFIG{'verbose'} && print "Request: [$attempt/$attempts]\n";
 
                 #
                 #  Make a request to see if our tar file is ready yet.
