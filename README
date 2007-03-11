@@ -57,7 +57,7 @@ xen-create-image
 ----------------
 
   This script is designed to create new images which may be used
- with the Xen hyperviser.  
+ with the Xen hyperviser.
 
   The virtual images will have their networking settings created and,
  you may optionally cause the new instance to boot once it has
@@ -76,6 +76,17 @@ xen-create-image
     * xt-create-xen-config
       Create a configuration file in /etc/xen such that Xen can
       boot the newly created machine.
+
+
+xen-create-nfs
+--------------
+
+  This script is similar in spirit to xen-create-image, but much
+ less complex.  It allows the creation of Xen configuration files
+ which are diskless - and mount their root filesystem over a remote
+ NFS-share.
+
+  Not many options to tweak, but still a useful addition to the suite.
 
 
 xen-delete-image
@@ -108,5 +119,5 @@ xen-update-image
 
 Steve
 --
-$Id: README,v 1.39 2007-02-23 13:30:13 steve Exp $
+$Id: README,v 1.40 2007-03-11 17:00:19 steve Exp $
 
