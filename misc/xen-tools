@@ -18,7 +18,7 @@
 # --
 # http://www.steve.org.uk
 #
-# $Id: xen-tools,v 1.44 2007-02-25 19:12:10 steve Exp $
+# $Id: xen-tools,v 1.45 2007-03-11 18:52:15 steve Exp $
 #
 
 
@@ -136,6 +136,34 @@ _xen_create_image()
 }
 complete -F _xen_create_image xen-create-image
 
+
+
+
+#
+#  Completion for xen-create-nfs
+#
+_xen_create_nfs()
+{
+    local cur prev ip roles dists vgs
+
+    COMPREPLY=()
+    cur=${COMP_WORDS[COMP_CWORD]}
+    prev=${COMP_WORDS[COMP_CWORD-1]}
+    opts='--admins --broadcast --dhcp --gateway --ip --netmask --hostname --memory --mac --nfs_server --nfs_root --kernel --initrd --force --template --help --manual --version'
+    
+    case "$prev" in
+	--template)
+	    _filedir 
+	    return 0
+	    ;;
+    esac
+    
+    if [[ ${cur} == -* ]]; then
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+        return 0
+    fi
+}
+complete -F _xen_create_nfs xen-create-nfs
 
 
 
