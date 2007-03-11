@@ -272,6 +272,52 @@ Create a configuration file in /etc/xen so that xm can create the new image.
 =cut
 
 
+
+=head1 NETWORKING AUTO-SETUP
+
+  We've already seen how the "gateway" and "netmask" options can
+ be used to specify the networking options of the freshly created
+ Xen guests.
+
+  One other shortcut is the use of an auto-incrementing IP addresses.
+
+  If you specify the IP address of the guest as only the initial
+ three octets (ie. 1.2.3, rather than 1.2.3.4) then the last
+ octet will be automatically incremented - and stored for future
+ use.
+
+  The last octet in use will be created in the text file
+ /etc/xen-tools/ips.txt.
+
+  For example if you wanted to create new Xen instances occupying
+ the IP address range 192.168.1.200+ then you would run:
+
+
+=for example start
+
+  echo "200" > /etc/xen-tools/ips.txt
+
+=for example end
+
+  Future creations would then simply use:
+
+=for example start
+
+  xen-create-image --ip=192.168.1 --hostname=blah [--dist=...]
+
+=for example end
+
+  The first time this ran the machine would recieve the IP address
+ 192.168.1.200.  The next time it ran the new image would receive
+ 192.168.1.201, etc.  (You could specify "ip = 192.168.1" in the
+ configuration file; meaning the only mandatory argument would be
+ the hostname of the new instance.)
+
+  Note: There is no facility to "wrap around".
+
+=cut
+
+
 =head1 XEN CONFIGURATION FILE
 
   Once a new image has been created an appropriate configuration file
@@ -504,7 +550,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.136 2007-03-11 16:05:30 steve Exp $
+ $Id: xen-create-image,v 1.137 2007-03-11 16:14:33 steve Exp $
 
 =cut
 
@@ -1142,7 +1188,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.136 $';
+        my $REVISION      = '$Revision: 1.137 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
