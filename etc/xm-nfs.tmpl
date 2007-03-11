@@ -1,0 +1,73 @@
+#
+# Configuration file for the Xen NFS-root instance {$hostname}.
+# Created by xen-tools {$xen_tools_version} on { scalar localtime }.
+#
+
+#
+#  Common stuff.
+#
+{ if ( $kernel )
+  {
+    $OUT.= "kernel  = '$kernel'";
+  }
+}
+{ if ( $initrd )
+  {
+    $OUT.= "ramdisk = '$initrd'";
+  }
+}
+memory  = '{$memory}'
+
+
+# Name
+name        = '{$hostname}'
+hostname    = '{$hostname}'
+
+#
+#  Networking
+#
+{ if ( $dhcp )
+  {
+    $OUT .= "dhcp        = 'dhcp'\n";
+
+    # Setup the mac address, if present.
+    my $m = '';
+    if ( $mac )
+    { 
+      $m = "mac=$mac"
+    }
+
+    $OUT .= "vif         = [ '$m' ]";
+  }    
+  else
+  {
+    #
+    # Setup the mac address, if present.
+    #
+    my $m = '';
+    if ( $mac )
+    { 
+      $m = ",mac=$mac"
+    }
+
+    $OUT .= "vif         = [ 'ip=$ip"; 
+    $OUT .= "$m' ]\n";
+
+    $OUT .= "ip        = '$ip'\n";
+    $OUT .= "netmask   = '$netmask'\n";
+    $OUT .= "broadcast = '$broadcast'\n";
+    $OUT .= "gateway   = '$gateway'\n";
+  }
+}
+
+
+#  NFS options
+nfs_server = '{ $nfs_server }'
+nfs_root   = '{ $nfs_root }'
+root       = '/dev/nfs'
+
+{ if ( $admins )
+  {
+    $OUT .= "xen_shell = '$admins'\n";
+  }
+}

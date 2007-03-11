@@ -8,7 +8,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.94 2007-02-23 21:58:12 steve Exp $
+# $Id: Makefile,v 1.95 2007-03-11 16:37:42 steve Exp $
 
 
 #
@@ -87,6 +87,7 @@ fixup-perms:
 	chmod 755 hooks/common.sh
 	chmod 644 etc/xen-tools.conf
 	chmod 644 etc/xm.tmpl
+	chmod 644 etc/xm-nfs.tmpl
 	chmod 644 misc/xm misc/xen-tools misc/README
 
 #
@@ -99,6 +100,7 @@ install-etc:
 	-mkdir -p ${prefix}/etc/xen-tools/role.d/
 	cp etc/xen-tools.conf ${prefix}/etc/xen-tools/
 	cp etc/xm.tmpl        ${prefix}/etc/xen-tools/
+	cp etc/xm-nfs.tmpl    ${prefix}/etc/xen-tools/
 	-mkdir -p             ${prefix}/etc/bash_completion.d
 	cp misc/xen-tools     ${prefix}/etc/bash_completion.d/
 	cp misc/xm            ${prefix}/etc/bash_completion.d/
@@ -110,6 +112,7 @@ install-etc:
 install-bin:
 	mkdir -p ${prefix}/usr/bin
 	cp bin/xen-create-image     ${prefix}/usr/bin
+	cp bin/xen-create-nfs       ${prefix}/usr/bin
 	cp bin/xt-customize-image   ${prefix}/usr/bin
 	cp bin/xt-install-image     ${prefix}/usr/bin
 	cp bin/xt-create-xen-config ${prefix}/usr/bin
@@ -117,6 +120,7 @@ install-bin:
 	cp bin/xen-list-images      ${prefix}/usr/bin
 	cp bin/xen-update-image     ${prefix}/usr/bin
 	chmod 755 ${prefix}/usr/bin/xen-create-image
+	chmod 755 ${prefix}/usr/bin/xen-create-nfs
 	chmod 755 ${prefix}/usr/bin/xt-customize-image
 	chmod 755 ${prefix}/usr/bin/xt-install-image
 	chmod 755 ${prefix}/usr/bin/xt-create-xen-config

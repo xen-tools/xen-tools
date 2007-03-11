@@ -1,0 +1,359 @@
+#!/usr/bin/perl -w
+#
+#  TODO:  Document.
+#
+
+use strict;
+use English;
+use Env;
+use Getopt::Long;
+use Pod::Usage;
+use Text::Template;
+
+
+
+#
+#  Configuration values read from the command line.
+#
+#  We do not need to read any configuration file.
+#
+my %CONFIG;
+
+#
+#  Default options
+#
+$CONFIG{'template'} = '/etc/xen-tools/xm-nfs.tmpl';
+
+
+#
+# Release number.
+#
+my $RELEASE = '3.1';
+
+
+# store version number away.
+$CONFIG{'xen_tools_version'} = $RELEASE;
+
+
+#
+#  Read the global configuration file.
+#
+readConfigurationFile( "/etc/xen-tools/xen-tools.conf" );
+
+
+#
+#  Parse the command line arguments.
+#
+parseCommandLineArguments();
+
+
+#
+#  Validate our arguments.
+#
+testArguments();
+
+
+#
+#  Create the image.
+#
+if ( -e "/etc/xen/$CONFIG{'hostname'}.cfg" )
+{
+    die "Configuration file for $CONFIG{'hostname'} already exists" 
+      unless( $CONFIG{'force'} );
+}
+
+#
+#  If we've been given any administrators then set them up.
+#
+if ( $CONFIG{'admins'} )
+{
+    setupAdminUsers();
+}
+
+#
+#  Now create the NFS configuration file.
+#
+createNewConfigurationFile();
+
+
+
+#
+#  All done.
+#
+exit;
+
+
+
+=begin doc
+
+  Read the specified configuration file, and update our global configuration
+ hash with the values found in it.
+
+=end doc
+
+=cut
+
+sub readConfigurationFile
+{
+    my ($file) = ( @_ );
+
+    # Don't read the file if it doesn't exist.
+    return if ( ! -e $file );
+
+
+    my $line = "";
+
+    open( FILE, "<", $file ) or die "Cannot read file '$file' - $!";
+
+    while (defined($line = <FILE>) )
+    {
+        chomp $line;
+        if ($line =~ s/\\$//)
+        {
+            $line .= <FILE>;
+            redo unless eof(FILE);
+        }
+
+        # Skip lines beginning with comments
+        next if ( $line =~ /^([ \t]*)\#/ );
+
+        # Skip blank lines
+        next if ( length( $line ) < 1 );
+
+        # Strip trailing comments.
+        if ( $line =~ /(.*)\#(.*)/ )
+        {
+            $line = $1;
+        }
+
+        # Find variable settings
+        if ( $line =~ /([^=]+)=([^\n]+)/ )
+        {
+            my $key = $1;
+            my $val = $2;
+
+            # Strip leading and trailing whitespace.
+            $key =~ s/^\s+//;
+            $key =~ s/\s+$//;
+            $val =~ s/^\s+//;
+            $val =~ s/\s+$//;
+
+            # Store value.
+            $CONFIG{ $key } = $val;
+        }
+    }
+
+    close( FILE );
+}
+
+
+
+=begin doc
+
+  Parse the command line arguments this script was given.
+
+=end doc
+
+=cut
+
+sub parseCommandLineArguments
+{
+    my $HELP    = 0;
+    my $MANUAL  = 0;
+    my $VERSION = 0;
+
+
+    #
+    #  Parse options.
+    #
+    GetOptions(
+
+               # Networking options
+               "dhcp",         \$CONFIG{'dhcp'},
+               "gateway=s",    \$CONFIG{'gateway'},
+               "broadcast=s",  \$CONFIG{'broadcast'},
+               "ip=s",         \$CONFIG{'ip'},
+               "netmask=s",    \$CONFIG{'netmask'},
+               "hostname=s",   \$CONFIG{'hostname'},
+               "memory=s",     \$CONFIG{'memory'},
+               "mac=s",        \$CONFIG{'mac'},
+
+               # NFS options.
+               "nfs_server=s", \$CONFIG{'nfs_server'},
+               "nfs_root=s",   \$CONFIG{'nfs_root'},
+
+               # Misc. options
+               "admins=s",     \$CONFIG{'admins'},
+               "force",        \$CONFIG{'force'},
+               "template=s",   \$CONFIG{'template'},
+
+               # Help options
+               "help",         \$HELP,
+               "manual",       \$MANUAL,
+               "version",      \$VERSION
+              );
+
+    pod2usage(1) if $HELP;
+    pod2usage(-verbose => 2 ) if $MANUAL;
+
+
+    if ( $VERSION )
+    {
+        my $REVISION      = '$Revision: 1.1 $';
+        if ( $REVISION =~ /1.([0-9.]+) / )
+        {
+            $REVISION = $1;
+        }
+
+        logprint( "xen-create-image release $RELEASE - CVS: $REVISION\n" );
+        exit;
+    }
+}
+
+
+
+=head2 testArguments
+
+  Test that our arguments make sense.
+
+=cut
+
+sub testArguments
+{
+    #
+    #  Hostname is mandatory
+    #
+    die "No hostname" unless( $CONFIG{'hostname'} );
+
+    my @network = qw/ ip gateway netmask /;
+
+    #
+    #  If DHCP then all the other options aren't needed
+    #
+    if ( $CONFIG{'dhcp'} )
+    {
+        foreach my $f ( @network )
+        {
+            delete( $CONFIG{ $f } );
+        }
+    }
+    else
+    {
+        foreach my $f ( @network )
+        {
+            die "Missing --$f" unless( $CONFIG{$f} );
+        }
+    }
+
+    #
+    #  We need an NFS server + root
+    #
+    die "Missing NFS server." unless( $CONFIG{'nfs_server'} );
+    die "Missing NFS root."   unless( $CONFIG{'nfs_root'} );
+
+
+    # All OK.
+}
+
+
+
+
+=begin doc
+
+  This routine is designed to ensure that any users specified with
+ the --admins flag are setup as administrators of the new instance.
+
+=end doc
+
+=cut
+
+sub setupAdminUsers
+{
+    #
+    #  If we're not root we can't modify users.
+    #
+    return if ( $EFFECTIVE_USER_ID != 0 );
+
+    #
+    #  If we don't have a sudoers file then we'll also ignore this.
+    #
+    return if ( ! -e "/etc/sudoers" );
+
+    #
+    #  Find the path to the xen-login-shell
+    #
+    my $shell = undef;
+    $shell = "/usr/bin/xen-login-shell" if ( -x "/usr/bin/xen-login-shell" );
+    $shell = "/usr/local/bin/xen-login-shell" if ( -x "/usr/bin/local/xen-login-shell" );
+
+    return if ( !defined( $shell ) );
+
+
+    #
+    #  For each user make sure they exist, and setup the
+    # login shell for them.
+    #
+    foreach my $user ( split( /,/, $ENV{'admins'} ) )
+    {
+        # Strip leading and trailing whitespace.
+        $user =~ s/^\s+//;
+        $user =~ s/\s+$//;
+
+        # Ignore root
+        next if ( $user =~ /^root$/i );
+
+        # Does the user exist?
+        if ( getpwnam($user) )
+        {
+            # Change shell.
+            $CONFIG{'verbose'} && print "Changing shell for $user: $shell\n";
+            system( "chsh", "-s", $shell, $user );
+        }
+        else
+        {
+            # Add a new user.
+            $CONFIG{'verbose'} && print "Adding new user: $user\n";
+            system( "useradd", "-s", $shell, $user );
+        }
+
+        #
+        #  Add the entry to /etc/sudoers.
+        #
+        open( SUDOERS, ">>", "/etc/sudoers" ) or warn "Failed to add user to sudoers file : $user - $!";
+        print SUDOERS "$user ALL = NOPASSWD: /usr/sbin/xm, /usr/bin/xen-create-image\n";
+        close( SUDOERS );
+
+    }
+}
+
+
+=head2 createNewConfigurationFile
+
+  Create the configuration file for the specified image.
+
+=cut
+
+sub createNewConfigurationFile
+{
+    die "Template file missing: $CONFIG{'template'}" unless( -e $CONFIG{'template'} );
+
+    #
+    #  Load the template.
+    #
+    my $template = new Text::Template( TYPE   => 'FILE',
+                                       SOURCE => $CONFIG{'template'} );
+
+    my $result   = $template->fill_in( HASH => \%CONFIG );
+
+    #
+    #  The file we'll write to.
+    #
+    my $file = "/etc/xen/$CONFIG{'hostname'}.cfg";
+
+    #
+    #  Output the configuration file.
+    #
+    open( FILE, ">", $file ) or die "Failed to write to $file - $!";
+    print FILE $result;
+    close( FILE );
+}
