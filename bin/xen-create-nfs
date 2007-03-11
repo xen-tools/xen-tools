@@ -184,6 +184,8 @@ sub parseCommandLineArguments
 
                # Misc. options
                "admins=s",     \$CONFIG{'admins'},
+               "kernel=s",     \$CONFIG{'kernel'},
+               "initrd=s",     \$CONFIG{'initrd'},
                "force",        \$CONFIG{'force'},
                "template=s",   \$CONFIG{'template'},
 
@@ -199,7 +201,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.1 $';
+        my $REVISION      = '$Revision: 1.2 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
