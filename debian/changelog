@@ -1,7 +1,7 @@
 xen-tools (3.2-1) unstable; urgency=low
 
   * New upstream release v3.2
-    - Installation argument changes so that --copy, --debootstrap, --rpmstrap, 
+    - Installation argument changes so that --copy, --debootstrap, --rpmstrap,
       and --tar have been replaced with --install-method.
       Indirectly (Closes: #404454, #411817)
     - Updated bash completion scripts.
@@ -13,7 +13,9 @@ xen-tools (3.2-1) unstable; urgency=low
     (Closes: #407543)
   * Automatically cleanup if installation fails.
     (Closes: #383029)
-	
+  * Auto-incrementing network addresses for new installations.
+  * Added 'xen-create-nfs' to create new NFS-Root Xen guests.
+
  -- Steve Kemp <skx@debian.org>  Fri,  23 Feb 2007 13:36:28 +0000
 
 xen-tools (3.1-1) unstable; urgency=low
