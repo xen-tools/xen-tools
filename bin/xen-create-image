@@ -129,6 +129,8 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --netmask     Setup the netmask for the new instance.
 
+   --broadcast   Setup the broadcast address for the new instance.
+
 
 
   Mandatory options:
@@ -252,7 +254,9 @@ Create a configuration file in /etc/xen so that xm can create the new image.
   # Networking options.
   #
   gateway   = 192.168.1.1
+  broadcast = 192.168.1.255
   netmask   = 255.255.255.0
+
 
   #
   # Installation method, one of "copy", "debootstrap", "rpmstrap", "tar".
@@ -550,7 +554,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.137 2007-03-11 16:14:33 steve Exp $
+ $Id: xen-create-image,v 1.138 2007-03-15 15:09:16 steve Exp $
 
 =cut
 
@@ -1145,6 +1149,7 @@ sub parseCommandLineArguments
                "ip=s@",        \$CONFIG{'ip'},
                "mac=s",        \$CONFIG{'mac'},
                "netmask=s",    \$CONFIG{'netmask'},
+               "broadcast=s",  \$CONFIG{'broadcast'},
                "p2p=s",        \$CONFIG{'p2p'},
 
                # Exclusive
@@ -1188,7 +1193,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.137 $';
+        my $REVISION      = '$Revision: 1.138 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1645,6 +1650,7 @@ sub showSummery
     }
 
     $CONFIG{'netmask'}   && logprint( "Netmask        : $CONFIG{'netmask'}\n" );
+    $CONFIG{'broadcast'} && logprint( "Broadcast      : $CONFIG{'broadcast'}\n" );
     $CONFIG{'gateway'}   && logprint( "Gateway        : $CONFIG{'gateway'}\n" );
     $CONFIG{'p2p'}       && logprint( "Point to Point : $CONFIG{'p2p'}\n" );
     print "\n";
