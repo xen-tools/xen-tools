@@ -68,6 +68,14 @@ E_O_DHCP
 setupStaticNetworking ()
 {
     #
+    # broadcast address?
+    #
+    bcast='';
+    if [ ! -z "${broadcast}" ]; then
+      bcast = ' broadcast ${broadcast}'
+    fi
+
+    #
     # We have a static IP address
     #
     cat <<E_O_STATIC >${prefix}/etc/network/interfaces
@@ -84,6 +92,7 @@ iface eth0 inet static
  address ${ip1}
  gateway ${gateway}
  netmask ${netmask}
+ ${bcast}
  # post-up  ethtool -K eth0 tx off
 
 #
