@@ -558,7 +558,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.139 2007-03-18 20:03:48 steve Exp $
+ $Id: xen-create-image,v 1.140 2007-03-18 20:12:16 steve Exp $
 
 =cut
 
@@ -1207,7 +1207,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.139 $';
+        my $REVISION      = '$Revision: 1.140 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1631,60 +1631,87 @@ sub showSummery
     my $mac   = $CONFIG{'mac'};
     my $count = 1;
 
-	if ( defined $ips ) {
-		#
-		#  Scary magic.
-		#
-		if ( !UNIVERSAL::isa( $ips, "ARRAY" ) )
-		{
-			#
-			#  If we're reading the value of "ip = xxx" from the configuration
-			# file we'll have a single (scalar) value in $CONFIG{'ip'}.
-			#
-			#  BUT we actually assume this hash element contains a reference
-			# to an array - since that is what the command-line parsing code
-			# sets up for us.
-			#
-			#  So here we fake it - that was what the test above as for,
-			# if we didn't have an array already, then fake one up.
-			#
-			#  We reset the $ips reference to undef, then coerce it to be an
-			# (empty) array and push on our single IP.
-			#
-			#  It works.   Even if it's nasty, (or if it is a clever hack!)
-			#
-			$ips          = undef;
-			push( @$ips, $CONFIG{'ip'} );
-			$CONFIG{'ip'} = $ips;
-		}
-	}
+    if ( defined $ips )
+    {
+        #
+        #  Scary magic.
+        #
+        if ( !UNIVERSAL::isa( $ips, "ARRAY" ) )
+        {
+            #
+            #  If we're reading the value of "ip = xxx" from the configuration
+            # file we'll have a single (scalar) value in $CONFIG{'ip'}.
+            #
+            #  BUT we actually assume this hash element contains a reference
+            # to an array - since that is what the command-line parsing code
+            # sets up for us.
+            #
+            #  So here we fake it - that was what the test above as for,
+            # if we didn't have an array already, then fake one up.
+            #
+            #  We reset the $ips reference to undef, then coerce it to be an
+            # (empty) array and push on our single IP.
+            #
+            #  It works.   Even if it's nasty, (or if it is a clever hack!)
+            #
+            $ips          = undef;
+            push( @$ips, $CONFIG{'ip'} );
+            $CONFIG{'ip'} = $ips;
+        }
+    }
 
 
-	if ( defined $ips ) 
-	{
-		#
-		#  Print out each network address, and if there is a mac address
-		# associated with it then use it too.
-		#
-		foreach my $i ( @$ips )
-		{
-			my $m = undef;
+    if ( defined $ips )
+    {
+        #
+        #  Print out each network address, and if there is a mac address
+        # associated with it then use it too.
+        #
+        foreach my $i ( @$ips )
+        {
+            my $m = undef;
 
-			if ( ( $count == 1 ) && ( defined( $mac ) ) )
-			{
-				$m = $mac;
-			}
+            if ( ( $count == 1 ) && ( defined( $mac ) ) )
+            {
+                $m = $mac;
+            }
 
-			logprint( "IP Address $count   : $i" );
-			if ( defined( $m ) )
-			{
-				logprint( " [MAC: $m]" );
-			}
-			logprint( "\n" );
 
-			$count += 1;
-		}
-	}
+            #
+            #  Here we have special handling for the case where
+            # IP addresses are xx.yy.zz - we automatically add
+            # in the next octet using /etc/xen-tools/ips.txt
+            #
+            #
+            if ( $i =~ /^([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)$/ )
+            {
+                # NOP
+                $CONFIG{'verbose'} && logprint( "IP address is complete: $i\n" );
+            }
+            elsif ( $i =~ /^([0-9]+)\.([0-9]+)\.([0-9]+)$/ )
+            {
+                $CONFIG{'verbose'} &&
+                  logprint( "Automatically determining the last octet for $i\n" );
+
+                $i = findNextIP( $i );
+                $CONFIG{'verbose'} && logprint( "Found $i\n" );
+            }
+
+            #
+            #  Show the IP address.
+            #
+            logprint( "IP Address $count   : $i" );
+
+            #  Option MAC address.
+            if ( defined( $m ) )
+            {
+                logprint( " [MAC: $m]" );
+            }
+            logprint( "\n" );
+
+            $count += 1;
+        }
+    }
 
     #
     # mac address setting still works even for DHCP, but in that
@@ -1886,6 +1913,8 @@ sub createLoopbackImages
     createSwap( $swap ) unless( $CONFIG{'noswap'} );
 }
 
+
+
 =begin doc
 
   This function is used if you want your new system be installed to a
@@ -1935,6 +1964,7 @@ sub usePhysicalDevice
     createFilesystem( $phys_img );
     createSwap( $swap_img ) unless ( $CONFIG{'noswap'} );
 }
+
 
 
 =begin doc
@@ -2515,31 +2545,10 @@ sub runCustomisationHooks
 
     foreach my $i ( @$ips )
     {
-        #
-        #  Here we have special handling for the case where
-        # IP addresses are xx.yy.zz - we automatically add
-        # in the next octet using /etc/xen-tools/ips.txt
-        #
-        #
-        if ( $i =~ /^([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)$/ )
-        {
-            # NOP
-            $CONFIG{'verbose'} && logprint( "IP address is complete: $i\n" );
-        }
-        elsif ( $i =~ /^([0-9]+)\.([0-9]+)\.([0-9]+)$/ )
-        {
-            $CONFIG{'verbose'} &&
-              logprint( "Automatically determining the last octet for $i\n" );
-
-            $i = findNextIP( $i );
-
-            $CONFIG{'verbose'} && logprint( "Found $i\n" );
-        }
-
         $ENV{'ip' . $count } = $i;
-
         $count += 1;
     }
+
     $ENV{'ip_count'} = ($count - 1);
 
 
