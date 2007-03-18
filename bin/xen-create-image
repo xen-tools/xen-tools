@@ -49,6 +49,8 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
                  Full images are mandatory when using LVM, so this setting
                 is ignored in that case.
 
+   --image-dev    Specify a physical/logical volume for the disk image.
+
    --initrd      Specify the initial ramdisk
                  If an image is specified it must exist.
 
@@ -78,6 +80,8 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --tar-cmd     Not used.
 
    --swap        Set the size of the swap partition.
+
+   --swap-dev    Specify a physical/logical volume for swap usage.
 
    --noswap      Do not create a swap partition.
                  When this option is used the system will not have a swap
@@ -554,7 +558,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.138 2007-03-15 15:09:16 steve Exp $
+ $Id: xen-create-image,v 1.139 2007-03-18 20:03:48 steve Exp $
 
 =cut
 
@@ -740,6 +744,13 @@ elsif ( $CONFIG{'evms'} )
     #  Create our evms partitions.
     #
     createEVMSBits();
+}
+elsif ( $CONFIG{'image-dev'} )
+{
+	#
+	#  Use physical disc
+	#
+	usePhysicalDevice();
 }
 else
 {
@@ -1119,6 +1130,7 @@ sub parseCommandLineArguments
     $install{'evms'}        = undef;
     $install{'dir'}         = undef;
     $install{'lvm'}         = undef;
+    $install{'image-dev'}   = undef;
 
     #
     #  Parse options.
@@ -1141,6 +1153,8 @@ sub parseCommandLineArguments
                "initrd=s",     \$CONFIG{'initrd'},
                "mirror=s",     \$CONFIG{'mirror'},
                "lvm=s",        \$install{'lvm'},
+               "image-dev=s",  \$install{'image-dev'},
+               "swap-dev=s",   \$install{'swap-dev'},
 
                # Networking options
                "dhcp",         \$CONFIG{'dhcp'},
@@ -1193,7 +1207,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.138 $';
+        my $REVISION      = '$Revision: 1.139 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1210,21 +1224,35 @@ sub parseCommandLineArguments
     #
     if ( $install{'dir'} )
     {
-        $CONFIG{'dir'}  = $install{'dir'};
-        $CONFIG{'evms'} = undef;
-        $CONFIG{'lvm'}  = undef;
+        $CONFIG{'dir'}       = $install{'dir'};
+        $CONFIG{'evms'}      = undef;
+        $CONFIG{'lvm'}       = undef;
+        $CONFIG{'image-dev'} = undef;
     }
     if ( $install{'evms'} )
     {
-        $CONFIG{'dir'}  = undef;
-        $CONFIG{'evms'} = $install{'evms'};
-        $CONFIG{'lvm'}  = undef;
+        $CONFIG{'dir'}       = undef;
+        $CONFIG{'evms'}      = $install{'evms'};
+        $CONFIG{'lvm'}       = undef;
+        $CONFIG{'image-dev'} = undef;
     }
     if ( $install{'lvm'} )
     {
-        $CONFIG{'dir'}  = undef;
-        $CONFIG{'evms'} = undef;
-        $CONFIG{'lvm'}  = $install{'lvm'};
+        $CONFIG{'dir'}       = undef;
+        $CONFIG{'evms'}      = undef;
+        $CONFIG{'lvm'}       = $install{'lvm'};
+        $CONFIG{'image-dev'} = undef;
+    }
+    if ( $install{'image-dev'} )
+    {
+        $CONFIG{'dir'}       = undef;
+        $CONFIG{'evms'}      = undef;
+        $CONFIG{'lvm'}       = undef;
+        $CONFIG{'image-dev'} = $install{'image-dev'};
+        $CONFIG{'size'}      = undef;
+        $CONFIG{'swap'}      = undef;
+
+        $CONFIG{'swap-dev'} = $install{'swap-dev'} if ( defined( $install{'swap-dev'} ) );
     }
 }
 
@@ -1344,7 +1372,8 @@ E_OR
     #  If using LVM or EVMS then the images may not be sparse
     #
     $CONFIG{'image'} = "full" if ( $CONFIG{'lvm'} ||
-                                   $CONFIG{'evms'} );
+                                   $CONFIG{'evms'} ||
+									$CONFIG{'image-dev'} );
 
 
 
@@ -1417,6 +1446,12 @@ EOF
             logprint( "The specified role directory '$CONFIG{'roledir'}' does not exist\n" );
             exit 1;
         }
+    }
+
+    if ( $CONFIG{'swap-dev'} && $CONFIG{'noswap'} )
+    {
+        logprint( "Please choose either swap-dev or noswap, not both!\n" );
+        exit 1;
     }
 
 
@@ -1554,10 +1589,23 @@ sub showSummery
     logprint( "Distribution   :  $CONFIG{'dist'}\n" );
     logprint( "Fileystem Type :  $CONFIG{'fs'}\n" );
 
+    if ( defined $CONFIG{'image-dev'} )
+    {
+        logprint( "Image Device   :  $CONFIG{'image-dev'}\n" );
+    }
+    if ( defined $CONFIG{'swap-dev'} )
+    {
+        logprint( "Swap Device    :  $CONFIG{'swap-dev'}\n" );
+    }
+
     logprint( "\nSize Information\n" );
     logprint( "----------------\n" );
-    logprint( "Image size     :  $CONFIG{'size'}\n") ;
-    logprint( "Swap size      :  $CONFIG{'swap'}\n" ) unless ( $CONFIG{'noswap' } );
+	if ( defined $CONFIG{'size'} ) {
+	    logprint( "Image size     :  $CONFIG{'size'}\n") ;
+	}
+	if ( defined $CONFIG{'swap'} ) {
+	    logprint( "Swap size      :  $CONFIG{'swap'}\n" ) unless ( $CONFIG{'noswap' } );
+	}
     logprint( "Image type     :  $CONFIG{'image'}\n" );
     logprint( "Memory size    :  $CONFIG{'memory'}\n" );
 
@@ -1583,55 +1631,60 @@ sub showSummery
     my $mac   = $CONFIG{'mac'};
     my $count = 1;
 
-    #
-    #  Scary magic.
-    #
-    if ( !UNIVERSAL::isa( $ips, "ARRAY" ) )
-    {
-        #
-        #  If we're reading the value of "ip = xxx" from the configuration
-        # file we'll have a single (scalar) value in $CONFIG{'ip'}.
-        #
-        #  BUT we actually assume this hash element contains a reference
-        # to an array - since that is what the command-line parsing code
-        # sets up for us.
-        #
-        #  So here we fake it - that was what the test above as for,
-        # if we didn't have an array already, then fake one up.
-        #
-        #  We reset the $ips reference to undef, then coerce it to be an
-        # (empty) array and push on our single IP.
-        #
-        #  It works.   Even if it's nasty, (or if it is a clever hack!)
-        #
-        $ips          = undef;
-        push( @$ips, $CONFIG{'ip'} );
-        $CONFIG{'ip'} = $ips;
-    }
+	if ( defined $ips ) {
+		#
+		#  Scary magic.
+		#
+		if ( !UNIVERSAL::isa( $ips, "ARRAY" ) )
+		{
+			#
+			#  If we're reading the value of "ip = xxx" from the configuration
+			# file we'll have a single (scalar) value in $CONFIG{'ip'}.
+			#
+			#  BUT we actually assume this hash element contains a reference
+			# to an array - since that is what the command-line parsing code
+			# sets up for us.
+			#
+			#  So here we fake it - that was what the test above as for,
+			# if we didn't have an array already, then fake one up.
+			#
+			#  We reset the $ips reference to undef, then coerce it to be an
+			# (empty) array and push on our single IP.
+			#
+			#  It works.   Even if it's nasty, (or if it is a clever hack!)
+			#
+			$ips          = undef;
+			push( @$ips, $CONFIG{'ip'} );
+			$CONFIG{'ip'} = $ips;
+		}
+	}
 
 
-    #
-    #  Print out each network address, and if there is a mac address
-    # associated with it then use it too.
-    #
-    foreach my $i ( @$ips )
-    {
-        my $m = undef;
+	if ( defined $ips ) 
+	{
+		#
+		#  Print out each network address, and if there is a mac address
+		# associated with it then use it too.
+		#
+		foreach my $i ( @$ips )
+		{
+			my $m = undef;
 
-        if ( ( $count == 1 ) && ( defined( $mac ) ) )
-        {
-            $m = $mac;
-        }
+			if ( ( $count == 1 ) && ( defined( $mac ) ) )
+			{
+				$m = $mac;
+			}
 
-        logprint( "IP Address $count   : $i" );
-        if ( defined( $m ) )
-        {
-            logprint( " [MAC: $m]" );
-        }
-        logprint( "\n" );
+			logprint( "IP Address $count   : $i" );
+			if ( defined( $m ) )
+			{
+				logprint( " [MAC: $m]" );
+			}
+			logprint( "\n" );
 
-        $count += 1;
-    }
+			$count += 1;
+		}
+	}
 
     #
     # mac address setting still works even for DHCP, but in that
@@ -1831,6 +1884,56 @@ sub createLoopbackImages
     #
     createFilesystem( $disk );
     createSwap( $swap ) unless( $CONFIG{'noswap'} );
+}
+
+=begin doc
+
+  This function is used if you want your new system be installed to a
+ physical drive (e.g. partition /dev/hda4) or to an already existing 
+ logical volume (e.g. /dev/root_vg/xen_root_lv).
+
+ Walter Reiner
+
+=end doc
+
+=cut
+
+sub usePhysicalDevice
+{
+    my $phys_img = undef;
+    my $swap_img = undef;
+
+    if ( defined $CONFIG{'image-dev'} )
+    {
+        $phys_img = $CONFIG{'image-dev'};
+    }
+    else
+    {
+        logprint( "No image-dev parameter given.  Aborting.\n" );
+        exit;
+    }
+
+    if ( defined $CONFIG{'swap-dev'} )
+    {
+        $swap_img = $CONFIG{'swap-dev'};
+
+        if (! -e $swap_img )
+        {
+            logprint( "The physical device or logical volume for swap-dev $swap_img doesn't exist.  Aborting.\n" );
+            logprint( "NOTE: Please provide full path to your physical device or logical volume.\n" );
+            exit;
+        }
+    }
+
+    if (! -e $phys_img)
+    {
+        logprint( "The physical device or logical volume for image-dev $phys_img doesn't exist.  Aborting.\n" );
+        logprint( "NOTE: Please provide full path to your physical device or logical volume.\n" );
+        exit;
+    }
+
+    createFilesystem( $phys_img );
+    createSwap( $swap_img ) unless ( $CONFIG{'noswap'} );
 }
 
 
@@ -2236,10 +2339,14 @@ sub mountImage
     {
        $image = $CONFIG{'dir'} . '/domains/' . $CONFIG{'hostname'} . "/disk.img" ;
     }
+	elsif ( $CONFIG{'image-dev'} )
+	{
+		$image = $CONFIG{'image-dev'};
+	}
     else
     {
        logprint( "I don't know what to mount!\n" );
-       logprint( "Please specify '--dir' or '--lvm' or '--evms'\n" );
+       logprint( "Please specify '--dir' or '--lvm' or '--evms' or '--image-dev'\n" );
        $FAIL = 1;
        exit;
     }
@@ -2267,6 +2374,10 @@ sub mountImage
     {
        $mount_cmd = "mount $mount_type $image $MOUNT_POINT";
     }
+	elsif ( $CONFIG{'image-dev'} )
+	{
+		$mount_cmd = "mount $mount_type $image $MOUNT_POINT";
+	}
     else
     {
         $mount_cmd = "mount $mount_type -o loop $image $MOUNT_POINT";

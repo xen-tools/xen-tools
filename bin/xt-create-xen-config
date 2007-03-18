@@ -103,7 +103,7 @@ xt-create-config - Create a Xen configuration file for a new guest
  --
  http://www.steve.org.uk/
 
- $Id: xt-create-xen-config,v 1.35 2007-02-23 18:58:26 steve Exp $
+ $Id: xt-create-xen-config,v 1.36 2007-03-18 20:03:49 steve Exp $
 
 =cut
 
@@ -225,7 +225,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.35 $';
+        my $REVISION      = '$Revision: 1.36 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -356,11 +356,28 @@ sub createXenConfig
         $image_vbd = "phy:/dev/evms/$ENV{'hostname'}-disk";
         $swap_vbd  = "phy:/dev/evms/$ENV{'hostname'}-swap";
     }
+    elsif ( $ENV{'image-dev'} )
+    {
+        $image_vbd = "phy:$ENV{'image-dev'}";
+
+        if ( $ENV{'swap-dev'} )
+        {
+            $swap_vbd  = "phy:$ENV{'swap-dev'}";
+        }
+        else
+        {
+            $swap_vbd  = undef;
+        }
+    }
     else
     {
         $image_vbd = "file:$ENV{'dir'}/domains/$ENV{'hostname'}/disk.img";
         $swap_vbd  = "file:$ENV{'dir'}/domains/$ENV{'hostname'}/swap.img";
     }
+
+    #
+    #  Setup the two devices in our environment.
+    #
     $ENV{'image_vbd'} = $image_vbd;
     $ENV{'swap_vbd'}  = $swap_vbd;
 
