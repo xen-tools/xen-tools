@@ -89,7 +89,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-nfs,v 1.4 2007-03-19 21:59:51 steve Exp $
+ $Id: xen-create-nfs,v 1.5 2007-03-19 22:14:21 steve Exp $
 
 =cut
 
@@ -296,7 +296,9 @@ sub parseCommandLineArguments
                # Help options
                "help",         \$HELP,
                "manual",       \$MANUAL,
+               "verbose",      \$CONFIG{'verbose'},
                "version",      \$VERSION
+
               );
 
     pod2usage(1) if $HELP;
@@ -305,7 +307,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.4 $';
+        my $REVISION      = '$Revision: 1.5 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
