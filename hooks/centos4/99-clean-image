@@ -36,7 +36,7 @@ find ${prefix}/ -name '*.rpmnew' -exec rm -f \{\} \;
 #  Clean yum
 #
 logMessage Cleaning Yum Repository
-chroot ${prefix}/usr/bin/yum clean all
+chroot ${prefix} /usr/bin/yum clean all
 
 #
 #  Log our finish
