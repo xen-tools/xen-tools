@@ -4,7 +4,7 @@
 #
 # Steve
 # --
-# $Id: perl-syntax.t,v 1.3 2006-07-12 14:44:33 steve Exp $
+# $Id: perl-syntax.t,v 1.4 2007-03-19 22:16:20 steve Exp $
 
 
 use strict;
@@ -36,6 +36,9 @@ sub checkFile
 
     # `modules.sh` is a false positive.
     return if ( $file =~ /modules.sh$/ );
+
+    # `tests/hook-tls.t` is too.
+    return if ( $file =~ /hook-tls.t$/ );
 
     # See if it is a perl file.
     my $isPerl = 0;
