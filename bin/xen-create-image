@@ -558,7 +558,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.141 2007-03-19 21:59:35 steve Exp $
+ $Id: xen-create-image,v 1.142 2007-03-19 22:00:59 steve Exp $
 
 =cut
 
@@ -747,10 +747,10 @@ elsif ( $CONFIG{'evms'} )
 }
 elsif ( $CONFIG{'image-dev'} )
 {
-	#
-	#  Use physical disc
-	#
-	usePhysicalDevice();
+    #
+    #  Use physical disc
+    #
+    usePhysicalDevice();
 }
 else
 {
@@ -1207,7 +1207,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.141 $';
+        my $REVISION      = '$Revision: 1.142 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1373,7 +1373,7 @@ E_OR
     #
     $CONFIG{'image'} = "full" if ( $CONFIG{'lvm'} ||
                                    $CONFIG{'evms'} ||
-									$CONFIG{'image-dev'} );
+                                   $CONFIG{'image-dev'} );
 
 
 
@@ -1600,12 +1600,16 @@ sub showSummery
 
     logprint( "\nSize Information\n" );
     logprint( "----------------\n" );
-	if ( defined $CONFIG{'size'} ) {
-	    logprint( "Image size     :  $CONFIG{'size'}\n") ;
-	}
-	if ( defined $CONFIG{'swap'} ) {
-	    logprint( "Swap size      :  $CONFIG{'swap'}\n" ) unless ( $CONFIG{'noswap' } );
-	}
+
+    if ( defined $CONFIG{'size'} )
+    {
+        logprint( "Image size     :  $CONFIG{'size'}\n") ;
+    }
+    if ( defined $CONFIG{'swap'} )
+    {
+        logprint( "Swap size      :  $CONFIG{'swap'}\n" ) unless ( $CONFIG{'noswap' } );
+    }
+
     logprint( "Image type     :  $CONFIG{'image'}\n" );
     logprint( "Memory size    :  $CONFIG{'memory'}\n" );
 
@@ -2369,10 +2373,10 @@ sub mountImage
     {
        $image = $CONFIG{'dir'} . '/domains/' . $CONFIG{'hostname'} . "/disk.img" ;
     }
-	elsif ( $CONFIG{'image-dev'} )
-	{
-		$image = $CONFIG{'image-dev'};
-	}
+    elsif ( $CONFIG{'image-dev'} )
+    {
+        $image = $CONFIG{'image-dev'};
+    }
     else
     {
        logprint( "I don't know what to mount!\n" );
@@ -2404,10 +2408,10 @@ sub mountImage
     {
        $mount_cmd = "mount $mount_type $image $MOUNT_POINT";
     }
-	elsif ( $CONFIG{'image-dev'} )
-	{
-		$mount_cmd = "mount $mount_type $image $MOUNT_POINT";
-	}
+    elsif ( $CONFIG{'image-dev'} )
+    {
+        $mount_cmd = "mount $mount_type $image $MOUNT_POINT";
+    }
     else
     {
         $mount_cmd = "mount $mount_type -o loop $image $MOUNT_POINT";
