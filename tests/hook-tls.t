@@ -1,18 +1,25 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 #
 #  Test that the tls-disabling hook works.
 #
 # Steve
 # --
-# $Id: hook-tls.t,v 1.8 2006-12-03 12:16:45 radu Exp $
+# $Id: hook-tls.t,v 1.9 2007-03-19 22:10:54 steve Exp $
 #
 
-use strict;
-use Test::More qw( no_plan );
+use Config qw(config_vars);
+use Test::More;
 use File::Temp;
 
 
-
+if ( $Config::Config{archname} =~ /64/ )
+{
+    plan skip_all => "This test will fail upon 64 bit systems" ;
+}
+else
+{
+    plan no_plan;
+}
 
 #
 #  Rather than having a hardwired list of distributions to test
