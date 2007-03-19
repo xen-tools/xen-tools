@@ -7,7 +7,7 @@
 #
 # Steve
 # --
-# $Id: getopt.t,v 1.3 2006-09-10 21:04:20 steve Exp $
+# $Id: getopt.t,v 1.4 2007-03-19 22:14:43 steve Exp $
 
 
 use strict;
@@ -47,7 +47,7 @@ sub testFile
 
     foreach my $line ( split( /\n/, $output ) )
     {
-        if ( $line =~ /[ \t]*--([a-z-]+)/ )
+        if ( $line =~ /[ \t]*--([a-z-_]+)/ )
         {
             push @documented, $1;
         }
@@ -91,6 +91,7 @@ sub testFile
         #
         foreach my $o ( split( /\n/, $opt ) )
         {
+#print "O: $o ";
             #
             #  Strip trailing comments.
             #
@@ -98,6 +99,7 @@ sub testFile
             {
                 $o = $1;
             }
+#print " - strip comments : $o ";
 
             #
             #  Remove "" from around it.
@@ -106,7 +108,7 @@ sub testFile
             {
                 $o = $1;
             }
-
+#print " - remove quotes : $o ";
             #
             #  Discard anything after "=", or " "
             #
@@ -114,7 +116,7 @@ sub testFile
             {
                 $o = $1;
             }
-
+#print " - remove = : $o ";
             #
             #  Now avoid blank lines.
             #
