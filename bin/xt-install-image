@@ -80,7 +80,7 @@ Untar a .tar file into the new installation location.  This tarfile is assumed t
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.53 2007-03-15 21:48:11 steve Exp $
+ $Id: xt-install-image,v 1.54 2007-03-19 14:01:53 steve Exp $
 
 =cut
 
@@ -414,7 +414,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.53 $';
+        my $REVISION      = '$Revision: 1.54 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -784,7 +784,7 @@ sub do_image_server
     #
     $request .= "&arch=amd64";
     $request .= "&root_device=/dev/sda";
-    $request .= "&ip1="      . $ENV{'ip'};
+    $request .= "&ip1="      . $ENV{'ip1'};
     $request .= "&dist="     . CGI::escapeHTML( $CONFIG{'dist'} );
     $request .= "&hostname=" . CGI::escapeHTML( $CONFIG{'hostname'} );
 

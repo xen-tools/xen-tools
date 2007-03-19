@@ -1,4 +1,4 @@
-xen-tools (3.2-1) unstable; urgency=low
+xen-tools (3.2-1) testing; urgency=low
 
   * New upstream release v3.2
     - Installation argument changes so that --copy, --debootstrap, --rpmstrap,
