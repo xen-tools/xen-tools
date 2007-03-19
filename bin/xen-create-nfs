@@ -89,7 +89,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-nfs,v 1.3 2007-03-19 21:42:31 steve Exp $
+ $Id: xen-create-nfs,v 1.4 2007-03-19 21:59:51 steve Exp $
 
 =cut
 
@@ -305,7 +305,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.3 $';
+        my $REVISION      = '$Revision: 1.4 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -318,9 +318,11 @@ sub parseCommandLineArguments
 
 
 
-=head2 testArguments
+=begin doc
 
   Test that our arguments make sense.
+
+=end doc
 
 =cut
 
@@ -433,9 +435,11 @@ sub setupAdminUsers
 }
 
 
-=head2 createNewConfigurationFile
+=begin doc
 
-  Create the configuration file for the specified image.
+  Create the Xen configuration file for our new Xen guest.
+
+=end doc
 
 =cut
 
