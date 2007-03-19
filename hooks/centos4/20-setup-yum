@@ -44,7 +44,7 @@ perl -pi.bak -e 's/\$releasever/4/g' ${prefix}/etc/yum.repos.d/*.repo
 #
 # Update yum
 #
-chroot ${prefix}/usr/bin/yum update
+chroot ${prefix} /usr/bin/yum update
 
 #
 #  Log our finish
