@@ -89,7 +89,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-nfs,v 1.5 2007-03-19 22:14:21 steve Exp $
+ $Id: xen-create-nfs,v 1.6 2007-03-20 20:49:58 steve Exp $
 
 =cut
 
@@ -132,7 +132,7 @@ $CONFIG{'template'} = '/etc/xen-tools/xm-nfs.tmpl';
 #
 # Release number.
 #
-my $RELEASE = '3.1';
+my $RELEASE = '3.2';
 
 
 # store version number away.
@@ -307,7 +307,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.5 $';
+        my $REVISION      = '$Revision: 1.6 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
