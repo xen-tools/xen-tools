@@ -27,7 +27,7 @@ logMessage Script $0 starting
 #
 #  Remove the links for upstart
 #
-rm ${prefix}/etc/event.d/tty[^1]
+rm ${prefix}/etc/event.d/tty[!1]
 
 #
 #  Log our finish
