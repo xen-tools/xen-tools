@@ -54,3 +54,4 @@ Contributions
 
   Wilson Neil <neil [at] uk.co.aldur>
    - Several suggestions and code for disabling start-stop-daemon
+   - Compatability fixups for Ubuntu.
