@@ -10,6 +10,10 @@
 
 use Test::More qw( no_plan );
 
+BEGIN{ use_ok( 'Config' ); }
+require_ok( 'Config' );
+
+
 BEGIN{ use_ok( 'English' ); }
 require_ok( 'English' );
 
