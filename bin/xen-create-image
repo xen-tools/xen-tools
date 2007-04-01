@@ -558,7 +558,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.143 2007-03-20 20:49:58 steve Exp $
+ $Id: xen-create-image,v 1.144 2007-04-01 22:29:45 steve Exp $
 
 =cut
 
@@ -1207,7 +1207,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.143 $';
+        my $REVISION      = '$Revision: 1.144 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1460,8 +1460,19 @@ EOF
     #
     if ( $CONFIG{'dhcp'} && $CONFIG{'ip'} )
     {
-        logprint( "Please choose either DHCP or static usage, not both!\n" );
-        exit 1;
+        #
+        #  However we will allow the DHCP setting to override a *partially*
+        # specified IP address.
+        #
+        if ( $CONFIG{'ip'} =~ /^([0-9]+)\.([0-9]+)\.([0-9]+)\.*$/ )
+        {
+            delete $CONFIG{'ip'};
+        }
+        else
+        {
+            logprint( "Please choose either DHCP or static usage, not both!\n" );
+            exit 1;
+        }
     }
 
     #
@@ -1692,10 +1703,10 @@ sub showSummery
                 # NOP
                 $CONFIG{'verbose'} && logprint( "IP address is complete: $i\n" );
             }
-            elsif ( $i =~ /^([0-9]+)\.([0-9]+)\.([0-9]+)$/ )
+            elsif ( $i =~ /^([0-9]+)\.([0-9]+)\.([0-9]+)\.$/ )
             {
                 $CONFIG{'verbose'} &&
-                  logprint( "Automatically determining the last octet for $i\n" );
+                  logprint( "Automatically determining the last octet for: $i\n" );
 
                 $i = findNextIP( $i );
                 $CONFIG{'verbose'} && logprint( "Found $i\n" );
