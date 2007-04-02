@@ -72,6 +72,9 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --role        Run a specific role command post-install.
                 These role scripts are discussed later in this manpage.
 
+   --role-args   Pass the named string literally to any role script.
+                This is useful for site-specific roles.
+
    --roledir     Specify the directory which contains the role scripts.
                  This defaults to /etc/xen-tools/role.d/
 
@@ -521,13 +524,16 @@ Install an X11 server, using VNC and XDM
 
   If you'd like to include your own role scripts you'll need to
  create a file in /etc/xen-tools/role.d, and then specify the
- name of that file with "--role=filename".
+ name of that file with "--role=filename".  Additionally you
+ may pass options to your role-script with the --role-args
+ flag.
 
   For example the script /etc/xen-tools/role.d/gdm would be used
  by executing with "--role=gdm".
 
-  Role scripts are invoked with a single argument -  the directory
- where the installed system is mounted.
+  Role scripts are invoked with the directory containing the
+ installed system as their first argument, and anything passed
+ as a role-arg will be passed allong as additional arguments.
 
 =cut
 
@@ -558,7 +564,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.144 2007-04-01 22:29:45 steve Exp $
+ $Id: xen-create-image,v 1.145 2007-04-02 23:34:33 steve Exp $
 
 =cut
 
@@ -1188,6 +1194,7 @@ sub parseCommandLineArguments
                "no-hooks",     \$CONFIG{'no-hooks'},
                "passwd",       \$CONFIG{'passwd'},
                "role=s",       \$CONFIG{'role'},
+               "role-args=s",  \$CONFIG{'role-args'},
                "roledir=s",    \$CONFIG{'roledir'},
                "force",        \$CONFIG{'force'},
                "keep",         \$CONFIG{'keep'},
@@ -1207,7 +1214,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.144 $';
+        my $REVISION      = '$Revision: 1.145 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -2650,6 +2657,14 @@ sub runRoleScript
     my $roleDir = $CONFIG{'roledir'};
     my $role    = $CONFIG{'role'};
 
+    #
+    #  Role-script arguments are optional.  If present prepare to
+    # append.
+    #
+    my $args = '';
+    $args    = " " . $CONFIG{'role-args'} if ( $CONFIG{'role-args'} );
+
+
     if ( !defined( $role ) )
     {
         logprint( "\nNo role script specified.  Skipping\n" );
@@ -2663,7 +2678,9 @@ sub runRoleScript
 
     if ( -x $file )
     {
-        logprint( "\nRunning role script '$file' for role '$role'\n" );
+        logprint( "\nRole: $role\n" );
+        logprint( "\tFile: $file\n" );
+        logprint( "\tArgs: $args\n" ) if ( length( $args ) );
     }
     else
     {
@@ -2677,12 +2694,16 @@ sub runRoleScript
     #  Our environment is already setup because of the call to
     # runCustomisationHooks.
     #
-    #  We just need to run the script with the mountpoint as its
-    # single argument.
+    #  We just need to run the script with two arguments:
     #
-    runCommand( $file . " " . $MOUNT_POINT );
+    #   - The mountpoint to the new system.
+    #   - Any, optional, supplied arguments.
+    #
+    # NOTE:  Space added to $args as prefix ..
+    #
+    runCommand( $file . " " . $MOUNT_POINT . $args );
 
-    logprint( "Done\n" );
+    logprint( "Role script completed.\n" );
 }
 
 
