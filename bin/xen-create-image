@@ -564,7 +564,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.146 2007-04-03 00:14:47 steve Exp $
+ $Id: xen-create-image,v 1.147 2007-04-03 00:20:43 steve Exp $
 
 =cut
 
@@ -866,9 +866,13 @@ if ( $CONFIG{'boot'} )
 
     #
     #  If there is an /etc/xen/auto directory then link
-    # in the domain so that it will automatically restart.
+    # in the domain so that it will automatically restart, if it isn't
+    # already present.
     #
-    if ( -d "/etc/xen/auto" )
+    #  (Will be present if this is overwriting a previous image, for example.)
+    #
+    if ( ( -d "/etc/xen/auto" ) &&
+         ( ! -e "/etc/xen/auto/$CONFIG{'hostname'}.cfg" ) )
     {
         logprint( "Creating auto-start symlink\n" );
 
@@ -1219,7 +1223,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.146 $';
+        my $REVISION      = '$Revision: 1.147 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;

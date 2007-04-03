@@ -136,7 +136,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-delete-image,v 1.31 2007-04-01 12:32:46 steve Exp $
+ $Id: xen-delete-image,v 1.32 2007-04-03 00:20:43 steve Exp $
 
 =cut
 
@@ -335,7 +335,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.31 $';
+       my $REVISION      = '$Revision: 1.32 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -408,6 +408,15 @@ sub deleteXenImage
     my ($hostname) = ( @_ );
 
     #
+    #  Delete the Xen auto-start file if it exists.
+    #
+    if ( -e "/etc/xen/auto/$hostname.cfg" )
+    {
+        $CONFIG{'verbose'} && print "Removing /etc/xen/auto/$hostname.cfg\n";
+        unlink("/etc/xen/auto/$hostname.cfg" )
+    }
+
+    #
     #  Delete the Xen configuration file if it exists.
     #
     if ( -e "/etc/xen/$hostname.cfg" )
@@ -415,7 +424,6 @@ sub deleteXenImage
         $CONFIG{'verbose'} && print "Removing /etc/xen/$hostname.cfg\n";
         unlink("/etc/xen/$hostname.cfg" )
     }
-
 
     #
     #  If we're working on disk images remove them.
