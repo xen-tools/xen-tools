@@ -564,7 +564,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.145 2007-04-02 23:34:33 steve Exp $
+ $Id: xen-create-image,v 1.146 2007-04-03 00:14:47 steve Exp $
 
 =cut
 
@@ -697,7 +697,7 @@ checkArguments();
 #
 #  Make sure we have a log directory
 #
-mkdir( "/var/log/xen-tools", 0777 ) if ( ! -d "/var/log/xen-tools" );
+mkdir( "/var/log/xen-tools", 0750 ) if ( ! -d "/var/log/xen-tools" );
 
 #
 #  Trash any existing for this run logfile.
@@ -705,6 +705,11 @@ mkdir( "/var/log/xen-tools", 0777 ) if ( ! -d "/var/log/xen-tools" );
 open( TRASH, ">", "/var/log/xen-tools/$CONFIG{'hostname'}.log" );
 print TRASH "";
 close(TRASH);
+
+#
+#  Make sure the logfile is 0640 - avoid leaking root passwords.
+#
+chmod( oct( "0640" ), "/var/log/xen-tools/$CONFIG{'hostname'}.log" );
 
 
 
@@ -1214,7 +1219,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.145 $';
+        my $REVISION      = '$Revision: 1.146 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
