@@ -10,9 +10,7 @@ TODO
 
   3. Test more distributions with RPMStrap, instead of just centos4.
 
-  4. Add role-arguments.
-
 Steve
 --
-$Id: TODO,v 1.27 2007-03-19 21:57:05 steve Exp $
+$Id: TODO,v 1.28 2007-04-03 00:07:54 steve Exp $
 
