@@ -14,12 +14,20 @@ BEGIN{ use_ok( 'Config' ); }
 require_ok( 'Config' );
 
 
+BEGIN{ use_ok( 'Digest::MD5' ); }
+require_ok( 'Digest::MD5' );
+
+
 BEGIN{ use_ok( 'English' ); }
 require_ok( 'English' );
 
 
 BEGIN{ use_ok( 'Env' ); }
 require_ok( 'Env' );
+
+
+BEGIN{ use_ok( 'Expect' ); }
+require_ok( 'Expect' );
 
 
 BEGIN{ use_ok( 'File::Copy' ); }
@@ -56,5 +64,9 @@ require_ok( 'Test::More' );
 
 BEGIN{ use_ok( 'Text::Template' ); }
 require_ok( 'Text::Template' );
+
+
+BEGIN{ use_ok( 'warnings' ); }
+require_ok( 'warnings' );
 
 
