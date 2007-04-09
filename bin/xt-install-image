@@ -80,7 +80,7 @@ Untar a .tar file into the new installation location.  This tarfile is assumed t
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.55 2007-03-20 20:49:59 steve Exp $
+ $Id: xt-install-image,v 1.56 2007-04-09 09:10:51 steve Exp $
 
 =cut
 
@@ -414,7 +414,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.55 $';
+        my $REVISION      = '$Revision: 1.56 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -916,9 +916,15 @@ sub do_rpmstrap
     }
 
     #
+    #  Setup mirror if present.
+    #
+    my $mirror = "";
+    $mirror    = $CONFIG{'mirror'} if ( $CONFIG{'mirror'} );
+
+    #
     #  The command we're going to run.
     #
-    my $command = "rpmstrap $EXTRA $CONFIG{'dist'} $CONFIG{'location'}";
+    my $command = "rpmstrap $EXTRA $CONFIG{'dist'} $CONFIG{'location'} $mirror";
     runCommand( $command );
 }
 
