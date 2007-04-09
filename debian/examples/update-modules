@@ -1,0 +1,234 @@
+#!/usr/bin/perl
+#
+#  This code is intended to update the modules installed within each
+# Xen guest domain to the named version.
+#
+#  It should be fairly safe, but I make no promises - hence why this
+# is an example.
+#
+# Steve
+# --
+# $Id: update-modules,v 1.1 2007-04-09 11:54:26 steve Exp $
+#
+
+use strict;
+use warnings;
+
+use File::Path qw/ rmtree  /;
+use File::Temp qw/ tempdir /;
+
+
+my $modules = shift;
+if ( ! defined( $modules ) )
+{
+    print <<EOF;
+
+ Usage: $0 <modules>
+
+  eg: $0 2.6.18.xx|/usr/lib/modules/nn.nn.nn-xen
+
+EOF
+  exit;
+}
+
+
+#
+#  Make sure the path is fully qualified.
+#
+if ( $modules !~ /^[\/\\]/ )
+{
+    $modules = "/lib/modules/" . $modules;
+}
+
+
+#
+#  Make sure the module directory exists.
+#
+if ( ! -d $modules )
+{
+    print "The modules directory $modules doesn't exist.\n";
+    exit;
+}
+
+
+#
+#  OK now we have the modules so we need to:
+#
+#  0.  Read our configuration file.
+#  1.  Find each xen guest.
+#  2.  Ensure it isn't running (TODO)
+#  3.  Mount the disk image.
+#  4.  Remove existing modules, and copy in the specified ones.
+#
+#
+
+
+my %CONFIG;
+readConfigurationFile( "/etc/xen-tools/xen-tools.conf" );
+
+
+foreach my $guest ( findGuests() )
+{
+    print "Attempting to update guest: $guest\n";
+
+    #
+    #  Create a temporary directory to mount the disk upon.
+    #
+    my $tmp = tempdir( CLEANUP => 1 );
+
+    #
+    # Mount the disk.
+    #
+    if ( $CONFIG{'dir'} )
+    {
+        # The loopback image.
+        my $img =  $CONFIG{'dir'} . "/domains/" . $guest . "/disk.img";
+        system( "mount -o loop $img $tmp" );
+    }
+    elsif ( $CONFIG{'lvm'} )
+    {
+        # The LVM volume
+        my $img = "/dev/" . $CONFIG{'lvm'} . "/$guest-disk";
+        system( "mount $img $tmp" );
+    }
+    else
+    {
+        print "Unhandled disk format - can't mount\n";
+        next;
+    }
+
+
+    #
+    #  We've got it mounted.
+    #
+    print "\tMounted disk image.\n";
+
+    # make sure we have a directory
+    if ( ! -d $tmp . "/lib/modules" )
+    {
+        print "\tMissing modules.  Skipping\n";
+        next;
+    }
+    #
+    #  Remove the existing module directories.
+    #
+    `rm -rf  $tmp/lib/modules`;
+    mkdir $tmp . "/lib/modules";
+    print "\tRemoved existing modules\n";
+
+    #
+    #  Copy existing directory.
+    #
+    if ( -d $tmp . "/lib/modules" )
+    {
+        `cp -R $modules $tmp/lib/modules/`;
+        print "\tCopied over $modules\n";
+    }
+    else
+    {
+        print "No module directory .. weirdness\n";
+    }
+
+    #
+    #  Unmount
+    #
+    system( "umount $tmp" );
+    print "\tUnmounted disk image.\n\n";
+}
+
+
+
+
+=begin doc
+
+  Find each xen guest upon the system.
+
+=end doc
+
+=cut
+
+sub findGuests
+{
+    my @results;
+
+    #
+    #  Assume xen-tools.
+    #
+    foreach my $file ( glob( "/etc/xen/*.cfg" ) )
+    {
+        #
+        #  Find the name.
+        #
+        open( INPUT, "<" , $file );
+        foreach my $line ( <INPUT> )
+        {
+            chomp( $line );
+            if ( $line =~ /name\s*=\s*['"]([^'"]+)["']/ )
+            {
+                push @results, $1;
+            }
+        }
+        close( INPUT );
+    }
+    return( sort( @results ) );
+}
+
+
+
+
+=begin doc
+
+  Read the configuration file specified.
+
+=end doc
+
+=cut
+
+sub readConfigurationFile
+{
+    my ($file) = ( @_ );
+
+    open( FILE, "<", $file ) or die "Cannot read file '$file' - $!";
+
+    my $line       = "";
+
+    while (defined($line = <FILE>) )
+    {
+        chomp $line;
+        if ($line =~ s/\\$//)
+        {
+            $line .= <FILE>;
+            redo unless eof(FILE);
+        }
+
+        # Skip lines beginning with comments
+        next if ( $line =~ /^([ \t]*)\#/ );
+
+        # Skip blank lines
+        next if ( length( $line ) < 1 );
+
+        # Strip trailing comments.
+        if ( $line =~ /(.*)\#(.*)/ )
+        {
+            $line = $1;
+        }
+
+        # Find variable settings
+        if ( $line =~ /([^=]+)=([^\n]+)/ )
+        {
+            my $key = $1;
+            my $val = $2;
+
+            # Strip leading and trailing whitespace.
+            $key =~ s/^\s+//;
+            $key =~ s/\s+$//;
+            $val =~ s/^\s+//;
+            $val =~ s/\s+$//;
+
+            # Store value.
+            $CONFIG{ $key } = $val;
+        }
+    }
+
+    close( FILE );
+}
