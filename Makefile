@@ -8,7 +8,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.96 2007-03-20 20:49:57 steve Exp $
+# $Id: Makefile,v 1.97 2007-04-10 10:43:40 steve Exp $
 
 
 #
@@ -222,6 +222,7 @@ uninstall:
 	rm -f ${prefix}/usr/bin/xt-customize-image
 	rm -f ${prefix}/usr/bin/xt-install-image
 	rm -f ${prefix}/usr/bin/xt-create-xen-config
+	rm -f ${prefix}/usr/bin/xen-create-nfs
 	rm -f ${prefix}/etc/xen-tools/xen-tools.conf
 	rm -f ${prefix}/etc/xen-tools/xm.tmpl
 	-rm -rf ${prefix}/etc/xen-tools/skel
