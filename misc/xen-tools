@@ -18,7 +18,7 @@
 # --
 # http://www.steve.org.uk
 #
-# $Id: xen-tools,v 1.47 2007-04-09 11:53:56 steve Exp $
+# $Id: xen-tools,v 1.48 2007-04-10 22:56:46 steve Exp $
 #
 
 
@@ -53,7 +53,9 @@ _xen_create_image()
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
     prev=${COMP_WORDS[COMP_CWORD-1]}
-    opts='--accounts --admins --arch --boot --cache --config --dhcp --dir --dist--evms --force --fs --gateway --help --hostname --ide --image --initrd --install-method --install-source --ip --keep --kernel --lvm --mac --manual --memory --mirror --netmask --no-hooks --no-install --noswap --passwd --role --role-args --roledir --size --swap --template --verbose --version'
+
+    # Determine arguments dynamically.  Avoids out-of-dateness.
+    opts=$(xen-create-image --help|grep -- --|awk '{print $1}' |grep -- -- | sort -u)
     
     
     #
@@ -149,7 +151,10 @@ _xen_create_nfs()
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
     prev=${COMP_WORDS[COMP_CWORD-1]}
-    opts='--admins --broadcast --dhcp --gateway --ip --netmask --hostname --memory --mac --nfs_server --nfs_root --kernel --initrd --force --template --help --manual --version'
+
+    # Determine arguments dynamically.  Avoids out-of-dateness.
+    opts=$(xen-create-nfs --help|grep -- --|awk '{print $1}' |grep -- -- | sort -u)
+
     
     case "$prev" in
 	--template)
@@ -189,8 +194,10 @@ _xen_delete_image()
 
     #
     # Complete the options + all available hostnames.
+    # Determine arguments dynamically.  Avoids out-of-dateness.
     #
-    opts="--dir --evms --help --hostname --lvm --manual --test --version ${names}"
+    opts=$(xen-delete-image  --help|grep -- --|awk '{print $1}'|grep -- -- | sort -u)
+    opts="${opts} ${names}"
 
     case "${prev}" in
         --dir)
@@ -247,7 +254,8 @@ _xen_update_image()
     #
     evmscontainers=`evms_query containers 2>/dev/null`
 
-    opts="--dir --evms --help --lvm --manual --version"
+    # Determine arguments dynamically.  Avoids out-of-dateness.
+    opts=$(xen-update-image  --help|grep -- --|awk '{print $1}'|grep -- -- | sort -u)
 
     case "${prev}" in
         --dir)
@@ -287,7 +295,9 @@ _xen_list_images()
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
-    opts="--help --manual --test --version"
+
+    # Determine arguments dynamically.  Avoids out-of-dateness.
+    opts=$(xen-list-image  --help|grep -- --|awk '{print $1}'|grep -- -- | sort -u)
 
     if [[ ${cur} == -* ]]; then
         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
@@ -308,7 +318,9 @@ _xt-create-xen-config()
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
     prev=${COMP_WORDS[COMP_CWORD-1]}
-    opts='--admins --help --manual --output --template --verbose --version'
+
+    # Determine arguments dynamically.  Avoids out-of-dateness.
+    opts=$(xt-create-xen-config  --help|grep -- --|awk '{print $1}'|grep -- -- | sort -u)
     
     
     case "$prev" in
@@ -341,7 +353,9 @@ _xt-customize-image()
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
     prev=${COMP_WORDS[COMP_CWORD-1]}
-    opts='--dist --help --location --manual --verbose --version'
+
+    # Determine arguments dynamically.  Avoids out-of-dateness.
+    opts=$(xt-customize-image  --help|grep -- --|awk '{print $1}'|grep -- -- | sort -u)
     
     #
     # Available distributions, from rpmstrap
@@ -352,7 +366,7 @@ _xt-customize-image()
     
     case "$prev" in
 	--dist)
-	    COMPREPLY=( $( compgen -W '${dists} sid sarge etch'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+	    COMPREPLY=( $( compgen -W '${dists} sid sarge etch lenny'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
 	    return 0
 	    ;;
 	--location)
@@ -380,9 +394,11 @@ _xt-install-image()
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
     prev=${COMP_WORDS[COMP_CWORD-1]}
-    opts='--cache --config --dist --help --install-method --install-source --location --manual --mirror  --verbose --version'
-    
-    
+
+    # Determine arguments dynamically.  Avoids out-of-dateness.
+    opts=$(xt-install-image  --help|grep -- --|awk '{print $1}'|grep -- -- | sort -u)
+
+   
     #
     # Available distributions, from rpmstrap
     #
@@ -401,7 +417,7 @@ _xt-install-image()
 	    return 0
 	    ;;
 	--dist)
-	    COMPREPLY=( $( compgen -W '${dists} sid sarge etch'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+	    COMPREPLY=( $( compgen -W '${dists} sid sarge etch lenny'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
 	    return 0
 	    ;;
 	--install-method)
