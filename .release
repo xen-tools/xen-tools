@@ -3,6 +3,11 @@
 #
 
 #
+#  Command to run
+#
+preupload="make release"
+
+#
 #
 #  Pattern for our release tarball.
 #
