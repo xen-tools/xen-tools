@@ -136,7 +136,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-delete-image,v 1.32 2007-04-03 00:20:43 steve Exp $
+ $Id: xen-delete-image,v 1.33 2007-04-28 15:34:19 steve Exp $
 
 =cut
 
@@ -221,7 +221,14 @@ E_O_ROOT
 #
 while( my $name = shift )
 {
-    deleteXenImage( $name );
+    if ( !xenRunning( $name ) )
+    {
+        #deleteXenImage( $name );
+    }
+    else
+    {
+        print "Skipping xen guest '$name' - it appears to be running.\n";
+    }
 }
 
 #
@@ -335,7 +342,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.32 $';
+       my $REVISION      = '$Revision: 1.33 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -392,6 +399,34 @@ sub checkArguments
     }
 }
 
+
+
+
+=begin doc
+
+  Test to see if the given instance is running.
+
+=end doc
+
+=cut
+
+sub xenRunning
+{
+    my( $hostname ) =  (@_ );
+
+    my $running = 0;
+
+    open( CMD, "xm list 2>/dev/null |")
+      or die "Failed to run 'xm list $hostname'";
+    while( <CMD> )
+    {
+        my $line = $_;
+        $running = 1 if ( $line =~ /\Q$hostname\E/ )
+    }
+    close( CMD );
+
+    return( $running );
+}
 
 
 =begin doc
