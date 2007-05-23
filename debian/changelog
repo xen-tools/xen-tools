@@ -1,3 +1,7 @@
+
+  * New upstream release v3.4
+    - Allows the expansion of backticks in configuration file(s).
+	
 xen-tools (3.3-1) unstable; urgency=low
 
   [ Steve Kemp ]
