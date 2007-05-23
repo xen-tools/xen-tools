@@ -136,7 +136,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-delete-image,v 1.35 2007-05-23 12:01:56 steve Exp $
+ $Id: xen-delete-image,v 1.36 2007-05-23 15:44:13 steve Exp $
 
 =cut
 
@@ -223,7 +223,7 @@ while( my $name = shift )
 {
     if ( !xenRunning( $name ) )
     {
-        #deleteXenImage( $name );
+        deleteXenImage( $name );
     }
     else
     {
@@ -237,7 +237,14 @@ while( my $name = shift )
 my $hosts = $CONFIG{'hostname'};
 foreach my $name ( @$hosts )
 {
-    deleteXenImage( $name );
+    if ( !xenRunning( $name ) )
+    {
+        deleteXenImage( $name );
+    }
+    else
+    {
+        print "Skipping xen guest '$name' - it appears to be running.\n";
+    }
 }
 
 #
@@ -358,7 +365,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.35 $';
+       my $REVISION      = '$Revision: 1.36 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
