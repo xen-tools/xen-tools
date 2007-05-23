@@ -8,7 +8,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.100 2007-05-11 16:36:13 steve Exp $
+# $Id: Makefile,v 1.101 2007-05-23 16:20:51 steve Exp $
 
 
 #
@@ -141,6 +141,7 @@ install-hooks:
 	mkdir -p ${prefix}/usr/lib/xen-tools/debian.d/
 	cp -R hooks/debian/*-* ${prefix}/usr/lib/xen-tools/debian.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d sarge.d
+	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d lenny.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d etch.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d sid.d
 	mkdir -p ${prefix}/usr/lib/xen-tools/fedora.d/
