@@ -1,6 +1,8 @@
 
   * New upstream release v3.4
     - Allows the expansion of backticks in configuration file(s).
+    - Generate locales for the new Xen guests to match the host machine.
+      (Closes: #423385)
 	
 xen-tools (3.3-1) unstable; urgency=low
 
