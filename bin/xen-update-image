@@ -87,7 +87,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-update-image,v 1.23 2007-05-11 16:36:14 steve Exp $
+ $Id: xen-update-image,v 1.24 2007-05-23 12:01:57 steve Exp $
 
 =cut
 
@@ -343,6 +343,22 @@ sub readConfigurationFile
             $val =~ s/^\s+//;
             $val =~ s/\s+$//;
 
+            # command expansion?
+            if ( $val =~ /(.*)`([^`]+)`(.*)/ )
+            {
+                # store
+                my $pre  = $1;
+                my $cmd  = $2;
+                my $post = $3;
+
+                # get output
+                my $output = `$cmd`;
+                chomp( $output );
+
+                # build up replacement.
+                $val = $pre . $output . $post;
+            }
+
             # Store value.
             $CONFIG{ $key } = $val;
         }
@@ -384,7 +400,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.23 $';
+        my $REVISION      = '$Revision: 1.24 $';
 
         if ( $REVISION =~ /1.([0-9.]+) / )
         {

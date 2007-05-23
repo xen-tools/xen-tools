@@ -80,7 +80,7 @@ Untar a .tar file into the new installation location.  This tarfile is assumed t
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.57 2007-05-11 16:36:14 steve Exp $
+ $Id: xt-install-image,v 1.58 2007-05-23 12:01:57 steve Exp $
 
 =cut
 
@@ -358,6 +358,22 @@ sub readConfigurationFile
             $val =~ s/^\s+//;
             $val =~ s/\s+$//;
 
+            # command expansion?
+            if ( $val =~ /(.*)`([^`]+)`(.*)/ )
+            {
+                # store
+                my $pre  = $1;
+                my $cmd  = $2;
+                my $post = $3;
+
+                # get output
+                my $output = `$cmd`;
+                chomp( $output );
+
+                # build up replacement.
+                $val = $pre . $output . $post;
+            }
+
             # Store value.
             $CONFIG{ $key } = $val;
         }
@@ -414,7 +430,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.57 $';
+        my $REVISION      = '$Revision: 1.58 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
