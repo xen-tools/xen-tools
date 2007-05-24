@@ -66,7 +66,7 @@ xt-customize-image - Customize a freshly installed copy of GNU/Linux
  --
  http://www.steve.org.uk/
 
- $Id: xt-customize-image,v 1.28 2007-05-11 16:36:14 steve Exp $
+ $Id: xt-customize-image,v 1.29 2007-05-24 17:35:18 steve Exp $
 
 =cut
 
@@ -99,7 +99,7 @@ my %CONFIG;
 #
 # Release number.
 #
-my $RELEASE = '3.3';
+my $RELEASE = '3.4';
 
 
 
@@ -165,7 +165,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.28 $';
+       my $REVISION      = '$Revision: 1.29 $';
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
            $REVISION = $1;

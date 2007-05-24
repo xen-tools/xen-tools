@@ -80,7 +80,7 @@ Untar a .tar file into the new installation location.  This tarfile is assumed t
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.58 2007-05-23 12:01:57 steve Exp $
+ $Id: xt-install-image,v 1.59 2007-05-24 17:35:18 steve Exp $
 
 =cut
 
@@ -112,7 +112,7 @@ my %CONFIG;
 #
 # Release number.
 #
-my $RELEASE = '3.3';
+my $RELEASE = '3.4';
 
 
 #
@@ -430,7 +430,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.58 $';
+        my $REVISION      = '$Revision: 1.59 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
