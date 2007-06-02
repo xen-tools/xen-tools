@@ -1,11 +1,16 @@
-xen-tools (3.4-1) stable; urgency=low
+xen-tools (3.4-1) unstable; urgency=low
 
+  [ Steve Kemp ]
   * New upstream release v3.4
     - Allows the expansion of backticks in configuration file(s).
     - Generate locales for the new Xen guests to match the host machine.
       (Closes: #423385)
-	
- -- Steve Kemp <steve@steve.org.uk>  Thu, 24 May 18:34:14 +0000
+
+  [ Radu Spineanu ]
+    - Better kernel/initrd guessing in the configuration file(using uname -r).
+      Also added a note about this in README.Debian. (closes: #425019)
+
+ -- Radu Spineanu <radu@debian.org>  Tue, 29 May 2007 01:09:40 +0300
 
 xen-tools (3.3-1) unstable; urgency=low
 
@@ -14,7 +19,7 @@ xen-tools (3.3-1) unstable; urgency=low
     - Refuse to delete running guests.  (Closes: #419561)
     - Updated the package "Recommends" (Closes: #421174)
 
- -- Steve Kemp <skx@debian.org>  Fri, 11 May 17:30:09 +0000
+ -- Radu Spineanu <radu@debian.org>  Fri, 12 May 2007 19:09:09 +0200
 
 xen-tools (3.2-1) unstable; urgency=low
 

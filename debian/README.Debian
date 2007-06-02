@@ -1,0 +1,35 @@
+README
+======
+
+Kernel/initrd guessing
+======================
+
+In xen-tools 3.4-1 a new feature was added which allows using backtick expressions 
+in xen-tools.conf.
+
+Using this feature you can improve kernel/initrd guessing by changing/adding the following options
+to xen-tools.conf:
+
+   kernel      = /boot/vmlinuz-`uname -r`
+   ramdisk     = /boot/initrd.img-`uname -r`
+
+
+Upgrading Existing kernel/initrd paths
+--------------------------------------
+
+The kernel, and initrd, settings which are included in the xen-tools
+(either statically or dynamically with `uname -r`) are only applied
+when the new guest domains are created.
+
+If you upgrade your kernel you will be left with existing xen
+guest domains which :
+
+  -  Have the wrong paths setup in /etc/xen/*.cfg
+  -  Have incorrect modules stored within their disk images.
+
+Both of these can be updated via the helper scripts located
+in:
+
+   /usr/share/doc/xen-tools/examples/
+
+

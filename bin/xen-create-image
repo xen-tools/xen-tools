@@ -254,8 +254,8 @@ Create a configuration file in /etc/xen so that xm can create the new image.
   #
   # Kernel options.
   #
-  initrd     = /boot/initrd.img-2.6.16-2-xen-686
-  kernel     = /boot/vmlinuz-2.6.16-2-xen-686
+  kernel      = /boot/vmlinuz-`uname -r`
+  initrd      = /boot/initrd.img-`uname -r`
 
   #
   # Networking options.
@@ -564,7 +564,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.150 2007-05-24 17:35:17 steve Exp $
+ $Id: xen-create-image,v 1.151 2007-06-02 11:48:18 radu Exp $
 
 =cut
 
@@ -1239,7 +1239,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.150 $';
+        my $REVISION      = '$Revision: 1.151 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
