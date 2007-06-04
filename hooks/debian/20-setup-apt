@@ -102,7 +102,7 @@ if [ "`uname -m`" = "x86_64" ]; then
 else
 
     case "${dist}" in
-        etch|sid)
+        etch|lenny|sid)
             logMessage "Installing xen-aware libc6"
     
             installDebianPackage ${prefix} libc6-xen
