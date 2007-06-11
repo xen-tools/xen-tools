@@ -1,6 +1,8 @@
 
   * Only add Debian sources for security.debian.org if enabled upon
     the host.
+  * Allow per-dist mirrors.  Which is useful when working with mixed
+    Debian + Ubuntu installations.
 
 xen-tools (3.4-1) unstable; urgency=low
 
