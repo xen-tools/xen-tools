@@ -72,16 +72,32 @@ cat <<E_O_APT > ${prefix}/etc/apt/sources.list
 deb     ${mirror}     ${dist} main contrib non-free
 deb-src ${mirror}     ${dist} main contrib non-free
 
+E_O_APT
+
+
+#
+#  If the host system has security support then enable that here too.
+#
+if ( grep ^deb.*security.debian.org /etc/apt/sources.list >/dev/null 2>/dev/null ) ; then
+
+    cat <<E_O_APT >> ${prefix}/etc/apt/sources.list
 # 
 #  Security updates
 # 
 deb     http://security.debian.org/ ${dist}/updates  main contrib non-free
 deb-src http://security.debian.org/ ${dist}/updates  main contrib non-free
-
-
 E_O_APT
 
+else
+    cat <<E_O_APT >> ${prefix}/etc/apt/sources.list
+# 
+#  Security updates - Uncomment to enable.
+# 
+# deb     http://security.debian.org/ ${dist}/updates  main contrib non-free
+# deb-src http://security.debian.org/ ${dist}/updates  main contrib non-free
+E_O_APT
 
+fi
     
 #
 #  Now that the sources have been setup make sure the system is up to date.
