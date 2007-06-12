@@ -87,7 +87,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-update-image,v 1.25 2007-05-24 17:35:18 steve Exp $
+ $Id: xen-update-image,v 1.26 2007-06-12 14:40:58 steve Exp $
 
 =cut
 
@@ -170,7 +170,14 @@ E_O_ROOT
 #
 while( my $name = shift )
 {
-    updateXenImage( $name );
+    if ( !xenRunning( $name ) )
+    {
+        updateXenImage( $name );
+    }
+    else
+    {
+        print "Skipping xen guest '$name' - it appears to be running.\n";
+    }
 }
 
 
@@ -197,9 +204,9 @@ sub updateXenImage
     #  Create a temporary directory, and prepare to mount the
     # image there.
     #
-    my $tmp = tempdir( CLEANUP => 1 );
-    my $img = '';
-
+    my $tmp       = tempdir( CLEANUP => 1 );
+    my $img       = '';
+    my $mount_cmd = '';
 
     #
     #  If we're dealing with loopback images find the main one,
@@ -215,6 +222,8 @@ sub updateXenImage
             print "Disk image '$img' for host '$name' not found\n";
             return;
         }
+
+        $mount_cmd = "mount -t auto -o loop $img $tmp";
     }
     elsif ( $CONFIG{'lvm'} )
     {
@@ -227,6 +236,8 @@ sub updateXenImage
             print "Logical volume '$img' for host '$name' not found\n";
             return;
         }
+
+        $mount_cmd = "mount -t auto $img $tmp";
     }
     elsif ( $CONFIG{'evms'} )
     {
@@ -251,6 +262,8 @@ sub updateXenImage
             print "EVMS volume '$img' for host '$name' not found\n";
             return;
         }
+
+        $mount_cmd = "mount -t auto $img $tmp";
     }
     else
     {
@@ -260,14 +273,13 @@ sub updateXenImage
     #
     #  Mount the image.
     #
-    my $mount_cmd = "mount -t auto -o loop $img $tmp";
     `$mount_cmd`;
 
     #
     #  Make sure this is a Debian image.
     #
     if ( ( -e $tmp . "/usr/bin/apt-get" ) &&
-         ( -e $tmp . "/etc/apt/sources.list" ) )
+         ( -x $tmp . "/usr/bin/apt-get" ) )
     {
        #
        #  Now run the update command.
@@ -289,9 +301,42 @@ sub updateXenImage
     #
     #  Unmount
     #
-    `umount $tmp`;
+    `umount -l $tmp`;
+    `umount $tmp 2>/dev/null >/dev/null`;
 
 }
+
+
+
+
+
+=begin doc
+
+  Test to see if the given instance is running.
+
+=end doc
+
+=cut
+
+sub xenRunning
+{
+    my( $hostname ) =  (@_ );
+
+    my $running = 0;
+
+    open( CMD, "xm list 2>/dev/null |")
+      or die "Failed to run 'xm list $hostname'";
+    while( <CMD> )
+    {
+        my $line = $_;
+        $running = 1 if ( $line =~ /\Q$hostname\E/ )
+    }
+    close( CMD );
+
+    return( $running );
+}
+
+
 
 
 =begin doc
@@ -400,7 +445,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.25 $';
+        my $REVISION      = '$Revision: 1.26 $';
 
         if ( $REVISION =~ /1.([0-9.]+) / )
         {

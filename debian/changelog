@@ -7,6 +7,7 @@ xen-tools (3.4-2) unstable; urgency=low
   * Added support for Ubuntu Feisty + Gutsy
   * Use "policy-rc.d" to prevent daemons from starting inside our
     chroot().
+  * xen-update-image will now skip Xen guests which are running.
 
  -- Radu Spineanu <radu@debian.org>  Tue, 29 May 2007 01:09:40 +0300
 
