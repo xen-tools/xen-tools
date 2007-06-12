@@ -5,7 +5,7 @@
 #
 # Steve
 # --
-# $Id: argument-check.t,v 1.5 2006-06-13 13:26:00 steve Exp $
+# $Id: argument-check.t,v 1.6 2007-06-12 14:05:25 steve Exp $
 #
 
 use strict;
@@ -45,6 +45,8 @@ foreach my $key ( sort keys %OPTIONS )
             $found = 1;
         }
     }
+
+    next if ( $key =~ /mirror_/i );
 
     is( $found, 1 , " Found documentation for '$key'" );
 }
