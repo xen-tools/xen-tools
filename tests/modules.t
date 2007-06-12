@@ -26,10 +26,6 @@ BEGIN{ use_ok( 'Env' ); }
 require_ok( 'Env' );
 
 
-BEGIN{ use_ok( 'Expect' ); }
-require_ok( 'Expect' );
-
-
 BEGIN{ use_ok( 'File::Copy' ); }
 require_ok( 'File::Copy' );
 
