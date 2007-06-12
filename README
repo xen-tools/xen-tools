@@ -14,15 +14,16 @@ xen-tools
 ---------
 
   The xen-tools package contains a collection of Perl scripts for
- working with Xen images under Debian GNU/Linux.
+ working with Xen guest images under Debian GNU/Linux.
 
-  Using this software you can easily create new Xen guest images
- which are setup with networking, including an installation of 
- OpenSSH, and configured to be ready to work.
+  Using this software you can easily create new Xen guests configured
+ to be accessible over your local network and complete with an installed
+ copy of OpenSSH.
 
-  It is primarily aimed at users who wish to create virtual 
- instances of Debian Sarge, Etch, or Sid.  Although there is support
- for installing non-Debian instances.
+  This software is primarily aimed at users who wish to create virtual 
+ instances of Debian Sarge, Etch, or Sid.  Although other distributions
+ such as Ubuntu Dapper, Edgy, and Feisty are supported if you have the
+ appropriate packages installed.
 
 
 Requirements
@@ -30,12 +31,20 @@ Requirements
 
   To use these tools you'll need the following software:
 
+        * debootstrap
         * Perl
         * The Perl module "Text::Template" available from CPAN.
 
-  Optionally you'll need "debootstrap" and "rpmstrap" to take advantage
- of the most common installation methods - although you could get by without
- them if you were prepared to work at it.
+  In order to install RPM-based distributions such as CentOS, SuSE
+ or Fedora Core you will need a correctly installed and configured
+ "rpmstrap" package.
+
+  To install Ubuntu distributions upon a Debian host system you will
+ need either:
+
+        * The Ubuntu version of debootstrap installed.
+        * A patched debootstrap package from:
+                http://steve.org.uk/Software/tmp/debootstrap/
 
   If you wish to create new Xen instances which may be controlled by
  users via a login shell you should also install the xen-shell package
@@ -49,7 +58,8 @@ The Scripts
 -----------
 
   There now follows a brief description of each included script,
- for more thorough documentation please consult their manpages.
+ for more thorough documentation please consult the appropriate
+ manpage.
 
 
 
@@ -82,11 +92,11 @@ xen-create-nfs
 --------------
 
   This script is similar in spirit to xen-create-image, but much
- less complex.  It allows the creation of Xen configuration files
- which are diskless - and mount their root filesystem over a remote
- NFS-share.
+ less complex.  It allows the creation of Xen guests which are
+ diskless, mounting their root filesystem over a remote NFS-share.
 
-  Not many options to tweak, but still a useful addition to the suite.
+  There are not many options to tweak, but still a useful addition 
+ to the suite.
 
 
 xen-delete-image
@@ -114,10 +124,11 @@ xen-update-image
   NOTES: 
 
   *  The image should not be running or corruption will occur!
-  *  The script should only be used for Xen instances of Debian.
+  *  The script should only be used for Xen instances of Debian or
+    a Debian-derived distribution.
 
 
 Steve
 --
-$Id: README,v 1.40 2007-03-11 17:00:19 steve Exp $
+$Id: README,v 1.41 2007-06-12 14:35:46 steve Exp $
 
