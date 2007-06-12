@@ -564,7 +564,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.152 2007-06-11 23:33:18 steve Exp $
+ $Id: xen-create-image,v 1.153 2007-06-12 00:56:30 steve Exp $
 
 =cut
 
@@ -1239,7 +1239,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.152 $';
+        my $REVISION      = '$Revision: 1.153 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -2561,6 +2561,15 @@ sub installSystem
 
 sub exportEnvironment
 {
+    #
+    #  Per-distribution mirror?
+    #
+    my $distMirror = "mirror_" . $CONFIG{'dist'};
+    if ( $CONFIG{$distMirror} && length( $CONFIG{$distMirror} ) )
+    {
+        $CONFIG{'mirror'} = $CONFIG{$distMirror};
+    }
+
     foreach my $key ( keys %CONFIG )
     {
         if ( defined( $CONFIG{$key} ) )
