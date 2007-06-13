@@ -8,6 +8,9 @@
 #  This script also includes a logging utility which you're encouraged
 # to use.
 #
+#  The routines here may be freely called from any role script(s) you
+# might develop.
+#
 # Steve
 # -- 
 #
@@ -54,6 +57,9 @@ assert ()
 #
 #  Install a Debian package via apt-get.
 #
+#  We take special care so that daemons shouldn't start after installation
+# which they might otherwise do.
+#
 installDebianPackage ()
 {
     prefix=$1
@@ -76,7 +82,15 @@ installDebianPackage ()
     assert "$LINENO" -d ${prefix}
 
     #
-    # Disable the start-stop-daemon
+    #  Use policy-rc to stop any daemons from starting.
+    #
+    echo -e '#!/bin/bash\nexit 101\n' > ${prefix}/usr/sbin/policy-rc.d
+    chmod +x ${prefix}/usr/sbin/policy-rc.d
+
+    #
+    # Disable the start-stop-daemon - this shouldn't be necessary
+    # with the policy-rc.d addition above, however leaving it in
+    # place won't hurt ..
     #
     disableStartStopDaemon ${prefix}
 
@@ -84,6 +98,11 @@ installDebianPackage ()
     # Install the package
     #
     DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes --force-yes install ${package}
+
+    #
+    #  Remove the policy-rc.d script.
+    #
+    rm -f ${prefix}/usr/sbin/policy-rc.d
 
     #
     # Re-enable the start-stop-daemon
@@ -108,7 +127,7 @@ disableStartStopDaemon ()
    echo "echo \"Warning: Fake start-stop-daemon called, doing nothing\"" >> "${daemonfile}"
 
    chmod 755 "${daemonfile}"
-   logMessage "Start Stop Daemon disabled off."
+   logMessage "start-stop-daemon disabled / made a stub."
 }
  
 
@@ -127,7 +146,7 @@ enableStartStopDaemon ()
    #
    if [ -e "${daemonfile}.REAL" ]; then
        mv "${daemonfile}.REAL" "${daemonfile}"
-       logMessage "Start Stop Daemon enabled on."
+       logMessage "start-stop-daemon restored to working order."
    fi
 
 }
