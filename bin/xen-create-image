@@ -564,7 +564,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.153 2007-06-12 00:56:30 steve Exp $
+ $Id: xen-create-image,v 1.154 2007-06-13 23:56:51 steve Exp $
 
 =cut
 
@@ -1239,7 +1239,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.153 $';
+        my $REVISION      = '$Revision: 1.154 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1626,7 +1626,7 @@ sub showSummery
     #
     # Show the user what to expect.
     #
-    logprint( "\nGeneral Infomation\n" );
+    logprint( "\nGeneral Information\n" );
     logprint( "--------------------\n" );
     logprint( "Hostname       :  $CONFIG{'hostname'}\n" );
     logprint( "Distribution   :  $CONFIG{'dist'}\n" );
