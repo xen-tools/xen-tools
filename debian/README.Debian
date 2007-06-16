@@ -4,11 +4,11 @@ README
 Kernel/initrd guessing
 ======================
 
-In xen-tools 3.4-1 a new feature was added which allows using backtick expressions 
-in xen-tools.conf.
+In xen-tools 3.4-1 a new feature was added which allows using 
+backtick expressions in xen-tools.conf.
 
-Using this feature you can improve kernel/initrd guessing by changing/adding the following options
-to xen-tools.conf:
+Using this feature you can improve kernel/initrd guessing by 
+changing/adding the following options in xen-tools.conf:
 
    kernel      = /boot/vmlinuz-`uname -r`
    ramdisk     = /boot/initrd.img-`uname -r`
