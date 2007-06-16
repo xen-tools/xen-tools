@@ -67,7 +67,7 @@ xen-create-image
 ----------------
 
   This script is designed to create new images which may be used
- with the Xen hyperviser.
+ with the Xen hypervisor.
 
   The virtual images will have their networking settings created and,
  you may optionally cause the new instance to boot once it has
@@ -130,5 +130,5 @@ xen-update-image
 
 Steve
 --
-$Id: README,v 1.41 2007-06-12 14:35:46 steve Exp $
+$Id: README,v 1.42 2007-06-16 13:28:51 steve Exp $
 
