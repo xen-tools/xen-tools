@@ -62,7 +62,7 @@ removeDebianPackage ${prefix} man-db
 removeDebianPackage ${prefix} info
 
 # misc
-removeDebianPackage ${prefix} tasksel
+removeDebianPackage ${prefix} tasksel tasksel-data
 removeDebianPackage ${prefix} pciutils
 removeDebianPackage ${prefix} fdutils
 removeDebianPackage ${prefix} cpio
