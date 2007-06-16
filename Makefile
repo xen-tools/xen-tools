@@ -8,7 +8,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.103 2007-06-12 11:10:06 steve Exp $
+# $Id: Makefile,v 1.104 2007-06-16 13:24:59 steve Exp $
 
 
 #
@@ -63,8 +63,8 @@ clean:
 	@if [ -e build-stamp ]; then rm -f build-stamp ; fi
 	@if [ -e configure-stamp ]; then rm -f configure-stamp ; fi
 	@if [ -d debian/xen-tools ]; then rm -rf ./debian/xen-tools; fi
-	@-rm $(BASE)-$(VERSION).tar.gz
-	@-rm $(BASE)-$(VERSION).tar.gz.asc
+	@if [ -e $(BASE)-$(VERSION).tar.gz ]; then rm $(BASE)-$(VERSION).tar.gz ; fi
+	@if [ -e $(BASE)-$(VERSION).tar.gz.asc ]; then rm $(BASE)-$(VERSION).tar.gz.asc ; fi
 
 
 #
