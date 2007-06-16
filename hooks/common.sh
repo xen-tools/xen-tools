@@ -1,3 +1,4 @@
+
 #!/bin/sh
 #
 #  Common shell functions which may be used by any hook script
@@ -55,25 +56,26 @@ assert ()
 
 
 #
-#  Install a Debian package via apt-get.
+#  Install a number of Debian packages via apt-get.
 #
 #  We take special care so that daemons shouldn't start after installation
 # which they might otherwise do.
 #
+#  NOTE:  Function not renamed with trailing "s" for compatability reasons.
+#
 installDebianPackage ()
 {
     prefix=$1
-    package=$2
+    shift
 
     #
     # Log our options
     #
-    logMessage "Installing Debian package ${package} to prefix ${prefix}"
+    logMessage "Installing Debian packages $@ to prefix ${prefix}"
 
     #
     #  We require a package + prefix
     #
-    assert "$LINENO" "${package}"
     assert "$LINENO" "${prefix}"
 
     #
@@ -95,9 +97,9 @@ installDebianPackage ()
     disableStartStopDaemon ${prefix}
 
     #
-    # Install the package
+    # Install the packages
     #
-    DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes --force-yes install ${package}
+    DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes --force-yes install "$@"
 
     #
     #  Remove the policy-rc.d script.
@@ -154,12 +156,14 @@ enableStartStopDaemon ()
 
 
 #
-#  Remove a Debian package.
+#  Remove the specified Debian packages.
+#
+#  NOTE:  Function not renamed with trailing "s" for compatability reasons.
 #
 removeDebianPackage ()
 {
     prefix=$1
-    package=$2
+    shift
 
     #
     # Log our options
@@ -167,9 +171,8 @@ removeDebianPackage ()
     logMessage "Purging Debian package ${package} from prefix ${prefix}"
 
     #
-    #  We require a package + prefix
+    #  We require a prefix
     #
-    assert "$LINENO" "${package}"
     assert "$LINENO" "${prefix}"
 
     #
@@ -178,9 +181,9 @@ removeDebianPackage ()
     assert "$LINENO" -d ${prefix}
 
     #
-    # Purge the package
+    # Purge the packages we've been given.
     #
-    chroot ${prefix} /usr/bin/dpkg --purge ${package}
+    chroot ${prefix} /usr/bin/dpkg --purge "$@"
 
 }
 
