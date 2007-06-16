@@ -1,4 +1,4 @@
-xen-tools (3.4-2) stable; urgency=low
+xen-tools (3.5-1) unstable; urgency=low
 
   * Only add Debian sources for security.debian.org if enabled upon the host.
   * Allow per-dist mirrors.  Which is useful when working with mixed
@@ -8,7 +8,7 @@ xen-tools (3.4-2) stable; urgency=low
     chroot().
   * xen-update-image will now skip Xen guests which are running.
 
- -- Steve Kemp <steve@steve.org.uk>  Wed, 13 Jun 2007 14:58:38 +0000
+ -- Steve Kemp <steve@steve.org.uk>  Sun, 16 Jun 2007 14:43:00 +0000
 
 xen-tools (3.4-1) unstable; urgency=low
 
