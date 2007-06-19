@@ -18,7 +18,7 @@
 # --
 # http://www.steve.org.uk
 #
-# $Id: xen-tools,v 1.48 2007-04-10 22:56:46 steve Exp $
+# $Id: xen-tools,v 1.49 2007-06-19 10:47:56 steve Exp $
 #
 
 
@@ -105,6 +105,14 @@ _xen_create_image()
 	    ;;
 	--fs)
 	    COMPREPLY=( $( compgen -W 'xfs ext3 reiserfs'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+	    return 0
+	    ;;
+	--hooks)
+	    COMPREPLY=( $( compgen -W '0 1'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+	    return 0
+	    ;;
+	--install)
+	    COMPREPLY=( $( compgen -W '0 1'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
 	    return 0
 	    ;;
 	--image)
