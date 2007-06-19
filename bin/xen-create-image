@@ -61,10 +61,9 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --memory      Setup the amount of memory allocated to the new instance.
 
-   --no-install  Don't install a guest system, just setup the disks/volumes
-                 and create the configuration file for Xen.
+   --install     Specify whether to install the guest system or not.
 
-   --no-hooks    Don't run any hooks after the image is created.
+   --hooks       Specify whether to run hooks after the image is created.
 
    --passwd      Ask for a root password during setup.
                  NOTE:  This is done interactively.
@@ -564,7 +563,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.156 2007-06-16 13:44:38 steve Exp $
+ $Id: xen-create-image,v 1.157 2007-06-19 10:44:24 steve Exp $
 
 =cut
 
@@ -644,6 +643,7 @@ readConfigurationFile( "/etc/xen-tools/xen-tools.conf" );
 #  Parse the command line arguments.
 #
 parseCommandLineArguments();
+
 
 #
 #  If we received a configuration file then read it.
@@ -794,7 +794,7 @@ exportEnvironment();
 # a binary name that is reasonably likely to exist under any
 # distribution of GNU/Linux.
 #
-if ( ! $CONFIG{'no-install'} )
+if ( ! $CONFIG{'install'} )
 {
     #
     #  Install the system.
@@ -814,7 +814,7 @@ if ( ! $CONFIG{'no-install'} )
     #
     #  Now customize the installation - setting up networking, etc.
     #
-    unless( $CONFIG{'no-hooks'} )
+    if( $CONFIG{'hooks'} )
     {
         runCustomisationHooks();
     }
@@ -1016,8 +1016,8 @@ sub setupDefaultOptions
     $CONFIG{'dist'}        = 'sarge';
     $CONFIG{'fs'}          = 'ext3';
     $CONFIG{'force'}       = 0;
-    $CONFIG{'no-install'}  = 0;
-    $CONFIG{'no-hooks'}    = 0;
+    $CONFIG{'install'}     = 1;
+    $CONFIG{'hooks'}       = 1;
     $CONFIG{'pid'}         = 0;
     $CONFIG{'template'}    = '';
     $CONFIG{'roledir'}     = '/etc/xen-tools/role.d';
@@ -1215,8 +1215,8 @@ sub parseCommandLineArguments
                "cache=s",      \$CONFIG{'cache'},
                "config=s",     \$CONFIG{'config'},
                "ide",          \$CONFIG{'ide'},
-               "no-install",   \$CONFIG{'no-install'},
-               "no-hooks",     \$CONFIG{'no-hooks'},
+               "install=i",    \$CONFIG{'install'},
+               "hooks=i",      \$CONFIG{'hooks'},
                "passwd",       \$CONFIG{'passwd'},
                "role=s",       \$CONFIG{'role'},
                "role-args=s",  \$CONFIG{'role-args'},
@@ -1239,7 +1239,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.156 $';
+        my $REVISION      = '$Revision: 1.157 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
