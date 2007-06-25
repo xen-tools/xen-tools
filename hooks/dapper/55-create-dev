@@ -42,7 +42,7 @@ fi
 #
 cd ${prefix}/dev
 ./MAKEDEV generic
-./MAKEDEV sd
+./MAKEDEV std
 
 
 #
