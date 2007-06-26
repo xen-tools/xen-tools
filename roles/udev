@@ -1,0 +1,35 @@
+#!/bin/sh
+#
+#  Configure the new image to have udev installed.
+#
+# Steve
+# --
+# http://www.steve.org.uk/
+#
+
+
+prefix=$1
+
+
+
+#
+#  Source our common functions - this will let us install a Debian package.
+#
+if [ -e /usr/lib/xen-tools/common.sh ]; then
+    . /usr/lib/xen-tools/common.sh
+else
+    echo "Installation problem"
+fi
+
+
+#
+#  Install udev.
+#
+installDebianPackage ${prefix} udev
+
+
+#
+#  Update APT lists.
+#
+chroot ${prefix} /usr/bin/apt-get update
+
