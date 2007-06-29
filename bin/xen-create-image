@@ -563,7 +563,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.158 2007-06-19 22:35:34 steve Exp $
+ $Id: xen-create-image,v 1.159 2007-06-29 11:52:19 steve Exp $
 
 =cut
 
@@ -623,6 +623,8 @@ my $RELEASE = '3.5';
 
 
 
+testXenConfig();
+exit;
 
 
 
@@ -976,7 +978,97 @@ EOF
             exit;
         }
     }
+
+
+    #
+    #  Test the system has a valid (network-script) + (vif-script) setup.
+    #
+    testXenConfig();
+
 }
+
+
+
+
+=begin doc
+
+  Test that the current Xen host has a valid network configuration,
+ this is designed to help newcomers to Xen.
+
+=end doc
+
+=cut
+
+sub testXenConfig
+{
+    # wierdness.
+    return if ( ! -d "/etc/xen" );
+
+    #
+    #  Temporary hash.
+    #
+    my %cfg;
+
+    #
+    # Read the configuration file.
+    #
+    open( CONFIG, "<", "/etc/xen/xend-config.sxp" )
+      or die "Failed to read /etc/xen/xend-config.xsp: $!";
+    while( <CONFIG> )
+    {
+        next if ( ! $_ || !length( $_ ) );
+
+        # vif
+        if ( $_ =~ /^\(vif-script ([^)]+)/ )
+        {
+            $cfg{'vif-script'} = $1;
+        }
+
+        # network
+        if ( $_ =~ /^\(network-script ([^)]+)/ )
+        {
+            $cfg{'network-script'} = $1;
+        }
+    }
+    close( CONFIG );
+
+    if ( !defined( $cfg{'network-script'} ) ||
+         !defined( $cfg{'vif-script'} ) )
+    {
+        print <<EOF;
+
+WARNING
+-------
+
+  You appear to have a missing vif-script, or network-script, in the
+ Xen configuration file /etc/xen/xend-config.sxp.
+
+  Please fix this and restart Xend, or your guests will not be able to
+ use any networking!
+
+EOF
+    }
+    else
+    {
+        if ( ( $cfg{'network-script'} =~ /dummy/i ) ||
+             ( $cfg{'vif-script'}     =~ /dummy/i ) )
+        {
+
+            print <<EOF;
+WARNING
+-------
+
+  You appear to have a "dummy" vif-script, or network-script, setting
+ in the Xen configuration file /etc/xen/xend-config.sxp.
+
+  Please fix this and restart Xend, or your guests will not be able to
+ use any networking!
+
+EOF
+        }
+    }
+}
+
 
 
 
@@ -1239,7 +1331,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.158 $';
+        my $REVISION      = '$Revision: 1.159 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
