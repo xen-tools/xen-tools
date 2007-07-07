@@ -38,11 +38,6 @@ fi
 installDebianPackage ${prefix} locales
 installDebianPackage ${prefix} util-linux-locales
 
-#
-#  Now generate the actual locale files.
-#
-chroot ${prefix} /usr/sbin/locale-gen
-
 
 
 #

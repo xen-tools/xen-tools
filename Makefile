@@ -8,7 +8,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.105 2007-06-16 13:44:37 steve Exp $
+# $Id: Makefile,v 1.106 2007-07-07 23:48:08 steve Exp $
 
 
 #
@@ -100,9 +100,11 @@ install-etc:
 	-if [ -d ${prefix}/etc/xen-tools/hook.d ]; then mv ${prefix}/etc/xen-tools/hook.d/  ${prefix}/etc/xen-tools/hook.d.obsolete ; fi
 	-mkdir -p ${prefix}/etc/xen-tools/skel/
 	-mkdir -p ${prefix}/etc/xen-tools/role.d/
+	-mkdir -p ${prefix}/etc/xen-tools/partitions.d/
 	cp etc/xen-tools.conf ${prefix}/etc/xen-tools/
 	cp etc/xm.tmpl        ${prefix}/etc/xen-tools/
 	cp etc/xm-nfs.tmpl    ${prefix}/etc/xen-tools/
+	cp partitions/*-*     ${prefix}/etc/xen-tools/partitions.d/
 	-mkdir -p             ${prefix}/etc/bash_completion.d
 	cp misc/xen-tools     ${prefix}/etc/bash_completion.d/
 	cp misc/xm            ${prefix}/etc/bash_completion.d/

@@ -1,3 +1,10 @@
+xen-tools (3.6-1) unstable; urgency=low
+
+  * UNRELEASED.
+     - Partitioning support.
+
+ -- Steve Kemp <steve@steve.org.uk>  Sun, 16 Jun 2007 14:43:00 +0000
+
 xen-tools (3.5-1) unstable; urgency=low
 
   * Only add Debian sources for security.debian.org if enabled upon the host.

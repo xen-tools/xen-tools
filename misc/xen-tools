@@ -18,7 +18,7 @@
 # --
 # http://www.steve.org.uk
 #
-# $Id: xen-tools,v 1.49 2007-06-19 10:47:56 steve Exp $
+# $Id: xen-tools,v 1.50 2007-07-07 23:48:44 steve Exp $
 #
 
 
@@ -48,7 +48,7 @@ function _find_xen_images
 #
 _xen_create_image()
 {
-    local cur prev ip roles dists vgs
+    local cur prev ip roles partitions dists vgs
 
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
@@ -135,6 +135,11 @@ _xen_create_image()
 	--role)
 	    roles=$(for x in `ls -1 /etc/xen-tools/role.d/ 2>/dev/null | grep -v \/ 2>/dev/null`; do echo ${x} ; done )
 	    COMPREPLY=( $( compgen -W '${roles}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+	    return 0
+	    ;;
+	--partitions)
+	    partitions=$(for x in `ls -1 /etc/xen-tools/partitions.d/ 2>/dev/null | grep -v \/ 2>/dev/null`; do echo ${x} ; done )
+	    COMPREPLY=( $( compgen -W '${partitions}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
 	    return 0
 	    ;;
     esac

@@ -43,7 +43,7 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
                 those which are liable to be used by the new invocation.
 
    --fs          Specify the filesystem type to use for the new guest.
-                 Valid choices are 'ext3', 'reiserfs', or 'xfs'.
+                 Valid choices are 'ext2', 'ext3', 'reiserfs', or 'xfs'.
 
    --image       Specify whether to create "sparse" or "full" disk images.
                  Full images are mandatory when using LVM, so this setting
@@ -61,9 +61,17 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --memory      Setup the amount of memory allocated to the new instance.
 
+   --modules     Set the path to the kernel modules to use for domU.
+                 If modules are specified they must exist.
+
    --install     Specify whether to install the guest system or not.
 
    --hooks       Specify whether to run hooks after the image is created.
+
+   --partitions  Use a specific partition layout configuration file.
+                Not supported with the image-dev and swap-dev options.
+                Parameters fs, size, swap and noswap are ignored when
+                using this option.
 
    --passwd      Ask for a root password during setup.
                  NOTE:  This is done interactively.
@@ -563,7 +571,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.159 2007-06-29 11:52:19 steve Exp $
+ $Id: xen-create-image,v 1.160 2007-07-07 23:48:09 steve Exp $
 
 =cut
 
@@ -580,6 +588,7 @@ The LICENSE file contains the full text of the license.
 
 
 use strict;
+use Config::IniFiles;
 use English;
 use Env;
 use File::Path qw/ mkpath /;
@@ -593,6 +602,11 @@ use Pod::Usage;
 # file, then optionally overridden by the command line.
 #
 my %CONFIG;
+
+#
+#  Partition layout information values read from the partitions file.
+#
+my @PARTITIONS = undef;
 
 #
 #  Global variable containing the temporary file where our image
@@ -624,7 +638,7 @@ my $RELEASE = '3.5';
 
 
 testXenConfig();
-exit;
+
 
 
 
@@ -722,9 +736,9 @@ checkBinariesPresent();
 
 
 #
-#  Show a summery of what we're going to do.
+#  Show a summary of what we're going to do.
 #
-showSummery();
+showSummary();
 
 
 
@@ -754,7 +768,7 @@ elsif ( $CONFIG{'lvm'} )
 elsif ( $CONFIG{'evms'} )
 {
     #
-    #  Create our evms partitions.
+    #  Create our EVMS partitions.
     #
     createEVMSBits();
 }
@@ -796,7 +810,7 @@ exportEnvironment();
 # a binary name that is reasonably likely to exist under any
 # distribution of GNU/Linux.
 #
-if ( ! $CONFIG{'install'} )
+if ( $CONFIG{'install'} )
 {
     #
     #  Install the system.
@@ -1086,34 +1100,37 @@ sub setupDefaultOptions
     #
     # Paths and files.
     #
-    $CONFIG{'dir'}         = '';
-    $CONFIG{'xm'}          = findBinary( "xm" );
-    $CONFIG{'kernel'}      = '';
-    $CONFIG{'initrd'}      = '';
+    $CONFIG{'dir'}            = '';
+    $CONFIG{'xm'}             = findBinary( "xm" );
+    $CONFIG{'kernel'}         = '';
+    $CONFIG{'modules'}        = '';
+    $CONFIG{'initrd'}         = '';
 
     #
     # Sizing options.
     #
-    $CONFIG{'memory'}      = '96Mb';
-    $CONFIG{'size'}        = '2000Mb';
-    $CONFIG{'swap'}        = '128M';
-    $CONFIG{'cache'}       = 'yes';
-    $CONFIG{'image'}       = 'sparse';
+    $CONFIG{'memory'}         = '96Mb';
+    $CONFIG{'size'}           = '2000Mb';
+    $CONFIG{'swap'}           = '128M';
+    $CONFIG{'cache'}          = 'yes';
+    $CONFIG{'image'}          = 'sparse';
 
     #
     # Misc. options.
     #
-    $CONFIG{'mirror'}      = 'http://ftp.us.debian.org/debian';
-    $CONFIG{'arch'}        = '';
-    $CONFIG{'dist'}        = 'sarge';
-    $CONFIG{'fs'}          = 'ext3';
-    $CONFIG{'force'}       = 0;
-    $CONFIG{'install'}     = 1;
-    $CONFIG{'hooks'}       = 1;
-    $CONFIG{'pid'}         = 0;
-    $CONFIG{'template'}    = '';
-    $CONFIG{'roledir'}     = '/etc/xen-tools/role.d';
-    $CONFIG{'ipfile'}      = '/etc/xen-tools/ips.txt';
+    $CONFIG{'mirror'}         = 'http://ftp.us.debian.org/debian';
+    $CONFIG{'arch'}           = '';
+    $CONFIG{'dist'}           = 'sarge';
+    $CONFIG{'fs'}             = 'ext3';
+    $CONFIG{'force'}          = 0;
+    $CONFIG{'install'}        = 1;
+    $CONFIG{'hooks'}          = 1;
+    $CONFIG{'partitions'}     = '';
+    $CONFIG{'pid'}            = 0;
+    $CONFIG{'template'}       = '';
+    $CONFIG{'roledir'}        = '/etc/xen-tools/role.d';
+    $CONFIG{'partitionsdir'}  = '/etc/xen-tools/partitions.d';
+    $CONFIG{'ipfile'}         = '/etc/xen-tools/ips.txt';
 
     #
     #  Installation method defaults to "debootstrap".
@@ -1130,6 +1147,7 @@ sub setupDefaultOptions
     #         filesystem, even if it exists.  This script must detect
     #         prior existance itself.
     #
+    $CONFIG{'make_fs_ext2'}      = 'mkfs.ext2 -F ';
     $CONFIG{'make_fs_ext3'}      = 'mkfs.ext3 -F ';
     $CONFIG{'make_fs_xfs'}       = 'mkfs.xfs -f -d name=';
     $CONFIG{'make_fs_reiserfs'}  = 'mkfs.reiserfs -f -q ';
@@ -1140,6 +1158,7 @@ sub setupDefaultOptions
     #  NOTE: Kinda redundent and may go away since '-t auto' should do
     #        the right thing.
     #
+    $CONFIG{'mount_fs_ext2'}      = '-t ext2';
     $CONFIG{'mount_fs_ext3'}      = '-t ext3';
     $CONFIG{'mount_fs_xfs'}       = '-t xfs';
     $CONFIG{'mount_fs_reiserfs'}  = '-t reiserfs';
@@ -1275,6 +1294,7 @@ sub parseCommandLineArguments
                "kernel=s",     \$CONFIG{'kernel'},
                "initrd=s",     \$CONFIG{'initrd'},
                "mirror=s",     \$CONFIG{'mirror'},
+               "modules=s",    \$CONFIG{'modules'},
                "lvm=s",        \$install{'lvm'},
                "image-dev=s",  \$install{'image-dev'},
                "swap-dev=s",   \$install{'swap-dev'},
@@ -1310,6 +1330,7 @@ sub parseCommandLineArguments
                "install=i",    \$CONFIG{'install'},
                "hooks=i",      \$CONFIG{'hooks'},
                "passwd",       \$CONFIG{'passwd'},
+               "partitions=s", \$CONFIG{'partitions'},
                "role=s",       \$CONFIG{'role'},
                "role-args=s",  \$CONFIG{'role-args'},
                "roledir=s",    \$CONFIG{'roledir'},
@@ -1331,7 +1352,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.159 $';
+        my $REVISION      = '$Revision: 1.160 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1352,6 +1373,8 @@ sub parseCommandLineArguments
         $CONFIG{'evms'}      = undef;
         $CONFIG{'lvm'}       = undef;
         $CONFIG{'image-dev'} = undef;
+
+        populatePartitionsData();
     }
     if ( $install{'evms'} )
     {
@@ -1359,6 +1382,8 @@ sub parseCommandLineArguments
         $CONFIG{'evms'}      = $install{'evms'};
         $CONFIG{'lvm'}       = undef;
         $CONFIG{'image-dev'} = undef;
+
+        populatePartitionsData();
     }
     if ( $install{'lvm'} )
     {
@@ -1366,6 +1391,8 @@ sub parseCommandLineArguments
         $CONFIG{'evms'}      = undef;
         $CONFIG{'lvm'}       = $install{'lvm'};
         $CONFIG{'image-dev'} = undef;
+
+        populatePartitionsData();
     }
     if ( $install{'image-dev'} )
     {
@@ -1584,9 +1611,55 @@ EOF
         }
     }
 
+
+    #
+    #  If we've got a partitions directory specified then it must exist.
+    #
+    if ( defined( $CONFIG{'partitionsdir'} ) && length( $CONFIG{'partitionsdir'} ) )
+    {
+        if ( ! -d $CONFIG{'partitionsdir'} )
+        {
+            logprint( "The specified partitions directory '$CONFIG{'partitionsdir'}' does not exist\n" );
+            exit 1;
+        }
+    }
+
+
+    #
+    #  Make sure that any specified partitions file exists.
+    #
+    if ( ( defined( $CONFIG{'partitions'} ) ) &&
+         ( length( $CONFIG{'partitions'}  ) ) )
+    {
+        if ( ! ( $CONFIG{'partitions'} =~ /\// ) )
+        {
+            $CONFIG{'partitions'} = $CONFIG{'partitionsdir'} . '/' . $CONFIG{'partitions'};
+        }
+
+        if ( ! -e $CONFIG{'partitions'} )
+        {
+            logprint( "The specified partitions file, $CONFIG{'partitions'}, does not exist.\n" );
+            exit 1;
+        }
+
+        loadAndCheckPartitionsFile();
+    }
+
     if ( $CONFIG{'swap-dev'} && $CONFIG{'noswap'} )
     {
         logprint( "Please choose either swap-dev or noswap, not both!\n" );
+        exit 1;
+    }
+
+    if ( $CONFIG{'swap-dev'} && $CONFIG{'partitions'} )
+    {
+        logprint( "Please choose either swap-dev or partitions, not both!\n" );
+        exit 1;
+    }
+
+    if ( $CONFIG{'image-dev'} && $CONFIG{'partitions'} )
+    {
+        logprint( "Please choose either image-dev or partitions, not both!\n" );
         exit 1;
     }
 
@@ -1719,13 +1792,177 @@ sub checkBinariesPresent
 
 =begin doc
 
-  Show the user a summery of what is going to be created for them
+  Loads a partitions file, checks the syntax and updates the configuration variables with it
 
 =end doc
 
 =cut
 
-sub showSummery
+sub loadAndCheckPartitionsFile
+{
+    my %partitions;
+    tie %partitions, 'Config::IniFiles', ( -file => $CONFIG{'partitions'} );
+
+    @PARTITIONS = ();
+
+    my $name;
+    my $details;
+    my $foundroot = 0;
+    while ( ( $name, $details ) = each %partitions )
+    {
+        if ( ! ( $name =~ /^[a-zA-Z0-9-]+$/ ) )
+        {
+            logprint( "The partition name $name contains invalid characters.\n" );
+            logprint( "Only alphanumeric characters and the hyphen are allowed\n" );
+            exit 1;
+        }
+
+        if ( ! ( $details->{'size'} =~ /^[0-9.]+[GgMmKk]b?$/ ) )
+        {
+            logprint( "The size $details->{'size'} of partition $name contains is not recognized.\n" );
+            exit 1;
+        }
+
+        if ( $details->{'type'} eq 'swap' )
+        {
+            push( @PARTITIONS, { 'name' => $name, 'size' => $details->{'size'}, 'type' => 'swap', 'mountpoint' => '', 'options' => '' } );
+        }
+        else
+        {
+            if ( ! $CONFIG{ 'make_fs_' . $details->{'type'} } )
+            {
+                logprint( "The type $details->{'type'} of partition $name is not recognized.\n" );
+                exit 1;
+            }
+
+            if ( ! ( $details->{'mountpoint'} =~ /^\/[^: \t\r\n]*$/ ) )
+            {
+                logprint( "The mount point $details->{'mountpoint'} of partition $name is invalid.\n" );
+                exit 1;
+            }
+
+            if ( ! ( $details->{'options'} =~ /^[^: \t\r\n]*$/ ) )
+            {
+                logprint( "The mount options $details->{'options'} of partition $name are invalid.\n" );
+                exit 1;
+            }
+
+            if ( ! $details->{'options'} )
+            {
+                $details->{'options'} = 'defaults';
+            }
+
+            if ( $details->{'mountpoint'} eq '/' )
+            {
+                $foundroot = 1;
+            }
+
+            push( @PARTITIONS,
+                {
+                    'name'       => $name,
+                    'size'       => $details->{'size'},
+                    'type'       => $details->{'type'},
+                    'mountpoint' => $details->{'mountpoint'},
+                    'options'    => $details->{'options'}
+                }
+            );
+        }
+    }
+
+    if ( ! $foundroot )
+    {
+        logprint( "The root partition was not specified.\n" );
+        exit 1;
+    }
+
+    #
+    # Sort by length of the mountpoint.
+    #
+    #  This makes it easy to mount parent folders first
+    # (e.g. /var before /var/tmp)
+    #
+    @PARTITIONS = sort { length $a->{'mountpoint'} cmp length $b->{'mountpoint'} } @PARTITIONS;
+}
+
+
+
+
+=begin doc
+
+  Populates the partition information using the supplied configuration arguments when not using the partitions file
+
+=end doc
+
+=cut
+
+sub populatePartitionsData
+{
+    @PARTITIONS = ();
+
+    #
+    #  [swap]
+    #
+    push( @PARTITIONS, { 'name'       => 'swap',
+                         'size'       => $CONFIG{'swap'},
+                         'type'       => 'swap',
+                         'mountpoint' => '',
+                         'options'    => '' } )
+      unless( $CONFIG{'noswap'} );
+
+    #
+    #  XFS has different default options.
+    #
+    my $options = 'errors=remount-ro';
+    $options = 'defaults' if ( $CONFIG{'fs'} eq 'xfs' );
+
+    #
+    #  [root]
+    #
+    push( @PARTITIONS, { 'name'       => 'disk',
+                         'size'       => $CONFIG{'size'},
+                         'type'       => $CONFIG{'fs'},
+                         'mountpoint' => '/',
+                         'options'    => $options } );
+}
+
+
+
+=begin doc
+
+  Converts the internal partitions array into a text representation suitable for passing to other scripts.
+
+=end doc
+
+=cut
+
+sub exportPartitionsToConfig
+{
+    $CONFIG{'NUMPARTITIONS'} = $#PARTITIONS + 1;
+
+    my $i;
+    for ( $i = 0; $i < $CONFIG{'NUMPARTITIONS'}; $i++ )
+    {
+        $CONFIG{'PARTITION' . ( $i + 1 )} = $PARTITIONS[$i]{'name'}       . ':' .
+                                            $PARTITIONS[$i]{'size'}       . ':' .
+                                            $PARTITIONS[$i]{'type'}       . ':' .
+                                            $PARTITIONS[$i]{'mountpoint'} . ':' .
+                                            $PARTITIONS[$i]{'options'}    . ':' .
+                                            $PARTITIONS[$i]{'imagetype'}  . ':' .
+                                            $PARTITIONS[$i]{'image'};
+    }
+}
+
+
+
+=begin doc
+
+  Show the user a summary of what is going to be created for them
+
+=end doc
+
+=cut
+
+sub showSummary
 {
     #
     # Show the user what to expect.
@@ -1734,27 +1971,32 @@ sub showSummery
     logprint( "--------------------\n" );
     logprint( "Hostname       :  $CONFIG{'hostname'}\n" );
     logprint( "Distribution   :  $CONFIG{'dist'}\n" );
-    logprint( "Fileystem Type :  $CONFIG{'fs'}\n" );
 
     if ( defined $CONFIG{'image-dev'} )
     {
-        logprint( "Image Device   :  $CONFIG{'image-dev'}\n" );
+        logprint( "Root Device    :  $CONFIG{'image-dev'}\n" );
     }
     if ( defined $CONFIG{'swap-dev'} )
     {
         logprint( "Swap Device    :  $CONFIG{'swap-dev'}\n" );
     }
 
-    logprint( "\nSize Information\n" );
-    logprint( "----------------\n" );
+    my $info;
+    my $partcount = 0;
 
-    if ( defined $CONFIG{'size'} )
+    logprint( "Partitions     :  " );
+    foreach my $partition ( @PARTITIONS )
     {
-        logprint( "Image size     :  $CONFIG{'size'}\n") ;
-    }
-    if ( defined $CONFIG{'swap'} )
-    {
-        logprint( "Swap size      :  $CONFIG{'swap'}\n" ) unless ( $CONFIG{'noswap' } );
+        $info = sprintf('%-15s %-5s (%s)', ($partition->{'type'} ne 'swap') ? $partition->{'mountpoint'} : 'swap', $partition->{'size'}, $partition->{'type'});
+
+        if ($partcount++)
+        {
+            logprint( "                  $info\n" );
+        }
+        else
+        {
+            logprint( "$info\n" );
+        }
     }
 
     logprint( "Image type     :  $CONFIG{'image'}\n" );
@@ -1763,6 +2005,11 @@ sub showSummery
     if ( defined( $CONFIG{'kernel'} ) && length( $CONFIG{'kernel'} ) )
     {
         logprint( "Kernel path    :  $CONFIG{'kernel'}\n" );
+    }
+
+    if ( defined( $CONFIG{'modules'} ) && length( $CONFIG{'modules'} ) )
+    {
+        logprint( "Module path    :  $CONFIG{'modules'}\n" );
     }
 
     if ( defined( $CONFIG{'initrd'} ) && length( $CONFIG{'initrd'} ) )
@@ -1934,12 +2181,6 @@ sub testLoopbackModule
 sub createLoopbackImages
 {
     #
-    #  The two files we need to test.
-    #
-    my $disk = $CONFIG{'dir'} . '/domains/' . $CONFIG{'hostname'} . "/disk.img" ;
-    my $swap = $CONFIG{'dir'} . '/domains/' . $CONFIG{'hostname'} . "/swap.img" ;
-
-    #
     #  Make sure we have the relevant output directory.
     #
     my $output = $CONFIG{'dir'} . "/domains/" . $CONFIG{'hostname'};
@@ -1963,105 +2204,89 @@ sub createLoopbackImages
     #
     # Only proceed overwritting if we have --force specified.
     #
-    if ( ( -e $disk ) && ! $CONFIG{'force'} )
+    if ( ! $CONFIG{'force'} )
     {
-       logprint( "The disk image already exists.  Aborting.\n" );
-       logprint( "Specify '--force' to overwrite, or remove the following file\n" );
-       logprint( $disk . "\n" );
-       exit;
-    }
-    if ( ( -e $swap ) && ! $CONFIG{'force'} )
-    {
-       logprint( "The swap image already exists.  Aborting.\n" );
-       logprint( "Specify '--force' to overwrite, or remove the following file\n" );
-       logprint( $swap . "\n" );
-       exit;
-    }
-
-
-    #
-    #  Modify the sizes to something reasonable
-    #
-    my $disk_size = $CONFIG{'size'};
-    my $swap_size = $CONFIG{'swap'};
-
-    #
-    # Convert Gb -> Mb for the disk image size, and swap size.
-    #
-    if ( $disk_size =~ /^(\d+)Gb*$/i )
-    {
-        $disk_size = $1 * 1024 . "M";
-    }
-    if ( $swap_size =~ /^(\d+)Gb*$/i )
-    {
-        $swap_size = $1 * 1024 . "M";
-    }
-
-    #
-    #  Final adjustments to sizing.
-    #
-    $disk_size =~ s/Mb*$/k/i;
-    if ( $swap_size =~ /^(\d+)Mb*$/i )
-    {
-        $swap_size = $1;
-    }
-
-    #
-    #  Use dd to create the swap
-    #
-    unless( $CONFIG{'noswap'} )
-    {
-        logprint( "\nCreating swap image: $swap\n" );
-        my $swap_cmd = "dd if=/dev/zero of=$swap bs=1024k count=$swap_size";
-        runCommand( $swap_cmd );
-        logprint( "Done\n" );
-    }
-
-
-    #
-    #  Use dd to create the disk image.
-    #
-    logprint( "\nCreating disk image: $disk\n" );
-    my $image_cmd;
-    if ( $CONFIG{'image'} eq "sparse" )
-    {
-        $CONFIG{'verbose'} && logprint( "Creating sparse image\n" );
-        $image_cmd = "dd if=/dev/zero of=$disk bs=$disk_size count=0 seek=1024";
-    }
-    else
-    {
-        $CONFIG{'verbose'} && logprint( "Creating full-sized image\n" );
-        $image_cmd = "dd if=/dev/zero of=$disk bs=$disk_size count=1024";
-    }
-
-    runCommand( $image_cmd );
-    logprint( "Done\n" );
-
-    #
-    #  Make sure the volumes exist.
-    #
-    if ( ! -e $swap )
-    {
-        unless( $CONFIG{'noswap'} )
+        foreach my $partition ( @PARTITIONS )
         {
-            logprint( "The disk image creation failed to create $swap.\n" );
-            logprint( "aborting\n" );
-            exit;
+            my $disk = $CONFIG{'dir'} . '/domains/' . $CONFIG{'hostname'} . '/' . $partition->{'name'} . '.img';
+
+            if ( -e $disk )
+            {
+                logprint( "The partition image already exists.  Aborting.\n" );
+                logprint( "Specify '--force' to overwrite, or remove the following file\n" );
+                logprint( $disk . "\n" );
+                exit;
+            }
         }
     }
 
-    if ( ! -e $disk )
-    {
-        logprint( "The disk image creation failed to create $disk.\n" );
-        logprint( "aborting\n" );
-        exit;
-    }
 
-    #
-    #  Finally create the filesystem + swap
-    #
-    createFilesystem( $disk );
-    createSwap( $swap ) unless( $CONFIG{'noswap'} );
+    foreach my $partition ( @PARTITIONS )
+    {
+        my $disk = $CONFIG{'dir'} . '/domains/' . $CONFIG{'hostname'} . '/' . $partition->{'name'} . '.img';
+
+        #
+        # Save the image path to the partitions array
+        #
+        $partition->{'imagetype'} = 'file:';
+        $partition->{'image'}     = $disk;
+
+        #
+        # Modify the size to something reasonable
+        #
+        my $size = $partition->{'size'};
+
+        #
+        # Convert Gb -> Mb for the partition image size.
+        #
+        if ( $size =~ /^([0-9.]+)Gb*$/i )
+        {
+            $size = $1 * 1024 . "M";
+        }
+
+        #
+        #  Final adjustments to sizing.
+        #
+        $size =~ s/Mb*$/k/i;
+
+        #
+        #  Use dd to create the partition image.
+        #
+        logprint( "\nCreating partition image: $disk\n" );
+        my $image_cmd;
+        if ( $CONFIG{'image'} eq "sparse" )
+        {
+            $CONFIG{'verbose'} && logprint( "Creating sparse image\n" );
+            $image_cmd = "dd if=/dev/zero of=$disk bs=$size count=0 seek=1024";
+        }
+        else
+        {
+            $CONFIG{'verbose'} && logprint( "Creating full-sized image\n" );
+            $image_cmd = "dd if=/dev/zero of=$disk bs=$size count=1024";
+        }
+
+        runCommand( $image_cmd );
+        logprint( "Done\n" );
+
+        if ( ! -e $disk )
+        {
+            logprint( "The partition image creation failed to create $disk.\n" );
+            logprint( "aborting\n" );
+            exit;
+        }
+
+        #
+        #  Finally create the filesystem / swap
+        #
+        if ( $partition->{'type'} eq 'swap' )
+        {
+            createSwap( $disk );
+        }
+        else
+        {
+            createFilesystem( $disk, $partition->{'type'} );
+        }
+    }
 }
 
 
@@ -2080,18 +2305,10 @@ sub createLoopbackImages
 
 sub usePhysicalDevice
 {
-    my $phys_img = undef;
-    my $swap_img = undef;
+    my $phys_img;
+    my $swap_img;
 
-    if ( defined $CONFIG{'image-dev'} )
-    {
-        $phys_img = $CONFIG{'image-dev'};
-    }
-    else
-    {
-        logprint( "No image-dev parameter given.  Aborting.\n" );
-        exit;
-    }
+    @PARTITIONS = ();
 
     if ( defined $CONFIG{'swap-dev'} )
     {
@@ -2103,16 +2320,30 @@ sub usePhysicalDevice
             logprint( "NOTE: Please provide full path to your physical device or logical volume.\n" );
             exit;
         }
+
+        push( @PARTITIONS, { 'name' => 'swap', 'size' => '', 'type' => 'swap', 'mountpoint' => '', 'options' => '', 'imagetype' => 'phy:', 'image' => $swap_img } )
+          unless( $CONFIG{'noswap'} );
     }
 
-    if (! -e $phys_img)
+    my $options = 'errors=remount-ro';
+    if ( $CONFIG{'fs'} eq 'xfs' )
     {
-        logprint( "The physical device or logical volume for image-dev $phys_img doesn't exist.  Aborting.\n" );
-        logprint( "NOTE: Please provide full path to your physical device or logical volume.\n" );
+        $options = 'defaults';
+    }
+
+    if ( defined $CONFIG{'image-dev'} )
+    {
+        $phys_img = $CONFIG{'image-dev'};
+
+        push( @PARTITIONS, { 'name' => 'disk', 'size' => '', 'type' => $CONFIG{'fs'}, 'mountpoint' => '/', 'options' => $options, 'imagetype' => 'phy:', 'image' => $phys_img } );
+    }
+    else
+    {
+        logprint( "No image-dev parameter given.  Aborting.\n" );
         exit;
     }
 
-    createFilesystem( $phys_img );
+    createFilesystem( $phys_img, $CONFIG{'fs'} );
     createSwap( $swap_img ) unless ( $CONFIG{'noswap'} );
 }
 
@@ -2129,120 +2360,75 @@ sub usePhysicalDevice
 
 sub createLVMBits
 {
-    #  The two volumes we will need to use..
-    my $disk = $CONFIG{'hostname'} . "-disk" ;
-    my $swap = $CONFIG{'hostname'} . "-swap" ;
-
     #
     #  Check whether the disk volume exists already, and if so abort
     #  unless '--force' is specified.
     #
-    my $lvm_disk = "/dev/$CONFIG{'lvm'}/$CONFIG{'hostname'}-disk";
-    if ( -e $lvm_disk )
+    foreach my $partition ( @PARTITIONS )
     {
-        # Delete if forcing
-        if ( $CONFIG{'force'} )
+        my $disk = $CONFIG{'hostname'} . '-' . $partition->{'name'};
+        my $lvm_disk = "/dev/$CONFIG{'lvm'}/$disk";
+
+        if ( -e $lvm_disk )
         {
-            logprint( "Removing $lvm_disk - since we're forcing the install\n" );
-            runCommand( "lvremove --force $lvm_disk" );
-        }
-        else
-        {
-            logprint( "The LVM disk image already exists.  Aborting.\n" );
-            logprint( "Specify '--force' to delete and recreate\n" );
-            exit;
-        }
-    }
-
-
-
-    #
-    #  Check whether the swap volume exists already, and if so abort
-    #  unless '--force' is specified.
-    #
-    my $lvm_swap = "/dev/$CONFIG{'lvm'}/$CONFIG{'hostname'}-swap";
-    if ( -e $lvm_swap )
-    {
-        # Delete if forcing
-        if ( $CONFIG{'force'} )
-        {
-            logprint( "Removing $lvm_swap - since we're forcing the install\n" );
-            runCommand( "lvremove --force $lvm_swap" );
-        }
-        else
-        {
-            logprint( "The LVM swap image already exists.  Aborting.\n" );
-            logprint( "Specify '--force' to delete and recreate\n" );
-            exit;
-        }
-    }
-
-
-    #
-    #  Modify the sizes to something reasonable
-    #
-    my $disk_size = $CONFIG{'size'};
-    my $swap_size = $CONFIG{'swap'};
-
-    #
-    # Convert Gb -> Mb for the disk image size, and swap size.
-    #
-    if ( $disk_size =~ /^(\d+)Gb*$/i )
-    {
-        $disk_size = $1 * 1024 . "M";
-    }
-    if ( $swap_size =~ /^(\d+)Gb*$/i )
-    {
-        $swap_size = $1 * 1024 . "M";
-    }
-
-    #
-    #  Final adjustments to sizing.
-    #
-    $disk_size =~ s/Mb*$/k/i;
-    if ( $swap_size =~ /^(\d+)Mb*$/i )
-    {
-        $swap_size = $1;
-    }
-
-
-    #
-    # The commands to create the volumes.
-    #
-    my $disk_cmd = "lvcreate $CONFIG{'lvm'} -L $CONFIG{'size'}M -n $disk";
-    my $swap_cmd = "lvcreate $CONFIG{'lvm'} -L $CONFIG{'swap'} -n $swap";
-
-    #
-    # Create the volumes
-    #
-    runCommand( $disk_cmd );
-    runCommand( $swap_cmd ) unless( $CONFIG{'noswap'} );
-
-    #
-    # Make sure that worked.
-    #
-    if ( ! -e $lvm_disk )
-    {
-        logprint( "The LVM disk image creation failed to create $lvm_disk.\n" );
-        logprint( "aborting\n" );
-        exit;
-    }
-    if ( ! -e $lvm_swap )
-    {
-        unless( $CONFIG{'noswap'} )
-        {
-                logprint( "The LVM disk image creation failed to create $swap.\n" );
-                logprint( "aborting\n" );
+            # Delete if forcing
+            if ( $CONFIG{'force'} )
+            {
+                logprint( "Removing $lvm_disk - since we're forcing the install\n" );
+                runCommand( "lvremove --force $lvm_disk" );
+            }
+            else
+            {
+                logprint( "The LVM disk image already exists.  Aborting.\n" );
+                logprint( "Specify '--force' to delete and recreate\n" );
                 exit;
+            }
         }
     }
 
+    foreach my $partition ( @PARTITIONS )
+    {
+        my $disk = $CONFIG{'hostname'} . '-' . $partition->{'name'};
+        my $lvm_disk = "/dev/$CONFIG{'lvm'}/$disk";
 
-    #
-    #  Initialise the partitions with the relevant filesystem.
-    #
-    createFilesystem( "/dev/$CONFIG{'lvm'}/$CONFIG{'hostname'}-disk" );
-    createSwap( "/dev/$CONFIG{'lvm'}/$CONFIG{'hostname'}-swap" ) unless ( $CONFIG{'noswap'} );
+        #
+        # Save the image path to the partitions array
+        #
+        $partition->{'imagetype'} = 'phy:';
+        $partition->{'image'}     = $lvm_disk;
+
+        #
+        # The commands to create the volume.
+        #
+        my $disk_cmd = "lvcreate $CONFIG{'lvm'} -L $partition->{'size'} -n $disk";
+
+        #
+        # Create the volume
+        #
+        runCommand( $disk_cmd );
+
+        #
+        # Make sure that worked.
+        #
+        if ( ! -e $lvm_disk )
+        {
+            logprint( "The LVM partition image creation failed to create $lvm_disk.\n" );
+            logprint( "aborting\n" );
+            exit;
+        }
+
+        #
+        #  Finally create the filesystem / swap
+        #
+        if ( $partition->{'type'} eq 'swap' )
+        {
+            createSwap( $lvm_disk );
+        }
+        else
+        {
+            createFilesystem( $lvm_disk, $partition->{'type'} );
+        }
+    }
 
 }
 
@@ -2260,164 +2446,115 @@ sub createLVMBits
 
 sub createEVMSBits
 {
-    #  The two volumes we will need to use..
-    my $disk = $CONFIG{'hostname'} . "-disk" ;
-    my $swap = $CONFIG{'hostname'} . "-swap" ;
-
     #
     #  Check whether the disk volume exists already, and if so abort
     #  unless '--force' is specified.  This is two steps with evms,
     #  because two things need to be checked, the volume and the object.
     #
 
-    # Check whether the EVMS volume already exists, abort unless '--force' is specified.
-    my $evms_volume_disk = "/dev/evms/$CONFIG{'hostname'}-disk";
-    if ( -e $evms_volume_disk )
+    foreach my $partition ( @PARTITIONS )
     {
-        # Delete if forcing
-        if ( $CONFIG{'force'} )
+        # Check whether the EVMS volume already exists, abort unless '--force' is specified.
+        my $evms_volume_disk = "/dev/evms/$CONFIG{'hostname'}-$partition->{'name'}";
+        if ( -e $evms_volume_disk )
         {
-            logprint( "Removing $evms_volume_disk - since we're forcing the install\n" );
-            runCommand( "echo Delete : $evms_volume_disk | evms" );
+            # Delete if forcing
+            if ( $CONFIG{'force'} )
+            {
+                logprint( "Removing $evms_volume_disk - since we're forcing the install\n" );
+                runCommand( "echo Delete : $evms_volume_disk | evms" );
+            }
+            else
+            {
+                logprint( "The EVMS volume $evms_volume_disk already exists.  Aborting.\n" );
+                logprint( "Specify '--force' to delete and recreate\n" );
+                exit;
+            }
+        }
+
+        #
+        # Check whether the EVMS object exists, abort unless '--force'
+        # is specified.
+        #
+        # Note: $evms_object_disk is not specified directly as a device
+        #
+        my $evms_object_disk = "$CONFIG{'evms'}/$CONFIG{'hostname'}-$partition->{'name'}";
+        if ( -e $evms_object_disk )
+        {
+            # Delete if forcing
+            if ( $CONFIG{'force'} )
+            {
+                logprint( "Removing $evms_object_disk - since we're forcing the install\n" );
+                runCommand( "echo Delete : $evms_object_disk | evms" );
+            }
+            else
+            {
+                logprint( "The EVMS object $evms_object_disk already exists.  Aborting.\n" );
+                logprint( "Specify '--force' to delete and recreate\n" );
+                exit;
+            }
+        }
+    }
+
+    foreach my $partition ( @PARTITIONS )
+    {
+        my $disk = $CONFIG{'hostname'} . '-' . $partition->{'name'};
+        my $evms_disk = "/dev/evms/$disk";
+
+        #
+        # Save the image path to the partitions array
+        #
+        $partition->{'imagetype'} = 'phy:';
+        $partition->{'image'}     = $evms_disk;
+
+        #
+        #  Modify the size to something reasonable
+        #
+        my $size = $partition->{'size'};
+
+        #
+        # Convert Gb -> Mb for the partition image size.
+        #
+        if ( $size =~ /^([0-9.]+)Gb*$/i )
+        {
+            $size = $1 * 1024 . "M";
+        }
+
+        #
+        #  Final adjustments to sizing.
+        #
+        $size =~ s/Mb*$/k/i;
+
+        #
+        # The commands to create the objects and volumes.
+        #
+        # create the object
+        #
+        my $disk_cmd_object = "echo allocate : $CONFIG{'evms'}/Freespace, size=$CONFIG{'size'}, name=$disk | evms";
+
+        #
+        # these will be piped to evms, but gotta check it first
+        #
+        my $disk_cmd_volume = "echo create : Volume, $CONFIG{'evms'}/$disk, name=$disk | evms";
+
+        #
+        # Create the volumes
+        #
+        runCommand( $disk_cmd_object );
+        runCommand( $disk_cmd_volume );
+
+        #
+        #  Initialise the partition with the relevant filesystem.
+        #
+        if ( $partition->{'type'} eq 'swap' )
+        {
+            createSwap( $disk_cmd_volume );
         }
         else
         {
-            logprint( "The EVMS volume $evms_volume_disk already exists.  Aborting.\n" );
-            logprint( "Specify '--force' to delete and recreate\n" );
-            exit;
+            createFilesystem( $disk_cmd_volume, $partition->{'type'} );
         }
     }
-
-    #
-    # Check whether the EVMS object exists, abort unless '--force'
-    # is specified.
-    #
-    # Note: $evms_object_disk is not specified directly as a device
-    #
-    my $evms_object_disk = "$CONFIG{'evms'}/$CONFIG{'hostname'}-disk";
-    if ( -e $evms_object_disk )
-    {
-        # Delete if forcing
-        if ( $CONFIG{'force'} )
-        {
-            logprint( "Removing $evms_object_disk - since we're forcing the install\n" );
-            runCommand( "echo Delete : $evms_object_disk | evms" );
-        }
-        else
-        {
-            logprint( "The EVMS object $evms_object_disk already exists.  Aborting.\n" );
-            logprint( "Specify '--force' to delete and recreate\n" );
-            exit;
-        }
-    }
-
-
-    #
-    #  Check whether the swap object and EVMS volume exists already, and
-    # if so abort unless '--force' is specified.
-    #
-    #
-    # Check whether the EVMS volume for swap already exists, abort
-    # unless '--force' is specified.
-    #
-    my $evms_volume_swap = "/dev/evms/$CONFIG{'hostname'}-swap";
-    if ( -e $evms_volume_swap )
-    {
-        # Delete if forcing
-        if ( $CONFIG{'force'} )
-        {
-            logprint( "Removing $evms_volume_swap - since we're forcing the install\n" );
-            runCommand( "echo Delete : $evms_volume_swap | evms" );
-        }
-        else
-        {
-            logprint( "The EVMS volume $evms_volume_swap image already exists.  Aborting.\n" );
-            logprint( "Specify '--force' to delete and recreate\n" );
-            exit;
-        }
-    }
-    # Check whether the evms object for swap exists, abort unless '--force' is specified.
-    # note that $evms_object_swap is not specified directly as a device
-    my $evms_object_swap = "$CONFIG{'evms'}/$CONFIG{'hostname'}-swap";
-    if ( -e $evms_object_swap )
-    {
-        # Delete if forcing
-        if ( $CONFIG{'force'} )
-        {
-            logprint( "Removing $evms_object_swap - since we're forcing the install\n" );
-            runCommand( "echo Delete : $evms_object_swap | evms" );
-        }
-        else
-        {
-            logprint( "The EVMS object $evms_object_swap image already exists.  Aborting.\n" );
-            logprint( "Specify '--force' to delete and recreate\n" );
-            exit;
-        }
-    }
-
-
-    #
-    #  Modify the sizes to something reasonable
-    #
-    my $disk_size = $CONFIG{'size'};
-    my $swap_size = $CONFIG{'swap'};
-
-    #
-    # Convert Gb -> Mb for the disk image size, and swap size.
-    #
-    if ( $disk_size =~ /^(\d+)Gb*$/i )
-    {
-        $disk_size = $1 * 1024 . "M";
-    }
-    if ( $swap_size =~ /^(\d+)Gb*$/i )
-    {
-        $swap_size = $1 * 1024 . "M";
-    }
-
-    #
-    #  Final adjustments to sizing.
-    #
-    $disk_size =~ s/Mb*$/k/i;
-    if ( $swap_size =~ /^(\d+)Mb*$/i )
-    {
-        $swap_size = $1;
-    }
-
-
-    #
-    # The commands to create the objects and volumes.
-    #
-    # create the object
-    #
-    my $disk_cmd_object = "echo allocate : $CONFIG{'evms'}/Freespace, size=$CONFIG{'size'}, name=$disk | evms";
-
-    #
-    # these will be piped to evms, but gotta check it first
-    #
-    my $disk_cmd_volume = "echo create : Volume, $CONFIG{'evms'}/$disk, name=$disk | evms";
-
-    #repeat the same steps for the swap partition
-    my $swap_cmd_object = "echo allocate : $CONFIG{'evms'}/Freespace, size=$CONFIG{'swap'}, name=$swap | evms";
-
-    #create the EVMS volume
-    my $swap_cmd_volume = "echo create : Volume, $CONFIG{'evms'}/$swap, name=$swap | evms";
-    ##/sbin/lvcreate $CONFIG{'evms'} -L $CONFIG{'swap'} -n $swap";
-
-
-    #
-    # Create the volumes
-    #
-    runCommand( $disk_cmd_object );
-    runCommand( $disk_cmd_volume );
-
-    runCommand( $swap_cmd_object ) unless( $CONFIG{'noswap'} );
-    runCommand( $swap_cmd_volume ) unless( $CONFIG{'noswap'} );
-
-    #
-    #  Initialise the partitions with the relevant filesystem.
-    #
-    createFilesystem( "/dev/evms/$CONFIG{'hostname'}-disk" );
-    createSwap( "/dev/evms/$CONFIG{'hostname'}-swap" ) unless ( $CONFIG{'noswap'} );
 
 }
 
@@ -2433,13 +2570,13 @@ sub createEVMSBits
 
 sub createFilesystem
 {
-    my( $image ) = ( @_ );
+    my( $image, $fs ) = ( @_ );
 
     #
     #  We have the filesystem the user wanted, make sure that the
     # binary exists.
     #
-    my $command = $CONFIG{ "make_fs_" . $CONFIG{'fs'} };
+    my $command = $CONFIG{ "make_fs_" . $fs };
 
     #
     #  Split the command into "binary" + "args".  Make sure that
@@ -2452,20 +2589,20 @@ sub createFilesystem
 
        if ( ! defined( findBinary( $binary ) ) )
        {
-           logprint( "The binary '$binary' required to create the filesystem $CONFIG{'fs'} is missing\n" );
+           logprint( "The binary '$binary' required to create the filesystem $fs is missing\n" );
            exit;
        }
     }
     else
     {
-       logprint( "The filesystem creation hash is bogus for filesystem : $CONFIG{'fs'}\n" );
+       logprint( "The filesystem creation hash is bogus for filesystem : $fs\n" );
        exit;
     }
 
     #
     #  OK we have the command and the filesystem.  Create it.
     #
-    logprint( "\nCreating $CONFIG{'fs'} filesystem on $image\n" );
+    logprint( "\nCreating $fs filesystem on $image\n" );
 
     $command .= $image;
 
@@ -2487,7 +2624,10 @@ sub createSwap
 {
     my ( $path ) = ( @_ );
 
+    logprint( "\nCreating swap on $path\n" );
+
     runCommand( "mkswap $path" );
+    logprint( "Done\n" );
 }
 
 
@@ -2504,67 +2644,47 @@ sub createSwap
 sub mountImage
 {
     #
-    #  Determine what we're to mount
-    #
-    my $image;
-
-    if ( $CONFIG{'lvm'} )
-    {
-       $image = "/dev/" . $CONFIG{'lvm'} . "/" . $CONFIG{'hostname'} . '-disk';
-    }
-    elsif ( $CONFIG{'evms'} )
-    {
-       $image = "/dev/evms/" . $CONFIG{'hostname'} . '-disk';
-    }
-    elsif ( $CONFIG{'dir'} )
-    {
-       $image = $CONFIG{'dir'} . '/domains/' . $CONFIG{'hostname'} . "/disk.img" ;
-    }
-    elsif ( $CONFIG{'image-dev'} )
-    {
-        $image = $CONFIG{'image-dev'};
-    }
-    else
-    {
-       logprint( "I don't know what to mount!\n" );
-       logprint( "Please specify '--dir' or '--lvm' or '--evms' or '--image-dev'\n" );
-       $FAIL = 1;
-       exit;
-    }
-
-
-    #
     #  Create a temporary mount-point to use for the image/volume.
     #
     $MOUNT_POINT = tempdir( CLEANUP => 1 );
 
-    #
-    #  Lookup the correct arguments to pass to mount.
-    #
-    my $mount_cmd;
-    my $mount_type = $CONFIG{'mount_fs_' . $CONFIG{'fs'} };
+    foreach my $partition ( @PARTITIONS )
+    {
+        if ( $partition->{'type'} ne 'swap' )
+        {
+            my $image      = $partition->{'image'};
+            my $mountpoint = $MOUNT_POINT . $partition->{'mountpoint'};
 
-    #
-    #  LVM partition
-    #
-    if ( $CONFIG{'lvm'} )
-    {
-        $mount_cmd = "mount $mount_type $image $MOUNT_POINT";
-    }
-    elsif ( $CONFIG{'evms'} )
-    {
-       $mount_cmd = "mount $mount_type $image $MOUNT_POINT";
-    }
-    elsif ( $CONFIG{'image-dev'} )
-    {
-        $mount_cmd = "mount $mount_type $image $MOUNT_POINT";
-    }
-    else
-    {
-        $mount_cmd = "mount $mount_type -o loop $image $MOUNT_POINT";
-    }
-    runCommand( $mount_cmd );
+            mkpath( $mountpoint, 0, 0755 );
 
+            #
+            #  Lookup the correct arguments to pass to mount.
+            #
+            my $mount_cmd;
+            my $mount_type = $CONFIG{'mount_fs_' . $partition->{'type'} };
+
+            #
+            #  LVM partition
+            #
+            if ( $CONFIG{'lvm'} )
+            {
+                $mount_cmd = "mount $mount_type $image $mountpoint";
+            }
+            elsif ( $CONFIG{'evms'} )
+            {
+               $mount_cmd = "mount $mount_type $image $mountpoint";
+            }
+            elsif ( $CONFIG{'image-dev'} )
+            {
+                $mount_cmd = "mount $mount_type $image $mountpoint";
+            }
+            else
+            {
+                $mount_cmd = "mount $mount_type -o loop $image $mountpoint";
+            }
+            runCommand( $mount_cmd );
+        }
+    }
 
 }
 
@@ -2673,6 +2793,11 @@ sub exportEnvironment
     {
         $CONFIG{'mirror'} = $CONFIG{$distMirror};
     }
+
+    #
+    # Export partitions array to configuration
+    #
+    exportPartitionsToConfig();
 
     foreach my $key ( keys %CONFIG )
     {

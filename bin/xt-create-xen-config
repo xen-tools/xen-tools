@@ -103,7 +103,7 @@ xt-create-config - Create a Xen configuration file for a new guest
  --
  http://www.steve.org.uk/
 
- $Id: xt-create-xen-config,v 1.40 2007-06-16 13:44:38 steve Exp $
+ $Id: xt-create-xen-config,v 1.41 2007-07-07 23:48:09 steve Exp $
 
 =cut
 
@@ -135,6 +135,11 @@ use Text::Template;
 #  We do not need to read any configuration file.
 #
 my %CONFIG;
+
+#
+#  Partition layout information values read from the partitions file.
+#
+my @PARTITIONS = undef;
 
 #
 #  Default options
@@ -225,7 +230,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.40 $';
+        my $REVISION      = '$Revision: 1.41 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -287,6 +292,36 @@ sub checkArguments
 }
 
 
+=begin doc
+
+  Reconstructs the internal partitions array from the text representation exported by the xen-create-image script.
+
+=end doc
+
+=cut
+
+sub importPartitionsFromEnvironment
+{
+    @PARTITIONS = ();
+
+    for (my $i=1; $i <= $ENV{'NUMPARTITIONS'}; $i++)
+    {
+        my @parts = split(/:/, $ENV{'PARTITION' . $i}, 7);
+        push( @PARTITIONS,
+            {
+                'name'       => $parts[0],
+                'size'       => $parts[1],
+                'type'       => $parts[2],
+                'mountpoint' => $parts[3],
+                'options'    => $parts[4],
+                'imagetype'  => $parts[5],
+                'image'      => $parts[6]
+            }
+        );
+    }
+}
+
+
 
 =begin doc
 
@@ -343,44 +378,37 @@ sub createXenConfig
     #
     # Images as presented to Xen - either loopback images, or LVM partitions.
     #
-    my $image_vbd;
-    my $swap_vbd;
-
     if ( $ENV{'lvm'} )
     {
-        $image_vbd = "phy:$ENV{'lvm'}/$ENV{'hostname'}-disk";
-        $swap_vbd  = "phy:$ENV{'lvm'}/$ENV{'hostname'}-swap";
+        $ENV{'image_prefix'} = "phy:$ENV{'lvm'}/$ENV{'hostname'}-";
+        $ENV{'image_suffix'} = '';
+        importPartitionsFromEnvironment();
     }
     elsif ( $ENV{'evms'} )
     {
-        $image_vbd = "phy:/dev/evms/$ENV{'hostname'}-disk";
-        $swap_vbd  = "phy:/dev/evms/$ENV{'hostname'}-swap";
+        $ENV{'image_prefix'} = "phy:/dev/evms/$ENV{'hostname'}-";
+        $ENV{'image_suffix'} = '';
+        importPartitionsFromEnvironment();
     }
     elsif ( $ENV{'image-dev'} )
     {
-        $image_vbd = "phy:$ENV{'image-dev'}";
+        $ENV{'image_vbd'} = "phy:$ENV{'image-dev'}";
 
         if ( $ENV{'swap-dev'} )
         {
-            $swap_vbd  = "phy:$ENV{'swap-dev'}";
+            $ENV{'swap_vbd'} = "phy:$ENV{'swap-dev'}";
         }
         else
         {
-            $swap_vbd  = undef;
+            $ENV{'swap_vbd'}  = undef;
         }
     }
     else
     {
-        $image_vbd = "file:$ENV{'dir'}/domains/$ENV{'hostname'}/disk.img";
-        $swap_vbd  = "file:$ENV{'dir'}/domains/$ENV{'hostname'}/swap.img";
+        $ENV{'image_prefix'} = "file:$ENV{'dir'}/domains/$ENV{'hostname'}/";
+        $ENV{'image_suffix'} = '.img';
+        importPartitionsFromEnvironment();
     }
-
-    #
-    #  Setup the two devices in our environment.
-    #
-    $ENV{'image_vbd'} = $image_vbd;
-    $ENV{'swap_vbd'}  = $swap_vbd;
-
 
     #
     # The xen-tools version.
@@ -398,6 +426,7 @@ sub createXenConfig
     {
         $vars{$key} = $ENV{$key};
     }
+    $vars{'PARTITIONS'} = \@PARTITIONS;
 
     #
     #  Now output the data.

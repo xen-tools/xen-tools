@@ -5,7 +5,7 @@
 #
 # Steve
 # --
-# $Id: xt-create-xen-config.t,v 1.4 2006-08-17 21:01:46 steve Exp $
+# $Id: xt-create-xen-config.t,v 1.5 2007-07-07 23:49:02 steve Exp $
 #
 
 
@@ -128,8 +128,8 @@ sub runCreateCommand
     #
     #  Create a temporary directory, and make sure it is present.
     #
-    my $dir = File::Temp::tempdir( CLEANUP => 1 );
-    ok ( -d $dir, "The temporary directory was created." );
+    my $dir = File::Temp::tempdir( CLEANUP => 0 );
+    ok ( -d $dir, "The temporary directory was created: $dir" );
 
     #
     #  Save the environment.

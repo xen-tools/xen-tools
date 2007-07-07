@@ -32,6 +32,14 @@ logMessage Script $0 starting
 # should speed up installs which use --copy/--tar
 #
 if ( test `ls -1 ${prefix}/dev | wc -l` -gt 10 ); then
+    #
+    # We still need to make sure the basic devices are present
+    #
+    cd ${prefix}/dev
+    ./MAKEDEV std
+    ./MAKEDEV hda
+    ./MAKEDEV sda
+
     logMessage "Terminating because there appear to be files in /dev already"
     exit
 fi

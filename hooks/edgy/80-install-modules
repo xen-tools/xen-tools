@@ -41,7 +41,16 @@ linux_modules_package="linux-modules-$(uname -r)"
 #  Attempt to install that package.  This will either work on an Etch
 # system, or fail on a Sarge/custom kernel.
 #
-if chroot ${prefix} /usr/bin/apt-cache show ${linux_modules_package} >/dev/null 2>/dev/null; then
+if [ -n "${modules}" -a -d "${modules}" ]; then
+
+    #
+    # Modules path was specified during install
+    #
+    logMessage "Copying modules from ${modules}"
+
+    mkdir -p ${prefix}/lib/modules
+    cp -au ${modules} ${prefix}/lib/modules
+elif chroot ${prefix} /usr/bin/apt-cache show ${linux_modules_package} >/dev/null 2>/dev/null; then
 
     logMessage "Package '${linux_modules_package}' is available - installing"
 

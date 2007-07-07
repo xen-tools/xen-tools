@@ -30,20 +30,6 @@ fi
 logMessage Script $0 starting
 
 
-#
-#  Options to mount the root filesystem with, we need to have
-# different options for xfs.
-#
-#  The default option works for ext2, ext3, and reiserfs.
-#
-options="errors=remount-ro"
-
-case "${fs}" in
-    xfs)
-        options="defaults"
-        ;;
-esac
-
 logMessage Filesystem options are ${options}
 
 
@@ -58,36 +44,52 @@ fi
 #
 #  Now we have the options we can create the fstab.
 #
+has_xfs=0
+has_reiserfs=0
 cat <<E_O_FSTAB > ${prefix}/etc/fstab
-/dev/${device}1     /     ${fs}     ${options}   0     1
-proc          /proc proc     rw,nodev,nosuid,noexec              0     0
-E_O_FSTAB
-
-
+# /etc/fstab: static file system information.
 #
-#  Add in the swap unless it is disabled
-#
-if [ "${noswap}" ]; then
-    :
-else
-cat <<E_O_FSTAB >> ${prefix}/etc/fstab
-/dev/${device}2     none  swap     sw                    0     0
+# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+proc            /proc           proc    defaults        0       0
 E_O_FSTAB
-fi
+for part in `seq 1 ${NUMPARTITIONS}`; do
+    eval "PARTITION=\"\${PARTITION${part}}\""
+    OLDIFS="${IFS}"
+    IFS=:
+    x=0
+    for partdata in ${PARTITION}; do
+        eval "partdata${x}=\"${partdata}\""
+        x=$(( x+1 ))
+    done
+    IFS="${OLDIFS}"
+    
+    case "${partdata2}" in
+        xfs)
+            has_xfs=1
+            ;;
+        reiserfs)
+            has_reiserfs=1
+            ;;
+    esac
+    
+    if [ "${partdata2}" = "swap" ]; then
+        echo "/dev/${device}${part} none swap sw 0 0" >> ${prefix}/etc/fstab
+    else
+        echo "/dev/${device}${part} ${partdata3} ${partdata2} ${partdata4} 0 1" >> ${prefix}/etc/fstab
+    fi
+done
 
 
 #
 #  Finally we can install any required packages for the given root
 # filesystem
 #
-#case "${fs}" in
-#    xfs)
-#       install_package xfsprogs
-#       ;;
-#    reiserfs)
-#       install_package reiserfsprogs
-#    ;;
-#esac
+#if [ $has_xfs -eq 1 ]; then
+#    installDebianPackage ${prefix} xfsprogs
+#fi
+#if [ $has_reiserfs -eq 1 ]; then
+#    installDebianPackage ${prefix} reiserfsprogs
+#fi
 
 
 #

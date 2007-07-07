@@ -32,6 +32,9 @@ Contributions
   Kirk Ismay <captain [at] com.netidea>
    - Added hook for automatic CFEngine installation.
 
+  Sascha Kettler <kettler [at] net.gmx>
+   - Implemented support for arbitary partitioning schemes.
+
   Eric Lemoine <eric.lemoine [at] com.gmail>
    - Improved binary detection and good suggestions.
    - Better portability for non-bash shells.
