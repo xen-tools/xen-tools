@@ -536,7 +536,8 @@ Create a configuration file in /etc/xen so that xm can create the new image.
 =over 8
 
 =item builder
-Setup the new virtual images with commonly used packages for rebuilding Debian packages from their source.
+Setup the new virtual images with commonly used packages for rebuilding
+Debian packages from their source.
 
 =item gdm
 Install an X11 server, using VNC and GDM
@@ -591,7 +592,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.162 2007-07-08 01:27:26 steve Exp $
+ $Id: xen-create-image,v 1.163 2007-07-08 02:44:44 steve Exp $
 
 =cut
 
@@ -623,10 +624,13 @@ use Pod::Usage;
 #
 my %CONFIG;
 
+
 #
-#  Partition layout information values read from the partitions file.
+#  Partition layout information values read from the partitions file,
+# or constructed automatically if no partitions file is specified.
 #
 my @PARTITIONS = undef;
+
 
 #
 #  Global variable containing the temporary file where our image
@@ -657,10 +661,6 @@ my $RELEASE = '3.5';
 
 
 
-testXenConfig();
-
-
-
 
 
 #
@@ -682,7 +682,7 @@ parseCommandLineArguments();
 
 
 #
-#  If we received a configuration file then read it.
+#  If we received an additional configuration file then read it.
 #
 if ( $CONFIG{'config'} )
 {
@@ -712,20 +712,21 @@ if ( $CONFIG{'config'} )
 #  Check the environment - after parsing arguments.
 #
 #  This is required so that the "--help" flag will work even if our support
-# scripts are not installed.
+# scripts are not installed, etc.
 #
 checkSystem();
 
 
 #
 #  Ensure we're started by root at this point.  This is required
-# to make sure we can create new LVM volumes, or mount loopback images.
+# to make sure we can create new LVM volumes, mount loopback images, or
+# carry out other privileged actions.
 #
 testRootUser();
 
 
 #
-#  Check our arguments
+#  Check our arguments were sane and complete.
 #
 checkArguments();
 
@@ -733,20 +734,7 @@ checkArguments();
 #
 #  Make sure we have a log directory
 #
-mkdir( "/var/log/xen-tools", 0750 ) if ( ! -d "/var/log/xen-tools" );
-
-#
-#  Trash any existing for this run logfile.
-#
-open( TRASH, ">", "/var/log/xen-tools/$CONFIG{'hostname'}.log" );
-print TRASH "";
-close(TRASH);
-
-#
-#  Make sure the logfile is 0640 - avoid leaking root passwords.
-#
-chmod( oct( "0640" ), "/var/log/xen-tools/$CONFIG{'hostname'}.log" );
-
+setupLogFile();
 
 
 #
@@ -754,20 +742,17 @@ chmod( oct( "0640" ), "/var/log/xen-tools/$CONFIG{'hostname'}.log" );
 #
 checkBinariesPresent();
 
+
 #
 #  Setup default partitioning scheme if we don't have one.
 #
-if ( $CONFIG{'dir'} )
+#  NOTE:  This must be done before we call "showSummary".
+#
+if ( !$#PARTITIONS )
 {
-    populatePartitionsData() if ( !$#PARTITIONS );
-}
-elsif ( $CONFIG{'lvm'} )
-{
-    populatePartitionsData() if ( !$#PARTITIONS );
-}
-elsif ( $CONFIG{'evms'} )
-{
-    populatePartitionsData() if ( !$#PARTITIONS );
+    populatePartitionsData()  if ( ( $CONFIG{'dir'}  ) ||
+                                   ( $CONFIG{'evms'} ) ||
+                                   ( $CONFIG{'lvm'}  ) );
 }
 
 
@@ -948,7 +933,7 @@ if ( $CONFIG{'boot'} )
         # Child.
         system( "$CONFIG{'xm'} create $CONFIG{'hostname'}.cfg >/dev/null 2>/dev/null" );
 
-        logprint( "Started new Xen instance.\n" );
+        logprint( "Started new Xen guest: $CONFIG{'hostname'}\n" );
     }
 }
 
@@ -1021,7 +1006,7 @@ E_O_ERROR
             print <<EOF;
 
   You've specified administrator accounts for use with the xen-shell,
- however that doesn't appear to be installed.
+ however the xen-shell doesn't appear to be installed.
 
   Aborting.
 EOF
@@ -1388,7 +1373,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.162 $';
+        my $REVISION      = '$Revision: 1.163 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1737,6 +1722,35 @@ EOF
         logprint( "WARNING:  No netmaks address specified!\n" )
           unless( defined( $CONFIG{'netmask'} ) );
     }
+}
+
+
+
+=head2 doc
+
+  Make sure we have a log directory, and create an empty logfile
+ for this run.
+
+=end doc
+
+=cut
+
+sub setupLogFile
+{
+
+    mkdir( "/var/log/xen-tools", 0750 ) if ( ! -d "/var/log/xen-tools" );
+
+    #
+    #  Trash any existing for this run logfile.
+    #
+    open( TRASH, ">", "/var/log/xen-tools/$CONFIG{'hostname'}.log" );
+    print TRASH "";
+    close(TRASH);
+
+    #
+    #  Make sure the logfile is 0640 - avoid leaking root passwords.
+    #
+    chmod( oct( "0640" ), "/var/log/xen-tools/$CONFIG{'hostname'}.log" );
 }
 
 
