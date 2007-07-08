@@ -571,7 +571,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.160 2007-07-07 23:48:09 steve Exp $
+ $Id: xen-create-image,v 1.161 2007-07-08 01:26:23 steve Exp $
 
 =cut
 
@@ -734,6 +734,22 @@ chmod( oct( "0640" ), "/var/log/xen-tools/$CONFIG{'hostname'}.log" );
 #
 checkBinariesPresent();
 
+#
+#  Setup default partitioning scheme if we don't have one.
+#
+if ( $CONFIG{'dir'} )
+{
+    populatePartitionsData() if ( !$#PARTITIONS );
+}
+elsif ( $CONFIG{'lvm'} )
+{
+    populatePartitionsData() if ( !$#PARTITIONS );
+}
+elsif ( $CONFIG{'evms'} )
+{
+    populatePartitionsData() if ( !$#PARTITIONS );
+}
+
 
 #
 #  Show a summary of what we're going to do.
@@ -783,7 +799,7 @@ else
 {
     # Can't happen we didn't get an installation type.
     logprint( "Error:  No recognised installation type.\n" );
-    logprint( "Please specify either a directory, lvm, or evms volume to use.\n");
+    logprint( "Please specify a directory, lvm, or evms volume to use.\n");
     $FAIL = 1;
     exit;
 }
@@ -1352,7 +1368,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.160 $';
+        my $REVISION      = '$Revision: 1.161 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1373,8 +1389,6 @@ sub parseCommandLineArguments
         $CONFIG{'evms'}      = undef;
         $CONFIG{'lvm'}       = undef;
         $CONFIG{'image-dev'} = undef;
-
-        populatePartitionsData();
     }
     if ( $install{'evms'} )
     {
@@ -1382,8 +1396,6 @@ sub parseCommandLineArguments
         $CONFIG{'evms'}      = $install{'evms'};
         $CONFIG{'lvm'}       = undef;
         $CONFIG{'image-dev'} = undef;
-
-        populatePartitionsData();
     }
     if ( $install{'lvm'} )
     {
@@ -1391,8 +1403,6 @@ sub parseCommandLineArguments
         $CONFIG{'evms'}      = undef;
         $CONFIG{'lvm'}       = $install{'lvm'};
         $CONFIG{'image-dev'} = undef;
-
-        populatePartitionsData();
     }
     if ( $install{'image-dev'} )
     {
@@ -1792,7 +1802,8 @@ sub checkBinariesPresent
 
 =begin doc
 
-  Loads a partitions file, checks the syntax and updates the configuration variables with it
+  Loads a partitions file, checks the syntax and updates the configuration
+ variables with it
 
 =end doc
 
@@ -1825,7 +1836,11 @@ sub loadAndCheckPartitionsFile
 
         if ( $details->{'type'} eq 'swap' )
         {
-            push( @PARTITIONS, { 'name' => $name, 'size' => $details->{'size'}, 'type' => 'swap', 'mountpoint' => '', 'options' => '' } );
+            push( @PARTITIONS, { 'name'       => $name,
+                                 'size'       => $details->{'size'},
+                                 'type'       => 'swap',
+                                 'mountpoint' => '',
+                                 'options'    => '' } );
         }
         else
         {
@@ -1889,7 +1904,8 @@ sub loadAndCheckPartitionsFile
 
 =begin doc
 
-  Populates the partition information using the supplied configuration arguments when not using the partitions file
+  Populates the partition information using the supplied configuration
+ arguments when not using the partitions file
 
 =end doc
 
@@ -1929,7 +1945,8 @@ sub populatePartitionsData
 
 =begin doc
 
-  Converts the internal partitions array into a text representation suitable for passing to other scripts.
+  Converts the internal partitions array into a text representation
+ suitable for passing to other scripts.
 
 =end doc
 
