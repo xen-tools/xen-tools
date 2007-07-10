@@ -1,9 +1,11 @@
 xen-tools (3.6-1) unstable; urgency=low
 
-  * UNRELEASED.
-     - Partitioning support.
+  * Added custom partitioning support.
+     - Added dependency upon libconfig-inifiles-perl.
+  * Better device creation in the creation of guests.
+  * Sanity checking of the network configuration of Xend.
 
- -- Steve Kemp <steve@steve.org.uk>  Sun, 16 Jun 2007 14:43:00 +0000
+ -- Steve Kemp <steve@steve.org.uk>  Tue, 10 Jul 2007 20:35:34 +0000
 
 xen-tools (3.5-1) unstable; urgency=low
 
