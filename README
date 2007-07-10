@@ -33,7 +33,11 @@ Requirements
 
         * debootstrap
         * Perl
-        * The Perl module "Text::Template" available from CPAN.
+        * The Perl module "Text::Template"
+        * The Perl module "Config::IniFiles"
+          - Both of these modules are available as Debian packages,
+            or direct from http://www.cpan.org/ for non-Debian distributions.
+
 
   In order to install RPM-based distributions such as CentOS, SuSE
  or Fedora Core you will need a correctly installed and configured
@@ -130,5 +134,5 @@ xen-update-image
 
 Steve
 --
-$Id: README,v 1.42 2007-06-16 13:28:51 steve Exp $
+$Id: README,v 1.43 2007-07-10 19:33:00 steve Exp $
 
