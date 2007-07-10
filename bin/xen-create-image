@@ -592,7 +592,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.164 2007-07-10 19:31:06 steve Exp $
+ $Id: xen-create-image,v 1.165 2007-07-10 19:32:52 steve Exp $
 
 =cut
 
@@ -958,7 +958,7 @@ exit;
 
 sub checkSystem
 {
-    my @required = qw ( /xt-customize-image xt-install-image xt-create-xen-config / );
+    my @required = qw ( / xt-customize-image xt-install-image xt-create-xen-config / );
 
     foreach my $bin ( @required )
     {
@@ -1372,7 +1372,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.164 $';
+        my $REVISION      = '$Revision: 1.165 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
