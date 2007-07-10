@@ -592,7 +592,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.163 2007-07-08 02:44:44 steve Exp $
+ $Id: xen-create-image,v 1.164 2007-07-10 19:31:06 steve Exp $
 
 =cut
 
@@ -609,7 +609,6 @@ The LICENSE file contains the full text of the license.
 
 
 use strict;
-use Config::IniFiles;
 use English;
 use Env;
 use File::Path qw/ mkpath /;
@@ -1373,7 +1372,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.163 $';
+        my $REVISION      = '$Revision: 1.164 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1846,6 +1845,37 @@ sub checkBinariesPresent
 sub loadAndCheckPartitionsFile
 {
     my %partitions;
+
+    #
+    #  Here we'll test for the required Perl module.
+    #
+    #  This allows us to:
+    #
+    #  a) Degrade usefully if the module isn't available.
+    #
+    #  b) Not require the module unless the user specifies a custom
+    #     partitioning scheme.
+    #
+    my $test = "use Config::IniFiles";
+    eval( $test );
+    if ( $@ )
+    {
+        print <<EOF;
+
+ Aborting - To use the custom partitioning code you need to have the
+ following Perl module installed:
+
+   Config::IniFiles
+
+ On a Debian system you can get this with:
+
+   apt-get install libconfig-inifiles-perl
+
+ Otherwise fetch it from CPAN.
+EOF
+        exit;
+    }
+
     tie %partitions, 'Config::IniFiles', ( -file => $CONFIG{'partitions'} );
 
     @PARTITIONS = ();
