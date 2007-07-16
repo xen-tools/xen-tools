@@ -277,7 +277,8 @@ Create a configuration file in /etc/xen so that xm can create the new image.
 
 
   #
-  # Installation method, one of "copy", "debootstrap", "rpmstrap", "tar".
+  # Installation method:
+  # One of "copy", "debootstrap", "rinse", "rpmstrap", "tar".
   #
   install-method = debootstrap
 
@@ -461,8 +462,9 @@ Create a configuration file in /etc/xen so that xm can create the new image.
 
   1.  Using the debootstrap command, which must be installed and present.
   2.  Using the rpmstrap command, which must be installed and present.
-  3.  By copying an existing installation.
-  4.  By untarring a file containing a previous installation.
+  3.  using the rinse command, which must be installed and present.
+  4.  By copying an existing installation.
+  5.  By untarring a file containing a previous installation.
 
   These different methods can be selected by either the command line
  arguments, or settings in the configuration file.  Only one installation
@@ -592,7 +594,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.166 2007-07-10 19:36:24 steve Exp $
+ $Id: xen-create-image,v 1.167 2007-07-16 00:22:55 steve Exp $
 
 =cut
 
@@ -1372,7 +1374,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.166 $';
+        my $REVISION      = '$Revision: 1.167 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1548,7 +1550,7 @@ E_OR
     my $valid = 0;
     if ( defined( $CONFIG{'install-method'} ) )
     {
-        foreach my $recognised ( qw/ copy debootstrap image-server rpmstrap tar / )
+        foreach my $recognised ( qw/ copy debootstrap image-server rinse rpmstrap tar / )
         {
             $valid = 1 if ( lc($CONFIG{'install-method'}) eq lc($recognised) );
         }
@@ -1581,6 +1583,7 @@ E_OR
 
      --install-method=copy        --install-source=/some/path
      --install-method=debootstrap
+     --install-method=rinse
      --install-method=rpmstrap
      --install-method=tar         --install-source=/some/file.tar
 
