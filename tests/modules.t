@@ -14,10 +14,6 @@ BEGIN{ use_ok( 'Config' ); }
 require_ok( 'Config' );
 
 
-BEGIN{ use_ok( 'Config::IniFiles' ); }
-require_ok( 'Config::IniFiles' );
-
-
 BEGIN{ use_ok( 'Digest::MD5' ); }
 require_ok( 'Digest::MD5' );
 
