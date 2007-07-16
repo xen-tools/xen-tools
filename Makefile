@@ -8,7 +8,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.107 2007-07-10 19:36:23 steve Exp $
+# $Id: Makefile,v 1.108 2007-07-16 04:18:37 steve Exp $
 
 
 #
@@ -138,17 +138,18 @@ install-bin:
 #
 install-hooks:
 	for i in roles/* ; do if [ -f $$i ]; then cp $$i ${prefix}/etc/xen-tools/role.d; fi ; done
-	mkdir -p ${prefix}/usr/lib/xen-tools/centos4.d/
-	cp -R hooks/centos4/*-* ${prefix}/usr/lib/xen-tools/centos4.d
+	mkdir -p ${prefix}/usr/lib/xen-tools/centos-4.d/
+	mkdir -p ${prefix}/usr/lib/xen-tools/centos-5.d/
+	mkdir -p ${prefix}/usr/lib/xen-tools/fedora-core-6.d/
+	cp -R hooks/centos-4/*-* ${prefix}/usr/lib/xen-tools/centos-4.d
+	cp -R hooks/centos-5/*-* ${prefix}/usr/lib/xen-tools/centos-5.d
+	cp -R hooks/fedora-core-6/*-* ${prefix}/usr/lib/xen-tools/fedora-core-6.d
 	mkdir -p ${prefix}/usr/lib/xen-tools/debian.d/
 	cp -R hooks/debian/*-* ${prefix}/usr/lib/xen-tools/debian.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d sarge.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d lenny.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d etch.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d sid.d
-	mkdir -p ${prefix}/usr/lib/xen-tools/fedora.d/
-	cp -R hooks/fedora/*-* ${prefix}/usr/lib/xen-tools/fedora.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora.d stentz.d
 	mkdir -p ${prefix}/usr/lib/xen-tools/gentoo.d/
 	cp -R hooks/gentoo/*-* ${prefix}/usr/lib/xen-tools/gentoo.d
 	 mkdir -p ${prefix}/usr/lib/xen-tools/edgy.d/
