@@ -83,7 +83,7 @@ Untar a .tar file into the new installation location.  This tarfile is assumed t
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.62 2007-07-16 00:22:56 steve Exp $
+ $Id: xt-install-image,v 1.63 2007-07-16 04:18:39 steve Exp $
 
 =cut
 
@@ -438,7 +438,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.62 $';
+        my $REVISION      = '$Revision: 1.63 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -925,6 +925,14 @@ sub do_rinse
     #  The command we're going to run.
     #
     my $command = "rinse --distribution=$CONFIG{'dist'} --directory=$CONFIG{'location'}";
+
+    #
+    #  Propogate the --arch argument
+    #
+    if ( $CONFIG{'arch'} )
+    {
+        $command .= " --arch $CONFIG{'arch'}"
+    }
 
 
     #
