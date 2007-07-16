@@ -33,18 +33,15 @@ cp /etc/resolv.conf ${prefix}/etc
 
 
 #
-# Transform yum so that it works.
-#
-#perl -pi.bak -e 's/enabled=0/enabled=1/g'     ${prefix}/etc/yum.repos.d/*.repo
-#perl -pi.bak -e 's/gpgcheck=1/gpgcheck=0/g'   ${prefix}/etc/yum.repos.d/*.repo
-#perl -pi.bak -e 's/^\#baseurl/baseurl/g'      ${prefix}/etc/yum.repos.d/*.repo
-#perl -pi.bak -e 's/^mirrorlist/#mirrorlist/g' ${prefix}/etc/yum.repos.d/*.repo
-#perl -pi.bak -e 's/\$releasever/4/g' ${prefix}/etc/yum.repos.d/*.repo
-    
-#
 # Update yum
 #
+if [ ! -d ${prefix}/proc ]; then
+    mkdir -p ${prefix}/proc
+fi
+mount -o bind /proc ${prefix}/proc
 chroot ${prefix} /usr/bin/yum update
+umount ${prefix}/proc
+
 
 #
 #  Log our finish

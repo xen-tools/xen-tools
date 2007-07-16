@@ -28,9 +28,14 @@ logMessage Script $0 starting
 #
 # Install the OpenSSH server.
 #
-chroot ${prefix} /bin/mount /proc
-chroot ${prefix} /usr/bin/yum -y install openssh-server
-chroot ${prefix} /bin/umount /proc
+if [ ! -d ${prefix}/proc ]; then
+    mkdir -p ${prefix}/proc
+fi
+mount -o bind /proc ${prefix}/proc
+chroot ${prefix} /usr/bin/yum  -y install openssh-server passwd
+umount ${prefix}/proc
+
+
 
 
 #
