@@ -594,7 +594,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.167 2007-07-16 00:22:55 steve Exp $
+ $Id: xen-create-image,v 1.168 2007-07-18 17:14:34 steve Exp $
 
 =cut
 
@@ -612,6 +612,7 @@ The LICENSE file contains the full text of the license.
 
 use strict;
 use English;
+use Digest::MD5 qw/ md5_hex /;
 use Env;
 use File::Path qw/ mkpath /;
 use File::Temp qw/ tempdir /;
@@ -1374,7 +1375,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.167 $';
+        my $REVISION      = '$Revision: 1.168 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1724,7 +1725,68 @@ EOF
         logprint( "WARNING:  No netmaks address specified!\n" )
           unless( defined( $CONFIG{'netmask'} ) );
     }
+
+    #
+    #  If we don't have a MAC address specified then generate one.
+    #
+    if ( !$CONFIG{'mac'} )
+    {
+        $CONFIG{'mac'} = generateMACAddress();
+    }
 }
+
+
+
+
+=begin doc
+
+  Generate a 'random' MAC address.
+
+  The MAC address is constructed based upon :
+
+   1.  The standard Xen prefix.
+
+   2.  The hostname + IP address of the new guest.
+
+   3.  The distribution which is to be installed.
+
+=end doc
+
+=cut
+
+sub generateMACAddress
+{
+    #
+    #  Start with the xen prefix
+    #
+    my $mac = '00:16:3E';
+
+    #
+    #  Build up ( hostname + ip + dhcp + dist );
+    #
+    my $hash = '';
+    foreach my $key ( qw/ hostname ip dhcp dist / )
+    {
+        $hash .= $CONFIG{$key} if ( $CONFIG{$key} );
+    }
+
+    #
+    #  Generate an MD5 hash of this data.
+    #
+    $hash = md5_hex( $hash );
+
+    #
+    #  Now build up a MAC address
+    #
+    while( length( $mac ) < 17 )
+    {
+        $mac .= ":" . substr( $hash, 0, 2 );
+        $hash = substr( $hash, 2 );
+    }
+
+    return( $mac );
+}
+
 
 
 
