@@ -102,9 +102,9 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
   Installation options:
 
-   --arch            Pass the given architecture to debootstrap or rpmstrap.
-                    This argument is ignored if you install with a different
-                    installation type.
+   --arch            Pass the given architecture to debootstrap, rinse,
+                    or rpmstrap when installing the system.  This argument
+                    is ignored for other install methods.
 
    --dist            Specify the distribution you wish to install.
 
@@ -278,7 +278,7 @@ Create a configuration file in /etc/xen so that xm can create the new image.
 
   #
   # Installation method:
-  # One of "copy", "debootstrap", "rinse", "rpmstrap", "tar".
+  # One of "copy", "debootstrap", "rinse", "rpmstrap", or "tar".
   #
   install-method = debootstrap
 
@@ -594,7 +594,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.169 2007-07-18 17:16:25 steve Exp $
+ $Id: xen-create-image,v 1.170 2007-07-22 00:47:23 steve Exp $
 
 =cut
 
@@ -1375,7 +1375,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.169 $';
+        my $REVISION      = '$Revision: 1.170 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1566,7 +1566,6 @@ E_OR
         {
             # not defined.
             $valid = 0 if (!defined( $CONFIG{'install-source'} ) );
-
         }
     }
     else
