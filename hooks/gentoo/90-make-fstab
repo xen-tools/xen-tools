@@ -56,7 +56,7 @@ for part in `seq 1 ${NUMPARTITIONS}`; do
     x=0
     for partdata in ${PARTITION}; do
         eval "partdata${x}=\"${partdata}\""
-        x=$(( x+1 ))
+        x=$(( $x+1 ))
     done
     IFS="${OLDIFS}"
     

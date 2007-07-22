@@ -52,6 +52,9 @@ Contributions
   Henning Sprang <henning_sprang [at] de.gmx>
    - Many suggestions and useful Debian bug reports.
 
+  Andrew Sutherland <andrew [at] com.theptrgroup>
+   - Fixups for dash/Ubuntu.
+
   Gergely Tamas <dice [at] hu.kfki.mfa>
    - Added patch to make initrd setup optional.
 
