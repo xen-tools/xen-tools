@@ -594,7 +594,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.170 2007-07-22 00:47:23 steve Exp $
+ $Id: xen-create-image,v 1.171 2007-07-23 19:54:48 steve Exp $
 
 =cut
 
@@ -1375,7 +1375,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.170 $';
+        my $REVISION      = '$Revision: 1.171 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -2959,8 +2959,8 @@ sub exportEnvironment
 
   Run the xt-customise-system script to customize our fresh installation.
 
-  Before we do this we must pass all the relevent options into our
- environment.
+  Before we do this we must pass all the relevant options into our
+ environment and mount /proc.
 
 =end doc
 
@@ -2968,6 +2968,14 @@ sub exportEnvironment
 
 sub runCustomisationHooks
 {
+    #
+    #  Before running any scripts we'll mount /proc in the guest.
+    #
+    #  1.  Make sure there is a directory.
+    mkdir( $MOUNT_POINT . "/proc", 0755 ) if ( ! -d $MOUNT_POINT . "/proc" );
+
+    #  2.  Mount
+    runCommand( "mount -o bind /proc $MOUNT_POINT/proc" );
 
     #
     # Now update the environment for each defined IP address.
@@ -3016,6 +3024,12 @@ sub runCustomisationHooks
     logprint( "\nRunning hooks\n" );
     runCommand( $customize );
     logprint( "Done\n" );
+
+    #
+    #  Unmount /proc in the guest install.
+    #
+    runCommand( "umount $MOUNT_POINT/proc" );
+
 }
 
 
