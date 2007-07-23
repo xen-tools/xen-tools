@@ -6,7 +6,7 @@
 #
 # Steve
 # --
-# $Id: xen-lists-images.t,v 1.5 2006-06-13 17:18:39 steve Exp $
+# $Id: xen-lists-images.t,v 1.6 2007-07-23 19:55:25 steve Exp $
 #
 
 
@@ -97,7 +97,7 @@ EOS
 
     #
     #  Now run the xen-list-images script to make sure we can read
-    # the relevent details back from it.
+    # the relevant details back from it.
     #
     my $cmd = "./bin/xen-list-images --test=$dir";
     my $output = `$cmd`;
