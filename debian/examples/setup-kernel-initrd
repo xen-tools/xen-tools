@@ -8,7 +8,7 @@
 #
 # Steve
 # --
-# $Id: setup-kernel-initrd,v 1.2 2007-02-23 23:52:05 steve Exp $
+# $Id: setup-kernel-initrd,v 1.3 2007-07-25 22:39:58 steve Exp $
 #
 
 
@@ -19,12 +19,11 @@
 # in the environment.
 #
 if [ -z "${kernel}" ]; then
-    kernel=` ls -1 /boot | grep ^vm  |grep -v syms| grep xen | head -n 1`
+    kernel=`ls -1 /boot| grep ^vm| grep -v syms| grep xen | sort -r| head -n 1`
     kernel="/boot/${kernel}"
-
 fi
 if [ -z "${ramdisk}" ]; then
-    ramdisk=` ls -1 /boot | grep ^init | grep xen | head -n 1`
+    ramdisk=`ls -1 /boot| grep ^init| grep xen| sort -r| head -n 1`
     ramdisk="/boot/${ramdisk}"
 fi
 
