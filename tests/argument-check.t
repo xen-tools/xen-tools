@@ -5,7 +5,7 @@
 #
 # Steve
 # --
-# $Id: argument-check.t,v 1.6 2007-06-12 14:05:25 steve Exp $
+# $Id: argument-check.t,v 1.7 2007-07-25 22:45:57 steve Exp $
 #
 
 use strict;
@@ -74,17 +74,20 @@ sub parseConfigFile
 
     my $line       = ""; 
 
-    while (defined($line = <FILE>) ) 
+    while (defined($line = <FILE>) )
     {
         chomp $line;
-        if ($line =~ s/\\$//) 
+        if ($line =~ s/\\$//)
         {
             $line .= <FILE>;
             redo unless eof(FILE);
         }
-      
+
         # Skip blank lines
         next if ( length( $line ) < 1 );
+
+        # skip false positive
+        next if ( $line =~ /Otherwise/ );
 
         # Find variable settings
         if ( $line =~ /([^=]+)=([^\n]+)/ )
