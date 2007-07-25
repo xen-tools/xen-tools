@@ -594,7 +594,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.171 2007-07-23 19:54:48 steve Exp $
+ $Id: xen-create-image,v 1.172 2007-07-25 20:51:15 steve Exp $
 
 =cut
 
@@ -1080,8 +1080,8 @@ WARNING
   You appear to have a missing vif-script, or network-script, in the
  Xen configuration file /etc/xen/xend-config.sxp.
 
-  Please fix this and restart Xend, or your guests will not be able to
- use any networking!
+  Please fix this and restart Xend, or your guests will not be able
+ to use any networking!
 
 EOF
     }
@@ -1375,7 +1375,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.171 $';
+        my $REVISION      = '$Revision: 1.172 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
