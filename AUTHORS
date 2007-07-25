@@ -39,6 +39,9 @@ Contributions
    - Improved binary detection and good suggestions.
    - Better portability for non-bash shells.
 
+  Gordon Messmer <gmessmer [at] edu.washington.u>
+   - Supplied .spec file for building .rpm packages.
+
   Walter Reiner <walter [at] at.wreiner>
    - Provided --image-dev + --swap-dev patch.
 
