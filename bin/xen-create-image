@@ -594,7 +594,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.172 2007-07-25 20:51:15 steve Exp $
+ $Id: xen-create-image,v 1.173 2007-07-25 22:44:00 steve Exp $
 
 =cut
 
@@ -1375,7 +1375,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.172 $';
+        my $REVISION      = '$Revision: 1.173 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1789,7 +1789,7 @@ sub generateMACAddress
 
 
 
-=head2 doc
+=begin doc
 
   Make sure we have a log directory, and create an empty logfile
  for this run.
