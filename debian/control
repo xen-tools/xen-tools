@@ -9,7 +9,7 @@ Standards-Version: 3.7.2
 Package: xen-tools
 Architecture: all
 Depends: debootstrap, perl-modules, libtext-template-perl, libconfig-inifiles-perl
-Recommends: xen-hypervisor-amd64 | xen-hypervisor-i386 | xen-hypervisor-i386-pae, reiserfsprogs, xfsprogs, rpmstrap, perl-doc, xen-shell, libexpect-perl
+Recommends: xen-hypervisor-amd64 | xen-hypervisor-i386 | xen-hypervisor-i386-pae, reiserfsprogs, xfsprogs, rinse, perl-doc, xen-shell, libexpect-perl
 Description: Tools to manage debian XEN virtual servers
  This package contains tools to manage Debian based XEN virtual servers.
  .

@@ -1,3 +1,15 @@
+xen-tools (3.7-1) unstable; urgency=low
+
+  * Added dependency upon 'rinse'
+    - Support the installation of Fedora Core 4-7 & Centos 4 + 5.
+  * Better POD files
+  * Updated the example script 'setup-kernel-initrd' to work better.
+  * Mount /proc prior to running post-install scripts.
+  * Better handling for Ubuntu language packs.
+  * Generate MAC addresses for all new guests by default.
+
+ -- Steve Kemp <steve@steve.org.uk>  Tue, 10 Jul 2007 20:35:34 +0000
+
 xen-tools (3.6-1) unstable; urgency=low
 
   * Added custom partitioning support.
