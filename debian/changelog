@@ -1,3 +1,11 @@
+xen-tools (xxx) unstable; urgency=low
+
+  * Allow the debootstrap command to be changed to cdebootstrap
+    via 'debootstrap-cmd = /usr/sbin/cdebootstrap'.
+    (Closes: #436480)
+
+ -- Blah
+
 xen-tools (3.7-1) unstable; urgency=low
 
   * Added dependency upon 'rinse'
