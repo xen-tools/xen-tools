@@ -3,6 +3,8 @@ xen-tools (xxx) unstable; urgency=low
   * Allow the debootstrap command to be changed to cdebootstrap
     via 'debootstrap-cmd = /usr/sbin/cdebootstrap'.
     (Closes: #436480)
+  * Fix typo on pointopoint links.
+    (Closes: #436170)
 
  -- Blah
 

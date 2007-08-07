@@ -58,11 +58,11 @@ E_O_DHCP
 setupStaticNetworking ()
 {
     #
-    #  if $p2p is set then add a "pointtopoint" setting.
+    #  if $p2p is set then add a "pointopoint" setting.
     #
     point='';
     if [ ! -z "${p2p}" ]; then
-        point="pointtopoint ${p2p}"
+        point="pointopoint ${p2p}"
     else
         point=''
     fi
