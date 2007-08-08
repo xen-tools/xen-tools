@@ -38,6 +38,8 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --copy-cmd    Not used.
 
+   --debootstrap-cmd    Not used.
+
    --force       Force overwriting existing images.
                  This will remove existing images or LVM volumes which match
                 those which are liable to be used by the new invocation.
@@ -594,7 +596,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.175 2007-08-08 22:41:44 steve Exp $
+ $Id: xen-create-image,v 1.176 2007-08-08 22:43:17 steve Exp $
 
 =cut
 
@@ -1375,7 +1377,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.175 $';
+        my $REVISION      = '$Revision: 1.176 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
