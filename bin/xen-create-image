@@ -594,7 +594,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.174 2007-07-31 17:33:29 steve Exp $
+ $Id: xen-create-image,v 1.175 2007-08-08 22:41:44 steve Exp $
 
 =cut
 
@@ -1375,7 +1375,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.174 $';
+        my $REVISION      = '$Revision: 1.175 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -2054,10 +2054,23 @@ sub populatePartitionsData
       unless( $CONFIG{'noswap'} );
 
     #
-    #  XFS has different default options.
+    #  read the default filesystem options from the configuration file.
     #
-    my $options = 'errors=remount-ro';
-    $options = 'defaults' if ( $CONFIG{'fs'} eq 'xfs' );
+    my $options = $CONFIG{$CONFIG{'fs'} . "_options" } ||undef;
+
+    #
+    #  If there weren't any options in the configuration file then
+    # revert to our defaults.
+    #
+    if (!defined($options))
+    {
+        #
+        #  XFS has different default options.
+        #
+        $options = "errors=remount-ro";
+        $options = "defaults" if ( $CONFIG{'fs'} eq "xfs" );
+    }
+
 
     #
     #  [root]
@@ -2067,6 +2080,7 @@ sub populatePartitionsData
                          'type'       => $CONFIG{'fs'},
                          'mountpoint' => '/',
                          'options'    => $options } );
+
 }
 
 
@@ -3215,9 +3229,13 @@ sub setupRootPassword
     {
         system( "chroot $MOUNT_POINT /usr/bin/passwd" );
     }
+    elsif ( -x $MOUNT_POINT . "/usr/sbin/passwd" )
+    {
+        system( "chroot $MOUNT_POINT /usr/sbin/passwd" );
+    }
     else
     {
-        logprint( "/usr/bin/passwd on the new system doesn't exist...\n" );
+        logprint( "'passwd' command not found on the new install\n" );
     }
 }
 
