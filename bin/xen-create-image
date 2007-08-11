@@ -133,7 +133,7 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
                 are allowed.   When specifying more than one IP the
                 first one is setup as the "system" IP, and the additional
                 ones are added as aliases.
-                 Note that Xen 3.x supports a maximum of three IP addresses
+                 Note that Xen 3.x supports a maximum of three vif statements
                 per guest.
                 This option conflicts with --dhcp.
 
@@ -596,7 +596,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.177 2007-08-08 22:44:17 steve Exp $
+ $Id: xen-create-image,v 1.178 2007-08-11 18:24:08 steve Exp $
 
 =cut
 
@@ -1377,7 +1377,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.177 $';
+        my $REVISION      = '$Revision: 1.178 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
