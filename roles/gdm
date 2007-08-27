@@ -45,7 +45,7 @@ installDebianPackage ${prefix} icewm-experimental
 #
 #  Add a new section to the GDM configuration file.
 #
-cat <<EOF >> ${prefix}/etc/X11/gdm/gdm.conf
+cat <<EOF >> ${prefix}/etc/gdm/gdm.conf
 [server-VNC]
 name=VNC server
 command=/usr/bin/Xvnc -geometry 800x600 -depth 24
@@ -56,4 +56,4 @@ EOF
 #
 #  Make the new section the default
 #
-perl -pi.bak -e 's/^0=Standard/0=VNC/g' ${prefix}/etc/X11/gdm/gdm.conf
+perl -pi.bak -e 's/^0=Standard\n//g ; s/^\[servers\]/\[servers\]\n0=VNC/g' ${prefix}/etc/gdm/gdm.conf 
