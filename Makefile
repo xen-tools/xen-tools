@@ -8,7 +8,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.111 2007-07-31 17:33:27 steve Exp $
+# $Id: Makefile,v 1.112 2007-09-01 19:23:09 steve Exp $
 
 
 #
@@ -211,14 +211,14 @@ release: fixup-perms update-version update-modules clean changelog
 #  Run the test suite.
 #
 test:
-	prove --shuffle tests/
+	prove --shuffle t/
 
 
 #
 #  Run the test suite verbosely.
 #
 test-verbose:
-	prove --shuffle --verbose tests/
+	prove --shuffle --verbose t/
 
 
 
@@ -261,7 +261,7 @@ update:
 # cases to ensure that all required modules are available.
 #
 update-modules:
-	cd tests && make modules
+	cd t && make modules
 
 
 #
