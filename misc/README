@@ -7,8 +7,9 @@ misc/
 
   Contents:
 
-        xen-tools   - Bash completion code for our commands.
-        xm          - Bash completion code for the Xen 'xm' command.
+        xen-tools      - Bash completion code for our commands.
+        xen-tools.spec - File to build an RPM of the xen-tools pacakge.
+        xm             - Bash completion code for the Xen 'xm' command.
 
 Steve
 --
