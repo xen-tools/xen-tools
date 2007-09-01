@@ -36,9 +36,9 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --config      Read the specified file in addition to the global
                 configuration file.
 
-   --copy-cmd    Not used.
+   --copy-cmd    NOP:  Ignored.
 
-   --debootstrap-cmd    Not used.
+   --debootstrap-cmd    NOP: Ignored.
 
    --force       Force overwriting existing images.
                  This will remove existing images or LVM volumes which match
@@ -89,7 +89,7 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --size        Set the size of the primary disk image.
 
-   --tar-cmd     Not used.
+   --tar-cmd     NOP: Ignored.
 
    --swap        Set the size of the swap partition.
 
@@ -596,7 +596,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.178 2007-08-11 18:24:08 steve Exp $
+ $Id: xen-create-image,v 1.179 2007-09-01 19:22:37 steve Exp $
 
 =cut
 
@@ -1338,10 +1338,8 @@ sub parseCommandLineArguments
                #
                #  NOTE:  We set the local variable here, not the global.
                #
-               "copy-cmd=s",        \$CONFIG{'copy-cmd'},   # NOP - IGNORED.
                "install-method=s",  \$CONFIG{'install-method'},
                "install-source=s",  \$CONFIG{'install-source'},
-               "tar-cmd=s",         \$CONFIG{'tar-cmd'},   # NOP - IGNORED.
 
                # Misc. options
                "accounts",     \$CONFIG{'accounts'},
@@ -1377,7 +1375,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.178 $';
+        my $REVISION      = '$Revision: 1.179 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
