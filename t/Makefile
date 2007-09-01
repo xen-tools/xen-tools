@@ -1,9 +1,9 @@
 
 all:
-	@cd ..; prove --shuffle tests/
+	@cd ..; prove --shuffle t/
 
 verbose:
-	@cd ..; prove --shuffle --verbose tests/
+	@cd ..; prove --shuffle --verbose t/
 
 
 modules: .PHONY
@@ -13,5 +13,4 @@ modules: .PHONY
 	true
 
 clean:
-
-	rm *~
+	-rm *~
