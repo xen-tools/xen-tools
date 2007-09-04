@@ -7,7 +7,7 @@
 #
 # Steve
 # --
-# $Id: getopt.t,v 1.1 2007-09-01 19:23:10 steve Exp $
+# $Id: getopt.t,v 1.2 2007-09-04 20:30:25 steve Exp $
 
 
 use strict;
@@ -20,6 +20,9 @@ use Test::More qw( no_plan );
 #
 foreach my $file ( sort( glob "./bin/*-*" ) )
 {
+    # Skip emacs and CVS backups
+    next if $file =~ /~$/;
+
     testFile( $file );
 }
 
