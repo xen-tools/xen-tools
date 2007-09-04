@@ -33,13 +33,27 @@ logMessage Script $0 starting
 logMessage Filesystem options are ${options}
 
 
+
 #
-# Make sure we use ide style device names if required
+# Find the root device.
+#
+#  1.  default to sda.
+#
+#  2.  If --ide is specified use hda.
+#
+#  3.  Otherwise use a named $disk_device
 #
 device=sda
 if [ "${ide}" ]; then
     device=hda
+else
+    if [ ! -z "${disk_device}" ]; then
+        device=`basename $disk_device`
+    fi
 fi
+
+logMessage "Root device is /dev/$device"
+
 
 #
 #  Now we have the options we can create the fstab.
