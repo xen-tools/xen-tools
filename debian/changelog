@@ -9,6 +9,9 @@ xen-tools (xxx) unstable; urgency=low
     (Closes: #439874)
   * Correctly determine whether a Xen guest is running prior to deletion.
     (Closes: #440664)
+  * Allow the user to specify which serial device should be used for
+    use by the 'xm console', via serial_device=/dev/xvc0 in xen-tools.conf
+    (Closes: #423389)
 
  -- Blah
 
