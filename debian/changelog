@@ -5,6 +5,8 @@ xen-tools (xxx) unstable; urgency=low
     (Closes: #436480)
   * Fix typo on pointopoint links.
     (Closes: #436170)
+  * Avoid breaking command line completion when using aliased 'ls'.
+    (Closes: #439874)
 
  -- Blah
 
