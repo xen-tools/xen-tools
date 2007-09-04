@@ -7,6 +7,8 @@ xen-tools (xxx) unstable; urgency=low
     (Closes: #436170)
   * Avoid breaking command line completion when using aliased 'ls'.
     (Closes: #439874)
+  * Correctly determine whether a Xen guest is running prior to deletion.
+    (Closes: #440664)
 
  -- Blah
 

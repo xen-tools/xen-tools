@@ -136,7 +136,7 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-delete-image,v 1.40 2007-07-31 17:33:29 steve Exp $
+ $Id: xen-delete-image,v 1.41 2007-09-04 20:39:19 steve Exp $
 
 =cut
 
@@ -365,7 +365,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-       my $REVISION      = '$Revision: 1.40 $';
+       my $REVISION      = '$Revision: 1.41 $';
 
        if ( $REVISION =~ /1.([0-9.]+) / )
        {
@@ -439,7 +439,7 @@ sub xenRunning
 
     my $running = 0;
 
-    open( CMD, "xm list 2>/dev/null |")
+    open( CMD, "xm list $hostname 2>/dev/null |")
       or die "Failed to run 'xm list $hostname'";
     while( <CMD> )
     {
