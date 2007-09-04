@@ -18,7 +18,7 @@
 # --
 # http://www.steve.org.uk
 #
-# $Id: xen-tools,v 1.50 2007-07-07 23:48:44 steve Exp $
+# $Id: xen-tools,v 1.51 2007-09-04 20:36:26 steve Exp $
 #
 
 
@@ -66,7 +66,7 @@ _xen_create_image()
     # Available distributions, by which we mean distributions which
     # we have hook scripts available.
     #
-    for i in `ls -1 /usr/lib/xen-tools/ ` ; do
+    for i in `/bin/ls -1 /usr/lib/xen-tools/ ` ; do
         if [ -d /usr/lib/xen-tools/${i} ]; then
             dists="${dists} ${i/.d/}"
         fi
@@ -133,12 +133,12 @@ _xen_create_image()
 	    return 0
 	    ;;
 	--role)
-	    roles=$(for x in `ls -1 /etc/xen-tools/role.d/ 2>/dev/null | grep -v \/ 2>/dev/null`; do echo ${x} ; done )
+	    roles=$(for x in `/bin/ls -1 /etc/xen-tools/role.d/ 2>/dev/null | grep -v \/ 2>/dev/null`; do echo ${x} ; done )
 	    COMPREPLY=( $( compgen -W '${roles}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
 	    return 0
 	    ;;
 	--partitions)
-	    partitions=$(for x in `ls -1 /etc/xen-tools/partitions.d/ 2>/dev/null | grep -v \/ 2>/dev/null`; do echo ${x} ; done )
+	    partitions=$(for x in `/bin/ls -1 /etc/xen-tools/partitions.d/ 2>/dev/null | grep -v \/ 2>/dev/null`; do echo ${x} ; done )
 	    COMPREPLY=( $( compgen -W '${partitions}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
 	    return 0
 	    ;;
@@ -374,7 +374,7 @@ _xt-customize-image()
     # Available distributions, from rpmstrap
     #
     if [ -d /usr/lib/rpmstrap/scripts ]; then
-       dists=`ls -1 /usr/lib/rpmstrap/scripts`
+       dists=`/bin/ls -1 /usr/lib/rpmstrap/scripts`
     fi
     
     case "$prev" in
@@ -416,7 +416,7 @@ _xt-install-image()
     # Available distributions, from rpmstrap
     #
     if [ -d /usr/lib/rpmstrap/scripts ]; then
-       dists=`ls -1 /usr/lib/rpmstrap/scripts`
+       dists=`/bin/ls -1 /usr/lib/rpmstrap/scripts`
     fi
 
 
