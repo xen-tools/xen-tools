@@ -8,7 +8,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.112 2007-09-01 19:23:09 steve Exp $
+# $Id: Makefile,v 1.113 2007-09-04 20:33:33 steve Exp $
 
 
 #
@@ -133,6 +133,7 @@ install-bin:
 	chmod 755 ${prefix}/usr/bin/xen-update-image
 
 
+
 #
 #  Install hooks
 #
@@ -170,6 +171,14 @@ install-hooks:
 
 
 #
+#  Install our library files
+#
+install-libraries:
+	-mkdir -p ${prefix}/usr/share/perl5/Xen/Tools
+	cp ./lib/Xen/*.pm ${prefix}/usr/share/perl5/Xen
+	cp ./lib/Xen/Tools/*.pm ${prefix}/usr/share/perl5/Xen/Tools
+
+#
 #  Generate and install manpages.
 #
 install-manpages: manpages
@@ -180,7 +189,7 @@ install-manpages: manpages
 #
 #  Install everything.
 #
-install: fixup-perms install-bin install-etc install-hooks install-manpages
+install: fixup-perms install-bin install-etc install-hooks install-libraries install-manpages
 
 
 #
