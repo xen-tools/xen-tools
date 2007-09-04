@@ -103,7 +103,7 @@ xt-create-config - Create a Xen configuration file for a new guest
  --
  http://www.steve.org.uk/
 
- $Id: xt-create-xen-config,v 1.43 2007-07-31 17:33:30 steve Exp $
+ $Id: xt-create-xen-config,v 1.44 2007-09-04 21:05:11 steve Exp $
 
 =cut
 
@@ -230,7 +230,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.43 $';
+        my $REVISION      = '$Revision: 1.44 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -354,6 +354,16 @@ sub createXenConfig
     if ( defined( $ENV{'ide'} ) )
     {
         $device = 'hda';
+    }
+    else if ( defined( $ENV{'disk_device'} ) )
+    {
+        $device = $ENV{'disk_device'};
+
+        # strip /dev/, if present.
+        if ( $device =~ /^(.*)\/(.*)$/ )
+        {
+            $device = $2;
+        }
     }
     $ENV{'device'} = $device;
 
