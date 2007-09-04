@@ -12,6 +12,9 @@ xen-tools (xxx) unstable; urgency=low
   * Allow the user to specify which serial device should be used for
     use by the 'xm console', via serial_device=/dev/xvc0 in xen-tools.conf
     (Closes: #423389)
+  * Allow the user to specify which disk device should be used, via
+    disk_device=/dev/xvd[a-z] in xen-tools.conf
+    (Closes: #439233)
 
  -- Blah
 
