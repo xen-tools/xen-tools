@@ -78,8 +78,8 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --passwd      Ask for a root password during setup.
                  NOTE:  This is done interactively.
 
-   --role        Run a specific role command post-install.
-                These role scripts are discussed later in this manpage.
+   --role        Run the specified role script(s) post-install.
+                Role scripts are discussed later in this manpage.
 
    --role-args   Pass the named string literally to any role script.
                 This is useful for site-specific roles.
@@ -567,6 +567,9 @@ Install an X11 server, using VNC and XDM
  installed system as their first argument, and anything passed
  as a role-arg will be passed allong as additional arguments.
 
+  NOTE: Multiple role scripts may be invoked if you separate their
+ names with commas.
+
 =cut
 
 
@@ -596,7 +599,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.180 2007-09-04 20:31:19 steve Exp $
+ $Id: xen-create-image,v 1.181 2007-09-21 22:32:29 steve Exp $
 
 =cut
 
@@ -870,9 +873,9 @@ if ( $CONFIG{'install'} )
 
 
 #
-#  Run the user specified role script, if any.
+#  Run any specified role scripts.
 #
-runRoleScript();
+runRoleScripts();
 
 
 #
@@ -1380,7 +1383,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.180 $';
+        my $REVISION      = '$Revision: 1.181 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -3096,7 +3099,45 @@ sub findNextIP
 
 =begin doc
 
-  If the user specified a role for the new instance then execute it.
+  Run *all* specified role scripts.
+
+=end doc
+
+=cut
+
+sub runRoleScripts
+{
+    my( $scripts ) = ( @_ );
+
+    if ( !defined( $scripts ) )
+    {
+        $xt->log( "\nNo role scripts were specified.  Skipping\n" );
+        return;
+    }
+
+    #
+    #  OK we have at least one script specified.  Split it up
+    # and try it out.
+    #
+    foreach my $name ( split( /,/, $scripts ) )
+    {
+        # ignore empty ones.
+        next if ( ( !defined( $name ) ) || ( !length( $name ) ) );
+
+        # strip leading + triling space.
+        $name =~ s/^\s+//;
+        $name =~ s/\s+$//;
+
+        # run the script
+        runRoleScript( $name );
+    }
+}
+
+
+
+=begin doc
+
+  Run the specified role script.
 
 =end doc
 
@@ -3104,8 +3145,9 @@ sub findNextIP
 
 sub runRoleScript
 {
+    my( $role ) = ( @_ );
+
     my $roleDir = $CONFIG{'roledir'};
-    my $role    = $CONFIG{'role'};
 
     #
     #  Role-script arguments are optional.  If present prepare to
@@ -3113,13 +3155,6 @@ sub runRoleScript
     #
     my $args = '';
     $args    = " " . $CONFIG{'role-args'} if ( $CONFIG{'role-args'} );
-
-
-    if ( !defined( $role ) )
-    {
-        $xt->log( "\nNo role script specified.  Skipping\n" );
-        return;
-    }
 
     #
     #  The complete path to the role script
