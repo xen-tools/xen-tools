@@ -4,6 +4,8 @@ use warnings;
 use strict;
 use Moose;
 use File::Spec;
+use POSIX; # strftime
+use Carp;
 
 =head1 NAME
 
@@ -56,7 +58,7 @@ sub print {
 sub print_screen {
   my $self = shift;
 
-  print @_;
+  print map { "$_\n" } @_;
 }
 
 =head2 print_log
@@ -68,8 +70,10 @@ sub print_screen {
 sub print_log {
   my $self = shift;
 
+  # Create an RFC 822 conformant date string
+  my $date = strftime( "%a, %d  %b  %Y  %H:%M:%S  %z", localtime );
   my $fh = $self->log_fh();
-  print $fh ( @_ );
+  print $fh ( map { "$date - $_" } @_ );
 }
 
 =head2 hostname
@@ -132,7 +136,8 @@ before 'DESTROY' => sub {
 
 _init_fh
 
-  This private method initializes the logging filehandle
+  This private method initializes the logging filehandle, creating the
+  containing directory if it does not exist.
 
 =end doc
 
@@ -143,8 +148,13 @@ sub _init_fh {
 
   my $logFile =
     File::Spec->catfile( $self->logpath(), $self->hostname() . '.log' );
+
+  system( 'mkdir -p', $self->logpath() ) unless -d $self->logpath();
+
+  carp "Couldn't create log directory: $!" unless $? == 0;
   
-  open( $self->{log_fh}, q{>>}, $logFile );
+  open( $self->{log_fh}, q{>>}, $logFile ) or
+    carp "Couldn't open log file for append: $!";
 };
 
 =head1 AUTHOR
