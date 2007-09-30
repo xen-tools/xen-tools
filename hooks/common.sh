@@ -1,4 +1,3 @@
-
 #!/bin/sh
 #
 #  Common shell functions which may be used by any hook script
@@ -158,7 +157,7 @@ enableStartStopDaemon ()
 #
 #  Remove the specified Debian packages.
 #
-#  NOTE:  Function not renamed with trailing "s" for compatability reasons.
+#  NOTE:  Function not renamed with trailing "s" for compatibility reasons.
 #
 removeDebianPackage ()
 {
@@ -183,7 +182,7 @@ removeDebianPackage ()
     #
     # Purge the packages we've been given.
     #
-    chroot ${prefix} /usr/bin/dpkg --purge "$@"
+    chroot ${prefix} /usr/bin/apt-get remove --purge "$@"
 
 }
 

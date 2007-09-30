@@ -15,6 +15,8 @@ xen-tools (xxx) unstable; urgency=low
   * Allow the user to specify which disk device should be used, via
     disk_device=/dev/xvd[a-z] in xen-tools.conf
     (Closes: #439233)
+  * Use 'apt-get remove' rather than 'dpkg --purge' when removing packages
+    in hooks.  (Closes: #441981)
 
  -- Blah
 
