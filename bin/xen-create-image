@@ -591,7 +591,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.183 2007-10-02 17:50:29 steve Exp $
+ $Id: xen-create-image,v 1.184 2007-10-02 21:41:22 steve Exp $
 
 =cut
 
@@ -1375,7 +1375,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.183 $';
+        my $REVISION      = '$Revision: 1.184 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -3072,7 +3072,7 @@ sub findIP
     #
     # Open and read the file.
     #
-    open( RANGE, "<", $CONFIG{'ipfile'} ) or return undef;
+    open( RANGE, "<", $CONFIG{'ipfile'} ) or die "Failed to read $CONFIG{'ipfile'} - $!";
     my @lines = <RANGE>;
     my @updated;
     close( RANGE );
@@ -3089,7 +3089,7 @@ sub findIP
         chomp( $line );
 
         # find an IP.
-        if ( ( !defined( $ip ) ) && ( $line =~ /^([0-9\.]+$/ ) )
+        if ( ( !defined( $ip ) ) && ( $line =~ /^([0-9\.]+)$/ ) )
         {
             $ip   = $line;
             $line = $ip . ": used";
@@ -3099,12 +3099,38 @@ sub findIP
     }
 
     #
-    #  Now write out the new files.
+    #  Now write out the new entries.
     #
-    open( RANGE, ">", $CONFIG{'ipfile'} );
+    open( RANGE, ">", $CONFIG{'ipfile'} ) or die "Failed to write to $CONFIG{'ipfile'} - $!";
     print RANGE @updated;
     close( RANGE );
 
+    #
+    #  Sanity check - handle the old case where the format of the file
+    # was different.
+    #
+    if ( defined( $ip ) && scalar( split( /\./, $ip ) < 3 ) )
+    {
+        print <<EOF;
+ERROR
+-----
+
+  The $CONFIG{'ipfile'} file must contain full IP addresses, for example:
+
+192.168.1.100
+192.168.1.101
+192.168.1.102
+..
+192.168.1.200
+
+  Aborting.  Please update the file or specify an IP address manually.
+
+EOF
+        exit;
+    }
+    #
+    #  Return
+    #
     return( $ip );
 }
 
