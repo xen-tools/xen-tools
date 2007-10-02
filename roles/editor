@@ -1,0 +1,93 @@
+#!/bin/sh
+#
+#  Role-script for the generalised editing of files for guests.
+#
+#  This script works via a skelington directory containing small
+# .sed files which will contain edits to be applied to an arbitary
+# tree of files upon the new domU.
+#
+#  For example if we have the following sed file:
+#
+#   /etc/xen-tools/sed.d/etc/ssh/sshd_config.sed
+#
+#  this will be applied to /etc/ssh/sshd_config upon the new guest
+# *if* it exists.  If the file encoded in the name doesn't exist then
+# it will be ignored.
+#
+# Steve
+# -- 
+#
+
+
+
+#
+#  Our installation directory + our prefix for finding scripts from.
+#
+prefix=$1
+source=/etc/xen-tools/sed.d/
+
+
+#
+#  Source our common functions - this will let us install a Debian package.
+#
+if [ -e /usr/lib/xen-tools/common.sh ]; then
+    . /usr/lib/xen-tools/common.sh
+else
+    echo "Installation problem"
+fi
+
+
+
+#
+# Log our start
+#
+logMessage Script $0 starting
+
+
+#
+#  Make sure source directory exists.
+#
+if [ ! -d "${source}" ]; then
+    logMessage "Source directory ${source} not found"
+    exit
+fi
+
+
+#
+#  Now find files which exist.
+#
+for i in `find ${source} -name '*.sed' -print`; do
+
+   #
+   #  Get the name of the file, minus the source prefix
+   #
+   sourcelen=${#source}
+   file=/${i:$sourcelen}
+
+   #
+   #  Strip the .sed suffix
+   #
+   file=${file/.sed/}
+
+   #
+   #  Does the file exist in the new install?
+   #
+   if [ -e "${prefix}/${file}" ]; then
+
+       #
+       #  Log it.
+       #
+       logPrint "Running script $i - against ${prefix}/${file}"
+
+       #
+       #  Invoke it.
+       #
+       sed -i~ -f $i "${prefix}/${file}"
+   fi
+done
+
+
+#
+#  Log our finish
+#
+logMessage Script $0 finished
