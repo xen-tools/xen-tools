@@ -304,41 +304,33 @@ Create a configuration file in /etc/xen so that xm can create the new image.
  be used to specify the networking options of the freshly created
  Xen guests.
 
-  One other shortcut is the use of an auto-incrementing IP addresses.
+  One other useful shortcut is the use of an automatic IP address.
+ You can specify '--ip=auto' and the system will choose and use
+ an IP address from those listed in /etc/xen-tools/ips.txt.
 
-  If you specify the IP address of the guest as only the initial
- three octets (ie. 1.2.3, rather than 1.2.3.4) then the last
- octet will be automatically incremented - and stored for future
- use.
-
-  The last octet in use will be created in the text file
- /etc/xen-tools/ips.txt.
-
-  For example if you wanted to create new Xen instances occupying
- the IP address range 192.168.1.200+ then you would run:
-
+  For example if you wished to have Xen guests automatically
+ take an address from the range 192.168.1.100-192.168.1.200 you
+ would first prepare the system by running this:
 
 =for example start
 
-  echo "200" > /etc/xen-tools/ips.txt
+  rm /etc/xen-tools/ips.txt
+  for i in $(seq 100 200) ; do echo 192.168.1.$i >> /etc/xen-tools/ips.txt ; done
 
 =for example end
 
-  Future creations would then simply use:
+  Now you can create a guest with the command:
 
 =for example start
 
-  xen-create-image --ip=192.168.1 --hostname=blah [--dist=...]
+  xen-create-image --ip=auto --hostname=blah [--dist=...]
 
 =for example end
 
-  The first time this ran the machine would recieve the IP address
- 192.168.1.200.  The next time it ran the new image would receive
- 192.168.1.201, etc.  (You could specify "ip = 192.168.1" in the
- configuration file; meaning the only mandatory argument would be
- the hostname of the new instance.)
-
-  Note: There is no facility to "wrap around".
+  The first time this ran the machine would recieve an IP address
+ from the pool which we've created.  This IP would be marked as used,
+ and would no longer be available.  If all the IP addresses are taken
+ then the system will fail.
 
 =cut
 
@@ -599,7 +591,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.182 2007-09-25 20:06:37 steve Exp $
+ $Id: xen-create-image,v 1.183 2007-10-02 17:50:29 steve Exp $
 
 =cut
 
@@ -1383,7 +1375,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.182 $';
+        my $REVISION      = '$Revision: 1.183 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -2244,22 +2236,29 @@ sub showSummary
 
             #
             #  Here we have special handling for the case where
-            # IP addresses are xx.yy.zz - we automatically add
-            # in the next octet using /etc/xen-tools/ips.txt
+            # IP addresses to be generated automatically.
             #
             #
-            if ( $i =~ /^([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)$/ )
-            {
-                # NOP
-                $CONFIG{'verbose'} && $xt->log( "IP address is complete: $i\n" );
-            }
-            elsif ( $i =~ /^([0-9]+)\.([0-9]+)\.([0-9]+)\.$/ )
+            if ( $i =~ /auto/i )
             {
                 $CONFIG{'verbose'} &&
-                  $xt->log( "Automatically determining the last octet for: $i\n" );
+                  $xt->log( "Automatically determining an IP." );
 
-                $i = findNextIP( $i );
-                $CONFIG{'verbose'} && $xt->log( "Found $i\n" );
+                $i = findIP( $i );
+                if ( defined( $i ) )
+                {
+                    $CONFIG{'verbose'} && $xt->log( "Claimed $i\n" );
+                }
+                else
+                {
+                    print <<EOF;
+
+ERROR:  You specified the automatic choosing of an IP address and
+        none are left in $CONFIG{'ipfile'}.
+
+EOF
+                    exit;
+                }
             }
 
             #
@@ -3059,38 +3058,52 @@ sub runCustomisationHooks
 
 =begin doc
 
-  Find the next usable IP address for the given host.
-
-  This works by reading the last octet from a global file, incrementing
- it and writing it back to the file.  So we have a running total of the
- last IP.
+  Find a useable IP address from the file /etc/xen-tools/ips.txt.
 
 =end doc
 
 =cut
 
-sub findNextIP
+sub findIP
 {
-    my( $ip ) = (@_);
-
     # Abort if we don't have the IP file.
-    return $ip if ( ! -e $CONFIG{'ipfile'} );
+    return undef if ( ! -e $CONFIG{'ipfile'} );
 
-    # Read the number.
-    open( OCTET, "<", $CONFIG{'ipfile'} ) or return $ip;
-    my $line = <OCTET>;
-    $line = 1 if ( ( ! defined( $line ) ) || ( $line !~ /^([0-9]+)$/ ) );
-    close( OCTET );
-    chomp( $line );
+    #
+    # Open and read the file.
+    #
+    open( RANGE, "<", $CONFIG{'ipfile'} ) or return undef;
+    my @lines = <RANGE>;
+    my @updated;
+    close( RANGE );
 
-    # Add it
-    $ip .= ".$line";
+    #
+    #  Find an unclaimed line.
+    #
+    my $ip = undef;
+    foreach my $line ( @lines )
+    {
+        # skip empty lines.
+        next if ( !defined( $line ) );
+        next if ( !length( $line ) );
+        chomp( $line );
 
-    # Increment + write
-    $line += 1 ;
-    open( OCTET, ">", $CONFIG{'ipfile'} );
-    print OCTET $line . "\n";
-    close( OCTET );
+        # find an IP.
+        if ( ( !defined( $ip ) ) && ( $line =~ /^([0-9\.]+$/ ) )
+        {
+            $ip   = $line;
+            $line = $ip . ": used";
+        }
+
+        push( @updated, $line );
+    }
+
+    #
+    #  Now write out the new files.
+    #
+    open( RANGE, ">", $CONFIG{'ipfile'} );
+    print RANGE @updated;
+    close( RANGE );
 
     return( $ip );
 }
