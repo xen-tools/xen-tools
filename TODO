@@ -8,9 +8,11 @@ TODO
 
   2. Write more test cases.
 
-  3.  LVM snapshot support as an install source.
+  3. LVM snapshot support as an install source.
+
+  4. xen-delete-image should unallocate any used IP addresses.
 
 Steve
 --
-$Id: TODO,v 1.30 2007-10-02 16:18:04 steve Exp $
+$Id: TODO,v 1.31 2007-10-02 21:42:28 steve Exp $
 
