@@ -1,5 +1,6 @@
-xen-tools (xxx) unstable; urgency=low
+xen-tools (3.8-1) unstable; urgency=low
 
+  [ Steve Kemp ]
   * Allow the debootstrap command to be changed to cdebootstrap
     via 'debootstrap-cmd = /usr/sbin/cdebootstrap'.
     (Closes: #436480)
@@ -17,8 +18,12 @@ xen-tools (xxx) unstable; urgency=low
     (Closes: #439233)
   * Use 'apt-get remove' rather than 'dpkg --purge' when removing packages
     in hooks.  (Closes: #441981)
+ 
+  [ Radu Spineanu ]
+  * debian/control: Roland Stigge and I switched maintainer places. 
+  * debian/control: Added Steve Kemp to Uploaders.
 
- -- Blah
+ -- Radu Spineanu <radu@debian.org>  Wed, 03 Oct 2007 00:39:58 +0300
 
 xen-tools (3.7-1) unstable; urgency=low
 
