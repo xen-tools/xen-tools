@@ -591,7 +591,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.184 2007-10-02 21:41:22 steve Exp $
+ $Id: xen-create-image,v 1.185 2007-10-10 08:56:32 steve Exp $
 
 =cut
 
@@ -1375,7 +1375,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.184 $';
+        my $REVISION      = '$Revision: 1.185 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -3102,7 +3102,7 @@ sub findIP
     #  Now write out the new entries.
     #
     open( RANGE, ">", $CONFIG{'ipfile'} ) or die "Failed to write to $CONFIG{'ipfile'} - $!";
-    print RANGE @updated;
+    print RANGE join( "\n", @updated );
     close( RANGE );
 
     #
