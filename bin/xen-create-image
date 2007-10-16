@@ -591,7 +591,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.186 2007-10-16 21:27:37 steve Exp $
+ $Id: xen-create-image,v 1.187 2007-10-16 21:28:56 steve Exp $
 
 =cut
 
@@ -1391,7 +1391,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.186 $';
+        my $REVISION      = '$Revision: 1.187 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -3125,9 +3125,12 @@ sub findIP
     #  Sanity check - handle the old case where the format of the file
     # was different.
     #
-    if ( defined( $ip ) && scalar( split( /\./, $ip ) < 3 ) )
+    if ( defined( $ip ) )
     {
-        print <<EOF;
+        my @tmp = split( /\./, $ip );
+        if ( scalar( @tmp )  < 3 )
+        {
+            print <<EOF;
 ERROR
 -----
 
@@ -3142,7 +3145,8 @@ ERROR
   Aborting.  Please update the file or specify an IP address manually.
 
 EOF
-        exit;
+            exit;
+        }
     }
     #
     #  Return
