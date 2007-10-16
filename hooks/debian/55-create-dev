@@ -39,6 +39,7 @@ if ( test `ls -1 ${prefix}/dev | wc -l` -gt 10 ); then
     ./MAKEDEV std
     ./MAKEDEV hda
     ./MAKEDEV sda
+    ./MAKEDEV tty1
 
     logMessage "Terminating because there appear to be files in /dev already"
     exit
