@@ -10,23 +10,31 @@ xt-create-config - Create a Xen configuration file for a new guest
 
   xt-create-config [options]
 
+  Filename Options:
+
+    --ouput      Specify the output directory to use.
+    --extension  Specify the file extension to use.
+
+
   General Options:
+
     --admins     Specify some administrator accounts which should be
                 created for use by the xen-shell.
 
     --template   Specify the template file to use when creating the
                 Xen configuration file.
 
+
   Help Options:
+
    --help        Show this scripts help information.
    --manual      Read this scripts manual.
    --version     Show the version number and exit.
 
   Debugging Options:
+
    --verbose  Be verbose in our execution.
 
-  Mandatory Options:
-   --output   The directory to save our configuration file to.
 
   All other options from xen-create-image, such as the new IP address(es)
  to give to the new instance, will be passed as environmental variables.
@@ -103,7 +111,7 @@ xt-create-config - Create a Xen configuration file for a new guest
  --
  http://www.steve.org.uk/
 
- $Id: xt-create-xen-config,v 1.45 2007-09-04 21:27:42 steve Exp $
+ $Id: xt-create-xen-config,v 1.46 2007-10-25 12:05:21 steve Exp $
 
 =cut
 
@@ -217,6 +225,7 @@ sub parseCommandLineArguments
     GetOptions(
                "admins=s",   \$ENV{'admins'},
                "output=s",   \$CONFIG{'output'},
+               "extension=s",\$CONFIG{'extension'},
                "template=s", \$CONFIG{'template'},
                "verbose",    \$CONFIG{'verbose'},
                "help",       \$HELP,
@@ -230,7 +239,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.45 $';
+        my $REVISION      = '$Revision: 1.46 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -271,7 +280,6 @@ sub checkArguments
         print "Aborting\n";
         exit 1;
     }
-
 
     #
     #  Make sure that any specified template file exists.
@@ -338,7 +346,7 @@ sub createXenConfig
     #
     #  The output file we're going to process.
     #
-    my $file = $CONFIG{'output'} . '/' . $ENV{'hostname'} . '.cfg';
+    my $file = $CONFIG{'output'} . '/' . $ENV{'hostname'} . $ENV{'extension'};
 
     #
     #  The template we're going to read from.

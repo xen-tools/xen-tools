@@ -186,7 +186,7 @@ Install a new distribution.
 Run a collection of hook scripts to customise the freshly installed system.
 
 =item B<xt-create-xen-config>
-Create a configuration file in /etc/xen so that xm can create the new image.
+Create a Xen configuration file in so that xm can start the new domain.
 
 =back
 
@@ -354,7 +354,8 @@ Create a configuration file in /etc/xen so that xm can create the new image.
 =head1 XEN CONFIGURATION FILE
 
   Once a new image has been created an appropriate configuration file
- for Xen will be saved in the directory /etc/xen.
+ for Xen will be saved in the directory /etc/xen by default.  However
+ you may change the ouput directory with the --output flag.
 
   The configuration file is built up using the template file
  /etc/xen-tools/xm.tmpl - which is a file processed via
@@ -591,7 +592,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.187 2007-10-16 21:28:56 steve Exp $
+ $Id: xen-create-image,v 1.188 2007-10-25 12:05:21 steve Exp $
 
 =cut
 
@@ -927,13 +928,17 @@ if ( $CONFIG{'boot'} )
     #
     #  (Will be present if this is overwriting a previous image, for example.)
     #
-    if ( ( -d "/etc/xen/auto" ) &&
-         ( ! -e "/etc/xen/auto/$CONFIG{'hostname'}.cfg" ) )
+    if ( -d "/etc/xen/auto" )
     {
-        $xt->log( "Creating auto-start symlink\n" );
+        my $cfg = $CONFIG{'output'} . "/" . $CONFIG{'hostname'} . $CONFIG{'suffix'};
 
-        my $link = "ln -s /etc/xen/$CONFIG{'hostname'}.cfg /etc/xen/auto/";
-        runCommand( $link );
+        if ( ! -e $cfg )
+        {
+            $xt->log( "Creating auto-start symlink to: $cfg\n" );
+
+            my $link = "ln -s $cfg /etc/xen/auto/";
+            runCommand( $link );
+        }
     }
 
 
@@ -949,10 +954,13 @@ if ( $CONFIG{'boot'} )
     }
     else
     {
-        # Child.
-        system( "$CONFIG{'xm'} create $CONFIG{'hostname'}.cfg >/dev/null 2>/dev/null" );
+        # Config file.
+        my $cfg = $CONFIG{'output'} . "/" . $CONFIG{'hostname'} . $CONFIG{'suffix'};
 
-        $xt->log( "Started new Xen guest: $CONFIG{'hostname'}\n" );
+        # Child.
+        system( "$CONFIG{'xm'} create $cfg >/dev/null 2>/dev/null" );
+
+        $xt->log( "Started new Xen guest: $CONFIG{'hostname'} [$cfg]\n" );
     }
 }
 
@@ -1172,6 +1180,8 @@ sub setupDefaultOptions
     $CONFIG{'roledir'}        = '/etc/xen-tools/role.d';
     $CONFIG{'partitionsdir'}  = '/etc/xen-tools/partitions.d';
     $CONFIG{'ipfile'}         = '/etc/xen-tools/ips.txt';
+    $CONFIG{'output'}         = '/etc/xen';
+    $CONFIG{'extension'}      = '.cfg';
 
     #
     #  Installation method defaults to "debootstrap".
@@ -1376,6 +1386,8 @@ sub parseCommandLineArguments
                "force",        \$CONFIG{'force'},
                "keep",         \$CONFIG{'keep'},
                "template=s",   \$CONFIG{'template'},
+               "output=s",     \$CONFIG{'output'},
+               "extension=s",  \$CONFIG{'extension'},
 
                # Help options
                "debug",        \$CONFIG{'debug'},
@@ -1391,7 +1403,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.187 $';
+        my $REVISION      = '$Revision: 1.188 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -1748,6 +1760,24 @@ EOF
     {
         $CONFIG{'mac'} = generateMACAddress();
     }
+
+    #
+    #  Make sure our output directory exists.
+    #
+    if ( ! -d $CONFIG{'output'} )
+    {
+        print <<EOF;
+  The output directory for creating the xen configuration file within
+ doesn't exist:
+ 
+           $CONFIG{'dir'}
+
+  Aborting.
+
+EOF
+        exit;
+    }
+
 }
 
 
@@ -3268,7 +3298,10 @@ sub runXenConfigCreation
     #
     #  Configuration file we'll create
     #
-    my $file = '/etc/xen/' . $ENV{'hostname'} . '.cfg';
+    my $dir  = $CONFIG{'output'};
+    my $ext  = $CONFIG{'extension'};
+    my $file = $dir . "/" . $CONFIG{'hostname'} . $ext;
+
 
     #
     #  Abort if it exists.
@@ -3285,8 +3318,10 @@ sub runXenConfigCreation
         }
     }
 
-
-    my $command = 'xt-create-xen-config --output=/etc/xen';
+    #
+    #  Create teh config.
+    #
+    my $command = "xt-create-xen-config --output=$dir --extension=$ext";
 
     #
     #  Add the template if specified

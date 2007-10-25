@@ -48,6 +48,9 @@ Contributions
   Walter Reiner <walter [at] at.wreiner>
    - Provided --image-dev + --swap-dev patch.
 
+  Jameson Rollins <jrollins [at] edu.columbia.phys>
+   - Provided --output + --extension code.
+
   Felipe Scarel <fbscarel [at] com.gmail>
    - Bugfix for --no-swap + LVM
 
