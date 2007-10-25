@@ -592,7 +592,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.188 2007-10-25 12:05:21 steve Exp $
+ $Id: xen-create-image,v 1.189 2007-10-25 12:19:40 steve Exp $
 
 =cut
 
@@ -617,7 +617,7 @@ use File::Temp qw/ tempdir /;
 use Getopt::Long;
 use Pod::Usage;
 
-use Xen::Tools;
+
 
 #
 #  Configuration values read initially from the global configuration
@@ -681,7 +681,6 @@ readConfigurationFile( "/etc/xen-tools/xen-tools.conf" );
 #
 parseCommandLineArguments();
 
-my $xt = Xen::Tools->new( hostname => $CONFIG{hostname} );
 
 #
 #  If we received an additional configuration file then read it.
@@ -703,7 +702,7 @@ if ( $CONFIG{'config'} )
     }
     else
     {
-        $xt->log( "The specified configuration file does not exist: '$path'\n",
+        logprint( "The specified configuration file does not exist: '$path'\n",
                   "Aborting\n\n"
                 );
         exit;
@@ -822,7 +821,7 @@ elsif ( $CONFIG{'image-dev'} )
 else
 {
     # Can't happen we didn't get an installation type.
-    $xt->log( "Error:  No recognised installation type.\n",
+    logprint( "Error:  No recognised installation type.\n",
               "Please specify a directory, lvm, or evms volume to use.\n"
             );
     $FAIL = 1;
@@ -863,7 +862,7 @@ if ( $CONFIG{'install'} )
     #
     if ( ! -x $MOUNT_POINT . "/bin/ls" )
     {
-        $xt->log( "System installation failed.  Aborting\n");
+        logprint( "System installation failed.  Aborting\n");
         $FAIL = 1;
         exit;
     }
@@ -902,7 +901,7 @@ setupRootPassword() if ( $CONFIG{'passwd'} );
 #
 #  Report success.
 #
-$xt->log( "All done\n");
+logprint( "All done\n");
 
 
 #
@@ -934,7 +933,7 @@ if ( $CONFIG{'boot'} )
 
         if ( ! -e $cfg )
         {
-            $xt->log( "Creating auto-start symlink to: $cfg\n" );
+            logprint( "Creating auto-start symlink to: $cfg\n" );
 
             my $link = "ln -s $cfg /etc/xen/auto/";
             runCommand( $link );
@@ -960,7 +959,7 @@ if ( $CONFIG{'boot'} )
         # Child.
         system( "$CONFIG{'xm'} create $cfg >/dev/null 2>/dev/null" );
 
-        $xt->log( "Started new Xen guest: $CONFIG{'hostname'} [$cfg]\n" );
+        logprint( "Started new Xen guest: $CONFIG{'hostname'} [$cfg]\n" );
     }
 }
 
@@ -992,7 +991,7 @@ sub checkSystem
     {
         if ( ! defined( findBinary( $bin ) ) )
         {
-            $xt->log("The script '$bin' was not found.\n",
+            logprint("The script '$bin' was not found.\n",
                      "Aborting\n\n"
                     );
             exit;
@@ -1403,13 +1402,13 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.188 $';
+        my $REVISION      = '$Revision: 1.189 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
         }
 
-        $xt->log( "xen-create-image release $RELEASE - CVS: $REVISION\n" );
+        logprint( "xen-create-image release $RELEASE - CVS: $REVISION\n" );
         exit;
     }
 
@@ -1475,7 +1474,7 @@ sub testRootUser
 
 E_O_ROOT
 
-        $xt->log( $err );
+        logprint( $err );
         exit;
     }
 }
@@ -1502,7 +1501,7 @@ sub checkArguments
     #
     if ( ! defined( $CONFIG{'dist'} ) )
     {
-       $xt->log( "The '--dist' argument is mandatory\n" );
+       logprint( "The '--dist' argument is mandatory\n" );
        exit 1;
     }
 
@@ -1511,7 +1510,7 @@ sub checkArguments
     #
     if ( ! defined( $CONFIG{'hostname'} ) )
     {
-        $xt->log( "The '--hostname' argument is mandatory.\n" );
+        logprint( "The '--hostname' argument is mandatory.\n" );
         exit 1;
     }
 
@@ -1546,7 +1545,7 @@ sub checkArguments
 
   Aborting.
 E_OR
-        $xt->log( $err );
+        logprint( $err );
         exit 1;
     }
 
@@ -1559,7 +1558,7 @@ E_OR
         if ( ( $CONFIG{'image'} ne "sparse" ) &&
              ( $CONFIG{'image'} ne "full" ) )
         {
-            $xt->log( "Image type must be 'sparse' or 'full'\n" );
+            logprint( "Image type must be 'sparse' or 'full'\n" );
             exit;
         }
     }
@@ -1638,7 +1637,7 @@ EOF
         {
             # failed to find either by fully qualified path,
             # or inside /etc/xen-tools.
-            $xt->log( "The specified template file, $CONFIG{'template'}, does not exist.\n" );
+            logprint( "The specified template file, $CONFIG{'template'}, does not exist.\n" );
             exit 1;
         }
     }
@@ -1651,7 +1650,7 @@ EOF
     {
         if ( ! -d $CONFIG{'roledir'} )
         {
-            $xt->log( "The specified role directory '$CONFIG{'roledir'}' does not exist\n" );
+            logprint( "The specified role directory '$CONFIG{'roledir'}' does not exist\n" );
             exit 1;
         }
     }
@@ -1664,7 +1663,7 @@ EOF
     {
         if ( ! -d $CONFIG{'partitionsdir'} )
         {
-            $xt->log( "The specified partitions directory '$CONFIG{'partitionsdir'}' does not exist\n" );
+            logprint( "The specified partitions directory '$CONFIG{'partitionsdir'}' does not exist\n" );
             exit 1;
         }
     }
@@ -1683,7 +1682,7 @@ EOF
 
         if ( ! -e $CONFIG{'partitions'} )
         {
-            $xt->log( "The specified partitions file, $CONFIG{'partitions'}, does not exist.\n" );
+            logprint( "The specified partitions file, $CONFIG{'partitions'}, does not exist.\n" );
             exit 1;
         }
 
@@ -1692,19 +1691,19 @@ EOF
 
     if ( $CONFIG{'swap-dev'} && $CONFIG{'noswap'} )
     {
-        $xt->log( "Please choose either swap-dev or noswap, not both!\n" );
+        logprint( "Please choose either swap-dev or noswap, not both!\n" );
         exit 1;
     }
 
     if ( $CONFIG{'swap-dev'} && $CONFIG{'partitions'} )
     {
-        $xt->log( "Please choose either swap-dev or partitions, not both!\n" );
+        logprint( "Please choose either swap-dev or partitions, not both!\n" );
         exit 1;
     }
 
     if ( $CONFIG{'image-dev'} && $CONFIG{'partitions'} )
     {
-        $xt->log( "Please choose either image-dev or partitions, not both!\n" );
+        logprint( "Please choose either image-dev or partitions, not both!\n" );
         exit 1;
     }
 
@@ -1724,7 +1723,7 @@ EOF
         }
         else
         {
-            $xt->log( "Please choose either DHCP or static usage, not both!\n" );
+            logprint( "Please choose either DHCP or static usage, not both!\n" );
             exit 1;
         }
     }
@@ -1734,9 +1733,9 @@ EOF
     #
     if ( ( !$CONFIG{'dhcp'} ) && ( !$CONFIG{'ip'} ) )
     {
-        $xt->log( "Please choose one of:\n" );
-        $xt->log( " --dhcp\n" );
-        $xt->log( " --ip xx.xx.xx.xx\n" );
+        logprint( "Please choose one of:\n" );
+        logprint( " --dhcp\n" );
+        logprint( " --ip xx.xx.xx.xx\n" );
         exit 1;
     }
 
@@ -1746,10 +1745,10 @@ EOF
     #
     if ( $CONFIG{'ip'} )
     {
-        $xt->log( "WARNING:  No gateway address specified!\n" )
+        logprint( "WARNING:  No gateway address specified!\n" )
           unless( defined( $CONFIG{'gateway'} ) );
 
-        $xt->log( "WARNING:  No netmask address specified!\n" )
+        logprint( "WARNING:  No netmask address specified!\n" )
           unless( defined( $CONFIG{'netmask'} ) );
     }
 
@@ -1884,8 +1883,8 @@ sub checkBinariesPresent
     {
         if ( ! defined( findBinary( $file ) ) )
         {
-            $xt->log( "The following binary is required to run this tool\n" );
-            $xt->log( "\t$file\n");
+            logprint( "The following binary is required to run this tool\n" );
+            logprint( "\t$file\n");
             exit 1;
         }
     }
@@ -1898,9 +1897,9 @@ sub checkBinariesPresent
         # loopback image
         if ( ! defined( findBinary( "dd" ) ) )
         {
-            $xt->log( "The following binary is required to run this tool\n" );
-            $xt->log( "\tdd\n");
-            $xt->log( "(This only required for loopback images, which you've selected)\n" );
+            logprint( "The following binary is required to run this tool\n" );
+            logprint( "\tdd\n");
+            logprint( "(This only required for loopback images, which you've selected)\n" );
             exit 1;
         }
     }
@@ -1915,9 +1914,9 @@ sub checkBinariesPresent
         {
             if ( ! defined( findBinary( $file ) ) )
             {
-                $xt->log( "The following binary is required to run this tool\n");
-                $xt->log( "\t$file\n" );
-                $xt->log( "(This is only required for EVMS volumes, which you've selected)\n" );
+                logprint( "The following binary is required to run this tool\n");
+                logprint( "\t$file\n" );
+                logprint( "(This is only required for EVMS volumes, which you've selected)\n" );
                 exit;
             }
         }
@@ -1931,9 +1930,9 @@ sub checkBinariesPresent
         {
             if ( !defined( findBinary( $file ) ) )
             {
-                $xt->log( "The following binary is required to run this tool\n");
-                $xt->log( "\t$file\n" );
-                $xt->log( "(This is only required for LVM volumes, which you've selected)\n" );
+                logprint( "The following binary is required to run this tool\n");
+                logprint( "\t$file\n" );
+                logprint( "(This is only required for LVM volumes, which you've selected)\n" );
                 exit;
             }
         }
@@ -1997,14 +1996,14 @@ EOF
     {
         if ( ! ( $name =~ /^[a-zA-Z0-9-]+$/ ) )
         {
-            $xt->log( "The partition name $name contains invalid characters.\n" );
-            $xt->log( "Only alphanumeric characters and the hyphen are allowed\n" );
+            logprint( "The partition name $name contains invalid characters.\n" );
+            logprint( "Only alphanumeric characters and the hyphen are allowed\n" );
             exit 1;
         }
 
         if ( ! ( $details->{'size'} =~ /^[0-9.]+[GgMmKk]b?$/ ) )
         {
-            $xt->log( "The size $details->{'size'} of partition $name contains is not recognized.\n" );
+            logprint( "The size $details->{'size'} of partition $name contains is not recognized.\n" );
             exit 1;
         }
 
@@ -2020,19 +2019,19 @@ EOF
         {
             if ( ! $CONFIG{ 'make_fs_' . $details->{'type'} } )
             {
-                $xt->log( "The type $details->{'type'} of partition $name is not recognized.\n" );
+                logprint( "The type $details->{'type'} of partition $name is not recognized.\n" );
                 exit 1;
             }
 
             if ( ! ( $details->{'mountpoint'} =~ /^\/[^: \t\r\n]*$/ ) )
             {
-                $xt->log( "The mount point $details->{'mountpoint'} of partition $name is invalid.\n" );
+                logprint( "The mount point $details->{'mountpoint'} of partition $name is invalid.\n" );
                 exit 1;
             }
 
             if ( ! ( $details->{'options'} =~ /^[^: \t\r\n]*$/ ) )
             {
-                $xt->log( "The mount options $details->{'options'} of partition $name are invalid.\n" );
+                logprint( "The mount options $details->{'options'} of partition $name are invalid.\n" );
                 exit 1;
             }
 
@@ -2060,7 +2059,7 @@ EOF
 
     if ( ! $foundroot )
     {
-        $xt->log( "The root partition was not specified.\n" );
+        logprint( "The root partition was not specified.\n" );
         exit 1;
     }
 
@@ -2172,58 +2171,58 @@ sub showSummary
     #
     # Show the user what to expect.
     #
-    $xt->log( "\nGeneral Information\n" );
-    $xt->log( "--------------------\n" );
-    $xt->log( "Hostname       :  $CONFIG{'hostname'}\n" );
-    $xt->log( "Distribution   :  $CONFIG{'dist'}\n" );
+    logprint( "\nGeneral Information\n" );
+    logprint( "--------------------\n" );
+    logprint( "Hostname       :  $CONFIG{'hostname'}\n" );
+    logprint( "Distribution   :  $CONFIG{'dist'}\n" );
 
     if ( defined $CONFIG{'image-dev'} )
     {
-        $xt->log( "Root Device    :  $CONFIG{'image-dev'}\n" );
+        logprint( "Root Device    :  $CONFIG{'image-dev'}\n" );
     }
     if ( defined $CONFIG{'swap-dev'} )
     {
-        $xt->log( "Swap Device    :  $CONFIG{'swap-dev'}\n" );
+        logprint( "Swap Device    :  $CONFIG{'swap-dev'}\n" );
     }
 
     my $info;
     my $partcount = 0;
 
-    $xt->log( "Partitions     :  " );
+    logprint( "Partitions     :  " );
     foreach my $partition ( @PARTITIONS )
     {
         $info = sprintf('%-15s %-5s (%s)', ($partition->{'type'} ne 'swap') ? $partition->{'mountpoint'} : 'swap', $partition->{'size'}, $partition->{'type'});
 
         if ($partcount++)
         {
-            $xt->log( "                  $info\n" );
+            logprint( "                  $info\n" );
         }
         else
         {
-            $xt->log( "$info\n" );
+            logprint( "$info\n" );
         }
     }
 
-    $xt->log( "Image type     :  $CONFIG{'image'}\n" );
-    $xt->log( "Memory size    :  $CONFIG{'memory'}\n" );
+    logprint( "Image type     :  $CONFIG{'image'}\n" );
+    logprint( "Memory size    :  $CONFIG{'memory'}\n" );
 
     if ( defined( $CONFIG{'kernel'} ) && length( $CONFIG{'kernel'} ) )
     {
-        $xt->log( "Kernel path    :  $CONFIG{'kernel'}\n" );
+        logprint( "Kernel path    :  $CONFIG{'kernel'}\n" );
     }
 
     if ( defined( $CONFIG{'modules'} ) && length( $CONFIG{'modules'} ) )
     {
-        $xt->log( "Module path    :  $CONFIG{'modules'}\n" );
+        logprint( "Module path    :  $CONFIG{'modules'}\n" );
     }
 
     if ( defined( $CONFIG{'initrd'} ) && length( $CONFIG{'initrd'} ) )
     {
-        $xt->log( "Initrd path    :  $CONFIG{'initrd'}\n" );
+        logprint( "Initrd path    :  $CONFIG{'initrd'}\n" );
     }
 
-    $xt->log( "\nNetworking Information\n" );
-    $xt->log( "----------------------\n" );
+    logprint( "\nNetworking Information\n" );
+    logprint( "----------------------\n" );
 
     #
     # Show each IP address added.
@@ -2288,12 +2287,12 @@ sub showSummary
             if ( $i =~ /auto/i )
             {
                 $CONFIG{'verbose'} &&
-                  $xt->log( "Automatically determining an IP." );
+                  logprint( "Automatically determining an IP." );
 
                 $i = findIP( $i );
                 if ( defined( $i ) )
                 {
-                    $CONFIG{'verbose'} && $xt->log( "Claimed $i\n" );
+                    $CONFIG{'verbose'} && logprint( "Claimed $i\n" );
                 }
                 else
                 {
@@ -2310,14 +2309,14 @@ EOF
             #
             #  Show the IP address.
             #
-            $xt->log( "IP Address $count   : $i" );
+            logprint( "IP Address $count   : $i" );
 
             #  Option MAC address.
             if ( defined( $m ) )
             {
-                $xt->log( " [MAC: $m]" );
+                logprint( " [MAC: $m]" );
             }
-            $xt->log( "\n" );
+            logprint( "\n" );
 
             $count += 1;
         }
@@ -2331,18 +2330,18 @@ EOF
     {
         if ( defined( $CONFIG{'mac'} ) )
         {
-            $xt->log( "IP Address     : DHCP [MAC: $CONFIG{'mac'}]\n" );
+            logprint( "IP Address     : DHCP [MAC: $CONFIG{'mac'}]\n" );
         }
         else
         {
-            $xt->log( "IP Address     : DHCP\n" );
+            logprint( "IP Address     : DHCP\n" );
         }
     }
 
-    $CONFIG{'netmask'}   && $xt->log( "Netmask        : $CONFIG{'netmask'}\n" );
-    $CONFIG{'broadcast'} && $xt->log( "Broadcast      : $CONFIG{'broadcast'}\n" );
-    $CONFIG{'gateway'}   && $xt->log( "Gateway        : $CONFIG{'gateway'}\n" );
-    $CONFIG{'p2p'}       && $xt->log( "Point to Point : $CONFIG{'p2p'}\n" );
+    $CONFIG{'netmask'}   && logprint( "Netmask        : $CONFIG{'netmask'}\n" );
+    $CONFIG{'broadcast'} && logprint( "Broadcast      : $CONFIG{'broadcast'}\n" );
+    $CONFIG{'gateway'}   && logprint( "Gateway        : $CONFIG{'gateway'}\n" );
+    $CONFIG{'p2p'}       && logprint( "Point to Point : $CONFIG{'p2p'}\n" );
     print "\n";
 
 }
@@ -2367,11 +2366,11 @@ sub testLoopbackModule
 
         if ( $modules !~ m/loop/ )
         {
-            $xt->log( "WARNING\n" );
-            $xt->log( "-------\n" );
-            $xt->log( "Loopback module not loaded and you're using loopback images\n" );
-            $xt->log( "Run the following to load the module:\n\n" );
-            $xt->log( "modprobe loop loop_max=255\n\n" );
+            logprint( "WARNING\n" );
+            logprint( "-------\n" );
+            logprint( "Loopback module not loaded and you're using loopback images\n" );
+            logprint( "Run the following to load the module:\n\n" );
+            logprint( "modprobe loop loop_max=255\n\n" );
         }
     }
 }
@@ -2424,9 +2423,9 @@ sub createLoopbackImages
 
             if ( -e $disk )
             {
-                $xt->log( "The partition image already exists.  Aborting.\n" );
-                $xt->log( "Specify '--force' to overwrite, or remove the following file\n" );
-                $xt->log( $disk . "\n" );
+                logprint( "The partition image already exists.  Aborting.\n" );
+                logprint( "Specify '--force' to overwrite, or remove the following file\n" );
+                logprint( $disk . "\n" );
                 exit;
             }
         }
@@ -2464,26 +2463,26 @@ sub createLoopbackImages
         #
         #  Use dd to create the partition image.
         #
-        $xt->log( "\nCreating partition image: $disk\n" );
+        logprint( "\nCreating partition image: $disk\n" );
         my $image_cmd;
         if ( $CONFIG{'image'} eq "sparse" )
         {
-            $CONFIG{'verbose'} && $xt->log( "Creating sparse image\n" );
+            $CONFIG{'verbose'} && logprint( "Creating sparse image\n" );
             $image_cmd = "dd if=/dev/zero of=$disk bs=$size count=0 seek=1024";
         }
         else
         {
-            $CONFIG{'verbose'} && $xt->log( "Creating full-sized image\n" );
+            $CONFIG{'verbose'} && logprint( "Creating full-sized image\n" );
             $image_cmd = "dd if=/dev/zero of=$disk bs=$size count=1024";
         }
 
         runCommand( $image_cmd );
-        $xt->log( "Done\n" );
+        logprint( "Done\n" );
 
         if ( ! -e $disk )
         {
-            $xt->log( "The partition image creation failed to create $disk.\n" );
-            $xt->log( "aborting\n" );
+            logprint( "The partition image creation failed to create $disk.\n" );
+            logprint( "aborting\n" );
             exit;
         }
 
@@ -2528,8 +2527,8 @@ sub usePhysicalDevice
 
         if (! -e $swap_img )
         {
-            $xt->log( "The physical device or logical volume for swap-dev $swap_img doesn't exist.  Aborting.\n" );
-            $xt->log( "NOTE: Please provide full path to your physical device or logical volume.\n" );
+            logprint( "The physical device or logical volume for swap-dev $swap_img doesn't exist.  Aborting.\n" );
+            logprint( "NOTE: Please provide full path to your physical device or logical volume.\n" );
             exit;
         }
 
@@ -2551,7 +2550,7 @@ sub usePhysicalDevice
     }
     else
     {
-        $xt->log( "No image-dev parameter given.  Aborting.\n" );
+        logprint( "No image-dev parameter given.  Aborting.\n" );
         exit;
     }
 
@@ -2586,13 +2585,13 @@ sub createLVMBits
             # Delete if forcing
             if ( $CONFIG{'force'} )
             {
-                $xt->log( "Removing $lvm_disk - since we're forcing the install\n" );
+                logprint( "Removing $lvm_disk - since we're forcing the install\n" );
                 runCommand( "lvremove --force $lvm_disk" );
             }
             else
             {
-                $xt->log( "The LVM disk image already exists.  Aborting.\n" );
-                $xt->log( "Specify '--force' to delete and recreate\n" );
+                logprint( "The LVM disk image already exists.  Aborting.\n" );
+                logprint( "Specify '--force' to delete and recreate\n" );
                 exit;
             }
         }
@@ -2624,8 +2623,8 @@ sub createLVMBits
         #
         if ( ! -e $lvm_disk )
         {
-            $xt->log( "The LVM partition image creation failed to create $lvm_disk.\n" );
-            $xt->log( "aborting\n" );
+            logprint( "The LVM partition image creation failed to create $lvm_disk.\n" );
+            logprint( "aborting\n" );
             exit;
         }
 
@@ -2673,13 +2672,13 @@ sub createEVMSBits
             # Delete if forcing
             if ( $CONFIG{'force'} )
             {
-                $xt->log( "Removing $evms_volume_disk - since we're forcing the install\n" );
+                logprint( "Removing $evms_volume_disk - since we're forcing the install\n" );
                 runCommand( "echo Delete : $evms_volume_disk | evms" );
             }
             else
             {
-                $xt->log( "The EVMS volume $evms_volume_disk already exists.  Aborting.\n" );
-                $xt->log( "Specify '--force' to delete and recreate\n" );
+                logprint( "The EVMS volume $evms_volume_disk already exists.  Aborting.\n" );
+                logprint( "Specify '--force' to delete and recreate\n" );
                 exit;
             }
         }
@@ -2696,13 +2695,13 @@ sub createEVMSBits
             # Delete if forcing
             if ( $CONFIG{'force'} )
             {
-                $xt->log( "Removing $evms_object_disk - since we're forcing the install\n" );
+                logprint( "Removing $evms_object_disk - since we're forcing the install\n" );
                 runCommand( "echo Delete : $evms_object_disk | evms" );
             }
             else
             {
-                $xt->log( "The EVMS object $evms_object_disk already exists.  Aborting.\n" );
-                $xt->log( "Specify '--force' to delete and recreate\n" );
+                logprint( "The EVMS object $evms_object_disk already exists.  Aborting.\n" );
+                logprint( "Specify '--force' to delete and recreate\n" );
                 exit;
             }
         }
@@ -2801,25 +2800,25 @@ sub createFilesystem
 
        if ( ! defined( findBinary( $binary ) ) )
        {
-           $xt->log( "The binary '$binary' required to create the filesystem $fs is missing\n" );
+           logprint( "The binary '$binary' required to create the filesystem $fs is missing\n" );
            exit;
        }
     }
     else
     {
-       $xt->log( "The filesystem creation hash is bogus for filesystem : $fs\n" );
+       logprint( "The filesystem creation hash is bogus for filesystem : $fs\n" );
        exit;
     }
 
     #
     #  OK we have the command and the filesystem.  Create it.
     #
-    $xt->log( "\nCreating $fs filesystem on $image\n" );
+    logprint( "\nCreating $fs filesystem on $image\n" );
 
     $command .= $image;
 
     runCommand( $command );
-    $xt->log( "Done\n" );
+    logprint( "Done\n" );
 }
 
 
@@ -2836,10 +2835,10 @@ sub createSwap
 {
     my ( $path ) = ( @_ );
 
-    $xt->log( "\nCreating swap on $path\n" );
+    logprint( "\nCreating swap on $path\n" );
 
     runCommand( "mkswap $path" );
-    $xt->log( "Done\n" );
+    logprint( "Done\n" );
 }
 
 
@@ -2969,15 +2968,15 @@ sub installSystem
     #
     #  Show the user what they are installing
     #
-    $xt->log( "Installation method: $CONFIG{'install-method'}\n" );
-    $xt->log( "(Source: $CONFIG{'install-source'})\n" ) if defined( $CONFIG{'install-source'} );
+    logprint( "Installation method: $CONFIG{'install-method'}\n" );
+    logprint( "(Source: $CONFIG{'install-source'})\n" ) if defined( $CONFIG{'install-source'} );
 
 
     #
     #  Run the command.
     #
     runCommand( $cmd );
-    $xt->log( "Done\n" );
+    logprint( "Done\n" );
 }
 
 
@@ -3071,11 +3070,11 @@ sub runCustomisationHooks
     #
     if ( $CONFIG{'verbose'} )
     {
-        $xt->log( "Customization Script Environment:\n" );
-        $xt->log( "---------------------------------\n" );
+        logprint( "Customization Script Environment:\n" );
+        logprint( "---------------------------------\n" );
         foreach my $key ( sort keys %ENV )
         {
-            $xt->log( "\t'" . $key . "' = '" . $ENV{$key} . "'\n" );
+            logprint( "\t'" . $key . "' = '" . $ENV{$key} . "'\n" );
         }
     }
 
@@ -3088,9 +3087,9 @@ sub runCustomisationHooks
     {
         $customize .= " --verbose";
     }
-    $xt->log( "\nRunning hooks\n" );
+    logprint( "\nRunning hooks\n" );
     runCommand( $customize );
-    $xt->log( "Done\n" );
+    logprint( "Done\n" );
 
     #
     #  Unmount /proc in the guest install.
@@ -3200,7 +3199,7 @@ sub runRoleScripts
 
     if ( !defined( $scripts ) )
     {
-        $xt->log( "\nNo role scripts were specified.  Skipping\n" );
+        logprint( "\nNo role scripts were specified.  Skipping\n" );
         return;
     }
 
@@ -3252,14 +3251,14 @@ sub runRoleScript
 
     if ( -x $file )
     {
-        $xt->log( "\nRole: $role\n" );
-        $xt->log( "\tFile: $file\n" );
-        $xt->log( "\tArgs: $args\n" ) if ( length( $args ) );
+        logprint( "\nRole: $role\n" );
+        logprint( "\tFile: $file\n" );
+        logprint( "\tArgs: $args\n" ) if ( length( $args ) );
     }
     else
     {
-        $xt->log( "\nRole script not executable : $file for role '$role'\n" );
-        $xt->log( "Ignoring\n" );
+        logprint( "\nRole script not executable : $file for role '$role'\n" );
+        logprint( "Ignoring\n" );
         return;
     }
 
@@ -3277,7 +3276,7 @@ sub runRoleScript
     #
     runCommand( $file . " " . $MOUNT_POINT . $args );
 
-    $xt->log( "Role script completed.\n" );
+    logprint( "Role script completed.\n" );
 }
 
 
@@ -3310,9 +3309,9 @@ sub runXenConfigCreation
     {
         unless( $CONFIG{'force'} )
         {
-            $xt->log( "The Xen configuration file $file exists\n" );
-            $xt->log( "Specify --force to force overwriting it.\n" );
-            $xt->log( "Aborting\n" );
+            logprint( "The Xen configuration file $file exists\n" );
+            logprint( "Specify --force to force overwriting it.\n" );
+            logprint( "Aborting\n" );
             $FAIL = 1;
             exit;
         }
@@ -3340,9 +3339,9 @@ sub runXenConfigCreation
         $command .= " --admins=$CONFIG{'admins'}";
     }
 
-    $xt->log( "\nCreating Xen configuration file\n" );
+    logprint( "\nCreating Xen configuration file\n" );
     runCommand( $command );
-    $xt->log( "Done\n" );
+    logprint( "Done\n" );
 }
 
 
@@ -3357,7 +3356,7 @@ sub runXenConfigCreation
 
 sub setupRootPassword
 {
-    $xt->log( "Setting up root password\n" );
+    logprint( "Setting up root password\n" );
 
     if ( -x $MOUNT_POINT . "/usr/bin/passwd" )
     {
@@ -3365,7 +3364,7 @@ sub setupRootPassword
     }
     else
     {
-        $xt->log( "'passwd' command not found in the new install.\n" );
+        logprint( "'passwd' command not found in the new install.\n" );
     }
 }
 
@@ -3471,8 +3470,8 @@ sub runCommand
 
     if ( $? != 0 )
     {
-        $xt->log( "Running command '$cmd' failed.\n" );
-        $xt->log( "Aborting\n" );
+        logprint( "Running command '$cmd' failed.\n" );
+        logprint( "Aborting\n" );
         $FAIL = 1;
         exit;
     }
@@ -3581,7 +3580,7 @@ sub END
         #
         #  Run the command
         #
-        $CONFIG{'verbose'} && $xt->log( "Removing failed install: $CONFIG{'hostname'}\n" );
+        $CONFIG{'verbose'} && logprint( "Removing failed install: $CONFIG{'hostname'}\n" );
 
         system( "xen-delete-image --hostname=$CONFIG{'hostname'}" );
     }
