@@ -66,6 +66,9 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --modules     Set the path to the kernel modules to use for domU.
                  If modules are specified they must exist.
 
+   --output      Specify the output directory to create the xen configuratoin
+                file within.
+
    --install     Specify whether to install the guest system or not.
 
    --hooks       Specify whether to run hooks after the image is created.
@@ -90,6 +93,8 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --size        Set the size of the primary disk image.
 
    --tar-cmd     NOP: Ignored.
+
+   --extension   Specify the suffix to give the Xen configuration file.
 
    --swap        Set the size of the swap partition.
 
@@ -355,7 +360,7 @@ Create a Xen configuration file in so that xm can start the new domain.
 
   Once a new image has been created an appropriate configuration file
  for Xen will be saved in the directory /etc/xen by default.  However
- you may change the ouput directory with the --output flag.
+ you may change the output directory with the --output flag.
 
   The configuration file is built up using the template file
  /etc/xen-tools/xm.tmpl - which is a file processed via
@@ -592,7 +597,7 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.189 2007-10-25 12:19:40 steve Exp $
+ $Id: xen-create-image,v 1.190 2007-10-25 12:23:53 steve Exp $
 
 =cut
 
@@ -1402,7 +1407,7 @@ sub parseCommandLineArguments
 
     if ( $VERSION )
     {
-        my $REVISION      = '$Revision: 1.189 $';
+        my $REVISION      = '$Revision: 1.190 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
