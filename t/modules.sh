@@ -7,7 +7,7 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: modules.sh,v 1.1 2007-09-01 19:23:10 steve Exp $
+# $Id: modules.sh,v 1.2 2007-10-25 12:27:49 steve Exp $
 #
 
 cat <<EOF
@@ -26,7 +26,7 @@ use Test::More qw( no_plan );
 EOF
 
 
-for i in `rgrep '^use ' .. | grep -v Expect | awk '{print $2}' | tr -d \;\(\) | sort | uniq`; \
+for i in `rgrep '^use ' .. | grep -v Expect | grep -v Xen:: | grep -v Moose | awk '{print $2}' | tr -d \;\(\) | sort | uniq`; \
     do \
      echo "BEGIN{ use_ok( '$i' ); }"; \
      echo "require_ok( '$i' );" ; \

@@ -10,6 +10,10 @@
 
 use Test::More qw( no_plan );
 
+BEGIN{ use_ok( 'Carp' ); }
+require_ok( 'Carp' );
+
+
 BEGIN{ use_ok( 'Config' ); }
 require_ok( 'Config' );
 
@@ -38,6 +42,10 @@ BEGIN{ use_ok( 'File::Path' ); }
 require_ok( 'File::Path' );
 
 
+BEGIN{ use_ok( 'File::Spec' ); }
+require_ok( 'File::Spec' );
+
+
 BEGIN{ use_ok( 'File::Temp' ); }
 require_ok( 'File::Temp' );
 
@@ -48,6 +56,10 @@ require_ok( 'Getopt::Long' );
 
 BEGIN{ use_ok( 'Pod::Usage' ); }
 require_ok( 'Pod::Usage' );
+
+
+BEGIN{ use_ok( 'POSIX' ); }
+require_ok( 'POSIX' );
 
 
 BEGIN{ use_ok( 'strict' ); }
