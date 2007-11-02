@@ -1,0 +1,42 @@
+#!/usr/bin/perl
+
+#
+#  Get domain name.
+#
+
+#
+#  Get disk increase amount.
+#
+
+
+#
+#  Ensure guest isn't running.
+#
+
+
+#
+#  If LVM:
+#    lvmresize
+#
+#
+
+
+#
+#  If disk:
+#   dd...
+#
+#
+
+
+#
+#  Check filesystem.
+#
+
+#
+#  Run ext3resize.
+#
+
+
+#
+#  Job done.
+#
