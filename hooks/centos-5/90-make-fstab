@@ -65,6 +65,7 @@ cat <<E_O_FSTAB > ${prefix}/etc/fstab
 #
 # <file system> <mount point>   <type>  <options>       <dump>  <pass>
 proc            /proc           proc    defaults        0       0
+none            /dev/pts        devpts  mode=0620       0       0
 E_O_FSTAB
 for part in `seq 1 ${NUMPARTITIONS}`; do
     eval "PARTITION=\"\${PARTITION${part}}\""
