@@ -74,7 +74,7 @@ commit: test
 
 
 #
-#  Show what has been changed in the local copy vs. the CVS repository.
+#  Show what has been changed in the local copy vs. the remote repository.
 #
 diff:
 	hg diff 2>/dev/null
@@ -254,7 +254,7 @@ uninstall:
 
 
 #
-#  Update the local copy from the CVS repository.
+#  Update the local copy from the remote repository.
 #
 #  NOTE: Removes empty local directories.
 #
