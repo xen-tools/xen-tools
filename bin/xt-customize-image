@@ -66,8 +66,6 @@ xt-customize-image - Customize a freshly installed copy of GNU/Linux
  --
  http://www.steve.org.uk/
 
- $Id: xt-customize-image,v 1.33 2007-07-31 17:33:30 steve Exp $
-
 =cut
 
 

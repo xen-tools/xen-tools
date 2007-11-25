@@ -597,8 +597,6 @@ Install an X11 server, using VNC and XDM
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-image,v 1.192 2007-10-25 12:26:08 steve Exp $
-
 =cut
 
 =head1 LICENSE

@@ -83,8 +83,6 @@ Untar a .tar file into the new installation location.  This tarfile is assumed t
  --
  http://www.steve.org.uk/
 
- $Id: xt-install-image,v 1.65 2007-08-07 20:50:39 steve Exp $
-
 =cut
 
 

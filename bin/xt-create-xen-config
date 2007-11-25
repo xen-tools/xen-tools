@@ -111,8 +111,6 @@ xt-create-config - Create a Xen configuration file for a new guest
  --
  http://www.steve.org.uk/
 
- $Id: xt-create-xen-config,v 1.47 2007-10-25 12:23:53 steve Exp $
-
 =cut
 
 

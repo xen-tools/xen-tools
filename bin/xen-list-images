@@ -60,12 +60,9 @@ Show the version number and exit.
 
 =head1 AUTHOR
 
-
  Steve
  --
  http://www.steve.org.uk/
-
- $Id: xen-list-images,v 1.30 2007-07-31 17:33:29 steve Exp $
 
 =cut
 

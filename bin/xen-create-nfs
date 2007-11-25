@@ -89,8 +89,6 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-create-nfs,v 1.13 2007-07-31 17:33:29 steve Exp $
-
 =cut
 
 

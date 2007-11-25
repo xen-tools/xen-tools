@@ -136,8 +136,6 @@ Show the version number and exit.
  --
  http://www.steve.org.uk/
 
- $Id: xen-delete-image,v 1.41 2007-09-04 20:39:19 steve Exp $
-
 =cut
 
 
