@@ -40,12 +40,11 @@ nop:
 
 
 #
-#  Extract the CVS revision history and make a ChangeLog file
+#  Extract the revision history and make a ChangeLog file
 # with those details.
 #
 changelog:
-	-if [ -x /usr/bin/cvs2cl ] ; then cvs2cl; fi
-	-rm ChangeLog.bak
+	hg log -v > ChangeLog
 
 
 #
