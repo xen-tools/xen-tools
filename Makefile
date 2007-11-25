@@ -2,7 +2,7 @@
 #  Utility makefile for people working with xen-tools.
 #
 #  The targets are intended to be useful for people who are using
-# the CVS repository - but it also contains other useful targets.
+# the source repository - but it also contains other useful targets.
 #
 # Steve
 # --
@@ -30,12 +30,12 @@ nop:
 	@echo " "
 	@echo " clean         = Remove bogus files."
 	@echo " commit        = Commit changes, after running check."
-	@echo " diff          = Run a 'cvs diff'."
+	@echo " diff          = See local changes."
 	@echo " install       = Install the software"
 	@echo " manpages      = Make manpages beneath man/"
 	@echo " release       = Make a release tarball"
 	@echo " uninstall     = Remove the software"
-	@echo " update        = Update from the CVS repository."
+	@echo " update        = Update from the source repository."
 	@echo " "
 
 
@@ -71,14 +71,14 @@ clean:
 #  If the testsuite runs correctly then commit any pending changes.
 #
 commit: test
-	cvs -z3 commit
+	hg commit
 
 
 #
 #  Show what has been changed in the local copy vs. the CVS repository.
 #
 diff:
-	cvs diff --unified 2>/dev/null
+	hg diff 2>/dev/null
 
 
 #
@@ -167,7 +167,6 @@ install-hooks:
 	mkdir -p ${prefix}/usr/lib/xen-tools/dapper.d/
 	cp -R hooks/dapper/*-* ${prefix}/usr/lib/xen-tools/dapper.d/
 	cp hooks/common.sh ${prefix}/usr/lib/xen-tools
-	@-find ${prefix}/usr/lib/xen-tools -name 'CVS' -exec rm -rf \{\} \;
 
 
 #
@@ -207,9 +206,8 @@ release: fixup-perms update-version update-modules clean changelog
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)
 	rm -f $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz
 	cp -R . $(DIST_PREFIX)/$(BASE)-$(VERSION)
-	find  $(DIST_PREFIX)/$(BASE)-$(VERSION) -name "CVS" -print | xargs rm -rf
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)/debian
-	cd $(DIST_PREFIX) && tar --exclude=.cvsignore -cvf $(DIST_PREFIX)/$(BASE)-$(VERSION).tar $(BASE)-$(VERSION)/
+	cd $(DIST_PREFIX) && tar -cvf $(DIST_PREFIX)/$(BASE)-$(VERSION).tar $(BASE)-$(VERSION)/
 	gzip $(DIST_PREFIX)/$(BASE)-$(VERSION).tar
 	mv $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz .
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)
@@ -262,7 +260,7 @@ uninstall:
 #  NOTE: Removes empty local directories.
 #
 update: 
-	cvs -z3 update -A -P -d 2>/dev/null
+	hg pull --update 2>/dev/null
 
 
 #
