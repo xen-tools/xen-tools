@@ -1,42 +1,437 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -w
+
+=head1 NAME
+
+xen-resize-guest - Resize a loopback-based xen guest.
+
+=head1 SYNOPSIS
+
+  xen-resize-guest [options]
+
+  Help Options:
+   --help     Show help information.
+   --manual   Read the manual for this script.
+   --version  Show the version information and exit.
+   --verbose  Show diagnostic output.
+
+  General Options:
+   --add      Specify the amount of space to add, e.g. --add=1gb
+   --dir      Specify the path to the loopback image root.
+   --force    Force the resize to happen without a last-chance delay.
+   --hostname Specify the hostname of the guest to resize.
+
+=cut
+
+
+=head1 OPTIONS
+
+=over 8
+
+=item B<--add>
+Specify the amount of storage to add to the primary disk.
+
+=item B<--help>
+Show help information.
+
+=item B<--hostname>
+Specify the hostname to delete.
+
+=item B<--manual>
+Read the manual for this script.
+
+=item B<--version>
+Show the version number and exit.
+
+=back
+
+=cut
+
+
+=head1 DESCRIPTION
+
+
+=cut
+
+=head1 AUTHOR
+
+ Steve
+ --
+ http://www.steve.org.uk/
+
+=cut
+
+
+=head1 LICENSE
+
+Copyright (c) 2005-2007 by Steve Kemp.  All rights reserved.
+
+This module is free software;
+you can redistribute it and/or modify it under
+the same terms as Perl itself.
+The LICENSE file contains the full text of the license.
+
+
+=cut
+
+
+use strict;
+use English;
+use Env;
+use Getopt::Long;
+use Pod::Usage;
+use Text::Template;
+
+
+
+
 
 #
-#  Get domain name.
+#  Configuration values read from the command line, or configuration file.
 #
-
-#
-#  Get disk increase amount.
-#
+my %CONFIG;
 
 
 #
-#  Ensure guest isn't running.
+# Release number.
 #
+my $RELEASE = '3.7';
 
-
-#
-#  If LVM:
-#    lvmresize
-#
-#
 
 
 #
-#  If disk:
-#   dd...
+#  Read the global configuration file.
 #
+readConfigurationFile( "/etc/xen-tools/xen-tools.conf" );
+
+
 #
+#  Parse the command line arguments.
+#
+parseCommandLineArguments();
+
+
+#
+#  Validate our arguments.
+#
+testArguments();
+
+
+#
+#  The path to the file, or device, to resize.
+#
+my $path = undef;
+
+if ( $CONFIG{'dir'} )
+{
+    #
+    #  Make sure we can find the disk
+    #
+    $path = $CONFIG{'dir'} . "/domains/" . $CONFIG{'hostname'} . "/disk.img";
+    if ( ! -e $path )
+    {
+        print <<EOF;
+
+  The disk image for the guest domain $CONFIG{'hostname'} was not found
+ where we expected it to be:
+
+   $path
+
+  Please check and try again, or report this as a bug.
+EOF
+        exit;
+    }
+
+    #
+    #  Ensure the file is an ext3 filesystem.
+    #
+    my $type = `file $path`;
+    if ( $type !~ /ext3/ )
+    {
+        print "Filesystem type is not understood.\n";
+        print "We only handle ext3 right now!\n";
+        print "Aborting\n";
+        exit;
+    }
+
+
+    #
+    #  OK we have the size, we have the image.
+    #
+    #  Resize with DD
+    #
+    print "Preparing to resize image: $path\n";
+
+    #
+    #  Allow panic
+    #
+    if ( !$CONFIG{'force'} )
+    {
+        foreach my $i ( 1 .. 10 )
+        {
+            my $delay = 10 - $i;
+            print "Sleeping for $delay seconds to allow cancel\n";
+            sleep 1;
+        }
+    }
+
+    print "DO NOT INTERRUPT\n";
+
+    my $cmd = "dd if=/dev/zero bs=1M count=$CONFIG{'add'}k >> $path";
+    system( $cmd );
+}
+elsif ( $CONFIG{'lvm'} )
+{
+    print "LVM isn't supported yet!\n";
+    exit;
+}
+else
+{
+    print "Unknown storage type.  (Neither LVM nor loopback.)\n";
+    exit;
+}
 
 
 #
 #  Check filesystem.
 #
+print "Checking filesystem\n";
+system( "fsck.ext3 -f $path" );
 
 #
 #  Run ext3resize.
 #
+print "Resizing in place\n";
+system( "resize2fs $path" );
 
 
 #
 #  Job done.
 #
+print "All done\n";
+
+
+
+=begin doc
+
+  Read the configuration file specified.
+
+=end doc
+
+=cut
+
+sub readConfigurationFile
+{
+    my ($file) = ( @_ );
+
+    open( FILE, "<", $file ) or die "Cannot read file '$file' - $!";
+
+    my $line       = "";
+
+    while (defined($line = <FILE>) )
+    {
+        chomp $line;
+        if ($line =~ s/\\$//)
+        {
+            $line .= <FILE>;
+            redo unless eof(FILE);
+        }
+
+        # Skip lines beginning with comments
+        next if ( $line =~ /^([ \t]*)\#/ );
+
+        # Skip blank lines
+        next if ( length( $line ) < 1 );
+
+        # Strip trailing comments.
+        if ( $line =~ /(.*)\#(.*)/ )
+        {
+            $line = $1;
+        }
+
+        # Find variable settings
+        if ( $line =~ /([^=]+)=([^\n]+)/ )
+        {
+            my $key = $1;
+            my $val = $2;
+
+            # Strip leading and trailing whitespace.
+            $key =~ s/^\s+//;
+            $key =~ s/\s+$//;
+            $val =~ s/^\s+//;
+            $val =~ s/\s+$//;
+
+            # command expansion?
+            if ( $val =~ /(.*)`([^`]+)`(.*)/ )
+            {
+                # store
+                my $pre  = $1;
+                my $cmd  = $2;
+                my $post = $3;
+
+                # get output
+                my $output = `$cmd`;
+                chomp( $output );
+
+                # build up replacement.
+                $val = $pre . $output . $post;
+            }
+
+            # Store value.
+            $CONFIG{ $key } = $val;
+        }
+    }
+
+    close( FILE );
+}
+
+
+=begin doc
+
+  Parse the command line arguments this script was given.
+
+=end doc
+
+=cut
+
+sub parseCommandLineArguments
+{
+    my $HELP    = 0;
+    my $MANUAL  = 0;
+    my $VERSION = 0;
+
+
+    #
+    #  Parse options.
+    #
+    GetOptions(
+
+               # Misc. options
+               "add=s",        \$CONFIG{'add'},
+               "dir=s",        \$CONFIG{'dir'},
+               "hostname=s",   \$CONFIG{'hostname'},
+               "force",        \$CONFIG{'force'},
+
+               # Help options
+               "help",         \$HELP,
+               "manual",       \$MANUAL,
+               "verbose",      \$CONFIG{'verbose'},
+               "version",      \$VERSION
+              );
+
+    pod2usage(1) if $HELP;
+    pod2usage(-verbose => 2 ) if $MANUAL;
+
+
+    if ( $VERSION )
+    {
+        print( "xen-resize-guest release $RELEASE\n" );
+        exit;
+    }
+}
+
+
+
+=begin doc
+
+  Test our arguments are complete.
+
+=end doc
+
+=cut
+
+sub testArguments
+{
+    #
+    #  Make sure we received a hostname.
+    #
+    if ( !$CONFIG{'hostname'} )
+    {
+        print <<EOF;
+
+  A hostname is mandatory!
+
+  Please specify one with --hostname=some.host.name
+
+EOF
+        exit;
+    }
+
+    #
+    #  Make sure we received a size.
+    #
+    if ( !$CONFIG{'add'} )
+    {
+        print <<EOF;
+
+  Please specify a size to increase the guest by:
+
+   --add=1Gb    -> Increase the size of the disk image by 1Gb.
+   --add=1      -> Increase the size of the disk image by 1Mb.
+
+EOF
+        exit;
+    }
+
+    #
+    #  Now make sure we have a loopback option.
+    #
+    if ( !$CONFIG{'dir'} )
+    {
+        print <<EOF;
+
+  We have not been given a directory for the xen images.
+
+  Please specify one via --dir=/path/to/images
+EOF
+        exit;
+
+    }
+    #
+    #  Make sure the guest isn't running
+    #
+    if ( xenRunning( $CONFIG{'hostname'} ) )
+    {
+        print "The guest $CONFIG{'hostname'} appears to be running!\n";
+        exit;
+    }
+
+    #
+    #  Convert from Gb -> Mb;
+    #
+    if ( $CONFIG{'add'} =~ /^([0-9.]+)Gb*$/i )
+    {
+        $CONFIG{'add'} = $1 * 1024;
+    }
+    if ( $CONFIG{'add'} =~ /^([0-9.]+)Mb*$/i )
+    {
+        $CONFIG{'add'} = $1;
+    }
+}
+
+
+
+=begin doc
+
+  Test to see if the given instance is running.
+
+=end doc
+
+=cut
+
+sub xenRunning
+{
+    my( $hostname ) =  (@_ );
+
+    my $running = 0;
+
+    open( CMD, "xm list $hostname 2>/dev/null |")
+      or die "Failed to run 'xm list $hostname'";
+    while( <CMD> )
+    {
+        my $line = $_;
+        $running = 1 if ( $line =~ /\Q$hostname\E/ )
+    }
+    close( CMD );
+
+    return( $running );
+}
