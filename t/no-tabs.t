@@ -38,6 +38,8 @@ sub checkFile
     # Nor about files which start with ./debian/
     return if ( $file =~ /^\.\/debian\// );
 
+    # Finally mercurial files are fine.
+    return if ( $file =~ /\.hg\// );
     # See if it is a shell/perl file.
     my $isShell        = 0;
     my $isPerl        = 0;
