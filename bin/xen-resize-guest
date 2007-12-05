@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-xen-resize-guest - Resize a loopback-based xen guest.
+xen-resize-guest - Resize a loopback or LVM based xen guest.
 
 =head1 SYNOPSIS
 
@@ -30,11 +30,20 @@ xen-resize-guest - Resize a loopback-based xen guest.
 =item B<--add>
 Specify the amount of storage to add to the primary disk.
 
+=item B<--dir>
+Specify the directory where the loopback files are based.
+
+=item B<--force>
+Don't pause for 10 seconds prior to commencing.
+
 =item B<--help>
 Show help information.
 
 =item B<--hostname>
 Specify the hostname to delete.
+
+=item B<--lvm>
+Specify the volume group to use.
 
 =item B<--manual>
 Read the manual for this script.
@@ -49,6 +58,21 @@ Show the version number and exit.
 
 =head1 DESCRIPTION
 
+  This tool will ease the resizing of Xen guests, whether they are based
+ upon loopback files or LVM partitions.
+
+  Whilst the process of resizing a guest is pretty simple it can be fiddly
+ to do the steps correctly in the right order:
+
+1.  Shutdown the guest.
+2.  Unmount the volume, if it is mounted.
+3.  Add to the space.
+4.  Check the filesystem.
+5.  Resize the filesystem.
+6.  Restart the guest.
+
+  More than once I've heard of users making mistakes and breaking their
+ filesystems; hence this tool.
 
 =cut
 
@@ -181,8 +205,60 @@ EOF
 }
 elsif ( $CONFIG{'lvm'} )
 {
-    print "LVM isn't supported yet!\n";
-    exit;
+    #
+    #  Make sure we can find the disk
+    #
+    $path = "/dev/" . $CONFIG{'lvm'} . "/" . $CONFIG{'hostname'} . "-disk";
+    if ( ! -e $path )
+    {
+        print <<EOF;
+
+  The disk image for the guest domain $CONFIG{'hostname'} was not found
+ where we expected it to be:
+
+   $path
+
+  Please check and try again, or report this as a bug.
+EOF
+        exit;
+    }
+
+    #
+    #  Ensure the file is an ext3 filesystem.
+    #
+    my $type = `head $path | file -`;
+    if ( $type !~ /ext3/ )
+    {
+        print "Filesystem type is not understood.\n";
+        print "We only handle ext3 right now!\n";
+        print "Aborting\n";
+        exit;
+    }
+
+
+    #
+    #  OK we have the size, we have the image.
+    #
+    #  Resize with DD
+    #
+    print "Preparing to resize image: $path\n";
+
+    #
+    #  Allow panic
+    #
+    if ( !$CONFIG{'force'} )
+    {
+        foreach my $i ( 1 .. 10 )
+        {
+            my $delay = 10 - $i;
+            print "Sleeping for $delay seconds to allow cancel\n";
+            sleep 1;
+        }
+    }
+
+    print "DO NOT INTERRUPT\n";
+    my $cmd = "lvextend -L+$CONFIG{'add'}M $path";
+    system( $cmd );
 }
 else
 {
@@ -299,6 +375,11 @@ sub parseCommandLineArguments
     my $MANUAL  = 0;
     my $VERSION = 0;
 
+    #
+    #  Local variables.
+    #
+    my %install;
+
 
     #
     #  Parse options.
@@ -307,7 +388,8 @@ sub parseCommandLineArguments
 
                # Misc. options
                "add=s",        \$CONFIG{'add'},
-               "dir=s",        \$CONFIG{'dir'},
+               "dir=s",        \$install{'dir'},
+               "lvm=s",        \$install{'lvm'},
                "hostname=s",   \$CONFIG{'hostname'},
                "force",        \$CONFIG{'force'},
 
@@ -326,6 +408,24 @@ sub parseCommandLineArguments
     {
         print( "xen-resize-guest release $RELEASE\n" );
         exit;
+    }
+
+    #
+    #  Setup mutually exclusive options in such a way that
+    # they will allow the configuration values to be overriden by
+    # the command line.
+    #
+    if ( $install{'lvm'} )
+    {
+        $CONFIG{'lvm'} = $install{'lvm'};
+        $CONFIG{'dir'} = undef;
+        delete $CONFIG{'dir'};
+    }
+    if ( $install{'dir'} )
+    {
+        $CONFIG{'dir'} = $install{'dir'};
+        $CONFIG{'lvm'} = undef;
+        delete $CONFIG{'lvm'};
     }
 }
 
@@ -373,25 +473,32 @@ EOF
     }
 
     #
-    #  Now make sure we have a loopback option.
-    #
-    if ( !$CONFIG{'dir'} )
-    {
-        print <<EOF;
-
-  We have not been given a directory for the xen images.
-
-  Please specify one via --dir=/path/to/images
-EOF
-        exit;
-
-    }
-    #
     #  Make sure the guest isn't running
     #
     if ( xenRunning( $CONFIG{'hostname'} ) )
     {
         print "The guest $CONFIG{'hostname'} appears to be running!\n";
+        exit;
+    }
+
+    #
+    #  We should either have LVM *or* directory - not neither or both.
+    #
+    my $options = 0;
+    $options += 1if ( defined($CONFIG{'lvm'}) && length( $CONFIG{'lvm'} ) );
+    $options += 1if ( defined($CONFIG{'dir'}) && length( $CONFIG{'dir'} ) );
+
+    #
+    #  Report
+    #
+    if ( $options == 0 )
+    {
+        print "Please specify one of --lvm or --dir\n";
+        exit;
+    }
+    if ( $options > 1 )
+    {
+        print "Please specify only one of --lvm or --dir - not both!\n";
         exit;
     }
 
