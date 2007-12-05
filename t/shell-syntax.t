@@ -34,6 +34,9 @@ sub checkFile
     # We don't care about directories
     return if ( ! -f $file );
 
+    # Finally mercurial files are fine.
+    return if ( $file =~ /\.hg\// );
+
     # See if it is a shell script.
     my $isShell = 0;
 
