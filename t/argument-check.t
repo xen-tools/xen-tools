@@ -48,6 +48,7 @@ foreach my $key ( sort keys %OPTIONS )
 
     next if ( $key =~ /mirror_/i );
     next if ( $key =~ /_options/i );
+    next if ( $key =~ /(serial_device|disk_device)/i );
 
     is( $found, 1 , " Found documentation for '$key'" );
 }
