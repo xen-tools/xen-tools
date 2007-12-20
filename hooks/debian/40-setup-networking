@@ -82,7 +82,7 @@ setupStaticNetworking ()
     #
     bcast='';
     if [ ! -z "${broadcast}" ]; then
-      bcast = ' broadcast ${broadcast}'
+      bcast=' broadcast ${broadcast}'
     fi
 
     #
