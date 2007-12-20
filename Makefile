@@ -8,8 +8,6 @@
 # --
 # http://www.steve.org.uk/
 #
-# $Id: Makefile,v 1.113 2007-09-04 20:33:33 steve Exp $
-
 
 #
 #  Only used to build distribution tarballs.
