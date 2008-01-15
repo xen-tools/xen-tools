@@ -1,11 +1,13 @@
 xen-tools (xxx) unstable; urgency=low
 
+  - general:
+    - Removed recommendation on perl-doc.  (Closes: #447715)
   - hooks:
     - Update /etc/securetty upon new images to ensure that xvc0 + hvc0
       are permitted.  (Closes: #442926)
   - xen-delete-image:
     - Show what has been deleted by default. (Closes: #452756)
-  * xen-create-image:
+  - xen-create-image:
     - Return exit status of 127 on any error.
       (Closes: #455916)
 
