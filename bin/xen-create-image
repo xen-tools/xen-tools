@@ -708,7 +708,7 @@ if ( $CONFIG{'config'} )
         logprint( "The specified configuration file does not exist: '$path'\n",
                   "Aborting\n\n"
                 );
-        exit;
+        exit 127;
     }
 }
 
@@ -724,7 +724,7 @@ if ( $CONFIG{'debug'} )
         print " : " . $CONFIG{$key} if ( $CONFIG{$key} );
         print  "\n";
     }
-    exit;
+    exit 127;
 }
 
 
@@ -828,7 +828,7 @@ else
               "Please specify a directory, lvm, or evms volume to use.\n"
             );
     $FAIL = 1;
-    exit;
+    exit 127;
 }
 
 
@@ -867,7 +867,7 @@ if ( $CONFIG{'install'} )
     {
         logprint( "System installation failed.  Aborting\n");
         $FAIL = 1;
-        exit;
+        exit 127;
     }
 
     #
@@ -970,7 +970,7 @@ if ( $CONFIG{'boot'} )
 #
 #  Finished.
 #
-exit;
+exit 0;
 
 
 
@@ -997,7 +997,7 @@ sub checkSystem
             logprint("The script '$bin' was not found.\n",
                      "Aborting\n\n"
                     );
-            exit;
+            exit 127;
         }
     }
 
@@ -1017,7 +1017,7 @@ sub checkSystem
   Specify '--force' to skip this check and continue regardless.
 
 E_O_ERROR
-        exit;
+        exit 127;
     }
 
 
@@ -1040,7 +1040,7 @@ E_O_ERROR
 
   Aborting.
 EOF
-            exit;
+            exit 127;
         }
     }
 
@@ -1412,7 +1412,7 @@ sub parseCommandLineArguments
         }
 
         logprint( "xen-create-image release $RELEASE - CVS: $REVISION\n" );
-        exit;
+        exit 0;
     }
 
 
@@ -1478,7 +1478,7 @@ sub testRootUser
 E_O_ROOT
 
         logprint( $err );
-        exit;
+        exit 127;
     }
 }
 
@@ -1505,7 +1505,7 @@ sub checkArguments
     if ( ! defined( $CONFIG{'dist'} ) )
     {
        logprint( "The '--dist' argument is mandatory\n" );
-       exit 1;
+       exit 127;
     }
 
     #
@@ -1514,7 +1514,7 @@ sub checkArguments
     if ( ! defined( $CONFIG{'hostname'} ) )
     {
         logprint( "The '--hostname' argument is mandatory.\n" );
-        exit 1;
+        exit 127;
     }
 
     #
@@ -1549,7 +1549,7 @@ sub checkArguments
   Aborting.
 E_OR
         logprint( $err );
-        exit 1;
+        exit 127;
     }
 
 
@@ -1562,7 +1562,7 @@ E_OR
              ( $CONFIG{'image'} ne "full" ) )
         {
             logprint( "Image type must be 'sparse' or 'full'\n" );
-            exit;
+            exit 127;
         }
     }
 
@@ -1618,7 +1618,7 @@ E_OR
      --install-method=tar         --install-source=/some/file.tar
 
 EOF
-        exit;
+        exit 127;
     }
 
 
@@ -1641,7 +1641,7 @@ EOF
             # failed to find either by fully qualified path,
             # or inside /etc/xen-tools.
             logprint( "The specified template file, $CONFIG{'template'}, does not exist.\n" );
-            exit 1;
+            exit 127;
         }
     }
 
@@ -1654,7 +1654,7 @@ EOF
         if ( ! -d $CONFIG{'roledir'} )
         {
             logprint( "The specified role directory '$CONFIG{'roledir'}' does not exist\n" );
-            exit 1;
+            exit 127;
         }
     }
 
@@ -1667,7 +1667,7 @@ EOF
         if ( ! -d $CONFIG{'partitionsdir'} )
         {
             logprint( "The specified partitions directory '$CONFIG{'partitionsdir'}' does not exist\n" );
-            exit 1;
+            exit 127;
         }
     }
 
@@ -1686,7 +1686,7 @@ EOF
         if ( ! -e $CONFIG{'partitions'} )
         {
             logprint( "The specified partitions file, $CONFIG{'partitions'}, does not exist.\n" );
-            exit 1;
+            exit 127;
         }
 
         loadAndCheckPartitionsFile();
@@ -1695,19 +1695,19 @@ EOF
     if ( $CONFIG{'swap-dev'} && $CONFIG{'noswap'} )
     {
         logprint( "Please choose either swap-dev or noswap, not both!\n" );
-        exit 1;
+        exit 127;
     }
 
     if ( $CONFIG{'swap-dev'} && $CONFIG{'partitions'} )
     {
         logprint( "Please choose either swap-dev or partitions, not both!\n" );
-        exit 1;
+        exit 127;
     }
 
     if ( $CONFIG{'image-dev'} && $CONFIG{'partitions'} )
     {
         logprint( "Please choose either image-dev or partitions, not both!\n" );
-        exit 1;
+        exit 127;
     }
 
 
@@ -1727,7 +1727,7 @@ EOF
         else
         {
             logprint( "Please choose either DHCP or static usage, not both!\n" );
-            exit 1;
+            exit 127;
         }
     }
 
@@ -1739,7 +1739,7 @@ EOF
         logprint( "Please choose one of:\n" );
         logprint( " --dhcp\n" );
         logprint( " --ip xx.xx.xx.xx\n" );
-        exit 1;
+        exit 127;
     }
 
     #
@@ -1777,7 +1777,7 @@ EOF
   Aborting.
 
 EOF
-        exit;
+        exit 127;
     }
 
 }
@@ -1888,7 +1888,7 @@ sub checkBinariesPresent
         {
             logprint( "The following binary is required to run this tool\n" );
             logprint( "\t$file\n");
-            exit 1;
+            exit 127;
         }
     }
 
@@ -1903,7 +1903,7 @@ sub checkBinariesPresent
             logprint( "The following binary is required to run this tool\n" );
             logprint( "\tdd\n");
             logprint( "(This only required for loopback images, which you've selected)\n" );
-            exit 1;
+            exit 127;
         }
     }
     elsif ( defined( $CONFIG{'evms'} ) )
@@ -1920,7 +1920,7 @@ sub checkBinariesPresent
                 logprint( "The following binary is required to run this tool\n");
                 logprint( "\t$file\n" );
                 logprint( "(This is only required for EVMS volumes, which you've selected)\n" );
-                exit;
+                exit 127;
             }
         }
     }
@@ -1936,7 +1936,7 @@ sub checkBinariesPresent
                 logprint( "The following binary is required to run this tool\n");
                 logprint( "\t$file\n" );
                 logprint( "(This is only required for LVM volumes, which you've selected)\n" );
-                exit;
+                exit 127;
             }
         }
     }
@@ -1985,7 +1985,7 @@ sub loadAndCheckPartitionsFile
 
  Otherwise fetch it from CPAN.
 EOF
-        exit;
+        exit 127;
     }
 
     tie %partitions, 'Config::IniFiles', ( -file => $CONFIG{'partitions'} );
@@ -2001,13 +2001,13 @@ EOF
         {
             logprint( "The partition name $name contains invalid characters.\n" );
             logprint( "Only alphanumeric characters and the hyphen are allowed\n" );
-            exit 1;
+            exit 127;
         }
 
         if ( ! ( $details->{'size'} =~ /^[0-9.]+[GgMmKk]b?$/ ) )
         {
             logprint( "The size $details->{'size'} of partition $name contains is not recognized.\n" );
-            exit 1;
+            exit 127;
         }
 
         if ( $details->{'type'} eq 'swap' )
@@ -2023,19 +2023,19 @@ EOF
             if ( ! $CONFIG{ 'make_fs_' . $details->{'type'} } )
             {
                 logprint( "The type $details->{'type'} of partition $name is not recognized.\n" );
-                exit 1;
+                exit 127;
             }
 
             if ( ! ( $details->{'mountpoint'} =~ /^\/[^: \t\r\n]*$/ ) )
             {
                 logprint( "The mount point $details->{'mountpoint'} of partition $name is invalid.\n" );
-                exit 1;
+                exit 127;
             }
 
             if ( ! ( $details->{'options'} =~ /^[^: \t\r\n]*$/ ) )
             {
                 logprint( "The mount options $details->{'options'} of partition $name are invalid.\n" );
-                exit 1;
+                exit 127;
             }
 
             if ( ! $details->{'options'} )
@@ -2063,7 +2063,7 @@ EOF
     if ( ! $foundroot )
     {
         logprint( "The root partition was not specified.\n" );
-        exit 1;
+        exit 127;
     }
 
     #
@@ -2305,7 +2305,7 @@ ERROR:  You specified the automatic choosing of an IP address and
         none are left in $CONFIG{'ipfile'}.
 
 EOF
-                    exit;
+                    exit 127;
                 }
             }
 
@@ -2429,7 +2429,7 @@ sub createLoopbackImages
                 logprint( "The partition image already exists.  Aborting.\n" );
                 logprint( "Specify '--force' to overwrite, or remove the following file\n" );
                 logprint( $disk . "\n" );
-                exit;
+                exit 127;
             }
         }
     }
@@ -2486,7 +2486,7 @@ sub createLoopbackImages
         {
             logprint( "The partition image creation failed to create $disk.\n" );
             logprint( "aborting\n" );
-            exit;
+            exit 127;
         }
 
         #
@@ -2532,7 +2532,7 @@ sub usePhysicalDevice
         {
             logprint( "The physical device or logical volume for swap-dev $swap_img doesn't exist.  Aborting.\n" );
             logprint( "NOTE: Please provide full path to your physical device or logical volume.\n" );
-            exit;
+            exit 127;
         }
 
         push( @PARTITIONS, { 'name' => 'swap', 'size' => '', 'type' => 'swap', 'mountpoint' => '', 'options' => '', 'imagetype' => 'phy:', 'image' => $swap_img } )
@@ -2554,7 +2554,7 @@ sub usePhysicalDevice
     else
     {
         logprint( "No image-dev parameter given.  Aborting.\n" );
-        exit;
+        exit 127;
     }
 
     createFilesystem( $phys_img, $CONFIG{'fs'} );
@@ -2595,7 +2595,7 @@ sub createLVMBits
             {
                 logprint( "The LVM disk image already exists.  Aborting.\n" );
                 logprint( "Specify '--force' to delete and recreate\n" );
-                exit;
+                exit 127;
             }
         }
     }
@@ -2628,7 +2628,7 @@ sub createLVMBits
         {
             logprint( "The LVM partition image creation failed to create $lvm_disk.\n" );
             logprint( "aborting\n" );
-            exit;
+            exit 127;
         }
 
         #
@@ -2682,7 +2682,7 @@ sub createEVMSBits
             {
                 logprint( "The EVMS volume $evms_volume_disk already exists.  Aborting.\n" );
                 logprint( "Specify '--force' to delete and recreate\n" );
-                exit;
+                exit 127;
             }
         }
 
@@ -2705,7 +2705,7 @@ sub createEVMSBits
             {
                 logprint( "The EVMS object $evms_object_disk already exists.  Aborting.\n" );
                 logprint( "Specify '--force' to delete and recreate\n" );
-                exit;
+                exit 127;
             }
         }
     }
@@ -2804,13 +2804,13 @@ sub createFilesystem
        if ( ! defined( findBinary( $binary ) ) )
        {
            logprint( "The binary '$binary' required to create the filesystem $fs is missing\n" );
-           exit;
+           exit 127;
        }
     }
     else
     {
        logprint( "The filesystem creation hash is bogus for filesystem : $fs\n" );
-       exit;
+       exit 127;
     }
 
     #
@@ -3177,7 +3177,7 @@ ERROR
   Aborting.  Please update the file or specify an IP address manually.
 
 EOF
-            exit;
+            exit 127;
         }
     }
     #
@@ -3316,7 +3316,7 @@ sub runXenConfigCreation
             logprint( "Specify --force to force overwriting it.\n" );
             logprint( "Aborting\n" );
             $FAIL = 1;
-            exit;
+            exit 127;
         }
     }
 
@@ -3476,7 +3476,7 @@ sub runCommand
         logprint( "Running command '$cmd' failed.\n" );
         logprint( "Aborting\n" );
         $FAIL = 1;
-        exit;
+        exit 127;
     }
 
 }
