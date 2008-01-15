@@ -145,6 +145,7 @@ install-hooks:
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-4.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-5.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-7.d
+	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-8.d
 	mkdir -p ${prefix}/usr/lib/xen-tools/debian.d/
 	cp -R hooks/debian/*-* ${prefix}/usr/lib/xen-tools/debian.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d sarge.d
