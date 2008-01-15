@@ -208,7 +208,7 @@ if ( (!$CONFIG{'test'}) && ( $EFFECTIVE_USER_ID != 0 ) )
 
 E_O_ROOT
 
-    exit;
+    exit 127;
 }
 
 
@@ -248,7 +248,7 @@ foreach my $name ( @$hosts )
 #
 #  All done.
 #
-exit;
+exit 0;
 
 
 
@@ -464,12 +464,16 @@ sub deleteXenImage
     my ($hostname) = ( @_ );
 
     #
+    #  Collect the names of files to delete.
+    #
+    my @delete;
+
+    #
     #  Delete the Xen auto-start file if it exists.
     #
     if ( -e "/etc/xen/auto/$hostname.cfg" )
     {
-        $CONFIG{'verbose'} && print "Removing /etc/xen/auto/$hostname.cfg\n";
-        unlink("/etc/xen/auto/$hostname.cfg" )
+        push( @delete, "/etc/xen/auto/$hostname.cfg" );
     }
 
     #
@@ -477,38 +481,36 @@ sub deleteXenImage
     #
     if ( -e "/etc/xen/$hostname.cfg" )
     {
-        $CONFIG{'verbose'} && print "Removing /etc/xen/$hostname.cfg\n";
-        unlink("/etc/xen/$hostname.cfg" )
+        push( @delete, "/etc/xen/$hostname.cfg" );
     }
 
     #
     #  If we're working on disk images remove them.
     #
+    foreach my $file ( @delete )
+    {
+        if ( -e $file )
+        {
+            print "Deleting: $file\n";
+            unlink( $file );
+        }
+        else
+        {
+            print "Ignoring missing file: $file\n";
+        }
+    }
+
+
     if ( defined( $CONFIG{'dir'} ) )
     {
        my $prefix = $CONFIG{'dir'} . "/domains/";
-
-       #
-       #  Delete the files
-       #
-       foreach my $file ( "/swap.img", "/disk.img", "/install.log" )
-       {
-           # complete path
-           my $path = $prefix . $hostname . $file;
-
-           if ( -e $path )
-           {
-               $CONFIG{'verbose'} && print "Removing $path\n";
-               unlink( $path );
-           }
-       }
 
        #
        #  Now remove the directory.
        #
        if ( -d $prefix . $hostname )
        {
-           $CONFIG{'verbose'} && print "Removing directory: $prefix" . $hostname . "\n";
+           print "Removing: " . $prefix . $hostname . "\n";
            rmdir ( $prefix . $hostname );
        }
     }
@@ -523,13 +525,13 @@ sub deleteXenImage
 
        if ( -e "/dev/$CONFIG{'lvm'}/$hostname-swap" )
        {
-           $CONFIG{'verbose'} && print "Removing LVM swap volume\n";
+           print "Removing swap volume\n";
            runCommand( "lvremove /dev/$CONFIG{'lvm'}/$hostname-swap --force" );
        }
 
        if ( -e "/dev/$CONFIG{'lvm'}/$hostname-disk" )
        {
-           $CONFIG{'verbose'} && print "Removing LVM disk volume\n";
+           print "Removing LVM disk volume\n";
            runCommand( "lvremove /dev/$CONFIG{'lvm'}/$hostname-disk --force" );
        }
 
@@ -545,14 +547,14 @@ sub deleteXenImage
 
        if ( -e "/dev/evms/$hostname-swap" )
        {
-           $CONFIG{'verbose'} && print "Removing EVMS swap volume\n";
+           print "Removing EVMS swap volume\n";
            runCommand( "echo Delete : /dev/evms/$hostname-swap | evms" );
            runCommand( "echo Delete : $CONFIG{'evms'}/$hostname-swap | evms" );
        }
 
        if ( -e "/dev/evms/$hostname-disk" )
        {
-           $CONFIG{'verbose'} && print "Removing EVMS disk volume\n";
+           print "Removing EVMS disk volume\n";
            runCommand( "echo Delete : /dev/evms/$hostname-disk | evms" );
            runCommand( "echo Delete : $CONFIG{'evms'}/$hostname-disk | evms" );
        }
@@ -563,7 +565,7 @@ sub deleteXenImage
        print "Error:  No installation type specified\n";
        print "Can't happen!\n";
        print "Hostname : $hostname\n";
-       exit;
+       exit 127;
     }
 }
 
