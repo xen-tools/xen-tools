@@ -133,7 +133,7 @@ _xen_create_image()
 	    return 0
 	    ;;
 	--role)
-	    roles=$(for x in `/bin/ls -1 /etc/xen-tools/role.d/ 2>/dev/null | grep -v \/ 2>/dev/null`; do echo ${x} ; done )
+            roles=$(ls -1 /etc/xen-tools/role.d/ | xargs echo )
 	    COMPREPLY=( $( compgen -W '${roles}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
 	    return 0
 	    ;;
@@ -144,7 +144,7 @@ _xen_create_image()
 	    ;;
     esac
     
-    if [[ ${cur} == -* ]]; then
+    if [[ ${cur} == -* ]] || [[ ${prev} == xen-create-image ]]; then
         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
         return 0
     fi

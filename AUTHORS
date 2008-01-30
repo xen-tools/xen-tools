@@ -14,6 +14,9 @@ Contributions
   C.J. Adams-Collier <cjcollier [at] com.gmail.com
    - Added new modular structure to the code.
 
+  Nick Anderson  <nick [at] net.anders0n>
+   - Better bash completion for xen-create-image.
+
   Ray Anthracite <ray [at] com.rayanthracite>
    - Added support for EVMS installation types.
 
