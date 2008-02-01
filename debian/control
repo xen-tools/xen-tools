@@ -2,18 +2,17 @@ Source: xen-tools
 Section: utils
 Priority: extra
 Maintainer: Roland Stigge <stigge@antcom.de>
-Uploaders: Radu Spineanu <radu@debian.org>
+Uploaders: Radu Spineanu <radu@debian.org>, Steve Kemp <skx@debian.org>
 Build-Depends: debhelper (>= 4.0.0), libtest-pod-perl, libtext-template-perl
-Standards-Version: 3.7.2
+Standards-Version: 3.7.3
+Homepage: http://xen-tools.org/software/xen-tools
 
 Package: xen-tools
 Architecture: all
 Depends: debootstrap, perl-modules, libtext-template-perl, libconfig-inifiles-perl
 Recommends: xen-hypervisor-amd64 | xen-hypervisor-i386 | xen-hypervisor-i386-pae, reiserfsprogs, xfsprogs, rinse, xen-shell, libexpect-perl
-Description: Tools to manage debian XEN virtual servers
+Description: Tools to manage Debian XEN virtual servers
  This package contains tools to manage Debian based XEN virtual servers.
  .
  Using the scripts you can easily create fully configured Xen guest
  domains (domU) which can be listed, updated, or copied easily.
- .
- Homepage: http://xen-tools.org/software/xen-tools
