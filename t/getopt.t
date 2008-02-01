@@ -7,7 +7,7 @@
 #
 # Steve
 # --
-# $Id: getopt.t,v 1.2 2007-09-04 20:30:25 steve Exp $
+#
 
 
 use strict;

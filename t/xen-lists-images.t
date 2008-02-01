@@ -6,7 +6,6 @@
 #
 # Steve
 # --
-# $Id: xen-lists-images.t,v 1.1 2007-09-01 19:23:10 steve Exp $
 #
 
 
