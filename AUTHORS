@@ -26,6 +26,9 @@ Contributions
   Edd Dumbill <edd [at] com.usefulinc>
    - Contributed APT sources.list file for Ubuntu's Dapper release.
 
+  Kevin Fullerton <kevin.fullerton [at] uk.co.shotgun-suicide>
+   - Fixup for gentoos revised networking scripts.  (dhcp)
+
   Stefan Fritsch  <sf [at] de.sfritsch>
    - Contributed the policy-rc.d fixups for common.sh
 

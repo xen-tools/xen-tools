@@ -45,7 +45,7 @@ setupDynamicNetworking ()
 #
 #  Setup DHCP for the first ethernet interface
 #
-iface_eth0="dhcp"
+config_eth0=( "dhcp" )
 
 E_O_DHCP
 }
