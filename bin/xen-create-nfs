@@ -130,7 +130,7 @@ $CONFIG{'template'} = '/etc/xen-tools/xm-nfs.tmpl';
 #
 # Release number.
 #
-my $RELEASE = '3.7';
+my $RELEASE = '3.9';
 
 
 # store version number away.

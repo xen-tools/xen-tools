@@ -120,7 +120,7 @@ my %CONFIG;
 #
 # Release number.
 #
-my $RELEASE = '3.7';
+my $RELEASE = '3.9';
 
 
 #

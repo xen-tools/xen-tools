@@ -1,4 +1,4 @@
-xen-tools (xxx) unstable; urgency=low
+xen-tools (3.9-1) unstable; urgency=low
 
   - general:
     - Removed recommendation on perl-doc.  (Closes: #447715)
@@ -12,7 +12,7 @@ xen-tools (xxx) unstable; urgency=low
     - Return exit status of 127 on any error.
       (Closes: #455916)
 
- -- Blah
+ -- Steve Kemp <skx@debian.org>  Fri, 1 Feb 2007 19:22:01 +0000
 
 xen-tools (3.8-1) unstable; urgency=low
 
