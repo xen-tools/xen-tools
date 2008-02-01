@@ -8,7 +8,6 @@
 #
 # Steve
 # --
-# $Id: update-modules,v 1.1 2007-04-09 11:54:26 steve Exp $
 #
 
 use strict;
