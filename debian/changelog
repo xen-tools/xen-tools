@@ -1,3 +1,10 @@
+xen-tools (3.9-2) unstable; urgency=high
+
+  - Ensure that the hook scripts which setup networking details for
+    Debian & Ubuntu guests will correctly setup teh broadcast address.
+
+ -- Steve Kemp <skx@debian.org>  Wed, 20 Feb 2007 21:22:23 +0000
+
 xen-tools (3.9-1) unstable; urgency=low
 
   - general:
