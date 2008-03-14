@@ -2972,7 +2972,16 @@ sub installSystem
     #  Show the user what they are installing
     #
     logprint( "Installation method: $CONFIG{'install-method'}\n" );
-    logprint( "(Source: $CONFIG{'install-source'})\n" ) if defined( $CONFIG{'install-source'} );
+
+    #
+    #  And where from, if relevant.
+    #
+    if ( ( lc($CONFIG{'install-method'}) eq "copy" )         ||
+         ( lc($CONFIG{'install-method'}) eq "image-server" ) ||
+         ( lc($CONFIG{'install-method'}) eq "tar" ) )
+    {
+        logprint( "(Source: $CONFIG{'install-source'})\n" );
+    }
 
 
     #
