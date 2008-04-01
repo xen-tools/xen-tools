@@ -200,7 +200,7 @@ manpages:
 #
 #  Make a new release tarball, and make a GPG signature.
 #
-release: fixup-perms update-version update-modules clean changelog
+release: tidy fixup-perms update-version update-modules clean changelog
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)
 	rm -f $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz
 	cp -R . $(DIST_PREFIX)/$(BASE)-$(VERSION)
@@ -227,6 +227,17 @@ test-verbose:
 	prove --shuffle --verbose t/
 
 
+
+#
+#  Run our main script(s) through perltidy
+#
+tidy:
+	if [ -x /usr/bin/perltidy ]; then \
+	for i in bin/*-*; do \
+		echo "tidying $$i"; \
+		perltidy -b -nt -bt=2 -sbt=1 -bl  -mbl=3 -sbl -bbs -bbb -anl  -lp $$i \
+	; done \
+	; fi
 
 #
 #  Uninstall the software, completely.
@@ -258,7 +269,7 @@ uninstall:
 #
 #  NOTE: Removes empty local directories.
 #
-update: 
+update:
 	hg pull --update 2>/dev/null
 
 
