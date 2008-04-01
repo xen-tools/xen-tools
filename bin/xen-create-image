@@ -665,8 +665,6 @@ my $RELEASE = '3.9';
 
 
 
-
-
 #
 #  Setup default options.
 #
@@ -676,7 +674,7 @@ setupDefaultOptions();
 #
 #  Read the global configuration file.
 #
-readConfigurationFile( "/etc/xen-tools/xen-tools.conf" );
+readConfigurationFile("/etc/xen-tools/xen-tools.conf");
 
 
 #
@@ -701,13 +699,12 @@ if ( $CONFIG{'config'} )
     # Read the file, if it exists.
     if ( -e $path )
     {
-        readConfigurationFile( $path );
+        readConfigurationFile($path);
     }
     else
     {
         logprint( "The specified configuration file does not exist: '$path'\n",
-                  "Aborting\n\n"
-                );
+                  "Aborting\n\n" );
         exit 127;
     }
 }
@@ -722,7 +719,7 @@ if ( $CONFIG{'debug'} )
     {
         print $key;
         print " : " . $CONFIG{$key} if ( $CONFIG{$key} );
-        print  "\n";
+        print "\n";
     }
     exit 127;
 }
@@ -771,9 +768,10 @@ checkBinariesPresent();
 #
 if ( !$#PARTITIONS )
 {
-    populatePartitionsData()  if ( ( $CONFIG{'dir'}  ) ||
-                                   ( $CONFIG{'evms'} ) ||
-                                   ( $CONFIG{'lvm'}  ) );
+    populatePartitionsData()
+      if (    ( $CONFIG{'dir'} )
+           || ( $CONFIG{'evms'} )
+           || ( $CONFIG{'lvm'} ) );
 }
 
 
@@ -789,6 +787,7 @@ showSummary();
 #
 if ( $CONFIG{'dir'} )
 {
+
     #
     #  Test to see if "loop" module is loaded.  This is probably
     # not required, except for paranoia.
@@ -802,6 +801,7 @@ if ( $CONFIG{'dir'} )
 }
 elsif ( $CONFIG{'lvm'} )
 {
+
     #
     #  Create our LVM partitions.
     #
@@ -809,6 +809,7 @@ elsif ( $CONFIG{'lvm'} )
 }
 elsif ( $CONFIG{'evms'} )
 {
+
     #
     #  Create our EVMS partitions.
     #
@@ -816,6 +817,7 @@ elsif ( $CONFIG{'evms'} )
 }
 elsif ( $CONFIG{'image-dev'} )
 {
+
     #
     #  Use physical disc
     #
@@ -823,10 +825,10 @@ elsif ( $CONFIG{'image-dev'} )
 }
 else
 {
+
     # Can't happen we didn't get an installation type.
     logprint( "Error:  No recognised installation type.\n",
-              "Please specify a directory, lvm, or evms volume to use.\n"
-            );
+              "Please specify a directory, lvm, or evms volume to use.\n" );
     $FAIL = 1;
     exit 127;
 }
@@ -855,6 +857,7 @@ exportEnvironment();
 #
 if ( $CONFIG{'install'} )
 {
+
     #
     #  Install the system.
     #
@@ -863,9 +866,9 @@ if ( $CONFIG{'install'} )
     #
     #  Did that work?
     #
-    if ( ! -x $MOUNT_POINT . "/bin/ls" )
+    if ( !-x $MOUNT_POINT . "/bin/ls" )
     {
-        logprint( "System installation failed.  Aborting\n");
+        logprint("System installation failed.  Aborting\n");
         $FAIL = 1;
         exit 127;
     }
@@ -873,13 +876,11 @@ if ( $CONFIG{'install'} )
     #
     #  Now customize the installation - setting up networking, etc.
     #
-    if( $CONFIG{'hooks'} )
+    if ( $CONFIG{'hooks'} )
     {
         runCustomisationHooks();
     }
 }
-
-
 
 
 
@@ -904,7 +905,7 @@ setupRootPassword() if ( $CONFIG{'passwd'} );
 #
 #  Report success.
 #
-logprint( "All done\n");
+logprint("All done\n");
 
 
 #
@@ -913,10 +914,11 @@ logprint( "All done\n");
 #
 if ( $CONFIG{'boot'} )
 {
+
     #
     #  Unmount the image and any subsequent mounts.
     #
-    unMountImage( $MOUNT_POINT );
+    unMountImage($MOUNT_POINT);
 
     #
     #  Mark us as unmounted.
@@ -932,14 +934,15 @@ if ( $CONFIG{'boot'} )
     #
     if ( -d "/etc/xen/auto" )
     {
-        my $cfg = $CONFIG{'output'} . "/" . $CONFIG{'hostname'} . $CONFIG{'extension'};
+        my $cfg =
+          $CONFIG{'output'} . "/" . $CONFIG{'hostname'} . $CONFIG{'extension'};
 
-        if ( ! -e $cfg )
+        if ( !-e $cfg )
         {
-            logprint( "Creating auto-start symlink to: $cfg\n" );
+            logprint("Creating auto-start symlink to: $cfg\n");
 
             my $link = "ln -s $cfg /etc/xen/auto/";
-            runCommand( $link );
+            runCommand($link);
         }
     }
 
@@ -951,18 +954,21 @@ if ( $CONFIG{'boot'} )
     $CONFIG{'pid'} = fork();
     if ( $CONFIG{'pid'} )
     {
+
         # Parent.
         exit;
     }
     else
     {
+
         # Config file.
-        my $cfg = $CONFIG{'output'} . "/" . $CONFIG{'hostname'} . $CONFIG{'extension'};
+        my $cfg =
+          $CONFIG{'output'} . "/" . $CONFIG{'hostname'} . $CONFIG{'extension'};
 
         # Child.
-        system( "$CONFIG{'xm'} create $cfg >/dev/null 2>/dev/null" );
+        system("$CONFIG{'xm'} create $cfg >/dev/null 2>/dev/null");
 
-        logprint( "Started new Xen guest: $CONFIG{'hostname'} [$cfg]\n" );
+        logprint("Started new Xen guest: $CONFIG{'hostname'} [$cfg]\n");
     }
 }
 
@@ -988,15 +994,14 @@ exit 0;
 
 sub checkSystem
 {
-    my @required = qw ( / xt-customize-image xt-install-image xt-create-xen-config / );
+    my @required =
+      qw ( / xt-customize-image xt-install-image xt-create-xen-config / );
 
-    foreach my $bin ( @required )
+    foreach my $bin (@required)
     {
-        if ( ! defined( findBinary( $bin ) ) )
+        if ( !defined( findBinary($bin) ) )
         {
-            logprint("The script '$bin' was not found.\n",
-                     "Aborting\n\n"
-                    );
+            logprint( "The script '$bin' was not found.\n", "Aborting\n\n" );
             exit 127;
         }
     }
@@ -1007,8 +1012,8 @@ sub checkSystem
     # running is pointless.
     #
     my $test = "use Text::Template";
-    eval( $test );
-    if ( ( $@ ) && ( ! $CONFIG{'force'} ) )
+    eval($test);
+    if ( ($@) && ( !$CONFIG{'force'} ) )
     {
         print <<E_O_ERROR;
 
@@ -1028,10 +1033,12 @@ E_O_ERROR
     if ( $CONFIG{'admins'} )
     {
         my $shell = undef;
-        $shell = "/usr/bin/xen-login-shell" if ( -x "/usr/bin/xen-login-shell" );
-        $shell = "/usr/local/bin/xen-login-shell" if ( -x "/usr/bin/local/xen-login-shell" );
+        $shell = "/usr/bin/xen-login-shell"
+          if ( -x "/usr/bin/xen-login-shell" );
+        $shell = "/usr/local/bin/xen-login-shell"
+          if ( -x "/usr/bin/local/xen-login-shell" );
 
-        if ( !defined( $shell ) )
+        if ( !defined($shell) )
         {
             print <<EOF;
 
@@ -1054,7 +1061,6 @@ EOF
 
 
 
-
 =begin doc
 
   Test that the current Xen host has a valid network configuration,
@@ -1066,8 +1072,9 @@ EOF
 
 sub testXenConfig
 {
+
     # wierdness.
-    return if ( ! -d "/etc/xen" );
+    return if ( !-d "/etc/xen" );
 
     #
     #  Temporary hash.
@@ -1079,9 +1086,9 @@ sub testXenConfig
     #
     open( CONFIG, "<", "/etc/xen/xend-config.sxp" )
       or die "Failed to read /etc/xen/xend-config.sxp: $!";
-    while( <CONFIG> )
+    while (<CONFIG>)
     {
-        next if ( ! $_ || !length( $_ ) );
+        next if ( !$_ || !length($_) );
 
         # vif
         if ( $_ =~ /^\(vif-script ([^)]+)/ )
@@ -1095,10 +1102,10 @@ sub testXenConfig
             $cfg{'network-script'} = $1;
         }
     }
-    close( CONFIG );
+    close(CONFIG);
 
-    if ( !defined( $cfg{'network-script'} ) ||
-         !defined( $cfg{'vif-script'} ) )
+    if (    !defined( $cfg{'network-script'} )
+         || !defined( $cfg{'vif-script'} ) )
     {
         print <<EOF;
 
@@ -1115,8 +1122,8 @@ EOF
     }
     else
     {
-        if ( ( $cfg{'network-script'} =~ /dummy/i ) ||
-             ( $cfg{'vif-script'}     =~ /dummy/i ) )
+        if (    ( $cfg{'network-script'} =~ /dummy/i )
+             || ( $cfg{'vif-script'} =~ /dummy/i ) )
         {
 
             print <<EOF;
@@ -1136,7 +1143,6 @@ EOF
 
 
 
-
 =begin doc
 
   Setup the default options we'd expect into our global configuration hash.
@@ -1151,39 +1157,39 @@ sub setupDefaultOptions
     #
     # Paths and files.
     #
-    $CONFIG{'dir'}            = '';
-    $CONFIG{'xm'}             = findBinary( "xm" );
-    $CONFIG{'kernel'}         = '';
-    $CONFIG{'modules'}        = '';
-    $CONFIG{'initrd'}         = '';
+    $CONFIG{'dir'}     = '';
+    $CONFIG{'xm'}      = findBinary("xm");
+    $CONFIG{'kernel'}  = '';
+    $CONFIG{'modules'} = '';
+    $CONFIG{'initrd'}  = '';
 
     #
     # Sizing options.
     #
-    $CONFIG{'memory'}         = '96Mb';
-    $CONFIG{'size'}           = '2000Mb';
-    $CONFIG{'swap'}           = '128M';
-    $CONFIG{'cache'}          = 'yes';
-    $CONFIG{'image'}          = 'sparse';
+    $CONFIG{'memory'} = '96Mb';
+    $CONFIG{'size'}   = '2000Mb';
+    $CONFIG{'swap'}   = '128M';
+    $CONFIG{'cache'}  = 'yes';
+    $CONFIG{'image'}  = 'sparse';
 
     #
     # Misc. options.
     #
-    $CONFIG{'mirror'}         = 'http://ftp.us.debian.org/debian';
-    $CONFIG{'arch'}           = '';
-    $CONFIG{'dist'}           = 'sarge';
-    $CONFIG{'fs'}             = 'ext3';
-    $CONFIG{'force'}          = 0;
-    $CONFIG{'install'}        = 1;
-    $CONFIG{'hooks'}          = 1;
-    $CONFIG{'partitions'}     = '';
-    $CONFIG{'pid'}            = 0;
-    $CONFIG{'template'}       = '';
-    $CONFIG{'roledir'}        = '/etc/xen-tools/role.d';
-    $CONFIG{'partitionsdir'}  = '/etc/xen-tools/partitions.d';
-    $CONFIG{'ipfile'}         = '/etc/xen-tools/ips.txt';
-    $CONFIG{'output'}         = '/etc/xen';
-    $CONFIG{'extension'}      = '.cfg';
+    $CONFIG{'mirror'}        = 'http://ftp.us.debian.org/debian';
+    $CONFIG{'arch'}          = '';
+    $CONFIG{'dist'}          = 'sarge';
+    $CONFIG{'fs'}            = 'ext3';
+    $CONFIG{'force'}         = 0;
+    $CONFIG{'install'}       = 1;
+    $CONFIG{'hooks'}         = 1;
+    $CONFIG{'partitions'}    = '';
+    $CONFIG{'pid'}           = 0;
+    $CONFIG{'template'}      = '';
+    $CONFIG{'roledir'}       = '/etc/xen-tools/role.d';
+    $CONFIG{'partitionsdir'} = '/etc/xen-tools/partitions.d';
+    $CONFIG{'ipfile'}        = '/etc/xen-tools/ips.txt';
+    $CONFIG{'output'}        = '/etc/xen';
+    $CONFIG{'extension'}     = '.cfg';
 
     #
     #  Installation method defaults to "debootstrap".
@@ -1200,10 +1206,10 @@ sub setupDefaultOptions
     #         filesystem, even if it exists.  This script must detect
     #         prior existance itself.
     #
-    $CONFIG{'make_fs_ext2'}      = 'mkfs.ext2 -F ';
-    $CONFIG{'make_fs_ext3'}      = 'mkfs.ext3 -F ';
-    $CONFIG{'make_fs_xfs'}       = 'mkfs.xfs -f -d name=';
-    $CONFIG{'make_fs_reiserfs'}  = 'mkfs.reiserfs -f -q ';
+    $CONFIG{'make_fs_ext2'}     = 'mkfs.ext2 -F ';
+    $CONFIG{'make_fs_ext3'}     = 'mkfs.ext3 -F ';
+    $CONFIG{'make_fs_xfs'}      = 'mkfs.xfs -f -d name=';
+    $CONFIG{'make_fs_reiserfs'} = 'mkfs.reiserfs -f -q ';
 
     #
     #  Flags to pass to "mount" to mount our image.
@@ -1211,13 +1217,12 @@ sub setupDefaultOptions
     #  NOTE: Kinda redundent and may go away since '-t auto' should do
     #        the right thing.
     #
-    $CONFIG{'mount_fs_ext2'}      = '-t ext2';
-    $CONFIG{'mount_fs_ext3'}      = '-t ext3';
-    $CONFIG{'mount_fs_xfs'}       = '-t xfs';
-    $CONFIG{'mount_fs_reiserfs'}  = '-t reiserfs';
+    $CONFIG{'mount_fs_ext2'}     = '-t ext2';
+    $CONFIG{'mount_fs_ext3'}     = '-t ext3';
+    $CONFIG{'mount_fs_xfs'}      = '-t xfs';
+    $CONFIG{'mount_fs_reiserfs'} = '-t reiserfs';
 
 }
-
 
 
 
@@ -1232,20 +1237,20 @@ sub setupDefaultOptions
 
 sub readConfigurationFile
 {
-    my ($file) = ( @_ );
+    my ($file) = (@_);
 
     # Don't read the file if it doesn't exist.
-    return if ( ! -e $file );
+    return if ( !-e $file );
 
 
     my $line = "";
 
     open( FILE, "<", $file ) or die "Cannot read file '$file' - $!";
 
-    while (defined($line = <FILE>) )
+    while ( defined( $line = <FILE> ) )
     {
         chomp $line;
-        if ($line =~ s/\\$//)
+        if ( $line =~ s/\\$// )
         {
             $line .= <FILE>;
             redo unless eof(FILE);
@@ -1255,7 +1260,7 @@ sub readConfigurationFile
         next if ( $line =~ /^([ \t]*)\#/ );
 
         # Skip blank lines
-        next if ( length( $line ) < 1 );
+        next if ( length($line) < 1 );
 
         # Strip trailing comments.
         if ( $line =~ /(.*)\#(.*)/ )
@@ -1278,6 +1283,7 @@ sub readConfigurationFile
             # command expansion?
             if ( $val =~ /(.*)`([^`]+)`(.*)/ )
             {
+
                 # store
                 my $pre  = $1;
                 my $cmd  = $2;
@@ -1285,18 +1291,18 @@ sub readConfigurationFile
 
                 # get output
                 my $output = `$cmd`;
-                chomp( $output );
+                chomp($output);
 
                 # build up replacement.
                 $val = $pre . $output . $post;
             }
 
             # Store value.
-            $CONFIG{ $key } = $val;
+            $CONFIG{$key} = $val;
         }
     }
 
-    close( FILE );
+    close(FILE);
 }
 
 
@@ -1322,96 +1328,97 @@ sub parseCommandLineArguments
     # file.
     #
     my %install;
-    $install{'evms'}        = undef;
-    $install{'dir'}         = undef;
-    $install{'lvm'}         = undef;
-    $install{'image-dev'}   = undef;
+    $install{'evms'}      = undef;
+    $install{'dir'}       = undef;
+    $install{'lvm'}       = undef;
+    $install{'image-dev'} = undef;
 
     #
     #  Parse options.
     #
     GetOptions(
-               # Mandatory
-               "dist=s",       \$CONFIG{'dist'},
 
-               # Size options.
-               "size=s",       \$CONFIG{'size'},
-               "swap=s",       \$CONFIG{'swap'},
-               "noswap",       \$CONFIG{'noswap'},
-               "image=s",      \$CONFIG{'image'},
-               "memory=s",     \$CONFIG{'memory'},
+        # Mandatory
+        "dist=s", \$CONFIG{'dist'},
 
-               # Locations
-               "dir=s",        \$install{'dir'},
-               "evms=s",       \$install{'evms'},
-               "kernel=s",     \$CONFIG{'kernel'},
-               "initrd=s",     \$CONFIG{'initrd'},
-               "mirror=s",     \$CONFIG{'mirror'},
-               "modules=s",    \$CONFIG{'modules'},
-               "lvm=s",        \$install{'lvm'},
-               "image-dev=s",  \$install{'image-dev'},
-               "swap-dev=s",   \$install{'swap-dev'},
+        # Size options.
+        "size=s",   \$CONFIG{'size'},
+        "swap=s",   \$CONFIG{'swap'},
+        "noswap",   \$CONFIG{'noswap'},
+        "image=s",  \$CONFIG{'image'},
+        "memory=s", \$CONFIG{'memory'},
 
-               # Networking options
-               "dhcp",         \$CONFIG{'dhcp'},
-               "gateway=s",    \$CONFIG{'gateway'},
-               "hostname=s",   \$CONFIG{'hostname'},
-               "ip=s@",        \$CONFIG{'ip'},
-               "mac=s",        \$CONFIG{'mac'},
-               "netmask=s",    \$CONFIG{'netmask'},
-               "broadcast=s",  \$CONFIG{'broadcast'},
-               "p2p=s",        \$CONFIG{'p2p'},
+        # Locations
+        "dir=s",       \$install{'dir'},
+        "evms=s",      \$install{'evms'},
+        "kernel=s",    \$CONFIG{'kernel'},
+        "initrd=s",    \$CONFIG{'initrd'},
+        "mirror=s",    \$CONFIG{'mirror'},
+        "modules=s",   \$CONFIG{'modules'},
+        "lvm=s",       \$install{'lvm'},
+        "image-dev=s", \$install{'image-dev'},
+        "swap-dev=s",  \$install{'swap-dev'},
 
-               # Exclusive
-               #
-               #  NOTE:  We set the local variable here, not the global.
-               #
-               "install-method=s",  \$CONFIG{'install-method'},
-               "install-source=s",  \$CONFIG{'install-source'},
+        # Networking options
+        "dhcp",        \$CONFIG{'dhcp'},
+        "gateway=s",   \$CONFIG{'gateway'},
+        "hostname=s",  \$CONFIG{'hostname'},
+        "ip=s@",       \$CONFIG{'ip'},
+        "mac=s",       \$CONFIG{'mac'},
+        "netmask=s",   \$CONFIG{'netmask'},
+        "broadcast=s", \$CONFIG{'broadcast'},
+        "p2p=s",       \$CONFIG{'p2p'},
 
-               # Misc. options
-               "accounts",     \$CONFIG{'accounts'},
-               "admins=s",     \$CONFIG{'admins'},
-               "arch=s",       \$CONFIG{'arch'},
-               "fs=s",         \$CONFIG{'fs'},
-               "boot",         \$CONFIG{'boot'},
-               "cache=s",      \$CONFIG{'cache'},
-               "config=s",     \$CONFIG{'config'},
-               "ide",          \$CONFIG{'ide'},
-               "install=i",    \$CONFIG{'install'},
-               "hooks=i",      \$CONFIG{'hooks'},
-               "passwd",       \$CONFIG{'passwd'},
-               "partitions=s", \$CONFIG{'partitions'},
-               "role=s",       \$CONFIG{'role'},
-               "role-args=s",  \$CONFIG{'role-args'},
-               "roledir=s",    \$CONFIG{'roledir'},
-               "force",        \$CONFIG{'force'},
-               "keep",         \$CONFIG{'keep'},
-               "template=s",   \$CONFIG{'template'},
-               "output=s",     \$CONFIG{'output'},
-               "extension=s",  \$CONFIG{'extension'},
+        # Exclusive
+        #
+        #  NOTE:  We set the local variable here, not the global.
+        #
+        "install-method=s", \$CONFIG{'install-method'},
+        "install-source=s", \$CONFIG{'install-source'},
 
-               # Help options
-               "debug",        \$CONFIG{'debug'},
-               "help",         \$HELP,
-               "manual",       \$MANUAL,
-               "verbose",      \$CONFIG{'verbose'},
-               "version",      \$VERSION
-              );
+        # Misc. options
+        "accounts",     \$CONFIG{'accounts'},
+        "admins=s",     \$CONFIG{'admins'},
+        "arch=s",       \$CONFIG{'arch'},
+        "fs=s",         \$CONFIG{'fs'},
+        "boot",         \$CONFIG{'boot'},
+        "cache=s",      \$CONFIG{'cache'},
+        "config=s",     \$CONFIG{'config'},
+        "ide",          \$CONFIG{'ide'},
+        "install=i",    \$CONFIG{'install'},
+        "hooks=i",      \$CONFIG{'hooks'},
+        "passwd",       \$CONFIG{'passwd'},
+        "partitions=s", \$CONFIG{'partitions'},
+        "role=s",       \$CONFIG{'role'},
+        "role-args=s",  \$CONFIG{'role-args'},
+        "roledir=s",    \$CONFIG{'roledir'},
+        "force",        \$CONFIG{'force'},
+        "keep",         \$CONFIG{'keep'},
+        "template=s",   \$CONFIG{'template'},
+        "output=s",     \$CONFIG{'output'},
+        "extension=s",  \$CONFIG{'extension'},
+
+        # Help options
+        "debug",   \$CONFIG{'debug'},
+        "help",    \$HELP,
+        "manual",  \$MANUAL,
+        "verbose", \$CONFIG{'verbose'},
+        "version", \$VERSION
+    );
 
     pod2usage(1) if $HELP;
-    pod2usage(-verbose => 2 ) if $MANUAL;
+    pod2usage( -verbose => 2 ) if $MANUAL;
 
 
-    if ( $VERSION )
+    if ($VERSION)
     {
-        my $REVISION      = '$Revision: 1.192 $';
+        my $REVISION = '$Revision: 1.192 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
         }
 
-        logprint( "xen-create-image release $RELEASE - CVS: $REVISION\n" );
+        logprint("xen-create-image release $RELEASE - CVS: $REVISION\n");
         exit 0;
     }
 
@@ -1450,10 +1457,10 @@ sub parseCommandLineArguments
         $CONFIG{'size'}      = undef;
         $CONFIG{'swap'}      = undef;
 
-        $CONFIG{'swap-dev'} = $install{'swap-dev'} if ( defined( $install{'swap-dev'} ) );
+        $CONFIG{'swap-dev'} = $install{'swap-dev'}
+          if ( defined( $install{'swap-dev'} ) );
     }
 }
-
 
 
 
@@ -1469,7 +1476,7 @@ sub testRootUser
 {
     if ( $EFFECTIVE_USER_ID != 0 )
     {
-        my $err =<<E_O_ROOT;
+        my $err = <<E_O_ROOT;
 
   In order to use this script you must be running with root privileges.
 
@@ -1477,7 +1484,7 @@ sub testRootUser
 
 E_O_ROOT
 
-        logprint( $err );
+        logprint($err);
         exit 127;
     }
 }
@@ -1499,21 +1506,22 @@ E_O_ROOT
 
 sub checkArguments
 {
+
     #
     #  We require a distribution name.
     #
-    if ( ! defined( $CONFIG{'dist'} ) )
+    if ( !defined( $CONFIG{'dist'} ) )
     {
-       logprint( "The '--dist' argument is mandatory\n" );
-       exit 127;
+        logprint("The '--dist' argument is mandatory\n");
+        exit 127;
     }
 
     #
     #  We require a hostname.
     #
-    if ( ! defined( $CONFIG{'hostname'} ) )
+    if ( !defined( $CONFIG{'hostname'} ) )
     {
-        logprint( "The '--hostname' argument is mandatory.\n" );
+        logprint("The '--hostname' argument is mandatory.\n");
         exit 127;
     }
 
@@ -1533,11 +1541,11 @@ sub checkArguments
     #  If there are no scripts then we clearly cannot
     # customise it!
     #
-    my $dir = "/usr/lib/xen-tools/"  . $CONFIG{'dist'} .  ".d";
+    my $dir = "/usr/lib/xen-tools/" . $CONFIG{'dist'} . ".d";
 
-    if ( ! -d $dir )
+    if ( !-d $dir )
     {
-        my $err =<<E_OR;
+        my $err = <<E_OR;
 
   We're trying to configure an installation of $CONFIG{'dist'} in
  $CONFIG{'dir'} - but there is no hook directory for us to use.
@@ -1548,7 +1556,7 @@ sub checkArguments
 
   Aborting.
 E_OR
-        logprint( $err );
+        logprint($err);
         exit 127;
     }
 
@@ -1558,10 +1566,10 @@ E_OR
     #
     if ( defined( $CONFIG{'image'} ) )
     {
-        if ( ( $CONFIG{'image'} ne "sparse" ) &&
-             ( $CONFIG{'image'} ne "full" ) )
+        if (    ( $CONFIG{'image'} ne "sparse" )
+             && ( $CONFIG{'image'} ne "full" ) )
         {
-            logprint( "Image type must be 'sparse' or 'full'\n" );
+            logprint("Image type must be 'sparse' or 'full'\n");
             exit 127;
         }
     }
@@ -1569,9 +1577,10 @@ E_OR
     #
     #  If using LVM or EVMS then the images may not be sparse
     #
-    $CONFIG{'image'} = "full" if ( $CONFIG{'lvm'} ||
-                                   $CONFIG{'evms'} ||
-                                   $CONFIG{'image-dev'} );
+    $CONFIG{'image'} = "full"
+      if (    $CONFIG{'lvm'}
+           || $CONFIG{'evms'}
+           || $CONFIG{'image-dev'} );
 
 
 
@@ -1581,21 +1590,24 @@ E_OR
     my $valid = 0;
     if ( defined( $CONFIG{'install-method'} ) )
     {
-        foreach my $recognised ( qw/ copy debootstrap image-server rinse rpmstrap tar / )
+        foreach my $recognised (
+                         qw/ copy debootstrap image-server rinse rpmstrap tar /)
         {
-            $valid = 1 if ( lc($CONFIG{'install-method'}) eq lc($recognised) );
+            $valid = 1
+              if ( lc( $CONFIG{'install-method'} ) eq lc($recognised) );
         }
 
         #
         #  If we have "copy", "image-server", or "tar" method
         # then make sure we have a source.
         #
-        if ( ( lc($CONFIG{'install-method'}) eq "copy" )         ||
-             ( lc($CONFIG{'install-method'}) eq "image-server" ) ||
-             ( lc($CONFIG{'install-method'}) eq "tar" ) )
+        if (    ( lc( $CONFIG{'install-method'} ) eq "copy" )
+             || ( lc( $CONFIG{'install-method'} ) eq "image-server" )
+             || ( lc( $CONFIG{'install-method'} ) eq "tar" ) )
         {
+
             # not defined.
-            $valid = 0 if (!defined( $CONFIG{'install-source'} ) );
+            $valid = 0 if ( !defined( $CONFIG{'install-source'} ) );
         }
     }
     else
@@ -1625,11 +1637,12 @@ EOF
     #
     #  Make sure that any specified template file exists.
     #
-    if ( defined( $CONFIG{'template'} ) &&
-         length( $CONFIG{'template'} ) )
+    if ( defined( $CONFIG{'template'} )
+         && length( $CONFIG{'template'} ) )
     {
-        if (  -e $CONFIG{'template'} )
+        if ( -e $CONFIG{'template'} )
         {
+
             # nop
         }
         elsif ( -e "/etc/xen-tools/$CONFIG{'template'}" )
@@ -1638,9 +1651,11 @@ EOF
         }
         else
         {
+
             # failed to find either by fully qualified path,
             # or inside /etc/xen-tools.
-            logprint( "The specified template file, $CONFIG{'template'}, does not exist.\n" );
+            logprint(
+"The specified template file, $CONFIG{'template'}, does not exist.\n" );
             exit 127;
         }
     }
@@ -1651,9 +1666,10 @@ EOF
     #
     if ( defined( $CONFIG{'roledir'} ) && length( $CONFIG{'roledir'} ) )
     {
-        if ( ! -d $CONFIG{'roledir'} )
+        if ( !-d $CONFIG{'roledir'} )
         {
-            logprint( "The specified role directory '$CONFIG{'roledir'}' does not exist\n" );
+            logprint(
+"The specified role directory '$CONFIG{'roledir'}' does not exist\n" );
             exit 127;
         }
     }
@@ -1662,11 +1678,14 @@ EOF
     #
     #  If we've got a partitions directory specified then it must exist.
     #
-    if ( defined( $CONFIG{'partitionsdir'} ) && length( $CONFIG{'partitionsdir'} ) )
+    if ( defined( $CONFIG{'partitionsdir'} )
+         && length( $CONFIG{'partitionsdir'} ) )
     {
-        if ( ! -d $CONFIG{'partitionsdir'} )
+        if ( !-d $CONFIG{'partitionsdir'} )
         {
-            logprint( "The specified partitions directory '$CONFIG{'partitionsdir'}' does not exist\n" );
+            logprint(
+"The specified partitions directory '$CONFIG{'partitionsdir'}' does not exist\n"
+            );
             exit 127;
         }
     }
@@ -1675,17 +1694,19 @@ EOF
     #
     #  Make sure that any specified partitions file exists.
     #
-    if ( ( defined( $CONFIG{'partitions'} ) ) &&
-         ( length( $CONFIG{'partitions'}  ) ) )
+    if (    ( defined( $CONFIG{'partitions'} ) )
+         && ( length( $CONFIG{'partitions'} ) ) )
     {
-        if ( ! ( $CONFIG{'partitions'} =~ /\// ) )
+        if ( !( $CONFIG{'partitions'} =~ /\// ) )
         {
-            $CONFIG{'partitions'} = $CONFIG{'partitionsdir'} . '/' . $CONFIG{'partitions'};
+            $CONFIG{'partitions'} =
+              $CONFIG{'partitionsdir'} . '/' . $CONFIG{'partitions'};
         }
 
-        if ( ! -e $CONFIG{'partitions'} )
+        if ( !-e $CONFIG{'partitions'} )
         {
-            logprint( "The specified partitions file, $CONFIG{'partitions'}, does not exist.\n" );
+            logprint(
+"The specified partitions file, $CONFIG{'partitions'}, does not exist.\n" );
             exit 127;
         }
 
@@ -1694,19 +1715,19 @@ EOF
 
     if ( $CONFIG{'swap-dev'} && $CONFIG{'noswap'} )
     {
-        logprint( "Please choose either swap-dev or noswap, not both!\n" );
+        logprint("Please choose either swap-dev or noswap, not both!\n");
         exit 127;
     }
 
     if ( $CONFIG{'swap-dev'} && $CONFIG{'partitions'} )
     {
-        logprint( "Please choose either swap-dev or partitions, not both!\n" );
+        logprint("Please choose either swap-dev or partitions, not both!\n");
         exit 127;
     }
 
     if ( $CONFIG{'image-dev'} && $CONFIG{'partitions'} )
     {
-        logprint( "Please choose either image-dev or partitions, not both!\n" );
+        logprint("Please choose either image-dev or partitions, not both!\n");
         exit 127;
     }
 
@@ -1716,6 +1737,7 @@ EOF
     #
     if ( $CONFIG{'dhcp'} && $CONFIG{'ip'} )
     {
+
         #
         #  However we will allow the DHCP setting to override a *partially*
         # specified IP address.
@@ -1726,7 +1748,7 @@ EOF
         }
         else
         {
-            logprint( "Please choose either DHCP or static usage, not both!\n" );
+            logprint("Please choose either DHCP or static usage, not both!\n");
             exit 127;
         }
     }
@@ -1736,9 +1758,9 @@ EOF
     #
     if ( ( !$CONFIG{'dhcp'} ) && ( !$CONFIG{'ip'} ) )
     {
-        logprint( "Please choose one of:\n" );
-        logprint( " --dhcp\n" );
-        logprint( " --ip xx.xx.xx.xx\n" );
+        logprint("Please choose one of:\n");
+        logprint(" --dhcp\n");
+        logprint(" --ip xx.xx.xx.xx\n");
         exit 127;
     }
 
@@ -1748,11 +1770,11 @@ EOF
     #
     if ( $CONFIG{'ip'} )
     {
-        logprint( "WARNING:  No gateway address specified!\n" )
-          unless( defined( $CONFIG{'gateway'} ) );
+        logprint("WARNING:  No gateway address specified!\n")
+          unless ( defined( $CONFIG{'gateway'} ) );
 
-        logprint( "WARNING:  No netmask address specified!\n" )
-          unless( defined( $CONFIG{'netmask'} ) );
+        logprint("WARNING:  No netmask address specified!\n")
+          unless ( defined( $CONFIG{'netmask'} ) );
     }
 
     #
@@ -1766,7 +1788,7 @@ EOF
     #
     #  Make sure our output directory exists.
     #
-    if ( ! -d $CONFIG{'output'} )
+    if ( !-d $CONFIG{'output'} )
     {
         print <<EOF;
   The output directory for creating the xen configuration file within
@@ -1781,7 +1803,6 @@ EOF
     }
 
 }
-
 
 
 
@@ -1803,6 +1824,7 @@ EOF
 
 sub generateMACAddress
 {
+
     #
     #  Start with the xen prefix
     #
@@ -1812,7 +1834,7 @@ sub generateMACAddress
     #  Build up ( hostname + ip + dhcp + dist );
     #
     my $hash = '';
-    foreach my $key ( qw/ hostname ip dhcp dist / )
+    foreach my $key (qw/ hostname ip dhcp dist /)
     {
         $hash .= $CONFIG{$key} if ( $CONFIG{$key} );
     }
@@ -1820,20 +1842,19 @@ sub generateMACAddress
     #
     #  Generate an MD5 hash of this data.
     #
-    $hash = md5_hex( $hash );
+    $hash = md5_hex($hash);
 
     #
     #  Now build up a MAC address
     #
-    while( length( $mac ) < 17 )
+    while ( length($mac) < 17 )
     {
         $mac .= ":" . substr( $hash, 0, 2 );
         $hash = substr( $hash, 2 );
     }
 
-    return( uc( $mac ) );
+    return ( uc($mac) );
 }
-
 
 
 
@@ -1849,7 +1870,7 @@ sub generateMACAddress
 sub setupLogFile
 {
 
-    mkdir( "/var/log/xen-tools", 0750 ) if ( ! -d "/var/log/xen-tools" );
+    mkdir( "/var/log/xen-tools", 0750 ) if ( !-d "/var/log/xen-tools" );
 
     #
     #  Trash any existing for this run logfile.
@@ -1861,7 +1882,7 @@ sub setupLogFile
     #
     #  Make sure the logfile is 0640 - avoid leaking root passwords.
     #
-    chmod( oct( "0640" ), "/var/log/xen-tools/$CONFIG{'hostname'}.log" );
+    chmod( oct("0640"), "/var/log/xen-tools/$CONFIG{'hostname'}.log" );
 }
 
 
@@ -1882,12 +1903,12 @@ sub checkBinariesPresent
     #
     my @required = qw ( mount mkswap );
 
-    foreach my $file ( @required )
+    foreach my $file (@required)
     {
-        if ( ! defined( findBinary( $file ) ) )
+        if ( !defined( findBinary($file) ) )
         {
-            logprint( "The following binary is required to run this tool\n" );
-            logprint( "\t$file\n");
+            logprint("The following binary is required to run this tool\n");
+            logprint("\t$file\n");
             exit 127;
         }
     }
@@ -1897,51 +1918,56 @@ sub checkBinariesPresent
     #
     if ( defined( $CONFIG{'dir'} ) )
     {
+
         # loopback image
-        if ( ! defined( findBinary( "dd" ) ) )
+        if ( !defined( findBinary("dd") ) )
         {
-            logprint( "The following binary is required to run this tool\n" );
-            logprint( "\tdd\n");
-            logprint( "(This only required for loopback images, which you've selected)\n" );
+            logprint("The following binary is required to run this tool\n");
+            logprint("\tdd\n");
+            logprint(
+"(This only required for loopback images, which you've selected)\n" );
             exit 127;
         }
     }
     elsif ( defined( $CONFIG{'evms'} ) )
     {
+
         #
         # EVMS-specific binaries.
         #
         my @evms = qw ( evms echo );
 
-        foreach my $file ( @evms )
+        foreach my $file (@evms)
         {
-            if ( ! defined( findBinary( $file ) ) )
+            if ( !defined( findBinary($file) ) )
             {
-                logprint( "The following binary is required to run this tool\n");
-                logprint( "\t$file\n" );
-                logprint( "(This is only required for EVMS volumes, which you've selected)\n" );
+                logprint("The following binary is required to run this tool\n");
+                logprint("\t$file\n");
+                logprint(
+"(This is only required for EVMS volumes, which you've selected)\n" );
                 exit 127;
             }
         }
     }
     else
     {
+
         # LVM-specific binaries.
         my @lvm = qw ( lvcreate lvremove );
 
-        foreach my $file ( @lvm )
+        foreach my $file (@lvm)
         {
-            if ( !defined( findBinary( $file ) ) )
+            if ( !defined( findBinary($file) ) )
             {
-                logprint( "The following binary is required to run this tool\n");
-                logprint( "\t$file\n" );
-                logprint( "(This is only required for LVM volumes, which you've selected)\n" );
+                logprint("The following binary is required to run this tool\n");
+                logprint("\t$file\n");
+                logprint(
+"(This is only required for LVM volumes, which you've selected)\n" );
                 exit 127;
             }
         }
     }
 }
-
 
 
 
@@ -1969,8 +1995,8 @@ sub loadAndCheckPartitionsFile
     #     partitioning scheme.
     #
     my $test = "use Config::IniFiles";
-    eval( $test );
-    if ( $@ )
+    eval($test);
+    if ($@)
     {
         print <<EOF;
 
@@ -1997,48 +2023,59 @@ EOF
     my $foundroot = 0;
     while ( ( $name, $details ) = each %partitions )
     {
-        if ( ! ( $name =~ /^[a-zA-Z0-9-]+$/ ) )
+        if ( !( $name =~ /^[a-zA-Z0-9-]+$/ ) )
         {
-            logprint( "The partition name $name contains invalid characters.\n" );
-            logprint( "Only alphanumeric characters and the hyphen are allowed\n" );
+            logprint("The partition name $name contains invalid characters.\n");
+            logprint(
+                   "Only alphanumeric characters and the hyphen are allowed\n");
             exit 127;
         }
 
-        if ( ! ( $details->{'size'} =~ /^[0-9.]+[GgMmKk]b?$/ ) )
+        if ( !( $details->{'size'} =~ /^[0-9.]+[GgMmKk]b?$/ ) )
         {
-            logprint( "The size $details->{'size'} of partition $name contains is not recognized.\n" );
+            logprint(
+"The size $details->{'size'} of partition $name contains is not recognized.\n"
+            );
             exit 127;
         }
 
         if ( $details->{'type'} eq 'swap' )
         {
-            push( @PARTITIONS, { 'name'       => $name,
-                                 'size'       => $details->{'size'},
-                                 'type'       => 'swap',
-                                 'mountpoint' => '',
-                                 'options'    => '' } );
+            push(
+                  @PARTITIONS,
+                  {
+                   'name'       => $name,
+                   'size'       => $details->{'size'},
+                   'type'       => 'swap',
+                   'mountpoint' => '',
+                   'options'    => ''
+                  }
+            );
         }
         else
         {
-            if ( ! $CONFIG{ 'make_fs_' . $details->{'type'} } )
+            if ( !$CONFIG{'make_fs_' . $details->{'type'}} )
             {
-                logprint( "The type $details->{'type'} of partition $name is not recognized.\n" );
+                logprint(
+"The type $details->{'type'} of partition $name is not recognized.\n" );
                 exit 127;
             }
 
-            if ( ! ( $details->{'mountpoint'} =~ /^\/[^: \t\r\n]*$/ ) )
+            if ( !( $details->{'mountpoint'} =~ /^\/[^: \t\r\n]*$/ ) )
             {
-                logprint( "The mount point $details->{'mountpoint'} of partition $name is invalid.\n" );
+                logprint(
+"The mount point $details->{'mountpoint'} of partition $name is invalid.\n" );
                 exit 127;
             }
 
-            if ( ! ( $details->{'options'} =~ /^[^: \t\r\n]*$/ ) )
+            if ( !( $details->{'options'} =~ /^[^: \t\r\n]*$/ ) )
             {
-                logprint( "The mount options $details->{'options'} of partition $name are invalid.\n" );
+                logprint(
+"The mount options $details->{'options'} of partition $name are invalid.\n" );
                 exit 127;
             }
 
-            if ( ! $details->{'options'} )
+            if ( !$details->{'options'} )
             {
                 $details->{'options'} = 'defaults';
             }
@@ -2048,21 +2085,22 @@ EOF
                 $foundroot = 1;
             }
 
-            push( @PARTITIONS,
-                {
-                    'name'       => $name,
-                    'size'       => $details->{'size'},
-                    'type'       => $details->{'type'},
-                    'mountpoint' => $details->{'mountpoint'},
-                    'options'    => $details->{'options'}
-                }
+            push(
+                  @PARTITIONS,
+                  {
+                   'name'       => $name,
+                   'size'       => $details->{'size'},
+                   'type'       => $details->{'type'},
+                   'mountpoint' => $details->{'mountpoint'},
+                   'options'    => $details->{'options'}
+                  }
             );
         }
     }
 
-    if ( ! $foundroot )
+    if ( !$foundroot )
     {
-        logprint( "The root partition was not specified.\n" );
+        logprint("The root partition was not specified.\n");
         exit 127;
     }
 
@@ -2072,9 +2110,10 @@ EOF
     #  This makes it easy to mount parent folders first
     # (e.g. /var before /var/tmp)
     #
-    @PARTITIONS = sort { length $a->{'mountpoint'} cmp length $b->{'mountpoint'} } @PARTITIONS;
+    @PARTITIONS =
+      sort { length $a->{'mountpoint'} cmp length $b->{'mountpoint'} }
+      @PARTITIONS;
 }
-
 
 
 
@@ -2094,24 +2133,29 @@ sub populatePartitionsData
     #
     #  [swap]
     #
-    push( @PARTITIONS, { 'name'       => 'swap',
-                         'size'       => $CONFIG{'swap'},
-                         'type'       => 'swap',
-                         'mountpoint' => '',
-                         'options'    => '' } )
-      unless( $CONFIG{'noswap'} );
+    push(
+          @PARTITIONS,
+          {
+           'name'       => 'swap',
+           'size'       => $CONFIG{'swap'},
+           'type'       => 'swap',
+           'mountpoint' => '',
+           'options'    => ''
+          }
+    ) unless ( $CONFIG{'noswap'} );
 
     #
     #  read the default filesystem options from the configuration file.
     #
-    my $options = $CONFIG{$CONFIG{'fs'} . "_options" } ||undef;
+    my $options = $CONFIG{$CONFIG{'fs'} . "_options"} || undef;
 
     #
     #  If there weren't any options in the configuration file then
     # revert to our defaults.
     #
-    if (!defined($options))
+    if ( !defined($options) )
     {
+
         #
         #  XFS has different default options.
         #
@@ -2123,11 +2167,16 @@ sub populatePartitionsData
     #
     #  [root]
     #
-    push( @PARTITIONS, { 'name'       => 'disk',
-                         'size'       => $CONFIG{'size'},
-                         'type'       => $CONFIG{'fs'},
-                         'mountpoint' => '/',
-                         'options'    => $options } );
+    push(
+          @PARTITIONS,
+          {
+           'name'       => 'disk',
+           'size'       => $CONFIG{'size'},
+           'type'       => $CONFIG{'fs'},
+           'mountpoint' => '/',
+           'options'    => $options
+          }
+    );
 
 }
 
@@ -2147,15 +2196,16 @@ sub exportPartitionsToConfig
     $CONFIG{'NUMPARTITIONS'} = $#PARTITIONS + 1;
 
     my $i;
-    for ( $i = 0; $i < $CONFIG{'NUMPARTITIONS'}; $i++ )
+    for ( $i = 0 ; $i < $CONFIG{'NUMPARTITIONS'} ; $i++ )
     {
-        $CONFIG{'PARTITION' . ( $i + 1 )} = $PARTITIONS[$i]{'name'}       . ':' .
-                                            $PARTITIONS[$i]{'size'}       . ':' .
-                                            $PARTITIONS[$i]{'type'}       . ':' .
-                                            $PARTITIONS[$i]{'mountpoint'} . ':' .
-                                            $PARTITIONS[$i]{'options'}    . ':' .
-                                            $PARTITIONS[$i]{'imagetype'}  . ':' .
-                                            $PARTITIONS[$i]{'image'};
+        $CONFIG{'PARTITION' . ( $i + 1 )} =
+            $PARTITIONS[$i]{'name'} . ':'
+          . $PARTITIONS[$i]{'size'} . ':'
+          . $PARTITIONS[$i]{'type'} . ':'
+          . $PARTITIONS[$i]{'mountpoint'} . ':'
+          . $PARTITIONS[$i]{'options'} . ':'
+          . $PARTITIONS[$i]{'imagetype'} . ':'
+          . $PARTITIONS[$i]{'image'};
     }
 }
 
@@ -2171,61 +2221,67 @@ sub exportPartitionsToConfig
 
 sub showSummary
 {
+
     #
     # Show the user what to expect.
     #
-    logprint( "\nGeneral Information\n" );
-    logprint( "--------------------\n" );
-    logprint( "Hostname       :  $CONFIG{'hostname'}\n" );
-    logprint( "Distribution   :  $CONFIG{'dist'}\n" );
+    logprint("\nGeneral Information\n");
+    logprint("--------------------\n");
+    logprint("Hostname       :  $CONFIG{'hostname'}\n");
+    logprint("Distribution   :  $CONFIG{'dist'}\n");
 
     if ( defined $CONFIG{'image-dev'} )
     {
-        logprint( "Root Device    :  $CONFIG{'image-dev'}\n" );
+        logprint("Root Device    :  $CONFIG{'image-dev'}\n");
     }
     if ( defined $CONFIG{'swap-dev'} )
     {
-        logprint( "Swap Device    :  $CONFIG{'swap-dev'}\n" );
+        logprint("Swap Device    :  $CONFIG{'swap-dev'}\n");
     }
 
     my $info;
     my $partcount = 0;
 
-    logprint( "Partitions     :  " );
-    foreach my $partition ( @PARTITIONS )
+    logprint("Partitions     :  ");
+    foreach my $partition (@PARTITIONS)
     {
-        $info = sprintf('%-15s %-5s (%s)', ($partition->{'type'} ne 'swap') ? $partition->{'mountpoint'} : 'swap', $partition->{'size'}, $partition->{'type'});
+        $info = sprintf( '%-15s %-5s (%s)',
+                         ( $partition->{'type'} ne 'swap' )
+                         ? $partition->{'mountpoint'}
+                         : 'swap',
+                         $partition->{'size'},
+                         $partition->{'type'} );
 
-        if ($partcount++)
+        if ( $partcount++ )
         {
-            logprint( "                  $info\n" );
+            logprint("                  $info\n");
         }
         else
         {
-            logprint( "$info\n" );
+            logprint("$info\n");
         }
     }
 
-    logprint( "Image type     :  $CONFIG{'image'}\n" );
-    logprint( "Memory size    :  $CONFIG{'memory'}\n" );
+    logprint("Image type     :  $CONFIG{'image'}\n");
+    logprint("Memory size    :  $CONFIG{'memory'}\n");
 
     if ( defined( $CONFIG{'kernel'} ) && length( $CONFIG{'kernel'} ) )
     {
-        logprint( "Kernel path    :  $CONFIG{'kernel'}\n" );
+        logprint("Kernel path    :  $CONFIG{'kernel'}\n");
     }
 
     if ( defined( $CONFIG{'modules'} ) && length( $CONFIG{'modules'} ) )
     {
-        logprint( "Module path    :  $CONFIG{'modules'}\n" );
+        logprint("Module path    :  $CONFIG{'modules'}\n");
     }
 
     if ( defined( $CONFIG{'initrd'} ) && length( $CONFIG{'initrd'} ) )
     {
-        logprint( "Initrd path    :  $CONFIG{'initrd'}\n" );
+        logprint("Initrd path    :  $CONFIG{'initrd'}\n");
     }
 
-    logprint( "\nNetworking Information\n" );
-    logprint( "----------------------\n" );
+    logprint("\nNetworking Information\n");
+    logprint("----------------------\n");
 
     #
     # Show each IP address added.
@@ -2238,11 +2294,13 @@ sub showSummary
 
     if ( defined $ips )
     {
+
         #
         #  Scary magic.
         #
         if ( !UNIVERSAL::isa( $ips, "ARRAY" ) )
         {
+
             #
             #  If we're reading the value of "ip = xxx" from the configuration
             # file we'll have a single (scalar) value in $CONFIG{'ip'}.
@@ -2259,7 +2317,7 @@ sub showSummary
             #
             #  It works.   Even if it's nasty, (or if it is a clever hack!)
             #
-            $ips          = undef;
+            $ips = undef;
             push( @$ips, $CONFIG{'ip'} );
             $CONFIG{'ip'} = $ips;
         }
@@ -2268,15 +2326,16 @@ sub showSummary
 
     if ( defined $ips )
     {
+
         #
         #  Print out each network address, and if there is a mac address
         # associated with it then use it too.
         #
-        foreach my $i ( @$ips )
+        foreach my $i (@$ips)
         {
             my $m = undef;
 
-            if ( ( $count == 1 ) && ( defined( $mac ) ) )
+            if ( ( $count == 1 ) && ( defined($mac) ) )
             {
                 $m = $mac;
             }
@@ -2289,13 +2348,13 @@ sub showSummary
             #
             if ( $i =~ /auto/i )
             {
-                $CONFIG{'verbose'} &&
-                  logprint( "Automatically determining an IP." );
+                $CONFIG{'verbose'}
+                  && logprint("Automatically determining an IP.");
 
-                $i = findIP( $i );
-                if ( defined( $i ) )
+                $i = findIP($i);
+                if ( defined($i) )
                 {
-                    $CONFIG{'verbose'} && logprint( "Claimed $i\n" );
+                    $CONFIG{'verbose'} && logprint("Claimed $i\n");
                 }
                 else
                 {
@@ -2312,14 +2371,14 @@ EOF
             #
             #  Show the IP address.
             #
-            logprint( "IP Address $count   : $i" );
+            logprint("IP Address $count   : $i");
 
             #  Option MAC address.
-            if ( defined( $m ) )
+            if ( defined($m) )
             {
-                logprint( " [MAC: $m]" );
+                logprint(" [MAC: $m]");
             }
-            logprint( "\n" );
+            logprint("\n");
 
             $count += 1;
         }
@@ -2333,22 +2392,21 @@ EOF
     {
         if ( defined( $CONFIG{'mac'} ) )
         {
-            logprint( "IP Address     : DHCP [MAC: $CONFIG{'mac'}]\n" );
+            logprint("IP Address     : DHCP [MAC: $CONFIG{'mac'}]\n");
         }
         else
         {
-            logprint( "IP Address     : DHCP\n" );
+            logprint("IP Address     : DHCP\n");
         }
     }
 
-    $CONFIG{'netmask'}   && logprint( "Netmask        : $CONFIG{'netmask'}\n" );
-    $CONFIG{'broadcast'} && logprint( "Broadcast      : $CONFIG{'broadcast'}\n" );
-    $CONFIG{'gateway'}   && logprint( "Gateway        : $CONFIG{'gateway'}\n" );
-    $CONFIG{'p2p'}       && logprint( "Point to Point : $CONFIG{'p2p'}\n" );
+    $CONFIG{'netmask'}   && logprint("Netmask        : $CONFIG{'netmask'}\n");
+    $CONFIG{'broadcast'} && logprint("Broadcast      : $CONFIG{'broadcast'}\n");
+    $CONFIG{'gateway'}   && logprint("Gateway        : $CONFIG{'gateway'}\n");
+    $CONFIG{'p2p'}       && logprint("Point to Point : $CONFIG{'p2p'}\n");
     print "\n";
 
 }
-
 
 
 
@@ -2369,11 +2427,13 @@ sub testLoopbackModule
 
         if ( $modules !~ m/loop/ )
         {
-            logprint( "WARNING\n" );
-            logprint( "-------\n" );
-            logprint( "Loopback module not loaded and you're using loopback images\n" );
-            logprint( "Run the following to load the module:\n\n" );
-            logprint( "modprobe loop loop_max=255\n\n" );
+            logprint("WARNING\n");
+            logprint("-------\n");
+            logprint(
+                 "Loopback module not loaded and you're using loopback images\n"
+            );
+            logprint("Run the following to load the module:\n\n");
+            logprint("modprobe loop loop_max=255\n\n");
         }
     }
 }
@@ -2394,21 +2454,20 @@ sub testLoopbackModule
 
 sub createLoopbackImages
 {
+
     #
     #  Make sure we have the relevant output directory.
     #
     my $output = $CONFIG{'dir'} . "/domains/" . $CONFIG{'hostname'};
 
-    if ( ! -d $output )
+    if ( !-d $output )
     {
+
         #
         #  Catch errors with eval.
         #
-        eval
-        {
-            mkpath( $output, 0, 0755 );
-        };
-        if ( $@ )
+        eval { mkpath( $output, 0, 0755 ); };
+        if ($@)
         {
             die "Cannot create directory tree $output - $@";
         }
@@ -2418,16 +2477,21 @@ sub createLoopbackImages
     #
     # Only proceed overwritting if we have --force specified.
     #
-    if ( ! $CONFIG{'force'} )
+    if ( !$CONFIG{'force'} )
     {
-        foreach my $partition ( @PARTITIONS )
+        foreach my $partition (@PARTITIONS)
         {
-            my $disk = $CONFIG{'dir'} . '/domains/' . $CONFIG{'hostname'} . '/' . $partition->{'name'} . '.img';
+            my $disk =
+                $CONFIG{'dir'}
+              . '/domains/'
+              . $CONFIG{'hostname'} . '/'
+              . $partition->{'name'} . '.img';
 
             if ( -e $disk )
             {
-                logprint( "The partition image already exists.  Aborting.\n" );
-                logprint( "Specify '--force' to overwrite, or remove the following file\n" );
+                logprint("The partition image already exists.  Aborting.\n");
+                logprint(
+"Specify '--force' to overwrite, or remove the following file\n" );
                 logprint( $disk . "\n" );
                 exit 127;
             }
@@ -2435,9 +2499,13 @@ sub createLoopbackImages
     }
 
 
-    foreach my $partition ( @PARTITIONS )
+    foreach my $partition (@PARTITIONS)
     {
-        my $disk = $CONFIG{'dir'} . '/domains/' . $CONFIG{'hostname'} . '/' . $partition->{'name'} . '.img';
+        my $disk =
+            $CONFIG{'dir'}
+          . '/domains/'
+          . $CONFIG{'hostname'} . '/'
+          . $partition->{'name'} . '.img';
 
         #
         # Save the image path to the partitions array
@@ -2466,26 +2534,26 @@ sub createLoopbackImages
         #
         #  Use dd to create the partition image.
         #
-        logprint( "\nCreating partition image: $disk\n" );
+        logprint("\nCreating partition image: $disk\n");
         my $image_cmd;
         if ( $CONFIG{'image'} eq "sparse" )
         {
-            $CONFIG{'verbose'} && logprint( "Creating sparse image\n" );
+            $CONFIG{'verbose'} && logprint("Creating sparse image\n");
             $image_cmd = "dd if=/dev/zero of=$disk bs=$size count=0 seek=1024";
         }
         else
         {
-            $CONFIG{'verbose'} && logprint( "Creating full-sized image\n" );
+            $CONFIG{'verbose'} && logprint("Creating full-sized image\n");
             $image_cmd = "dd if=/dev/zero of=$disk bs=$size count=1024";
         }
 
-        runCommand( $image_cmd );
-        logprint( "Done\n" );
+        runCommand($image_cmd);
+        logprint("Done\n");
 
-        if ( ! -e $disk )
+        if ( !-e $disk )
         {
-            logprint( "The partition image creation failed to create $disk.\n" );
-            logprint( "aborting\n" );
+            logprint("The partition image creation failed to create $disk.\n");
+            logprint("aborting\n");
             exit 127;
         }
 
@@ -2494,7 +2562,7 @@ sub createLoopbackImages
         #
         if ( $partition->{'type'} eq 'swap' )
         {
-            createSwap( $disk );
+            createSwap($disk);
         }
         else
         {
@@ -2528,15 +2596,28 @@ sub usePhysicalDevice
     {
         $swap_img = $CONFIG{'swap-dev'};
 
-        if (! -e $swap_img )
+        if ( !-e $swap_img )
         {
-            logprint( "The physical device or logical volume for swap-dev $swap_img doesn't exist.  Aborting.\n" );
-            logprint( "NOTE: Please provide full path to your physical device or logical volume.\n" );
+            logprint(
+"The physical device or logical volume for swap-dev $swap_img doesn't exist.  Aborting.\n"
+            );
+            logprint(
+"NOTE: Please provide full path to your physical device or logical volume.\n" );
             exit 127;
         }
 
-        push( @PARTITIONS, { 'name' => 'swap', 'size' => '', 'type' => 'swap', 'mountpoint' => '', 'options' => '', 'imagetype' => 'phy:', 'image' => $swap_img } )
-          unless( $CONFIG{'noswap'} );
+        push(
+              @PARTITIONS,
+              {
+               'name'       => 'swap',
+               'size'       => '',
+               'type'       => 'swap',
+               'mountpoint' => '',
+               'options'    => '',
+               'imagetype'  => 'phy:',
+               'image'      => $swap_img
+              }
+        ) unless ( $CONFIG{'noswap'} );
     }
 
     my $options = 'errors=remount-ro';
@@ -2549,16 +2630,27 @@ sub usePhysicalDevice
     {
         $phys_img = $CONFIG{'image-dev'};
 
-        push( @PARTITIONS, { 'name' => 'disk', 'size' => '', 'type' => $CONFIG{'fs'}, 'mountpoint' => '/', 'options' => $options, 'imagetype' => 'phy:', 'image' => $phys_img } );
+        push(
+              @PARTITIONS,
+              {
+               'name'       => 'disk',
+               'size'       => '',
+               'type'       => $CONFIG{'fs'},
+               'mountpoint' => '/',
+               'options'    => $options,
+               'imagetype'  => 'phy:',
+               'image'      => $phys_img
+              }
+        );
     }
     else
     {
-        logprint( "No image-dev parameter given.  Aborting.\n" );
+        logprint("No image-dev parameter given.  Aborting.\n");
         exit 127;
     }
 
     createFilesystem( $phys_img, $CONFIG{'fs'} );
-    createSwap( $swap_img ) unless ( $CONFIG{'noswap'} );
+    createSwap($swap_img) unless ( $CONFIG{'noswap'} );
 }
 
 
@@ -2574,35 +2666,38 @@ sub usePhysicalDevice
 
 sub createLVMBits
 {
+
     #
     #  Check whether the disk volume exists already, and if so abort
     #  unless '--force' is specified.
     #
-    foreach my $partition ( @PARTITIONS )
+    foreach my $partition (@PARTITIONS)
     {
-        my $disk = $CONFIG{'hostname'} . '-' . $partition->{'name'};
+        my $disk     = $CONFIG{'hostname'} . '-' . $partition->{'name'};
         my $lvm_disk = "/dev/$CONFIG{'lvm'}/$disk";
 
         if ( -e $lvm_disk )
         {
+
             # Delete if forcing
             if ( $CONFIG{'force'} )
             {
-                logprint( "Removing $lvm_disk - since we're forcing the install\n" );
-                runCommand( "lvremove --force $lvm_disk" );
+                logprint(
+                      "Removing $lvm_disk - since we're forcing the install\n");
+                runCommand("lvremove --force $lvm_disk");
             }
             else
             {
-                logprint( "The LVM disk image already exists.  Aborting.\n" );
-                logprint( "Specify '--force' to delete and recreate\n" );
+                logprint("The LVM disk image already exists.  Aborting.\n");
+                logprint("Specify '--force' to delete and recreate\n");
                 exit 127;
             }
         }
     }
 
-    foreach my $partition ( @PARTITIONS )
+    foreach my $partition (@PARTITIONS)
     {
-        my $disk = $CONFIG{'hostname'} . '-' . $partition->{'name'};
+        my $disk     = $CONFIG{'hostname'} . '-' . $partition->{'name'};
         my $lvm_disk = "/dev/$CONFIG{'lvm'}/$disk";
 
         #
@@ -2614,20 +2709,23 @@ sub createLVMBits
         #
         # The commands to create the volume.
         #
-        my $disk_cmd = "lvcreate $CONFIG{'lvm'} -L $partition->{'size'} -n $disk";
+        my $disk_cmd =
+          "lvcreate $CONFIG{'lvm'} -L $partition->{'size'} -n $disk";
 
         #
         # Create the volume
         #
-        runCommand( $disk_cmd );
+        runCommand($disk_cmd);
 
         #
         # Make sure that worked.
         #
-        if ( ! -e $lvm_disk )
+        if ( !-e $lvm_disk )
         {
-            logprint( "The LVM partition image creation failed to create $lvm_disk.\n" );
-            logprint( "aborting\n" );
+            logprint(
+                "The LVM partition image creation failed to create $lvm_disk.\n"
+            );
+            logprint("aborting\n");
             exit 127;
         }
 
@@ -2636,7 +2734,7 @@ sub createLVMBits
         #
         if ( $partition->{'type'} eq 'swap' )
         {
-            createSwap( $lvm_disk );
+            createSwap($lvm_disk);
         }
         else
         {
@@ -2660,28 +2758,34 @@ sub createLVMBits
 
 sub createEVMSBits
 {
+
     #
     #  Check whether the disk volume exists already, and if so abort
     #  unless '--force' is specified.  This is two steps with evms,
     #  because two things need to be checked, the volume and the object.
     #
 
-    foreach my $partition ( @PARTITIONS )
+    foreach my $partition (@PARTITIONS)
     {
-        # Check whether the EVMS volume already exists, abort unless '--force' is specified.
-        my $evms_volume_disk = "/dev/evms/$CONFIG{'hostname'}-$partition->{'name'}";
+
+# Check whether the EVMS volume already exists, abort unless '--force' is specified.
+        my $evms_volume_disk =
+          "/dev/evms/$CONFIG{'hostname'}-$partition->{'name'}";
         if ( -e $evms_volume_disk )
         {
+
             # Delete if forcing
             if ( $CONFIG{'force'} )
             {
-                logprint( "Removing $evms_volume_disk - since we're forcing the install\n" );
-                runCommand( "echo Delete : $evms_volume_disk | evms" );
+                logprint(
+"Removing $evms_volume_disk - since we're forcing the install\n" );
+                runCommand("echo Delete : $evms_volume_disk | evms");
             }
             else
             {
-                logprint( "The EVMS volume $evms_volume_disk already exists.  Aborting.\n" );
-                logprint( "Specify '--force' to delete and recreate\n" );
+                logprint(
+"The EVMS volume $evms_volume_disk already exists.  Aborting.\n" );
+                logprint("Specify '--force' to delete and recreate\n");
                 exit 127;
             }
         }
@@ -2692,27 +2796,31 @@ sub createEVMSBits
         #
         # Note: $evms_object_disk is not specified directly as a device
         #
-        my $evms_object_disk = "$CONFIG{'evms'}/$CONFIG{'hostname'}-$partition->{'name'}";
+        my $evms_object_disk =
+          "$CONFIG{'evms'}/$CONFIG{'hostname'}-$partition->{'name'}";
         if ( -e $evms_object_disk )
         {
+
             # Delete if forcing
             if ( $CONFIG{'force'} )
             {
-                logprint( "Removing $evms_object_disk - since we're forcing the install\n" );
-                runCommand( "echo Delete : $evms_object_disk | evms" );
+                logprint(
+"Removing $evms_object_disk - since we're forcing the install\n" );
+                runCommand("echo Delete : $evms_object_disk | evms");
             }
             else
             {
-                logprint( "The EVMS object $evms_object_disk already exists.  Aborting.\n" );
-                logprint( "Specify '--force' to delete and recreate\n" );
+                logprint(
+"The EVMS object $evms_object_disk already exists.  Aborting.\n" );
+                logprint("Specify '--force' to delete and recreate\n");
                 exit 127;
             }
         }
     }
 
-    foreach my $partition ( @PARTITIONS )
+    foreach my $partition (@PARTITIONS)
     {
-        my $disk = $CONFIG{'hostname'} . '-' . $partition->{'name'};
+        my $disk      = $CONFIG{'hostname'} . '-' . $partition->{'name'};
         my $evms_disk = "/dev/evms/$disk";
 
         #
@@ -2744,25 +2852,27 @@ sub createEVMSBits
         #
         # create the object
         #
-        my $disk_cmd_object = "echo allocate : $CONFIG{'evms'}/Freespace, size=$CONFIG{'size'}, name=$disk | evms";
+        my $disk_cmd_object =
+"echo allocate : $CONFIG{'evms'}/Freespace, size=$CONFIG{'size'}, name=$disk | evms";
 
         #
         # these will be piped to evms, but gotta check it first
         #
-        my $disk_cmd_volume = "echo create : Volume, $CONFIG{'evms'}/$disk, name=$disk | evms";
+        my $disk_cmd_volume =
+          "echo create : Volume, $CONFIG{'evms'}/$disk, name=$disk | evms";
 
         #
         # Create the volumes
         #
-        runCommand( $disk_cmd_object );
-        runCommand( $disk_cmd_volume );
+        runCommand($disk_cmd_object);
+        runCommand($disk_cmd_volume);
 
         #
         #  Initialise the partition with the relevant filesystem.
         #
         if ( $partition->{'type'} eq 'swap' )
         {
-            createSwap( $disk_cmd_volume );
+            createSwap($disk_cmd_volume);
         }
         else
         {
@@ -2784,13 +2894,13 @@ sub createEVMSBits
 
 sub createFilesystem
 {
-    my( $image, $fs ) = ( @_ );
+    my ( $image, $fs ) = (@_);
 
     #
     #  We have the filesystem the user wanted, make sure that the
     # binary exists.
     #
-    my $command = $CONFIG{ "make_fs_" . $fs };
+    my $command = $CONFIG{"make_fs_" . $fs};
 
     #
     #  Split the command into "binary" + "args".  Make sure that
@@ -2798,30 +2908,32 @@ sub createFilesystem
     #
     if ( $command =~ /([^ ]+) (.*)$/ )
     {
-       my $binary = $1;
-       my $args   = $2;
+        my $binary = $1;
+        my $args   = $2;
 
-       if ( ! defined( findBinary( $binary ) ) )
-       {
-           logprint( "The binary '$binary' required to create the filesystem $fs is missing\n" );
-           exit 127;
-       }
+        if ( !defined( findBinary($binary) ) )
+        {
+            logprint(
+"The binary '$binary' required to create the filesystem $fs is missing\n" );
+            exit 127;
+        }
     }
     else
     {
-       logprint( "The filesystem creation hash is bogus for filesystem : $fs\n" );
-       exit 127;
+        logprint(
+                "The filesystem creation hash is bogus for filesystem : $fs\n");
+        exit 127;
     }
 
     #
     #  OK we have the command and the filesystem.  Create it.
     #
-    logprint( "\nCreating $fs filesystem on $image\n" );
+    logprint("\nCreating $fs filesystem on $image\n");
 
     $command .= $image;
 
-    runCommand( $command );
-    logprint( "Done\n" );
+    runCommand($command);
+    logprint("Done\n");
 }
 
 
@@ -2836,12 +2948,12 @@ sub createFilesystem
 
 sub createSwap
 {
-    my ( $path ) = ( @_ );
+    my ($path) = (@_);
 
-    logprint( "\nCreating swap on $path\n" );
+    logprint("\nCreating swap on $path\n");
 
-    runCommand( "mkswap $path" );
-    logprint( "Done\n" );
+    runCommand("mkswap $path");
+    logprint("Done\n");
 }
 
 
@@ -2857,12 +2969,13 @@ sub createSwap
 
 sub mountImage
 {
+
     #
     #  Create a temporary mount-point to use for the image/volume.
     #
     $MOUNT_POINT = tempdir( CLEANUP => 1 );
 
-    foreach my $partition ( @PARTITIONS )
+    foreach my $partition (@PARTITIONS)
     {
         if ( $partition->{'type'} ne 'swap' )
         {
@@ -2875,7 +2988,7 @@ sub mountImage
             #  Lookup the correct arguments to pass to mount.
             #
             my $mount_cmd;
-            my $mount_type = $CONFIG{'mount_fs_' . $partition->{'type'} };
+            my $mount_type = $CONFIG{'mount_fs_' . $partition->{'type'}};
 
             #
             #  LVM partition
@@ -2886,7 +2999,7 @@ sub mountImage
             }
             elsif ( $CONFIG{'evms'} )
             {
-               $mount_cmd = "mount $mount_type $image $mountpoint";
+                $mount_cmd = "mount $mount_type $image $mountpoint";
             }
             elsif ( $CONFIG{'image-dev'} )
             {
@@ -2896,7 +3009,7 @@ sub mountImage
             {
                 $mount_cmd = "mount $mount_type -o loop $image $mountpoint";
             }
-            runCommand( $mount_cmd );
+            runCommand($mount_cmd);
         }
     }
 
@@ -2916,6 +3029,7 @@ sub mountImage
 
 sub installSystem
 {
+
     #
     #  We might have a per-distro mirror.
     my $distMirror = "mirror_" . $CONFIG{'dist'};
@@ -2928,12 +3042,14 @@ sub installSystem
     #
     #  Basic command
     #
-    my $cmd = "xt-install-image --hostname=$CONFIG{'hostname'} --location=$MOUNT_POINT --dist=$CONFIG{'dist'} --install-method=$CONFIG{'install-method'}";
+    my $cmd =
+"xt-install-image --hostname=$CONFIG{'hostname'} --location=$MOUNT_POINT --dist=$CONFIG{'dist'} --install-method=$CONFIG{'install-method'}";
 
     #
     #  Add on the install source if required.
     #
-    $cmd .= " --install-source=$CONFIG{'install-source'}" if ( defined( $CONFIG{'install-source'} ) );
+    $cmd .= " --install-source=$CONFIG{'install-source'}"
+      if ( defined( $CONFIG{'install-source'} ) );
 
     #
     #  Do we have a per-image configuration file?
@@ -2971,24 +3087,24 @@ sub installSystem
     #
     #  Show the user what they are installing
     #
-    logprint( "Installation method: $CONFIG{'install-method'}\n" );
+    logprint("Installation method: $CONFIG{'install-method'}\n");
 
     #
     #  And where from, if relevant.
     #
-    if ( ( lc($CONFIG{'install-method'}) eq "copy" )         ||
-         ( lc($CONFIG{'install-method'}) eq "image-server" ) ||
-         ( lc($CONFIG{'install-method'}) eq "tar" ) )
+    if (    ( lc( $CONFIG{'install-method'} ) eq "copy" )
+         || ( lc( $CONFIG{'install-method'} ) eq "image-server" )
+         || ( lc( $CONFIG{'install-method'} ) eq "tar" ) )
     {
-        logprint( "(Source: $CONFIG{'install-source'})\n" );
+        logprint("(Source: $CONFIG{'install-source'})\n");
     }
 
 
     #
     #  Run the command.
     #
-    runCommand( $cmd );
-    logprint( "Done\n" );
+    runCommand($cmd);
+    logprint("Done\n");
 }
 
 
@@ -3008,6 +3124,7 @@ sub installSystem
 
 sub exportEnvironment
 {
+
     #
     #  Per-distribution mirror?
     #
@@ -3046,14 +3163,15 @@ sub exportEnvironment
 
 sub runCustomisationHooks
 {
+
     #
     #  Before running any scripts we'll mount /proc in the guest.
     #
     #  1.  Make sure there is a directory.
-    mkdir( $MOUNT_POINT . "/proc", 0755 ) if ( ! -d $MOUNT_POINT . "/proc" );
+    mkdir( $MOUNT_POINT . "/proc", 0755 ) if ( !-d $MOUNT_POINT . "/proc" );
 
     #  2.  Mount
-    runCommand( "mount -o bind /proc $MOUNT_POINT/proc" );
+    runCommand("mount -o bind /proc $MOUNT_POINT/proc");
 
     #
     # Now update the environment for each defined IP address.
@@ -3068,13 +3186,13 @@ sub runCustomisationHooks
     my $ips   = $CONFIG{'ip'};
     my $count = 1;
 
-    foreach my $i ( @$ips )
+    foreach my $i (@$ips)
     {
-        $ENV{'ip' . $count } = $i;
+        $ENV{'ip' . $count} = $i;
         $count += 1;
     }
 
-    $ENV{'ip_count'} = ($count - 1);
+    $ENV{'ip_count'} = ( $count - 1 );
 
 
     #
@@ -3082,8 +3200,8 @@ sub runCustomisationHooks
     #
     if ( $CONFIG{'verbose'} )
     {
-        logprint( "Customization Script Environment:\n" );
-        logprint( "---------------------------------\n" );
+        logprint("Customization Script Environment:\n");
+        logprint("---------------------------------\n");
         foreach my $key ( sort keys %ENV )
         {
             logprint( "\t'" . $key . "' = '" . $ENV{$key} . "'\n" );
@@ -3094,22 +3212,22 @@ sub runCustomisationHooks
     #
     #  Actually run the appropriate hooks
     #
-    my $customize = "xt-customize-image --dist=$CONFIG{'dist'} --location=$MOUNT_POINT";
+    my $customize =
+      "xt-customize-image --dist=$CONFIG{'dist'} --location=$MOUNT_POINT";
     if ( $CONFIG{'verbose'} )
     {
         $customize .= " --verbose";
     }
-    logprint( "\nRunning hooks\n" );
-    runCommand( $customize );
-    logprint( "Done\n" );
+    logprint("\nRunning hooks\n");
+    runCommand($customize);
+    logprint("Done\n");
 
     #
     #  Unmount /proc in the guest install.
     #
-    runCommand( "umount $MOUNT_POINT/proc" );
+    runCommand("umount $MOUNT_POINT/proc");
 
 }
-
 
 
 
@@ -3123,30 +3241,33 @@ sub runCustomisationHooks
 
 sub findIP
 {
+
     # Abort if we don't have the IP file.
-    return undef if ( ! -e $CONFIG{'ipfile'} );
+    return undef if ( !-e $CONFIG{'ipfile'} );
 
     #
     # Open and read the file.
     #
-    open( RANGE, "<", $CONFIG{'ipfile'} ) or die "Failed to read $CONFIG{'ipfile'} - $!";
+    open( RANGE, "<", $CONFIG{'ipfile'} )
+      or die "Failed to read $CONFIG{'ipfile'} - $!";
     my @lines = <RANGE>;
     my @updated;
-    close( RANGE );
+    close(RANGE);
 
     #
     #  Find an unclaimed line.
     #
     my $ip = undef;
-    foreach my $line ( @lines )
+    foreach my $line (@lines)
     {
+
         # skip empty lines.
-        next if ( !defined( $line ) );
-        next if ( !length( $line ) );
-        chomp( $line );
+        next if ( !defined($line) );
+        next if ( !length($line) );
+        chomp($line);
 
         # find an IP.
-        if ( ( !defined( $ip ) ) && ( $line =~ /^([0-9\.]+)$/ ) )
+        if ( ( !defined($ip) ) && ( $line =~ /^([0-9\.]+)$/ ) )
         {
             $ip   = $line;
             $line = $ip . ": used";
@@ -3158,18 +3279,19 @@ sub findIP
     #
     #  Now write out the new entries.
     #
-    open( RANGE, ">", $CONFIG{'ipfile'} ) or die "Failed to write to $CONFIG{'ipfile'} - $!";
+    open( RANGE, ">", $CONFIG{'ipfile'} )
+      or die "Failed to write to $CONFIG{'ipfile'} - $!";
     print RANGE join( "\n", @updated );
-    close( RANGE );
+    close(RANGE);
 
     #
     #  Sanity check - handle the old case where the format of the file
     # was different.
     #
-    if ( defined( $ip ) )
+    if ( defined($ip) )
     {
         my @tmp = split( /\./, $ip );
-        if ( scalar( @tmp )  < 3 )
+        if ( scalar(@tmp) < 3 )
         {
             print <<EOF;
 ERROR
@@ -3189,10 +3311,11 @@ EOF
             exit 127;
         }
     }
+
     #
     #  Return
     #
-    return( $ip );
+    return ($ip);
 }
 
 
@@ -3207,11 +3330,11 @@ EOF
 
 sub runRoleScripts
 {
-    my( $scripts ) = ( @_ );
+    my ($scripts) = (@_);
 
-    if ( !defined( $scripts ) )
+    if ( !defined($scripts) )
     {
-        logprint( "\nNo role scripts were specified.  Skipping\n" );
+        logprint("\nNo role scripts were specified.  Skipping\n");
         return;
     }
 
@@ -3221,15 +3344,16 @@ sub runRoleScripts
     #
     foreach my $name ( split( /,/, $scripts ) )
     {
+
         # ignore empty ones.
-        next if ( ( !defined( $name ) ) || ( !length( $name ) ) );
+        next if ( ( !defined($name) ) || ( !length($name) ) );
 
         # strip leading + triling space.
         $name =~ s/^\s+//;
         $name =~ s/\s+$//;
 
         # run the script
-        runRoleScript( $name );
+        runRoleScript($name);
     }
 }
 
@@ -3245,7 +3369,7 @@ sub runRoleScripts
 
 sub runRoleScript
 {
-    my( $role ) = ( @_ );
+    my ($role) = (@_);
 
     my $roleDir = $CONFIG{'roledir'};
 
@@ -3254,7 +3378,7 @@ sub runRoleScript
     # append.
     #
     my $args = '';
-    $args    = " " . $CONFIG{'role-args'} if ( $CONFIG{'role-args'} );
+    $args = " " . $CONFIG{'role-args'} if ( $CONFIG{'role-args'} );
 
     #
     #  The complete path to the role script
@@ -3263,14 +3387,14 @@ sub runRoleScript
 
     if ( -x $file )
     {
-        logprint( "\nRole: $role\n" );
-        logprint( "\tFile: $file\n" );
-        logprint( "\tArgs: $args\n" ) if ( length( $args ) );
+        logprint("\nRole: $role\n");
+        logprint("\tFile: $file\n");
+        logprint("\tArgs: $args\n") if ( length($args) );
     }
     else
     {
-        logprint( "\nRole script not executable : $file for role '$role'\n" );
-        logprint( "Ignoring\n" );
+        logprint("\nRole script not executable : $file for role '$role'\n");
+        logprint("Ignoring\n");
         return;
     }
 
@@ -3288,7 +3412,7 @@ sub runRoleScript
     #
     runCommand( $file . " " . $MOUNT_POINT . $args );
 
-    logprint( "Role script completed.\n" );
+    logprint("Role script completed.\n");
 }
 
 
@@ -3306,6 +3430,7 @@ sub runRoleScript
 
 sub runXenConfigCreation
 {
+
     #
     #  Configuration file we'll create
     #
@@ -3319,11 +3444,11 @@ sub runXenConfigCreation
     #
     if ( -e $file )
     {
-        unless( $CONFIG{'force'} )
+        unless ( $CONFIG{'force'} )
         {
-            logprint( "The Xen configuration file $file exists\n" );
-            logprint( "Specify --force to force overwriting it.\n" );
-            logprint( "Aborting\n" );
+            logprint("The Xen configuration file $file exists\n");
+            logprint("Specify --force to force overwriting it.\n");
+            logprint("Aborting\n");
             $FAIL = 1;
             exit 127;
         }
@@ -3337,8 +3462,8 @@ sub runXenConfigCreation
     #
     #  Add the template if specified
     #
-    if ( ( defined( $CONFIG{'template'} ) ) &&
-         ( -e $CONFIG{'template'} ) )
+    if (    ( defined( $CONFIG{'template'} ) )
+         && ( -e $CONFIG{'template'} ) )
     {
         $command .= " --template=" . $CONFIG{'template'};
     }
@@ -3351,9 +3476,9 @@ sub runXenConfigCreation
         $command .= " --admins=$CONFIG{'admins'}";
     }
 
-    logprint( "\nCreating Xen configuration file\n" );
-    runCommand( $command );
-    logprint( "Done\n" );
+    logprint("\nCreating Xen configuration file\n");
+    runCommand($command);
+    logprint("Done\n");
 }
 
 
@@ -3368,15 +3493,15 @@ sub runXenConfigCreation
 
 sub setupRootPassword
 {
-    logprint( "Setting up root password\n" );
+    logprint("Setting up root password\n");
 
     if ( -x $MOUNT_POINT . "/usr/bin/passwd" )
     {
-        system( "chroot $MOUNT_POINT /usr/bin/passwd" );
+        system("chroot $MOUNT_POINT /usr/bin/passwd");
     }
     else
     {
-        logprint( "'passwd' command not found in the new install.\n" );
+        logprint("'passwd' command not found in the new install.\n");
     }
 }
 
@@ -3392,7 +3517,7 @@ sub setupRootPassword
 
 sub logprint
 {
-    my ( $text ) = (@_);
+    my ($text) = (@_);
 
     print $text;
 
@@ -3404,7 +3529,7 @@ sub logprint
         open( LOGFILE, ">>", "/var/log/xen-tools/$CONFIG{'hostname'}.log" )
           or return;
         print LOGFILE $text;
-        close( LOGFILE );
+        close(LOGFILE);
     }
 }
 
@@ -3422,13 +3547,14 @@ sub logprint
 
 sub findBinary
 {
-    my( $bin ) = (@_);
+    my ($bin) = (@_);
 
     # strip any path which might be present.
-    $bin  = $2 if ( $bin  =~ /(.*)[\/\\](.*)/ );
+    $bin = $2 if ( $bin =~ /(.*)[\/\\](.*)/ );
 
     foreach my $entry ( split( /:/, $ENV{'PATH'} ) )
     {
+
         # guess of location.
         my $guess = $entry . "/" . $bin;
 
@@ -3455,12 +3581,12 @@ sub findBinary
 
 sub runCommand
 {
-    my ( $cmd ) = (@_ );
+    my ($cmd) = (@_);
 
     #
     #  Set a local if we don't have one.
     #
-    $ENV{'LC_ALL'} = "C" unless( $ENV{'LC_ALL'} );
+    $ENV{'LC_ALL'} = "C" unless ( $ENV{'LC_ALL'} );
 
     #
     #  Header.
@@ -3482,14 +3608,13 @@ sub runCommand
 
     if ( $? != 0 )
     {
-        logprint( "Running command '$cmd' failed.\n" );
-        logprint( "Aborting\n" );
+        logprint("Running command '$cmd' failed.\n");
+        logprint("Aborting\n");
         $FAIL = 1;
         exit 127;
     }
 
 }
-
 
 
 
@@ -3506,7 +3631,7 @@ sub runCommand
 
 sub unMountImage
 {
-    my ( $point ) = ( @_ );
+    my ($point) = (@_);
 
     #
     #  Open /proc/mount and get a list of currently mounted paths
@@ -3516,8 +3641,9 @@ sub unMountImage
 
     open( MOUNTED, "<", "/proc/mounts" )
       or die "Failed to open mount list";
-    foreach my $line (<MOUNTED> )
+    foreach my $line (<MOUNTED>)
     {
+
         #
         #  Split into the device and mountpoint.
         #
@@ -3528,7 +3654,7 @@ sub unMountImage
             push @points, $path;
         }
     }
-    close( MOUNTED );
+    close(MOUNTED);
 
     #
     #  Now we have a list of mounts.  We need to move the
@@ -3539,10 +3665,10 @@ sub unMountImage
     @points = sort @points;
     @points = reverse @points;
 
-    foreach my $path ( @points )
+    foreach my $path (@points)
     {
         $CONFIG{'verbose'} && print "Unmounting : $path\n";
-        runCommand( "umount $path" );
+        runCommand("umount $path");
     }
 
     $MOUNT_POINT = undef;
@@ -3560,12 +3686,13 @@ sub unMountImage
 
 sub END
 {
+
     #
     #  Unmount the image if it is still mounted.
     #
-    if ( defined( $MOUNT_POINT ) )
+    if ( defined($MOUNT_POINT) )
     {
-        unMountImage( $MOUNT_POINT );
+        unMountImage($MOUNT_POINT);
     }
 
     #
@@ -3575,9 +3702,9 @@ sub END
     # message is displayed - since this avoids it from being displayed
     # twice when --boot is used.
     #
-    if ( ( defined( $CONFIG{'hostname'} ) ) &&
-         ( -e "/var/log/xen-tools/$CONFIG{'hostname'}.log" ) &&
-         ( ! $CONFIG{'pid'} ) )
+    if (    ( defined( $CONFIG{'hostname'} ) )
+         && ( -e "/var/log/xen-tools/$CONFIG{'hostname'}.log" )
+         && ( !$CONFIG{'pid'} ) )
     {
         print "\n\nLogfile produced at:\n";
         print "\t /var/log/xen-tools/$CONFIG{'hostname'}.log\n";
@@ -3587,13 +3714,15 @@ sub END
     #  Did we fail?  If so then we should remove the broken installation,
     # unless "--keep" was specified.
     #
-    if ( $FAIL && ( ! $CONFIG{'keep'} ) )
+    if ( $FAIL && ( !$CONFIG{'keep'} ) )
     {
+
         #
         #  Run the command
         #
-        $CONFIG{'verbose'} && logprint( "Removing failed install: $CONFIG{'hostname'}\n" );
+        $CONFIG{'verbose'}
+          && logprint("Removing failed install: $CONFIG{'hostname'}\n");
 
-        system( "xen-delete-image --hostname=$CONFIG{'hostname'}" );
+        system("xen-delete-image --hostname=$CONFIG{'hostname'}");
     }
 }

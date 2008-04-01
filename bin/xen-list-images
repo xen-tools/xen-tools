@@ -109,7 +109,7 @@ my $RELEASE = '3.9';
 #
 #  Read the global configuration file if it exists.
 #
-readConfigurationFile( "/etc/xen-tools/xen-tools.conf" );
+readConfigurationFile("/etc/xen-tools/xen-tools.conf");
 
 
 #
@@ -129,11 +129,11 @@ my @instances = findXenInstances();
 #  Now process each instance.
 #
 my $count = 0;
-foreach my $instance ( @instances )
+foreach my $instance (@instances)
 {
-    if ( $count ) { print "\n"; }
+    if ($count) { print "\n"; }
 
-    displayInstance( $instance );
+    displayInstance($instance);
     $count += 1;
 }
 
@@ -155,18 +155,18 @@ exit;
 
 sub readConfigurationFile
 {
-    my ($file) = ( @_ );
+    my ($file) = (@_);
 
     # Don't read the file if it doesn't exist.
-    return if ( ! -e $file );
+    return if ( !-e $file );
 
     open( FILE, "<", $file ) or die "Cannot read file '$file' - $!";
 
 
-    while (defined(my $line = <FILE>) )
+    while ( defined( my $line = <FILE> ) )
     {
         chomp $line;
-        if ($line =~ s/\\$//)
+        if ( $line =~ s/\\$// )
         {
             $line .= <FILE>;
             redo unless eof(FILE);
@@ -176,7 +176,7 @@ sub readConfigurationFile
         next if ( $line =~ /^([ \t]*)\#/ );
 
         # Skip blank lines
-        next if ( length( $line ) < 1 );
+        next if ( length($line) < 1 );
 
         # Strip trailing comments.
         if ( $line =~ /(.*)\#(.*)/ )
@@ -199,6 +199,7 @@ sub readConfigurationFile
             # command expansion?
             if ( $val =~ /(.*)`([^`]+)`(.*)/ )
             {
+
                 # store
                 my $pre  = $1;
                 my $cmd  = $2;
@@ -206,19 +207,18 @@ sub readConfigurationFile
 
                 # get output
                 my $output = `$cmd`;
-                chomp( $output );
+                chomp($output);
 
                 # build up replacement.
                 $val = $pre . $output . $post;
             }
 
             # Store value.
-            $CONFIG{ $key } = $val;
+            $CONFIG{$key} = $val;
         }
     }
-    close( FILE );
+    close(FILE);
 }
-
 
 
 
@@ -234,24 +234,20 @@ sub parseCommandLineArguments
 {
     my $HELP    = 0;
     my $MANUAL  = 0;
-    my $VERSION        = 0;
+    my $VERSION = 0;
 
     #  Parse options.
     #
-    GetOptions(
-               "test=s",     \$CONFIG{'prefix'},
-               "help",       \$HELP,
-               "manual",     \$MANUAL,
-               "version",    \$VERSION
-             );
+    GetOptions( "test=s", \$CONFIG{'prefix'}, "help", \$HELP, "manual",
+                \$MANUAL, "version", \$VERSION );
 
     pod2usage(1) if $HELP;
-    pod2usage(-verbose => 2 ) if $MANUAL;
+    pod2usage( -verbose => 2 ) if $MANUAL;
 
 
-    if ( $VERSION )
+    if ($VERSION)
     {
-        my $REVISION      = '$Revision: 1.30 $';
+        my $REVISION = '$Revision: 1.30 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -282,7 +278,7 @@ sub findXenInstances
         push @found, $file if ( -e $file );
     }
 
-    return( @found );
+    return (@found);
 }
 
 
@@ -298,14 +294,14 @@ sub findXenInstances
 
 sub displayInstance
 {
-    my ( $file ) = ( @_ );
+    my ($file) = (@_);
 
     #
     #  Read each line.
     #
     open( FILY, "<", $file );
     my @LINES = <FILY>;
-    close( FILY );
+    close(FILY);
 
     #
     #  Is it dynamic?
@@ -316,7 +312,7 @@ sub displayInstance
     my $name = '';
     my $mem  = 0;
 
-    foreach my $line ( @LINES )
+    foreach my $line (@LINES)
     {
         if ( $line =~ /^\s*dhcp\s*=\s*"dhcp\"/i )
         {
@@ -342,7 +338,7 @@ sub displayInstance
 
     print "Name: $name\n";
     print "Memory: $mem\n";
-    print "IP: "  . $ip . $mac . "\n" if length( $ip );
+    print "IP: " . $ip . $mac . "\n" if length($ip);
     print "DHCP" . $mac . "\n" if $dhcp;
 }
 

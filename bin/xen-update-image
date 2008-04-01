@@ -128,7 +128,7 @@ my $RELEASE = '3.9';
 #
 if ( -e "/etc/xen-tools/xen-tools.conf" )
 {
-    readConfigurationFile( "/etc/xen-tools/xen-tools.conf" );
+    readConfigurationFile("/etc/xen-tools/xen-tools.conf");
 }
 
 
@@ -166,11 +166,11 @@ E_O_ROOT
 #
 #  Loop over the supplied arguments, and attempt to update each image.
 #
-while( my $name = shift )
+while ( my $name = shift )
 {
-    if ( !xenRunning( $name ) )
+    if ( !xenRunning($name) )
     {
-        updateXenImage( $name );
+        updateXenImage($name);
     }
     else
     {
@@ -196,7 +196,7 @@ exit;
 
 sub updateXenImage
 {
-    my ( $name ) = ( @_ );
+    my ($name) = (@_);
 
     #
     #  Create a temporary directory, and prepare to mount the
@@ -212,10 +212,11 @@ sub updateXenImage
     #
     if ( $CONFIG{'dir'} )
     {
-        # The loopback image.
-        $img =  $CONFIG{'dir'} . "/domains/" . $name . "/disk.img";
 
-        if ( ! -e $img )
+        # The loopback image.
+        $img = $CONFIG{'dir'} . "/domains/" . $name . "/disk.img";
+
+        if ( !-e $img )
         {
             print "Disk image '$img' for host '$name' not found\n";
             return;
@@ -225,11 +226,12 @@ sub updateXenImage
     }
     elsif ( $CONFIG{'lvm'} )
     {
+
         # The LVM volume
         $img = "/dev/" . $CONFIG{'lvm'} . "/$name-disk";
 
         # make sure it exists.
-        if ( ! -e $img )
+        if ( !-e $img )
         {
             print "Logical volume '$img' for host '$name' not found\n";
             return;
@@ -239,23 +241,24 @@ sub updateXenImage
     }
     elsif ( $CONFIG{'evms'} )
     {
-        # The EVMS volume  -- note, unlike LVM, you don't need the $CONFIG{'evms'}
-        # to see it and mount the volume. $CONFIG{'evms'} is only used for manipulating
-        # the underlying object.  Still, I don't want to mess with the parse code and
-        # make it confusing - otherwise --evms takes an argument everywhere but here,
-        # which will confuse users.  The better solution is to make it so that --evms can
-        # take a following container, but doesn't require it.  For the moment, it is
-        # better to leave it as it is, take a container, and then ignore it.
 
-        # The best way to do it is to just read it out of the configuration file,
-        # tell the user what you got and where you got it from, and not bother the user
-        # with picking --dir or --lvm or --evms at all, but infer it from the config
-        # file's disk = parameter.  xen-delete-image might work the same way, but
-        # it could be *slightly* more dangerous in the context of deleting.
+# The EVMS volume  -- note, unlike LVM, you don't need the $CONFIG{'evms'}
+# to see it and mount the volume. $CONFIG{'evms'} is only used for manipulating
+# the underlying object.  Still, I don't want to mess with the parse code and
+# make it confusing - otherwise --evms takes an argument everywhere but here,
+# which will confuse users.  The better solution is to make it so that --evms can
+# take a following container, but doesn't require it.  For the moment, it is
+# better to leave it as it is, take a container, and then ignore it.
+
+ # The best way to do it is to just read it out of the configuration file,
+ # tell the user what you got and where you got it from, and not bother the user
+ # with picking --dir or --lvm or --evms at all, but infer it from the config
+ # file's disk = parameter.  xen-delete-image might work the same way, but
+ # it could be *slightly* more dangerous in the context of deleting.
         $img = "/dev/evms/$name-disk";
 
         # make sure it exists.
-        if ( ! -e $img )
+        if ( !-e $img )
         {
             print "EVMS volume '$img' for host '$name' not found\n";
             return;
@@ -276,23 +279,26 @@ sub updateXenImage
     #
     #  Make sure this is a Debian image.
     #
-    if ( ( -e $tmp . "/usr/bin/apt-get" ) &&
-         ( -x $tmp . "/usr/bin/apt-get" ) )
+    if (    ( -e $tmp . "/usr/bin/apt-get" )
+         && ( -x $tmp . "/usr/bin/apt-get" ) )
     {
-       #
-       #  Now run the update command.
-       #
-       system( "chroot $tmp /usr/bin/apt-get update" );
+
+        #
+        #  Now run the update command.
+        #
+        system("chroot $tmp /usr/bin/apt-get update");
 
 
-       #
-       #  Now upgrade
-       #
-       system( "DEBIAN_FRONTEND=noninteractive  chroot $tmp /usr/bin/apt-get upgrade --yes --force-yes" );
+        #
+        #  Now upgrade
+        #
+        system(
+"DEBIAN_FRONTEND=noninteractive  chroot $tmp /usr/bin/apt-get upgrade --yes --force-yes"
+        );
     }
     else
     {
-       print "Xen image $name is not a Debian GNU/Linux image.  Skipping\n";
+        print "Xen image $name is not a Debian GNU/Linux image.  Skipping\n";
     }
 
 
@@ -306,8 +312,6 @@ sub updateXenImage
 
 
 
-
-
 =begin doc
 
   Test to see if the given instance is running.
@@ -318,22 +322,21 @@ sub updateXenImage
 
 sub xenRunning
 {
-    my( $hostname ) =  (@_ );
+    my ($hostname) = (@_);
 
     my $running = 0;
 
-    open( CMD, "xm list 2>/dev/null |")
+    open( CMD, "xm list 2>/dev/null |" )
       or die "Failed to run 'xm list $hostname'";
-    while( <CMD> )
+    while (<CMD>)
     {
         my $line = $_;
-        $running = 1 if ( $line =~ /\Q$hostname\E/ )
+        $running = 1 if ( $line =~ /\Q$hostname\E/ );
     }
-    close( CMD );
+    close(CMD);
 
-    return( $running );
+    return ($running);
 }
-
 
 
 
@@ -347,16 +350,16 @@ sub xenRunning
 
 sub readConfigurationFile
 {
-    my ($file) = ( @_ );
+    my ($file) = (@_);
 
     open( FILE, "<", $file ) or die "Cannot read file '$file' - $!";
 
-    my $line       = "";
+    my $line = "";
 
-    while (defined($line = <FILE>) )
+    while ( defined( $line = <FILE> ) )
     {
         chomp $line;
-        if ($line =~ s/\\$//)
+        if ( $line =~ s/\\$// )
         {
             $line .= <FILE>;
             redo unless eof(FILE);
@@ -366,7 +369,7 @@ sub readConfigurationFile
         next if ( $line =~ /^([ \t]*)\#/ );
 
         # Skip blank lines
-        next if ( length( $line ) < 1 );
+        next if ( length($line) < 1 );
 
         # Strip trailing comments.
         if ( $line =~ /(.*)\#(.*)/ )
@@ -389,6 +392,7 @@ sub readConfigurationFile
             # command expansion?
             if ( $val =~ /(.*)`([^`]+)`(.*)/ )
             {
+
                 # store
                 my $pre  = $1;
                 my $cmd  = $2;
@@ -396,20 +400,19 @@ sub readConfigurationFile
 
                 # get output
                 my $output = `$cmd`;
-                chomp( $output );
+                chomp($output);
 
                 # build up replacement.
                 $val = $pre . $output . $post;
             }
 
             # Store value.
-            $CONFIG{ $key } = $val;
+            $CONFIG{$key} = $val;
         }
     }
 
-    close( FILE );
+    close(FILE);
 }
-
 
 
 
@@ -430,20 +433,17 @@ sub parseCommandLineArguments
     #  Parse options.
     #
     GetOptions(
-              "dir=s",      \$CONFIG{'dir'},
-              "lvm=s",      \$CONFIG{'lvm'},
-              "evms=s",     \$CONFIG{'evms'},
-              "help",       \$HELP,
-              "manual",     \$MANUAL,
-              "version",    \$VERSION
-             );
+                "dir=s",  \$CONFIG{'dir'},  "lvm=s",   \$CONFIG{'lvm'},
+                "evms=s", \$CONFIG{'evms'}, "help",    \$HELP,
+                "manual", \$MANUAL,         "version", \$VERSION
+    );
 
     pod2usage(1) if $HELP;
-    pod2usage(-verbose => 2 ) if $MANUAL;
+    pod2usage( -verbose => 2 ) if $MANUAL;
 
-    if ( $VERSION )
+    if ($VERSION)
     {
-        my $REVISION      = '$Revision: 1.29 $';
+        my $REVISION = '$Revision: 1.29 $';
 
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
@@ -468,11 +468,12 @@ sub parseCommandLineArguments
 
 sub checkArguments
 {
+
     #
     #  Make sure we got one and only one installation method.
     #
     my $count = 0;
-    foreach my $type ( qw/dir lvm evms/ )
+    foreach my $type (qw/dir lvm evms/)
     {
         $count += 1 if defined( $CONFIG{$type} );
     }
@@ -483,10 +484,10 @@ sub checkArguments
     #
     if ( $count != 1 )
     {
-       print "Please select one and only one of the installation methods:\n";
-       print " --dir\n";
-       print " --evms\n";
-       print " --lvm\n";
-       exit;
+        print "Please select one and only one of the installation methods:\n";
+        print " --dir\n";
+        print " --evms\n";
+        print " --lvm\n";
+        exit;
     }
 }

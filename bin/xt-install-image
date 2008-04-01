@@ -127,50 +127,41 @@ my $RELEASE = '3.9';
 #  needDirectory Defined if we need an install-source directory specified.
 #
 #
-my %dispatch =
-  (
-   "copy" =>
-     {
-               sub    => \&do_copy,
-        needBinary    => "/bin/cp",
-        needDirectory => 1,
-     },
-   "debootstrap" =>
-     {
-               sub => \&do_debootstrap,
-        needBinary => "/usr/sbin/debootstrap",
-     },
-   "image-server" =>
-     {
-               sub => \&do_image_server,
-           needURL => 1,
-     },
-   "rinse" =>
-     {
-               sub => \&do_rinse,
-        needBinary => "/usr/bin/rinse",
-     },
-   "rpmstrap" =>
-     {
-               sub => \&do_rpmstrap,
-        needBinary => "/usr/bin/rpmstrap",
-     },
-   "tar" =>
-     {
-               sub => \&do_tar,
-        needBinary => "/bin/tar",
-          needFile => 1,
-     }
+my %dispatch = (
+                 "copy" => {
+                            sub           => \&do_copy,
+                            needBinary    => "/bin/cp",
+                            needDirectory => 1,
+                 },
+                 "debootstrap" => {
+                                   sub        => \&do_debootstrap,
+                                   needBinary => "/usr/sbin/debootstrap",
+                 },
+                 "image-server" => {
+                                    sub     => \&do_image_server,
+                                    needURL => 1,
+                 },
+                 "rinse" => {
+                             sub        => \&do_rinse,
+                             needBinary => "/usr/bin/rinse",
+                 },
+                 "rpmstrap" => {
+                                sub        => \&do_rpmstrap,
+                                needBinary => "/usr/bin/rpmstrap",
+                 },
+                 "tar" => {
+                           sub        => \&do_tar,
+                           needBinary => "/bin/tar",
+                           needFile   => 1,
+                 }
 );
-
-
 
 
 
 #
 #  Read the global configuration file.
 #
-readConfigurationFile( "/etc/xen-tools/xen-tools.conf" );
+readConfigurationFile("/etc/xen-tools/xen-tools.conf");
 
 
 #
@@ -193,7 +184,7 @@ if ( $CONFIG{'config'} )
     }
 
     # Read the file, if it exists.
-    readConfigurationFile( $path ) if ( -e $path );
+    readConfigurationFile($path) if ( -e $path );
 }
 
 
@@ -206,59 +197,65 @@ checkArguments();
 #
 #  Now lookup our installation type and dispatch control to it.
 #
-if ( defined( $CONFIG{'install-method'} ) &&
-      length( $CONFIG{'install-method'} ) )
+if ( defined( $CONFIG{'install-method'} )
+     && length( $CONFIG{'install-method'} ) )
 {
 
     #
     #  Get the entry from the dispatch table.
     #
-    my $installer = $dispatch{ lc($CONFIG{'install-method'}) };
+    my $installer = $dispatch{lc( $CONFIG{'install-method'} )};
 
-    if ( defined( $installer ) )
+    if ( defined($installer) )
     {
+
         #
         #  If we found it.
         #
 
         # Do we need to test for a binary.
-        if  ( ( $installer->{'needBinary'} ) &&
-              ( ! -x $installer->{'needBinary'} ) )
+        if (    ( $installer->{'needBinary'} )
+             && ( !-x $installer->{'needBinary'} ) )
         {
-            print "The following required binary for the installation was not found\n";
+            print
+"The following required binary for the installation was not found\n";
             print "\t" . $installer->{'needBinary'} . "\n";
             exit 1;
         }
 
         # Do we need a directory specified as the installation source?
-        if ( ( $installer->{'needDirectory'} ) &&
-             ( ! $CONFIG{'install-source'} || ! -d $CONFIG{'install-source'} ) )
+        if (   ( $installer->{'needDirectory'} )
+            && ( !$CONFIG{'install-source'} || !-d $CONFIG{'install-source'} ) )
         {
             print "Please specify the source directory with --install-source\n";
             if ( $CONFIG{'install-source'} )
             {
-                print "The specified directory $CONFIG{'install-source'} does not exist.\n";
+                print
+"The specified directory $CONFIG{'install-source'} does not exist.\n";
             }
             exit 1;
         }
 
         # Do we need a file specified as the installation source?
-        if ( ( $installer->{'needFile'} ) &&
-             ( ! $CONFIG{'install-source'} || ! -e $CONFIG{'install-source'} ) )
+        if (   ( $installer->{'needFile'} )
+            && ( !$CONFIG{'install-source'} || !-e $CONFIG{'install-source'} ) )
         {
             print "Please specify the source file with --install-source\n";
 
             if ( $CONFIG{'install-source'} )
             {
-                print "The specified file $CONFIG{'install-source'} does not exist.\n";
+                print
+"The specified file $CONFIG{'install-source'} does not exist.\n";
             }
             exit 1;
         }
 
         # Do we need an URL specified as the installation source?
-        if ( ( $installer->{'needURL'} ) &&
-             ( ! $CONFIG{'install-source'} ||
-               ( $CONFIG{'install-source'} !~ /^http/i ) ) )
+        if (
+             ( $installer->{'needURL'} )
+             && ( !$CONFIG{'install-source'}
+                  || ( $CONFIG{'install-source'} !~ /^http/i ) )
+          )
         {
             print "Please specify the image server URL with --install-source\n";
             exit 1;
@@ -276,9 +273,9 @@ if ( defined( $CONFIG{'install-method'} ) &&
         #
         #  Test that we have some "standard" files present.
         #
-        foreach my $file ( qw( /bin/ls /bin/cp ) )
+        foreach my $file (qw( /bin/ls /bin/cp ))
         {
-            if ( ! -x $CONFIG{'location'} . $file )
+            if ( !-x $CONFIG{'location'} . $file )
             {
                 print "The installation of the new system has failed.\n";
                 print "\n";
@@ -306,10 +303,6 @@ else
 
 
 
-
-
-
-
 =begin doc
 
   Read the specified configuration file, and update our global configuration
@@ -321,20 +314,20 @@ else
 
 sub readConfigurationFile
 {
-    my ($file) = ( @_ );
+    my ($file) = (@_);
 
     # Don't read the file if it doesn't exist.
-    return if ( ! -e $file );
+    return if ( !-e $file );
 
 
     my $line = "";
 
     open( FILE, "<", $file ) or die "Cannot read file '$file' - $!";
 
-    while (defined($line = <FILE>) )
+    while ( defined( $line = <FILE> ) )
     {
         chomp $line;
-        if ($line =~ s/\\$//)
+        if ( $line =~ s/\\$// )
         {
             $line .= <FILE>;
             redo unless eof(FILE);
@@ -344,7 +337,7 @@ sub readConfigurationFile
         next if ( $line =~ /^([ \t]*)\#/ );
 
         # Skip blank lines
-        next if ( length( $line ) < 1 );
+        next if ( length($line) < 1 );
 
         # Strip trailing comments.
         if ( $line =~ /(.*)\#(.*)/ )
@@ -367,6 +360,7 @@ sub readConfigurationFile
             # command expansion?
             if ( $val =~ /(.*)`([^`]+)`(.*)/ )
             {
+
                 # store
                 my $pre  = $1;
                 my $cmd  = $2;
@@ -374,18 +368,18 @@ sub readConfigurationFile
 
                 # get output
                 my $output = `$cmd`;
-                chomp( $output );
+                chomp($output);
 
                 # build up replacement.
                 $val = $pre . $output . $post;
             }
 
             # Store value.
-            $CONFIG{ $key } = $val;
+            $CONFIG{$key} = $val;
         }
     }
 
-    close( FILE );
+    close(FILE);
 }
 
 
@@ -408,35 +402,36 @@ sub parseCommandLineArguments
     #  Parse options.
     #
     GetOptions(
-               # Mandatory
-               "location=s",     \$CONFIG{'location'},
-               "dist=s",         \$CONFIG{'dist'},
-               "hostname=s",     \$CONFIG{'hostname'},
 
-               # Installation method
-               "install-method=s",  \$CONFIG{'install-method'},
-               "install-source=s",  \$CONFIG{'install-source'},
+        # Mandatory
+        "location=s", \$CONFIG{'location'},
+        "dist=s",     \$CONFIG{'dist'},
+        "hostname=s", \$CONFIG{'hostname'},
 
-               # Misc
-               "arch=s",         \$CONFIG{'arch'},
-               "cache=s",        \$CONFIG{'cache'},
-               "config=s",       \$CONFIG{'config'},
-               "mirror=s",       \$CONFIG{'mirror'},
+        # Installation method
+        "install-method=s", \$CONFIG{'install-method'},
+        "install-source=s", \$CONFIG{'install-source'},
 
-               # Help.
-               "verbose",        \$CONFIG{'verbose'},
-               "help",           \$HELP,
-               "manual",         \$MANUAL,
-               "version",        \$VERSION
-             );
+        # Misc
+        "arch=s",   \$CONFIG{'arch'},
+        "cache=s",  \$CONFIG{'cache'},
+        "config=s", \$CONFIG{'config'},
+        "mirror=s", \$CONFIG{'mirror'},
+
+        # Help.
+        "verbose", \$CONFIG{'verbose'},
+        "help",    \$HELP,
+        "manual",  \$MANUAL,
+        "version", \$VERSION
+    );
 
     pod2usage(1) if $HELP;
-    pod2usage(-verbose => 2 ) if $MANUAL;
+    pod2usage( -verbose => 2 ) if $MANUAL;
 
 
-    if ( $VERSION )
+    if ($VERSION)
     {
-        my $REVISION      = '$Revision: 1.65 $';
+        my $REVISION = '$Revision: 1.65 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
@@ -459,10 +454,11 @@ sub parseCommandLineArguments
 
 sub checkArguments
 {
+
     #
     #  We require a location.
     #
-    if ( ! defined( $CONFIG{'location'} ) )
+    if ( !defined( $CONFIG{'location'} ) )
     {
         print "The '--location' argument is mandatory\n";
         exit 1;
@@ -472,7 +468,7 @@ sub checkArguments
     #
     #  Test that the location we've been given exists
     #
-    if ( ! -d $CONFIG{'location'} )
+    if ( !-d $CONFIG{'location'} )
     {
         print "The installation directory we've been given doesn't exist\n";
         print "We tried to use : $CONFIG{'location'}\n";
@@ -483,7 +479,7 @@ sub checkArguments
     #
     #  We require a distribution name.
     #
-    if ( ! defined( $CONFIG{'dist'} ) )
+    if ( !defined( $CONFIG{'dist'} ) )
     {
         print "The '--dist' argument is mandatory\n";
         exit 1;
@@ -497,9 +493,9 @@ sub checkArguments
     #  If there are no scripts then we clearly cannot
     # customise it!
     #
-    my $dir = "/usr/lib/xen-tools/"  . $CONFIG{'dist'} .  ".d";
+    my $dir = "/usr/lib/xen-tools/" . $CONFIG{'dist'} . ".d";
 
-    if ( ! -d $dir )
+    if ( !-d $dir )
     {
         print <<E_OR;
 
@@ -524,7 +520,8 @@ E_OR
     {
         foreach my $recognised ( keys %dispatch )
         {
-            $valid = 1 if ( lc($CONFIG{'install-method'}) eq lc($recognised) );
+            $valid = 1
+              if ( lc( $CONFIG{'install-method'} ) eq lc($recognised) );
         }
     }
     else
@@ -552,7 +549,6 @@ EOF
 
 
 
-
 =begin doc
 
   A utility method to run a system command.  We will capture the return
@@ -566,7 +562,7 @@ EOF
 
 sub runCommand
 {
-    my ( $cmd ) = (@_ );
+    my ($cmd) = (@_);
 
     #
     #  Command start.
@@ -595,9 +591,8 @@ sub runCommand
     #
     $CONFIG{'verbose'} && print "Finished : $cmd\n";
 
-    return( $output );
+    return ($output);
 }
-
 
 
 
@@ -613,7 +608,7 @@ sub runCommand
 
 sub copyDebFiles
 {
-    my ( $source, $dest ) = ( @_ );
+    my ( $source, $dest ) = (@_);
 
     print "Copying files from $source -> $dest\n";
 
@@ -631,7 +626,7 @@ sub copyDebFiles
         #
         #  Only copy if the file doesn't already exist.
         #
-        if ( ! ( -e $dest . "/" . $name ) )
+        if ( !( -e $dest . "/" . $name ) )
         {
             File::Copy::cp( $file, $dest );
         }
@@ -642,14 +637,11 @@ sub copyDebFiles
 
 
 
-
-
 ###
 #
 #  Installation functions follow.
 #
 ###
-
 
 
 
@@ -663,14 +655,15 @@ sub copyDebFiles
 
 sub do_copy
 {
+
     #
     #  Find the copy command to run from the configuration file.
     #
-    my $cmd = $CONFIG{'copy-cmd'} ;
-    if ( !defined( $cmd ) )
+    my $cmd = $CONFIG{'copy-cmd'};
+    if ( !defined($cmd) )
     {
         print "Falling back to default copy command\n";
-        $cmd = '/bin/cp -a $src/* $dest';   # Note: single quotes.
+        $cmd = '/bin/cp -a $src/* $dest';    # Note: single quotes.
     }
 
     #
@@ -682,9 +675,8 @@ sub do_copy
     #
     #  Run the copy command.
     #
-    runCommand( $cmd );
+    runCommand($cmd);
 }
-
 
 
 
@@ -698,12 +690,13 @@ sub do_copy
 
 sub do_debootstrap
 {
+
     #
     #  The command is a little configurable - mostly to allow you
     # to use cdebootstrap.
     #
-    my $cmd = $CONFIG{'debootstrap-cmd'} ;
-    if ( !defined( $cmd ) )
+    my $cmd = $CONFIG{'debootstrap-cmd'};
+    if ( !defined($cmd) )
     {
         print "Falling back to default debootstrap command\n";
         $cmd = '/usr/sbin/debootstrap';
@@ -717,9 +710,10 @@ sub do_debootstrap
     if ( $CONFIG{'cache'} eq "yes" )
     {
         print "\nCopying files from host to image.\n";
-        runCommand( "mkdir -p $CONFIG{'location'}/var/cache/apt/archives" );
-        copyDebFiles( "/var/cache/apt/archives", "$CONFIG{'location'}/var/cache/apt/archives" );
-        print( "Done\n" );
+        runCommand("mkdir -p $CONFIG{'location'}/var/cache/apt/archives");
+        copyDebFiles( "/var/cache/apt/archives",
+                      "$CONFIG{'location'}/var/cache/apt/archives" );
+        print("Done\n");
     }
 
     #
@@ -736,19 +730,20 @@ sub do_debootstrap
     #
     if ( $CONFIG{'arch'} )
     {
-        $EXTRA .= " --arch $CONFIG{'arch'}"
+        $EXTRA .= " --arch $CONFIG{'arch'}";
     }
 
 
     #
     #  This is the command we'll run
     #
-    my $command = "$cmd $EXTRA $CONFIG{'dist'} $CONFIG{'location'} $CONFIG{'mirror'}";
+    my $command =
+      "$cmd $EXTRA $CONFIG{'dist'} $CONFIG{'location'} $CONFIG{'mirror'}";
 
     #
     #  Run the command.
     #
-    runCommand( $command );
+    runCommand($command);
 
 
     #
@@ -760,12 +755,11 @@ sub do_debootstrap
         print "\nCopying files from new installation to host.\n";
         copyDebFiles( "$CONFIG{'location'}/var/cache/apt/archives",
                       "/var/cache/apt/archives" );
-        print( "Done\n" );
+        print("Done\n");
     }
 
 
 }
-
 
 
 
@@ -781,6 +775,7 @@ sub do_debootstrap
 
 sub do_image_server
 {
+
     #
     #  Load the modules we require.
     #
@@ -793,8 +788,8 @@ sub do_image_server
     # which users will not require for the typical installation
     # method(s).
     #
-    eval( $test );
-    if ( $@ )
+    eval($test);
+    if ($@)
     {
         die "The module LDP::UserAgent wasn't found...\n";
     }
@@ -818,15 +813,16 @@ sub do_image_server
     #
     $request .= "&arch=amd64";
     $request .= "&root_device=/dev/sda";
-    $request .= "&ip1="      . $ENV{'ip1'};
-    $request .= "&dist="     . CGI::escapeHTML( $CONFIG{'dist'} );
+    $request .= "&ip1=" . $ENV{'ip1'};
+    $request .= "&dist=" . CGI::escapeHTML( $CONFIG{'dist'} );
     $request .= "&hostname=" . CGI::escapeHTML( $CONFIG{'hostname'} );
 
     #
     #  We only care about some keys
     #
-    foreach my $k ( qw/ dhcp broadcast gateway netmask  / )
+    foreach my $k (qw/ dhcp broadcast gateway netmask  /)
     {
+
         # Skip values which aren't defined.
         next unless defined $ENV{$k};
 
@@ -848,8 +844,8 @@ sub do_image_server
     #
     #  Do the creation step
     #
-    my $response = $ua->get( $request );
-    if ($response->is_success)
+    my $response = $ua->get($request);
+    if ( $response->is_success )
     {
         my $content = $response->content;
 
@@ -857,67 +853,71 @@ sub do_image_server
         {
             my $session = $1;
             my $new     = $CONFIG{'install-source'};
-            $new       .= "/fetch.cgi?session=$session";
+            $new .= "/fetch.cgi?session=$session";
             my $attempt = 1;
 
             # Make sure we don't wait indefinitely.
-            while( $attempt < $attempts )
+            while ( $attempt < $attempts )
             {
                 $CONFIG{'verbose'} && print "Request: [$attempt/$attempts]\n";
 
                 #
                 #  Make a request to see if our tar file is ready yet.
                 #
-                $response = $ua->head( $new );
+                $response = $ua->head($new);
                 if ( $response->is_success )
                 {
 
                     #
                     #  Get the headers
                     #
-                    my $header  = $response->headers();
-                    my $type    = $header->{'content-type'};
+                    my $header = $response->headers();
+                    my $type   = $header->{'content-type'};
 
                     #
                     # OK our file is correct.
                     #
                     if ( $type =~ /tar/ )
                     {
+
                         #
                         #  Download it to the installation root.
                         #
                         $ua->get( $new,
-                                  ":content_file" => $CONFIG{'location'} . "/$session.tar"
-                                );
+                                      ":content_file" => $CONFIG{'location'}
+                                    . "/$session.tar" );
 
                         #
                         #  If it worked .. then untar, remove, and return.
                         #
-                        system( "cd $CONFIG{'location'} && tar --numeric-owner -xf $session.tar && rm -f $CONFIG{'location'}/$session.tar" );
+                        system(
+"cd $CONFIG{'location'} && tar --numeric-owner -xf $session.tar && rm -f $CONFIG{'location'}/$session.tar"
+                        );
                         return 1;
                     }
                 }
 
-                sleep( $sleep );
+                sleep($sleep);
                 $attempt += 1;
 
             }
-            print ( "ERROR:  Timeout waiting for image to be ready." );
+            print("ERROR:  Timeout waiting for image to be ready.");
             return 0;
         }
         else
         {
-            print( "ERROR:  Failed to find session.  Received this:\n$content\n" );
+            print(
+                 "ERROR:  Failed to find session.  Received this:\n$content\n");
             return 0;
         }
     }
     else
     {
-        print( "ERROR: Submitting the image create request failed:\n" . $response->status_line );
+        print( "ERROR: Submitting the image create request failed:\n"
+               . $response->status_line );
         return 0;
     }
 }
-
 
 
 
@@ -931,17 +931,19 @@ sub do_image_server
 
 sub do_rinse
 {
+
     #
     #  The command we're going to run.
     #
-    my $command = "rinse --distribution=$CONFIG{'dist'} --directory=$CONFIG{'location'}";
+    my $command =
+      "rinse --distribution=$CONFIG{'dist'} --directory=$CONFIG{'location'}";
 
     #
     #  Propogate the --arch argument
     #
     if ( $CONFIG{'arch'} )
     {
-        $command .= " --arch $CONFIG{'arch'}"
+        $command .= " --arch $CONFIG{'arch'}";
     }
 
 
@@ -953,7 +955,7 @@ sub do_rinse
         $command .= " --verbose";
     }
 
-    runCommand( $command );
+    runCommand($command);
 }
 
 
@@ -972,7 +974,7 @@ sub do_rpmstrap
     #
     #  Propogate the verbosity setting.
     #
-    my $EXTRA='';
+    my $EXTRA = '';
     if ( $CONFIG{'verbose'} )
     {
         $EXTRA .= " --verbose";
@@ -990,15 +992,14 @@ sub do_rpmstrap
     #  Setup mirror if present.
     #
     my $mirror = "";
-    $mirror    = $CONFIG{'mirror'} if ( $CONFIG{'mirror'} );
+    $mirror = $CONFIG{'mirror'} if ( $CONFIG{'mirror'} );
 
     #
     #  The command we're going to run.
     #
     my $command = "rpmstrap $EXTRA $CONFIG{'dist'} $CONFIG{'location'} $mirror";
-    runCommand( $command );
+    runCommand($command);
 }
-
 
 
 
@@ -1012,14 +1013,15 @@ sub do_rpmstrap
 
 sub do_tar
 {
+
     #
     #  Find the tar command to run from the configuration file.
     #
-    my $cmd = $CONFIG{'tar-cmd'} ;
-    if ( !defined( $cmd ) )
+    my $cmd = $CONFIG{'tar-cmd'};
+    if ( !defined($cmd) )
     {
         print "Falling back to default tar command\n";
-        $cmd = '/bin/tar --numeric-owner -xvf $src';  # Note: single quotes.
+        $cmd = '/bin/tar --numeric-owner -xvf $src';    # Note: single quotes.
     }
 
     #
@@ -1030,5 +1032,5 @@ sub do_tar
     #
     #  Run a command to copy an installed system into the new root.
     #
-    runCommand( "cd $CONFIG{'location'} && $cmd" );
+    runCommand("cd $CONFIG{'location'} && $cmd");
 }

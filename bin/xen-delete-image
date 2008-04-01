@@ -173,13 +173,12 @@ my $RELEASE = '3.9';
 
 
 
-
 #
 # Read the global configuration file if it exists.
 #
 if ( -e "/etc/xen-tools/xen-tools.conf" )
 {
-    readConfigurationFile( "/etc/xen-tools/xen-tools.conf" );
+    readConfigurationFile("/etc/xen-tools/xen-tools.conf");
 }
 
 
@@ -199,7 +198,7 @@ checkArguments();
 #
 #  Abort if non-root user.
 #
-if ( (!$CONFIG{'test'}) && ( $EFFECTIVE_USER_ID != 0 ) )
+if ( ( !$CONFIG{'test'} ) && ( $EFFECTIVE_USER_ID != 0 ) )
 {
     print <<E_O_ROOT;
 
@@ -217,11 +216,11 @@ E_O_ROOT
 #  Loop over the supplied arguments, and attempt to delete each
 # image.
 #
-while( my $name = shift )
+while ( my $name = shift )
 {
-    if ( !xenRunning( $name ) )
+    if ( !xenRunning($name) )
     {
-        deleteXenImage( $name );
+        deleteXenImage($name);
     }
     else
     {
@@ -233,11 +232,11 @@ while( my $name = shift )
 #  Also delete any which were specified using the --hostname flag
 #
 my $hosts = $CONFIG{'hostname'};
-foreach my $name ( @$hosts )
+foreach my $name (@$hosts)
 {
-    if ( !xenRunning( $name ) )
+    if ( !xenRunning($name) )
     {
-        deleteXenImage( $name );
+        deleteXenImage($name);
     }
     else
     {
@@ -252,7 +251,6 @@ exit 0;
 
 
 
-
 =begin doc
 
   Read the configuration file specified.
@@ -263,16 +261,16 @@ exit 0;
 
 sub readConfigurationFile
 {
-    my ($file) = ( @_ );
+    my ($file) = (@_);
 
     open( FILE, "<", $file ) or die "Cannot read file '$file' - $!";
 
-    my $line       = "";
+    my $line = "";
 
-    while (defined($line = <FILE>) )
+    while ( defined( $line = <FILE> ) )
     {
         chomp $line;
-        if ($line =~ s/\\$//)
+        if ( $line =~ s/\\$// )
         {
             $line .= <FILE>;
             redo unless eof(FILE);
@@ -282,7 +280,7 @@ sub readConfigurationFile
         next if ( $line =~ /^([ \t]*)\#/ );
 
         # Skip blank lines
-        next if ( length( $line ) < 1 );
+        next if ( length($line) < 1 );
 
         # Strip trailing comments.
         if ( $line =~ /(.*)\#(.*)/ )
@@ -305,6 +303,7 @@ sub readConfigurationFile
             # command expansion?
             if ( $val =~ /(.*)`([^`]+)`(.*)/ )
             {
+
                 # store
                 my $pre  = $1;
                 my $cmd  = $2;
@@ -312,20 +311,19 @@ sub readConfigurationFile
 
                 # get output
                 my $output = `$cmd`;
-                chomp( $output );
+                chomp($output);
 
                 # build up replacement.
                 $val = $pre . $output . $post;
             }
 
             # Store value.
-            $CONFIG{ $key } = $val;
+            $CONFIG{$key} = $val;
         }
     }
 
-    close( FILE );
+    close(FILE);
 }
-
 
 
 
@@ -346,32 +344,32 @@ sub parseCommandLineArguments
     #  Parse options.
     #
     GetOptions(
-              "dir=s",       \$CONFIG{'dir'},
-              "lvm=s",       \$CONFIG{'lvm'},
-              "evms=s",      \$CONFIG{'evms'},
-              "hostname=s@", \$CONFIG{'hostname'},
-              "test",        \$CONFIG{'test'},
-              "verbose",     \$CONFIG{'verbose'},
-              "help",        \$HELP,
-              "manual",      \$MANUAL,
-              "version",     \$VERSION
-             );
+                "dir=s",       \$CONFIG{'dir'},
+                "lvm=s",       \$CONFIG{'lvm'},
+                "evms=s",      \$CONFIG{'evms'},
+                "hostname=s@", \$CONFIG{'hostname'},
+                "test",        \$CONFIG{'test'},
+                "verbose",     \$CONFIG{'verbose'},
+                "help",        \$HELP,
+                "manual",      \$MANUAL,
+                "version",     \$VERSION
+    );
 
     pod2usage(1) if $HELP;
-    pod2usage(-verbose => 2 ) if $MANUAL;
+    pod2usage( -verbose => 2 ) if $MANUAL;
 
 
-    if ( $VERSION )
+    if ($VERSION)
     {
-       my $REVISION      = '$Revision: 1.41 $';
+        my $REVISION = '$Revision: 1.41 $';
 
-       if ( $REVISION =~ /1.([0-9.]+) / )
-       {
-           $REVISION = $1;
-       }
+        if ( $REVISION =~ /1.([0-9.]+) / )
+        {
+            $REVISION = $1;
+        }
 
-       print "xen-delete-image release $RELEASE - CVS: $REVISION\n";
-       exit;
+        print "xen-delete-image release $RELEASE - CVS: $REVISION\n";
+        exit;
 
     }
 }
@@ -388,6 +386,7 @@ sub parseCommandLineArguments
 
 sub checkArguments
 {
+
     #
     #  When testing we only care about loopback images, not disk images.
     #
@@ -401,7 +400,7 @@ sub checkArguments
     #  Make sure we got one and only one installation method.
     #
     my $count = 0;
-    foreach my $type ( qw/dir lvm evms/ )
+    foreach my $type (qw/dir lvm evms/)
     {
         $count += 1 if defined( $CONFIG{$type} );
     }
@@ -412,14 +411,13 @@ sub checkArguments
     #
     if ( $count != 1 )
     {
-       print "Please select one and only one of the installation methods:\n";
-       print " --dir\n";
-       print " --evms\n";
-       print " --lvm\n";
-       exit;
+        print "Please select one and only one of the installation methods:\n";
+        print " --dir\n";
+        print " --evms\n";
+        print " --lvm\n";
+        exit;
     }
 }
-
 
 
 
@@ -433,20 +431,20 @@ sub checkArguments
 
 sub xenRunning
 {
-    my( $hostname ) =  (@_ );
+    my ($hostname) = (@_);
 
     my $running = 0;
 
-    open( CMD, "xm list $hostname 2>/dev/null |")
+    open( CMD, "xm list $hostname 2>/dev/null |" )
       or die "Failed to run 'xm list $hostname'";
-    while( <CMD> )
+    while (<CMD>)
     {
         my $line = $_;
-        $running = 1 if ( $line =~ /\Q$hostname\E/ )
+        $running = 1 if ( $line =~ /\Q$hostname\E/ );
     }
-    close( CMD );
+    close(CMD);
 
-    return( $running );
+    return ($running);
 }
 
 
@@ -461,7 +459,7 @@ sub xenRunning
 
 sub deleteXenImage
 {
-    my ($hostname) = ( @_ );
+    my ($hostname) = (@_);
 
     #
     #  Collect the names of files to delete.
@@ -487,12 +485,12 @@ sub deleteXenImage
     #
     #  If we're working on disk images remove them.
     #
-    foreach my $file ( @delete )
+    foreach my $file (@delete)
     {
         if ( -e $file )
         {
             print "Deleting: $file\n";
-            unlink( $file );
+            unlink($file);
         }
         else
         {
@@ -503,69 +501,71 @@ sub deleteXenImage
 
     if ( defined( $CONFIG{'dir'} ) )
     {
-       my $prefix = $CONFIG{'dir'} . "/domains/";
+        my $prefix = $CONFIG{'dir'} . "/domains/";
 
-       #
-       #  Now remove the directory.
-       #
-       if ( -d $prefix . $hostname )
-       {
-           print "Removing: " . $prefix . $hostname . "\n";
-           rmdir ( $prefix . $hostname );
-       }
+        #
+        #  Now remove the directory.
+        #
+        if ( -d $prefix . $hostname )
+        {
+            print "Removing: " . $prefix . $hostname . "\n";
+            rmdir( $prefix . $hostname );
+        }
     }
     elsif ( defined( $CONFIG{'lvm'} ) )
     {
-       #
-       #  LVM volumes
-       #
-       #
-       #  TODO: Check we're not mounted.
-       #
 
-       if ( -e "/dev/$CONFIG{'lvm'}/$hostname-swap" )
-       {
-           print "Removing swap volume\n";
-           runCommand( "lvremove /dev/$CONFIG{'lvm'}/$hostname-swap --force" );
-       }
+        #
+        #  LVM volumes
+        #
+        #
+        #  TODO: Check we're not mounted.
+        #
 
-       if ( -e "/dev/$CONFIG{'lvm'}/$hostname-disk" )
-       {
-           print "Removing LVM disk volume\n";
-           runCommand( "lvremove /dev/$CONFIG{'lvm'}/$hostname-disk --force" );
-       }
+        if ( -e "/dev/$CONFIG{'lvm'}/$hostname-swap" )
+        {
+            print "Removing swap volume\n";
+            runCommand("lvremove /dev/$CONFIG{'lvm'}/$hostname-swap --force");
+        }
+
+        if ( -e "/dev/$CONFIG{'lvm'}/$hostname-disk" )
+        {
+            print "Removing LVM disk volume\n";
+            runCommand("lvremove /dev/$CONFIG{'lvm'}/$hostname-disk --force");
+        }
 
     }
     elsif ( defined( $CONFIG{'evms'} ) )
     {
-       #
-       #  EVMS volumes
-       #
-       #
-       #  TODO: Check we're not mounted.
-       #
 
-       if ( -e "/dev/evms/$hostname-swap" )
-       {
-           print "Removing EVMS swap volume\n";
-           runCommand( "echo Delete : /dev/evms/$hostname-swap | evms" );
-           runCommand( "echo Delete : $CONFIG{'evms'}/$hostname-swap | evms" );
-       }
+        #
+        #  EVMS volumes
+        #
+        #
+        #  TODO: Check we're not mounted.
+        #
 
-       if ( -e "/dev/evms/$hostname-disk" )
-       {
-           print "Removing EVMS disk volume\n";
-           runCommand( "echo Delete : /dev/evms/$hostname-disk | evms" );
-           runCommand( "echo Delete : $CONFIG{'evms'}/$hostname-disk | evms" );
-       }
+        if ( -e "/dev/evms/$hostname-swap" )
+        {
+            print "Removing EVMS swap volume\n";
+            runCommand("echo Delete : /dev/evms/$hostname-swap | evms");
+            runCommand("echo Delete : $CONFIG{'evms'}/$hostname-swap | evms");
+        }
+
+        if ( -e "/dev/evms/$hostname-disk" )
+        {
+            print "Removing EVMS disk volume\n";
+            runCommand("echo Delete : /dev/evms/$hostname-disk | evms");
+            runCommand("echo Delete : $CONFIG{'evms'}/$hostname-disk | evms");
+        }
 
     }
     else
     {
-       print "Error:  No installation type specified\n";
-       print "Can't happen!\n";
-       print "Hostname : $hostname\n";
-       exit 127;
+        print "Error:  No installation type specified\n";
+        print "Can't happen!\n";
+        print "Hostname : $hostname\n";
+        exit 127;
     }
 }
 
@@ -584,7 +584,7 @@ sub deleteXenImage
 
 sub runCommand
 {
-    my ( $cmd ) = (@_ );
+    my ($cmd) = (@_);
 
     #
     #  Header.
@@ -596,14 +596,15 @@ sub runCommand
     #
     if ( $CONFIG{'verbose'} )
     {
-       #
-       #  Copy stderr to stdout, so we can see it.
-       #
-       $cmd .= " 2>&1";
+
+        #
+        #  Copy stderr to stdout, so we can see it.
+        #
+        $cmd .= " 2>&1";
     }
     else
     {
-       $cmd .= " >/dev/null 2>/dev/null" ;
+        $cmd .= " >/dev/null 2>/dev/null";
     }
 
 
@@ -614,9 +615,9 @@ sub runCommand
 
     if ( $? != 0 )
     {
-       print "Running command '$cmd' failed.\n";
-       print "Aborting\n";
-       exit;
+        print "Running command '$cmd' failed.\n";
+        print "Aborting\n";
+        exit;
     }
 
 
@@ -628,5 +629,5 @@ sub runCommand
     $CONFIG{'verbose'} && print $output . "\n";
     $CONFIG{'verbose'} && print "Finished : $cmd\n";
 
-    return( $output );
+    return ($output);
 }

@@ -107,8 +107,6 @@ use Text::Template;
 
 
 
-
-
 #
 #  Configuration values read from the command line, or configuration file.
 #
@@ -125,7 +123,7 @@ my $RELEASE = '3.9';
 #
 #  Read the global configuration file.
 #
-readConfigurationFile( "/etc/xen-tools/xen-tools.conf" );
+readConfigurationFile("/etc/xen-tools/xen-tools.conf");
 
 
 #
@@ -147,11 +145,12 @@ my $path = undef;
 
 if ( $CONFIG{'dir'} )
 {
+
     #
     #  Make sure we can find the disk
     #
     $path = $CONFIG{'dir'} . "/domains/" . $CONFIG{'hostname'} . "/disk.img";
-    if ( ! -e $path )
+    if ( !-e $path )
     {
         print <<EOF;
 
@@ -201,15 +200,16 @@ EOF
     print "DO NOT INTERRUPT\n";
 
     my $cmd = "dd if=/dev/zero bs=1M count=$CONFIG{'add'}k >> $path";
-    system( $cmd );
+    system($cmd );
 }
 elsif ( $CONFIG{'lvm'} )
 {
+
     #
     #  Make sure we can find the disk
     #
     $path = "/dev/" . $CONFIG{'lvm'} . "/" . $CONFIG{'hostname'} . "-disk";
-    if ( ! -e $path )
+    if ( !-e $path )
     {
         print <<EOF;
 
@@ -258,7 +258,7 @@ EOF
 
     print "DO NOT INTERRUPT\n";
     my $cmd = "lvextend -L+$CONFIG{'add'}M $path";
-    system( $cmd );
+    system($cmd );
 }
 else
 {
@@ -271,13 +271,13 @@ else
 #  Check filesystem.
 #
 print "Checking filesystem\n";
-system( "fsck.ext3 -f $path" );
+system("fsck.ext3 -f $path");
 
 #
 #  Run ext3resize.
 #
 print "Resizing in place\n";
-system( "resize2fs $path" );
+system("resize2fs $path");
 
 
 #
@@ -298,16 +298,16 @@ exit 0;
 
 sub readConfigurationFile
 {
-    my ($file) = ( @_ );
+    my ($file) = (@_);
 
     open( FILE, "<", $file ) or die "Cannot read file '$file' - $!";
 
-    my $line       = "";
+    my $line = "";
 
-    while (defined($line = <FILE>) )
+    while ( defined( $line = <FILE> ) )
     {
         chomp $line;
-        if ($line =~ s/\\$//)
+        if ( $line =~ s/\\$// )
         {
             $line .= <FILE>;
             redo unless eof(FILE);
@@ -317,7 +317,7 @@ sub readConfigurationFile
         next if ( $line =~ /^([ \t]*)\#/ );
 
         # Skip blank lines
-        next if ( length( $line ) < 1 );
+        next if ( length($line) < 1 );
 
         # Strip trailing comments.
         if ( $line =~ /(.*)\#(.*)/ )
@@ -340,6 +340,7 @@ sub readConfigurationFile
             # command expansion?
             if ( $val =~ /(.*)`([^`]+)`(.*)/ )
             {
+
                 # store
                 my $pre  = $1;
                 my $cmd  = $2;
@@ -347,18 +348,18 @@ sub readConfigurationFile
 
                 # get output
                 my $output = `$cmd`;
-                chomp( $output );
+                chomp($output);
 
                 # build up replacement.
                 $val = $pre . $output . $post;
             }
 
             # Store value.
-            $CONFIG{ $key } = $val;
+            $CONFIG{$key} = $val;
         }
     }
 
-    close( FILE );
+    close(FILE);
 }
 
 
@@ -387,27 +388,27 @@ sub parseCommandLineArguments
     #
     GetOptions(
 
-               # Misc. options
-               "add=s",        \$CONFIG{'add'},
-               "dir=s",        \$install{'dir'},
-               "lvm=s",        \$install{'lvm'},
-               "hostname=s",   \$CONFIG{'hostname'},
-               "force",        \$CONFIG{'force'},
+        # Misc. options
+        "add=s",      \$CONFIG{'add'},
+        "dir=s",      \$install{'dir'},
+        "lvm=s",      \$install{'lvm'},
+        "hostname=s", \$CONFIG{'hostname'},
+        "force",      \$CONFIG{'force'},
 
-               # Help options
-               "help",         \$HELP,
-               "manual",       \$MANUAL,
-               "verbose",      \$CONFIG{'verbose'},
-               "version",      \$VERSION
-              );
+        # Help options
+        "help",    \$HELP,
+        "manual",  \$MANUAL,
+        "verbose", \$CONFIG{'verbose'},
+        "version", \$VERSION
+    );
 
     pod2usage(1) if $HELP;
-    pod2usage(-verbose => 2 ) if $MANUAL;
+    pod2usage( -verbose => 2 ) if $MANUAL;
 
 
-    if ( $VERSION )
+    if ($VERSION)
     {
-        print( "xen-resize-guest release $RELEASE\n" );
+        print("xen-resize-guest release $RELEASE\n");
         exit 1;
     }
 
@@ -442,6 +443,7 @@ sub parseCommandLineArguments
 
 sub testArguments
 {
+
     #
     #  Make sure we received a hostname.
     #
@@ -486,8 +488,8 @@ EOF
     #  We should either have LVM *or* directory - not neither or both.
     #
     my $options = 0;
-    $options += 1if ( defined($CONFIG{'lvm'}) && length( $CONFIG{'lvm'} ) );
-    $options += 1if ( defined($CONFIG{'dir'}) && length( $CONFIG{'dir'} ) );
+    $options += 1 if ( defined( $CONFIG{'lvm'} ) && length( $CONFIG{'lvm'} ) );
+    $options += 1 if ( defined( $CONFIG{'dir'} ) && length( $CONFIG{'dir'} ) );
 
     #
     #  Report
@@ -528,18 +530,18 @@ EOF
 
 sub xenRunning
 {
-    my( $hostname ) =  (@_ );
+    my ($hostname) = (@_);
 
     my $running = 0;
 
-    open( CMD, "xm list $hostname 2>/dev/null |")
+    open( CMD, "xm list $hostname 2>/dev/null |" )
       or die "Failed to run 'xm list $hostname'";
-    while( <CMD> )
+    while (<CMD>)
     {
         my $line = $_;
-        $running = 1 if ( $line =~ /\Q$hostname\E/ )
+        $running = 1 if ( $line =~ /\Q$hostname\E/ );
     }
-    close( CMD );
+    close(CMD);
 
-    return( $running );
+    return ($running);
 }
