@@ -2072,7 +2072,7 @@ EOF
     #  This makes it easy to mount parent folders first
     # (e.g. /var before /var/tmp)
     #
-    @PARTITIONS = sort { length $a->{'mountpoint'} cmp length $b->{'mountpoint'} } @PARTITIONS;
+    @PARTITIONS = sort { length $a->{'mountpoint'} <=> length $b->{'mountpoint'} } @PARTITIONS;
 }
 
 

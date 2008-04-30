@@ -98,7 +98,7 @@ if [ -z "${dhcp}" ]; then
 
         logMessage Adding ${hostname} and ${name} to /etc/hosts on the host
 
-        echo "${ip1}    ${name}    ${hostname}" >> /etc/hosts
+        echo "${ip1}   ${hostname}  ${name}" >> /etc/hosts
 
         #
         #  If we've updated the /etc/hosts file on the host machine

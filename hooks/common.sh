@@ -12,7 +12,7 @@
 # might develop.
 #
 # Steve
-# -- 
+# --
 #
 
 
@@ -130,7 +130,7 @@ disableStartStopDaemon ()
    chmod 755 "${daemonfile}"
    logMessage "start-stop-daemon disabled / made a stub."
 }
- 
+
 
 
 #
@@ -151,7 +151,7 @@ enableStartStopDaemon ()
    fi
 
 }
- 
+
 
 
 #
@@ -182,7 +182,7 @@ removeDebianPackage ()
     #
     # Purge the packages we've been given.
     #
-    chroot ${prefix} /usr/bin/apt-get remove --purge "$@"
+    chroot ${prefix} /usr/bin/apt-get remove --yes --purge "$@"
 
 }
 
@@ -232,7 +232,7 @@ installGentooPackage ()
     # Log our options
     #
     logMessage "Installing Gentoo package ${package} to prefix ${prefix}"
-    
+
     logMessage "NOTE: Not doing anything - this is a stub - FIXME"
 
 }
