@@ -58,10 +58,6 @@ BEGIN{ use_ok( 'Pod::Usage' ); }
 require_ok( 'Pod::Usage' );
 
 
-BEGIN{ use_ok( 'POSIX' ); }
-require_ok( 'POSIX' );
-
-
 BEGIN{ use_ok( 'strict' ); }
 require_ok( 'strict' );
 

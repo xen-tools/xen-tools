@@ -25,7 +25,7 @@ use Test::More qw( no_plan );
 EOF
 
 
-for i in `rgrep '^use ' .. | grep -v Expect | grep -v Xen:: | grep -v Moose | awk '{print $2}' | tr -d \;\(\) | sort | uniq`; \
+for i in `rgrep '^use ' .. | grep -v Expect | grep -v POSIX | grep -v Xen:: | grep -v Moose | awk '{print $2}' | tr -d \;\(\) | sort | uniq`; \
     do \
      echo "BEGIN{ use_ok( '$i' ); }"; \
      echo "require_ok( '$i' );" ; \
