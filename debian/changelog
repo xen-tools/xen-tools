@@ -1,3 +1,14 @@
+xen-tools (3.9-4) unstable; urgency=high
+
+  * Changed two defaults in xen-tools.conf to conform
+    to the defaults used by the xen packages:
+      + serial_device: tty1 -> hvc0
+      + disk_device:   sda  -> xvda  
+
+  * Priority High because of RC bug. (closes: #499282)
+
+ -- Radu Spineanu <radu@debian.org>  Tue, 30 Sep 2008 02:02:21 +0300
+
 xen-tools (3.9-3) unstable; urgency=medium
 
   - Ensure that Fedora guests get /dev/pts mounted.
