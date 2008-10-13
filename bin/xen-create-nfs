@@ -140,7 +140,7 @@ $CONFIG{'xen_tools_version'} = $RELEASE;
 #
 #  Read the global configuration file.
 #
-readConfigurationFile( "/etc/xen-tools/xen-tools.conf" );
+readConfigurationFile("/etc/xen-tools/xen-tools.conf");
 
 
 #
@@ -161,7 +161,7 @@ testArguments();
 if ( -e "/etc/xen/$CONFIG{'hostname'}.cfg" )
 {
     die "Configuration file for $CONFIG{'hostname'} already exists"
-      unless( $CONFIG{'force'} );
+      unless ( $CONFIG{'force'} );
 }
 
 #
@@ -197,20 +197,20 @@ exit;
 
 sub readConfigurationFile
 {
-    my ($file) = ( @_ );
+    my ($file) = (@_);
 
     # Don't read the file if it doesn't exist.
-    return if ( ! -e $file );
+    return if ( !-e $file );
 
 
     my $line = "";
 
     open( FILE, "<", $file ) or die "Cannot read file '$file' - $!";
 
-    while (defined($line = <FILE>) )
+    while ( defined( $line = <FILE> ) )
     {
         chomp $line;
-        if ($line =~ s/\\$//)
+        if ( $line =~ s/\\$// )
         {
             $line .= <FILE>;
             redo unless eof(FILE);
@@ -220,7 +220,7 @@ sub readConfigurationFile
         next if ( $line =~ /^([ \t]*)\#/ );
 
         # Skip blank lines
-        next if ( length( $line ) < 1 );
+        next if ( length($line) < 1 );
 
         # Strip trailing comments.
         if ( $line =~ /(.*)\#(.*)/ )
@@ -243,6 +243,7 @@ sub readConfigurationFile
             # command expansion?
             if ( $val =~ /(.*)`([^`]+)`(.*)/ )
             {
+
                 # store
                 my $pre  = $1;
                 my $cmd  = $2;
@@ -250,18 +251,18 @@ sub readConfigurationFile
 
                 # get output
                 my $output = `$cmd`;
-                chomp( $output );
+                chomp($output);
 
                 # build up replacement.
                 $val = $pre . $output . $post;
             }
 
             # Store value.
-            $CONFIG{ $key } = $val;
+            $CONFIG{$key} = $val;
         }
     }
 
-    close( FILE );
+    close(FILE);
 }
 
 
@@ -286,48 +287,48 @@ sub parseCommandLineArguments
     #
     GetOptions(
 
-               # Networking options
-               "dhcp",         \$CONFIG{'dhcp'},
-               "gateway=s",    \$CONFIG{'gateway'},
-               "broadcast=s",  \$CONFIG{'broadcast'},
-               "ip=s",         \$CONFIG{'ip'},
-               "netmask=s",    \$CONFIG{'netmask'},
-               "hostname=s",   \$CONFIG{'hostname'},
-               "memory=s",     \$CONFIG{'memory'},
-               "mac=s",        \$CONFIG{'mac'},
+        # Networking options
+        "dhcp",        \$CONFIG{'dhcp'},
+        "gateway=s",   \$CONFIG{'gateway'},
+        "broadcast=s", \$CONFIG{'broadcast'},
+        "ip=s",        \$CONFIG{'ip'},
+        "netmask=s",   \$CONFIG{'netmask'},
+        "hostname=s",  \$CONFIG{'hostname'},
+        "memory=s",    \$CONFIG{'memory'},
+        "mac=s",       \$CONFIG{'mac'},
 
-               # NFS options.
-               "nfs_server=s", \$CONFIG{'nfs_server'},
-               "nfs_root=s",   \$CONFIG{'nfs_root'},
+        # NFS options.
+        "nfs_server=s", \$CONFIG{'nfs_server'},
+        "nfs_root=s",   \$CONFIG{'nfs_root'},
 
-               # Misc. options
-               "admins=s",     \$CONFIG{'admins'},
-               "kernel=s",     \$CONFIG{'kernel'},
-               "initrd=s",     \$CONFIG{'initrd'},
-               "force",        \$CONFIG{'force'},
-               "template=s",   \$CONFIG{'template'},
+        # Misc. options
+        "admins=s",   \$CONFIG{'admins'},
+        "kernel=s",   \$CONFIG{'kernel'},
+        "initrd=s",   \$CONFIG{'initrd'},
+        "force",      \$CONFIG{'force'},
+        "template=s", \$CONFIG{'template'},
 
-               # Help options
-               "help",         \$HELP,
-               "manual",       \$MANUAL,
-               "verbose",      \$CONFIG{'verbose'},
-               "version",      \$VERSION
+        # Help options
+        "help",    \$HELP,
+        "manual",  \$MANUAL,
+        "verbose", \$CONFIG{'verbose'},
+        "version", \$VERSION
 
-              );
+    );
 
     pod2usage(1) if $HELP;
-    pod2usage(-verbose => 2 ) if $MANUAL;
+    pod2usage( -verbose => 2 ) if $MANUAL;
 
 
-    if ( $VERSION )
+    if ($VERSION)
     {
-        my $REVISION      = '$Revision: 1.13 $';
+        my $REVISION = '$Revision: 1.13 $';
         if ( $REVISION =~ /1.([0-9.]+) / )
         {
             $REVISION = $1;
         }
 
-        logprint( "xen-create-nfs release $RELEASE - CVS: $REVISION\n" );
+        logprint("xen-create-nfs release $RELEASE - CVS: $REVISION\n");
         exit;
     }
 }
@@ -344,10 +345,11 @@ sub parseCommandLineArguments
 
 sub testArguments
 {
+
     #
     #  Hostname is mandatory
     #
-    die "No hostname" unless( $CONFIG{'hostname'} );
+    die "No hostname" unless ( $CONFIG{'hostname'} );
 
     my @network = qw/ ip gateway netmask /;
 
@@ -356,29 +358,28 @@ sub testArguments
     #
     if ( $CONFIG{'dhcp'} )
     {
-        foreach my $f ( @network )
+        foreach my $f (@network)
         {
-            delete( $CONFIG{ $f } );
+            delete( $CONFIG{$f} );
         }
     }
     else
     {
-        foreach my $f ( @network )
+        foreach my $f (@network)
         {
-            die "Missing --$f" unless( $CONFIG{$f} );
+            die "Missing --$f" unless ( $CONFIG{$f} );
         }
     }
 
     #
     #  We need an NFS server + root
     #
-    die "Missing NFS server." unless( $CONFIG{'nfs_server'} );
-    die "Missing NFS root."   unless( $CONFIG{'nfs_root'} );
+    die "Missing NFS server." unless ( $CONFIG{'nfs_server'} );
+    die "Missing NFS root."   unless ( $CONFIG{'nfs_root'} );
 
 
     # All OK.
 }
-
 
 
 
@@ -393,6 +394,7 @@ sub testArguments
 
 sub setupAdminUsers
 {
+
     #
     #  If we're not root we can't modify users.
     #
@@ -401,16 +403,17 @@ sub setupAdminUsers
     #
     #  If we don't have a sudoers file then we'll also ignore this.
     #
-    return if ( ! -e "/etc/sudoers" );
+    return if ( !-e "/etc/sudoers" );
 
     #
     #  Find the path to the xen-login-shell
     #
     my $shell = undef;
     $shell = "/usr/bin/xen-login-shell" if ( -x "/usr/bin/xen-login-shell" );
-    $shell = "/usr/local/bin/xen-login-shell" if ( -x "/usr/bin/local/xen-login-shell" );
+    $shell = "/usr/local/bin/xen-login-shell"
+      if ( -x "/usr/bin/local/xen-login-shell" );
 
-    return if ( !defined( $shell ) );
+    return if ( !defined($shell) );
 
 
     #
@@ -419,6 +422,7 @@ sub setupAdminUsers
     #
     foreach my $user ( split( /,/, $ENV{'admins'} ) )
     {
+
         # Strip leading and trailing whitespace.
         $user =~ s/^\s+//;
         $user =~ s/\s+$//;
@@ -429,12 +433,14 @@ sub setupAdminUsers
         # Does the user exist?
         if ( getpwnam($user) )
         {
+
             # Change shell.
             $CONFIG{'verbose'} && print "Changing shell for $user: $shell\n";
             system( "chsh", "-s", $shell, $user );
         }
         else
         {
+
             # Add a new user.
             $CONFIG{'verbose'} && print "Adding new user: $user\n";
             system( "useradd", "-s", $shell, $user );
@@ -443,9 +449,11 @@ sub setupAdminUsers
         #
         #  Add the entry to /etc/sudoers.
         #
-        open( SUDOERS, ">>", "/etc/sudoers" ) or warn "Failed to add user to sudoers file : $user - $!";
-        print SUDOERS "$user ALL = NOPASSWD: /usr/sbin/xm, /usr/bin/xen-create-image\n";
-        close( SUDOERS );
+        open( SUDOERS, ">>", "/etc/sudoers" )
+          or warn "Failed to add user to sudoers file : $user - $!";
+        print SUDOERS
+          "$user ALL = NOPASSWD: /usr/sbin/xm, /usr/bin/xen-create-image\n";
+        close(SUDOERS);
 
     }
 }
@@ -461,7 +469,8 @@ sub setupAdminUsers
 
 sub createNewConfigurationFile
 {
-    die "Template file missing: $CONFIG{'template'}" unless( -e $CONFIG{'template'} );
+    die "Template file missing: $CONFIG{'template'}"
+      unless ( -e $CONFIG{'template'} );
 
     #
     #  Load the template.
@@ -469,7 +478,7 @@ sub createNewConfigurationFile
     my $template = new Text::Template( TYPE   => 'FILE',
                                        SOURCE => $CONFIG{'template'} );
 
-    my $result   = $template->fill_in( HASH => \%CONFIG );
+    my $result = $template->fill_in( HASH => \%CONFIG );
 
     #
     #  The file we'll write to.
@@ -481,5 +490,5 @@ sub createNewConfigurationFile
     #
     open( FILE, ">", $file ) or die "Failed to write to $file - $!";
     print FILE $result;
-    close( FILE );
+    close(FILE);
 }

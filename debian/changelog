@@ -1,9 +1,18 @@
+xen-tools (3.9-5) unstable; urgency=medium
+
+  - Record the ARCH for RPM-based distros.
+    (Closes: #475125)
+  - Abort if the generated configuration file already exists.
+    (Closes: #499475)
+
+ -- Steve Kemp <skx@debian.org>  Mon, 13 Oct 2008 19:20:21 +0000
+
 xen-tools (3.9-4) unstable; urgency=high
 
   * Changed two defaults in xen-tools.conf to conform
     to the defaults used by the xen packages:
       + serial_device: tty1 -> hvc0
-      + disk_device:   sda  -> xvda  
+      + disk_device:   sda  -> xvda
 
   * Priority High because of RC bug. (closes: #499282)
 

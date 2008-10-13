@@ -101,7 +101,6 @@ my $RELEASE = '3.9';
 
 
 
-
 #
 #  Parse the command line arguments.
 #
@@ -128,9 +127,6 @@ exit 0;
 
 
 
-
-
-
 =begin doc
 
   Parse the command line arguments this script was given.
@@ -149,28 +145,28 @@ sub parseCommandLineArguments
     #  Parse options.
     #
     GetOptions(
-               "location=s", \$CONFIG{'location'},
-               "dist=s",     \$CONFIG{'dist'},
-               "verbose",    \$CONFIG{'verbose'},
-               "help",       \$HELP,
-               "manual",     \$MANUAL,
-               "version",    \$VERSION
-             );
+                "location=s", \$CONFIG{'location'},
+                "dist=s",     \$CONFIG{'dist'},
+                "verbose",    \$CONFIG{'verbose'},
+                "help",       \$HELP,
+                "manual",     \$MANUAL,
+                "version",    \$VERSION
+    );
 
     pod2usage(1) if $HELP;
-    pod2usage(-verbose => 2 ) if $MANUAL;
+    pod2usage( -verbose => 2 ) if $MANUAL;
 
 
-    if ( $VERSION )
+    if ($VERSION)
     {
-       my $REVISION      = '$Revision: 1.33 $';
-       if ( $REVISION =~ /1.([0-9.]+) / )
-       {
-           $REVISION = $1;
-       }
+        my $REVISION = '$Revision: 1.33 $';
+        if ( $REVISION =~ /1.([0-9.]+) / )
+        {
+            $REVISION = $1;
+        }
 
-       print "xt-customize-image release $RELEASE - CVS: $REVISION\n";
-       exit;
+        print "xt-customize-image release $RELEASE - CVS: $REVISION\n";
+        exit;
     }
 }
 
@@ -186,10 +182,11 @@ sub parseCommandLineArguments
 
 sub checkArguments
 {
+
     #
     #  We require a location.
     #
-    if ( ! defined( $CONFIG{'location'} ) )
+    if ( !defined( $CONFIG{'location'} ) )
     {
         print "The '--location' argument is mandatory\n";
         exit 1;
@@ -199,7 +196,7 @@ sub checkArguments
     #
     #  Test that the location we've been given exists
     #
-    if ( ! -d $CONFIG{'location'} )
+    if ( !-d $CONFIG{'location'} )
     {
         print "The installation directory we've been given doesn't exist\n";
         print "We tried to use : $CONFIG{'location'}\n";
@@ -210,7 +207,7 @@ sub checkArguments
     #
     #  We require a distribution name.
     #
-    if ( ! defined( $CONFIG{'dist'} ) )
+    if ( !defined( $CONFIG{'dist'} ) )
     {
         print "The '--dist' argument is mandatory\n";
         exit 1;
@@ -224,9 +221,9 @@ sub checkArguments
     #  If there are no scripts then we clearly cannot
     # customise it!
     #
-    my $dir = "/usr/lib/xen-tools/"  . $CONFIG{'dist'} .  ".d";
+    my $dir = "/usr/lib/xen-tools/" . $CONFIG{'dist'} . ".d";
 
-    if ( ! -d $dir )
+    if ( !-d $dir )
     {
         print <<E_OR;
 
@@ -262,10 +259,11 @@ E_OR
 
 sub runDistributionHooks
 {
+
     #
     #  Hook directory.
     #
-    my $hooks = "/usr/lib/xen-tools/"  . $CONFIG{'dist'} .  ".d/";
+    my $hooks = "/usr/lib/xen-tools/" . $CONFIG{'dist'} . ".d/";
 
     #
     #  Installation prefix
@@ -290,6 +288,7 @@ sub runDistributionHooks
     #
     foreach my $file ( sort( glob( $hooks . "*" ) ) )
     {
+
         # skip files that end with .dpkg-new, .dpkg-old or '~'
         next if ( $file =~ /\.dpkg-(new|old)/ );
         next if ( $file =~ /~$/ );
@@ -299,6 +298,7 @@ sub runDistributionHooks
         #
         if ( ( -x $file ) && ( -f $file ) )
         {
+
             #
             # Just display the name - no need to see the full path.
             #
@@ -321,14 +321,14 @@ sub runDistributionHooks
             {
                 print "Running hook $name ['$cmd']\n";
                 print "--\n";
-                system( $cmd );
+                system($cmd );
                 print "--\n";
                 print "Done\n\n";
             }
             else
             {
                 print "Running hook $name\n";
-                system( $cmd );
+                system($cmd );
                 print "hook $name: done.\n";
             }
         }
