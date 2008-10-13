@@ -1802,6 +1802,18 @@ EOF
         exit 127;
     }
 
+    #
+    #  Already present?
+    #
+    my $cfg =
+      $CONFIG{'output'} . "/" . $CONFIG{'hostname'} . $CONFIG{'extension'};
+    if ( -e $cfg )
+    {
+        print "Configuration file already exists; $cfg\n";
+        print "Aborting\n";
+        exit 127;
+    }
+
 }
 
 
