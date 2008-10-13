@@ -1,3 +1,8 @@
+xen-tools (3.9-4) unstable; urgency=medium
+
+  - Record the ARCH for RPM-based distros.
+    (Closes: #475125)
+
 xen-tools (3.9-3) unstable; urgency=medium
 
   - Ensure that Fedora guests get /dev/pts mounted.
