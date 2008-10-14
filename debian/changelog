@@ -1,3 +1,11 @@
+xen-tools (3.9-6) unstable; urgency=low
+
+  - Allow command line flags to be unset.
+    Thanks to Ruud Koolen for the patch.
+    (Closes: #484338)
+
+ -- Steve Kemp <skx@debian.org>  Tue, 14 Oct 2008 22:00:22 +0000
+
 xen-tools (3.9-5) unstable; urgency=medium
 
   - Record the ARCH for RPM-based distros.
