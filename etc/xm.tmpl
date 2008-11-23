@@ -22,19 +22,22 @@ memory      = '{$memory}'
 #  Disk device(s).
 #
 {
-  for ( my $i = 0; $i <= $#PARTITIONS; $i++ )
+  if ( !defined($image_vbd ) )
   {
+    for ( my $i = 0; $i <= $#PARTITIONS; $i++ )
+    {
       if ( $PARTITIONS[$i]{'mountpoint'} eq '/' )
       {
           $OUT .= "root        = '/dev/$device" . ($i + 1) . " ro'\n";
       }
-  }
-  $OUT .= "disk        = [\n";
-  for ( my $i = 0; $i <= $#PARTITIONS; $i++ )
-  {
+    }
+    $OUT .= "disk        = [\n";
+    for ( my $i = 0; $i <= $#PARTITIONS; $i++ )
+    {
       $OUT .= "                  '$PARTITIONS[$i]{'imagetype'}$PARTITIONS[$i]{'image'},$device" . ( $i + 1 ) .",w',\n";
+    }
+    $OUT .= "              ]\n";
   }
-  $OUT .= "              ]\n";
 }
 
 #
@@ -43,14 +46,14 @@ memory      = '{$memory}'
 {
     if ( $image_vbd )
     {
-          $OUT .= "root  = '/dev/$image-dev ro'\n";
+          $OUT .= "root  = '/dev/$device" . "1 ro'\n";
           $OUT .= "disk  = [ '$image_vbd,sda1,w' ";
     }
     if ( $swap_vbd )
     {
           $OUT .= ", '$swap_vbd,sda2,w'";
     }
-    if ( $imag_vbd )
+    if ( $image_vbd )
     {
           $OUT .= " ]\n";
     }
