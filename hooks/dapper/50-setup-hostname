@@ -89,24 +89,25 @@ if [ -z "${dhcp}" ]; then
         #
         name=`echo ${hostname} | awk -F. '{print $1}'`
 
-        logMessage Adding ${hostname} and ${name} to /etc/hosts on the host
+        if [ -z "${nohosts}" ]; then
 
-        echo "${ip1}    ${hostname}    ${name}" >> /etc/hosts
+            logMessage Adding ${hostname} and ${name} to /etc/hosts on the host
+            echo "${ip1}    ${hostname}    ${name}" >> /etc/hosts
 
 
-        #
-        #  If we've updated the /etc/hosts file on the host machine
-        # and there is an installation of dnsmasq installed then
-        # reload it.
-        #
-        #  This will let the local LAN clients lookup the new address.
-        #
-        if [ -x /usr/sbin/dnsmasq ] ; then
-            if [ -e /var/run/dnsmasq.pid ]; then
+            #
+            #  If we've updated the /etc/hosts file on the host machine
+            # and there is an installation of dnsmasq installed then
+            # reload it.
+            #
+            #  This will let the local LAN clients lookup the new address.
+             #
+            if [ -x /usr/sbin/dnsmasq ] ; then
+                if [ -e /var/run/dnsmasq.pid ]; then
 
                 logMessage Allowing DNSMasq to restart.
-
                 kill -HUP `cat /var/run/dnsmasq.pid`
+                fi
             fi
         fi
     fi

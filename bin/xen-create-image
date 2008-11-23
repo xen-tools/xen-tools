@@ -73,6 +73,8 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --hooks       Specify whether to run hooks after the image is created.
 
+   --no-hosts    Don't touch /etc/hosts on the dom0.
+
    --partitions  Use a specific partition layout configuration file.
                 Not supported with the image-dev and swap-dev options.
                 Parameters fs, size, swap and noswap are ignored when
@@ -1358,6 +1360,9 @@ sub parseCommandLineArguments
         "lvm=s",       \$install{'lvm'},
         "image-dev=s", \$install{'image-dev'},
         "swap-dev=s",  \$install{'swap-dev'},
+
+        # Host options
+        "no-hosts",    \$CONFIG{'nohosts'},
 
         # Networking options
         "dhcp",        \$CONFIG{'dhcp'},
