@@ -21,7 +21,7 @@ memory      = '{$memory}'
 #
 #  Disk device(s).
 #
-{ 
+{
   for ( my $i = 0; $i <= $#PARTITIONS; $i++ )
   {
       if ( $PARTITIONS[$i]{'mountpoint'} eq '/' )
@@ -38,6 +38,26 @@ memory      = '{$memory}'
 }
 
 #
+#  Physical volumes
+#
+{
+    if ( $image_vbd )
+    {
+          $OUT .= "root  = '/dev/$image-dev ro'\n";
+          $OUT .= "disk  = [ '$image_vbd,sda1,w' ";
+    }
+    if ( $swap_vbd )
+    {
+          $OUT .= ", '$swap_vbd,sda2,w'";
+    }
+    if ( $imag_vbd )
+    {
+          $OUT .= " ]\n";
+    }
+}
+
+
+#
 #  Hostname
 #
 name        = '{$hostname}'
@@ -52,12 +72,12 @@ name        = '{$hostname}'
     # Setup the mac address, if present.
     my $m = '';
     if ( $mac )
-    { 
+    {
       $m = "mac=$mac"
     }
 
     $OUT .= "vif         = [ '$m' ]";
-  }    
+  }
   else
   {
     #
@@ -65,11 +85,11 @@ name        = '{$hostname}'
     #
     my $m = '';
     if ( $mac )
-    { 
+    {
       $m = ",mac=$mac"
     }
 
-    $OUT .= "vif         = [ 'ip=$ip1"; 
+    $OUT .= "vif         = [ 'ip=$ip1";
     $OUT .= "$m' ]";
   }
 }
