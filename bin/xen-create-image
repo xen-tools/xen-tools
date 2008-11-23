@@ -663,7 +663,7 @@ my $FAIL = 0;
 #
 # Release number.
 #
-my $RELEASE = '3.9';
+my $RELEASE = '4.0';
 
 
 
@@ -1812,7 +1812,7 @@ EOF
     #
     my $cfg =
       $CONFIG{'output'} . "/" . $CONFIG{'hostname'} . $CONFIG{'extension'};
-    if ( -e $cfg )
+    if ( ( -e $cfg ) && ( !$CONFIG{'force'} ) )
     {
         print "Configuration file already exists; $cfg\n";
         print "Aborting\n";
