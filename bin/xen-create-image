@@ -1812,11 +1812,19 @@ EOF
     #
     my $cfg =
       $CONFIG{'output'} . "/" . $CONFIG{'hostname'} . $CONFIG{'extension'};
-    if ( ( -e $cfg ) && ( !$CONFIG{'force'} ) )
+    if ( -e $cfg )
     {
-        print "Configuration file already exists; $cfg\n";
-        print "Aborting\n";
-        exit 127;
+        if ( $CONFIG{'force'} )
+        {
+            $CONFIG{'verbose'} && print "Removing existing file: $cfg\n";
+            unlink( $cfg );
+        }
+        else
+        {
+            print "Configuration file already exists; $cfg\n";
+            print "Aborting\n";
+            exit 127;
+        }
     }
 
 }
