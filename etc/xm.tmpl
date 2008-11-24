@@ -6,14 +6,20 @@
 #
 #  Kernel + memory size
 #
-{ if ( $kernel )
+{ if ( ( $kernel ) && ( !defined($pygrub)) )
   {
     $OUT.= "kernel      = '$kernel'";
   }
 }
-{ if ( $initrd )
+{ if ( ( $initrd ) && ( !defined($pygrub)) )
   {
     $OUT.= "ramdisk     = '$initrd'";
+  }
+}
+{
+  if ( $pygrub )
+  {
+    $OUT .= "bootloader = '/usr/bin/pygrub'\n";
   }
 }
 memory      = '{$memory}'
@@ -47,11 +53,11 @@ memory      = '{$memory}'
     if ( $image_vbd )
     {
           $OUT .= "root  = '/dev/$device" . "1 ro'\n";
-          $OUT .= "disk  = [ '$image_vbd,sda1,w' ";
+          $OUT .= "disk  = [ '$image_vbd," . $device . "1,w' ";
     }
     if ( $swap_vbd )
     {
-          $OUT .= ", '$swap_vbd,sda2,w'";
+          $OUT .= ", '$swap_vbd," . $device . "2,w'";
     }
     if ( $image_vbd )
     {
@@ -92,8 +98,16 @@ name        = '{$hostname}'
       $m = ",mac=$mac"
     }
 
+    my $vn = '';
+    if ( $vifname )
+    {
+      $vn = ",vifname=$vifname";
+    }
+
     $OUT .= "vif         = [ 'ip=$ip1";
-    $OUT .= "$m' ]";
+    $OUT .= "$m";
+    $OUT .= "$vn";
+    $OUT .= "' ]";
   }
 }
 
