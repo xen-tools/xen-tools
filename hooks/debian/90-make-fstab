@@ -60,6 +60,7 @@ cat <<E_O_FSTAB > ${prefix}/etc/fstab
 #
 # <file system> <mount point>   <type>  <options>       <dump>  <pass>
 proc            /proc           proc    defaults        0       0
+devpts          /dev/pts        devpts  rw,noexec,nosuid,gid=5,mode=620 0  0
 E_O_FSTAB
 for part in `seq 1 ${NUMPARTITIONS}`; do
     eval "PARTITION=\"\${PARTITION${part}}\""
@@ -71,7 +72,7 @@ for part in `seq 1 ${NUMPARTITIONS}`; do
         x=$(( $x+1 ))
     done
     IFS="${OLDIFS}"
-    
+
     case "${partdata2}" in
         xfs)
             has_xfs=1
@@ -80,7 +81,7 @@ for part in `seq 1 ${NUMPARTITIONS}`; do
             has_reiserfs=1
             ;;
     esac
-    
+
     if [ "${partdata2}" = "swap" ]; then
         echo "/dev/${device}${part} none swap sw 0 0" >> ${prefix}/etc/fstab
     else
