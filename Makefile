@@ -158,6 +158,8 @@ install-hooks:
 	cp -R hooks/edgy/*-* ${prefix}/usr/lib/xen-tools/edgy.d/
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s edgy.d feisty.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s edgy.d gutsy.d
+	-cd ${prefix}/usr/lib/xen-tools/ && ln -s edgy.d hardy.d
+	-cd ${prefix}/usr/lib/xen-tools/ && ln -s edgy.d intrepid.d
 	mkdir -p ${prefix}/usr/lib/xen-tools/dapper.d/
 	cp -R hooks/dapper/*-* ${prefix}/usr/lib/xen-tools/dapper.d/
 	mkdir -p ${prefix}/usr/lib/xen-tools/edgy.d/
