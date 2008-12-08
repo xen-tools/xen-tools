@@ -1,7 +1,11 @@
 xen-tools (4.0-1) unstable; urgency=low
 
-  - New command line argument:
-     --no-hosts
+  - New command line argument '--no-hosts' to avoid touching /etc/hosts
+    on dom0
+  - New command line argument '--pygrub' to setup a guest for pygrub use.
+  - Generated configuration file should work for --image-dev + --swap-dev
+    again.
+  - Always use /dev/pts for new images.
 
  -- Steve Kemp <skx@debian.org>  Sun, 23 Nov 2008 13:06:01 +0000
 

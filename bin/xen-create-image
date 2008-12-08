@@ -1338,7 +1338,7 @@ sub parseCommandLineArguments
     #
     #  Parse options.
     #
-    GetOptions(
+    if ( !GetOptions(
 
         # Mandatory
         "dist=s", \$CONFIG{'dist'},
@@ -1372,6 +1372,7 @@ sub parseCommandLineArguments
         "mac=s",       \$CONFIG{'mac'},
         "netmask=s",   \$CONFIG{'netmask'},
         "broadcast=s", \$CONFIG{'broadcast'},
+        "vifname=s",   \$CONFIG{'vifname'},
         "p2p=s",       \$CONFIG{'p2p'},
 
         # Exclusive
@@ -1392,6 +1393,7 @@ sub parseCommandLineArguments
         "ide",          \$CONFIG{'ide'},
         "install=i",    \$CONFIG{'install'},
         "hooks=i",      \$CONFIG{'hooks'},
+        "pygrub",       \$CONFIG{'pygrub'},
         "passwd",       \$CONFIG{'passwd'},
         "partitions=s", \$CONFIG{'partitions'},
         "role=s",       \$CONFIG{'role'},
@@ -1409,7 +1411,10 @@ sub parseCommandLineArguments
         "manual",  \$MANUAL,
         "verbose", \$CONFIG{'verbose'},
         "version", \$VERSION
-    );
+    ) )
+    {
+        exit;
+    }
 
     pod2usage(1) if $HELP;
     pod2usage( -verbose => 2 ) if $MANUAL;
@@ -2268,6 +2273,7 @@ sub showSummary
     logprint("Partitions     :  ");
     foreach my $partition (@PARTITIONS)
     {
+        next if ( !$partition );
         $info = sprintf( '%-15s %-5s (%s)',
                          ( $partition->{'type'} ne 'swap' )
                          ? $partition->{'mountpoint'}

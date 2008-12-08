@@ -13,7 +13,7 @@
 #  Only used to build distribution tarballs.
 #
 DIST_PREFIX = ${TMP}
-VERSION     = 3.9
+VERSION     = 4.0
 BASE        = xen-tools
 
 
