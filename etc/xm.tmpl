@@ -50,24 +50,29 @@ memory      = '{$memory}'
 #  Physical volumes
 #
 {
+    if ( ( $swap_vbd ) && ( $image_vbd ) )
+    {
     $OUT .= "root  = '/dev/$device" . "2 ro'\n";
 
     $OUT .= "disk  = [ ";
 
-    if ( $swap_vbd )
-    {
-         $OUT .= "'$swap_vbd," . $device . "1,w'";
-    }
     if ( $image_vbd )
     {
-         if ( $swap_vbd )
-         {
-            $OUT .= ",";
-         }
          $OUT .= "'$image_vbd," . $device . "2,w'";
 
     }
+
+    if ( $swap_vbd )
+    {
+         if ( $image_vbd )
+         {
+            $OUT .= ",";
+         }
+
+         $OUT .= "'$swap_vbd," . $device . "1,w'";
+    }
     $OUT .= " ]\n";
+    }
 }
 
 
