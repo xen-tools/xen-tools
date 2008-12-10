@@ -1,4 +1,4 @@
-xen-tools (4.0-1) unstable; urgency=low
+xen-tools (4.1-1) unstable; urgency=low
 
   - New command line argument '--no-hosts' to avoid touching /etc/hosts
     on dom0
