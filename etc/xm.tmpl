@@ -30,7 +30,7 @@ memory      = '{$memory}'
 {
   if ( !defined($image_vbd ) )
   {
-    for ( my $i = 0; $i <= $#PARTITIONS; $i++ )
+    for ( my $i = $#PARTITIONS; $i >= 0 ; $i-- )
     {
       if ( $PARTITIONS[$i]{'mountpoint'} eq '/' )
       {
@@ -38,7 +38,7 @@ memory      = '{$memory}'
       }
     }
     $OUT .= "disk        = [\n";
-    for ( my $i = 0; $i <= $#PARTITIONS; $i++ )
+    for ( my $i = $#PARTITIONS; $i >= 0 ; $i-- )
     {
       $OUT .= "                  '$PARTITIONS[$i]{'imagetype'}$PARTITIONS[$i]{'image'},$device" . ( $i + 1 ) .",w',\n";
     }
