@@ -12,6 +12,7 @@
 #
 #  Only used to build distribution tarballs.
 #
+TMP        ?= /tmp
 DIST_PREFIX = ${TMP}
 VERSION     = 4.1
 BASE        = xen-tools
@@ -56,7 +57,7 @@ clean:
 	@find . -name '*.tmp' -exec rm \{\} \;
 	@find . -name 'tags' -exec rm \{\} \;
 	@find . -name '*.8.gz' -exec rm \{\} \;
-	@find man -name '*.html' -exec rm \{\} \;
+        @if [ -d man ]; then rm -rf man ; fi
 	@if [ -e build-stamp ]; then rm -f build-stamp ; fi
 	@if [ -e configure-stamp ]; then rm -f configure-stamp ; fi
 	@if [ -d debian/xen-tools ]; then rm -rf ./debian/xen-tools; fi
@@ -195,6 +196,7 @@ install: fixup-perms install-bin install-etc install-hooks install-libraries ins
 #  Build our manpages via the `pod2man` command.
 #
 manpages:
+	mkdir man
 	cd bin; for i in *-*; do pod2man --release=${VERSION} --official --section=8 $$i ../man/$$i.8; done
 	for i in man/*.8; do gzip --force -9 $$i; done
 

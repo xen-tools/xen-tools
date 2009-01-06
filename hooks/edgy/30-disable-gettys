@@ -42,7 +42,10 @@ if [ ! -z "${serial_device}" ]; then
 
     # replace existing device.
     mv ${prefix}/etc/event.d/tty1  ${prefix}/etc/event.d/${serial_device}
-    sed -i -e s/tty1/${serial_device}/ ${prefix}/etc/inittab
+    sed -i -e s/tty1/${serial_device}/ ${prefix}/etc/event.d/${serial_device}
+    [ -f ${prefix}/etc/inittab ] && sed -i -e s/tty1/${serial_device}/ ${prefix}/etc/inittab
+
+
 
     # make sure that it is allowed to login.
     echo $serial_device >> ${prefix}/etc/securetty

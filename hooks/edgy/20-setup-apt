@@ -41,7 +41,8 @@ cp /etc/resolv.conf ${prefix}/etc
 #
 #  Process any of the present apt-conf setup lines.
 #
-for i in /etc/apt/apt.conf /etc/apt/apt.conf.d/* ; do 
+for i in /etc/apt/apt.conf $(run-parts --list /etc/apt/apt.conf.d) ; do
+
 
     #
     # If the file exists.  (Need this in case the literal glob fails.)
@@ -52,7 +53,8 @@ for i in /etc/apt/apt.conf /etc/apt/apt.conf.d/* ; do
         # Save the matching line(s) to the proxy guess file.
         #
         logMessage The use of a proxy detected.
-        grep -i HTTP::Proxy $i >> ${prefix}/etc/apt/apt.conf.d/proxy-guess
+
+        grep -v '^//' $i | grep -i HTTP::Proxy >>${prefix}/etc/apt/apt.conf.d/proxy-guess
     fi
 done
 
