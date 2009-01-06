@@ -1,0 +1,41 @@
+#!/bin/sh
+#
+#  This role installs Puppet upon the new guest system.
+#
+#  It must make sure that the server is not running before it exits
+# otherwise the temporary mounted directory will not be unmountable.
+#
+
+prefix=$1
+
+#
+#  Source our common functions - this will let us install a Debian package.
+#
+if [ -e /usr/lib/xen-tools/common.sh ]; then
+    . /usr/lib/xen-tools/common.sh
+else
+    echo "Installation problem"
+fi
+
+#
+# Log our start
+#
+logMessage Script $0 starting
+
+
+#
+#  Install ssh
+#
+installDebianPackage ${prefix} puppet
+
+
+#
+#  Make sure sshd isn't running, this will cause our unmounting of the
+# disk image to fail..
+#
+chroot ${prefix} /etc/init.d/puppet stop
+
+#
+#  Log our finish
+#
+logMessage Script $0 finished
