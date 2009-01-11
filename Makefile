@@ -239,7 +239,7 @@ tidy:
 	if [ -x /usr/bin/perltidy ]; then \
 	for i in bin/*-*; do \
 		echo "tidying $$i"; \
-		perltidy -b -nt -bt=2 -sbt=1 -bl  -mbl=3 -sbl -bbs -bbb -anl  -lp $$i \
+		perltidy  $$i \
 	; done \
 	; fi
 
