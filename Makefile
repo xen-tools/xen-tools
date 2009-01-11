@@ -57,7 +57,7 @@ clean:
 	@find . -name '*.tmp' -exec rm \{\} \;
 	@find . -name 'tags' -exec rm \{\} \;
 	@find . -name '*.8.gz' -exec rm \{\} \;
-        @if [ -d man ]; then rm -rf man ; fi
+	@if [ -d man ]; then rm -rf man ; fi
 	@if [ -e build-stamp ]; then rm -f build-stamp ; fi
 	@if [ -e configure-stamp ]; then rm -f configure-stamp ; fi
 	@if [ -d debian/xen-tools ]; then rm -rf ./debian/xen-tools; fi
