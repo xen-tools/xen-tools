@@ -144,14 +144,13 @@ sub parseCommandLineArguments
     #
     #  Parse options.
     #
-    GetOptions(
-                "location=s", \$CONFIG{'location'},
-                "dist=s",     \$CONFIG{'dist'},
-                "verbose",    \$CONFIG{'verbose'},
+    GetOptions( "location=s", \$CONFIG{ 'location' },
+                "dist=s",     \$CONFIG{ 'dist' },
+                "verbose",    \$CONFIG{ 'verbose' },
                 "help",       \$HELP,
                 "manual",     \$MANUAL,
                 "version",    \$VERSION
-    );
+              );
 
     pod2usage(1) if $HELP;
     pod2usage( -verbose => 2 ) if $MANUAL;
@@ -186,7 +185,7 @@ sub checkArguments
     #
     #  We require a location.
     #
-    if ( !defined( $CONFIG{'location'} ) )
+    if ( !defined( $CONFIG{ 'location' } ) )
     {
         print "The '--location' argument is mandatory\n";
         exit 1;
@@ -196,7 +195,7 @@ sub checkArguments
     #
     #  Test that the location we've been given exists
     #
-    if ( !-d $CONFIG{'location'} )
+    if ( !-d $CONFIG{ 'location' } )
     {
         print "The installation directory we've been given doesn't exist\n";
         print "We tried to use : $CONFIG{'location'}\n";
@@ -207,7 +206,7 @@ sub checkArguments
     #
     #  We require a distribution name.
     #
-    if ( !defined( $CONFIG{'dist'} ) )
+    if ( !defined( $CONFIG{ 'dist' } ) )
     {
         print "The '--dist' argument is mandatory\n";
         exit 1;
@@ -221,7 +220,7 @@ sub checkArguments
     #  If there are no scripts then we clearly cannot
     # customise it!
     #
-    my $dir = "/usr/lib/xen-tools/" . $CONFIG{'dist'} . ".d";
+    my $dir = "/usr/lib/xen-tools/" . $CONFIG{ 'dist' } . ".d";
 
     if ( !-d $dir )
     {
@@ -263,12 +262,12 @@ sub runDistributionHooks
     #
     #  Hook directory.
     #
-    my $hooks = "/usr/lib/xen-tools/" . $CONFIG{'dist'} . ".d/";
+    my $hooks = "/usr/lib/xen-tools/" . $CONFIG{ 'dist' } . ".d/";
 
     #
     #  Installation prefix
     #
-    my $prefix = $CONFIG{'location'};
+    my $prefix = $CONFIG{ 'location' };
 
     #
     #  If we're running verbosely then setup the client environment
@@ -277,9 +276,9 @@ sub runDistributionHooks
     #  This is useful in case this script is called outwith the usual
     # xen-create-image framework.
     #
-    if ( $CONFIG{'verbose'} )
+    if ( $CONFIG{ 'verbose' } )
     {
-        $ENV{'verbose'} = 1;
+        $ENV{ 'verbose' } = 1;
     }
 
     #
@@ -317,7 +316,7 @@ sub runDistributionHooks
             #  Run the command.  This has different prolog and epilog
             # depending on whether we're running verbosely or not.
             #
-            if ( $CONFIG{'verbose'} )
+            if ( $CONFIG{ 'verbose' } )
             {
                 print "Running hook $name ['$cmd']\n";
                 print "--\n";

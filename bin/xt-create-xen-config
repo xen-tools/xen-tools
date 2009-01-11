@@ -150,7 +150,7 @@ my @PARTITIONS = undef;
 #
 #  Default options
 #
-$CONFIG{'template'} = '/etc/xen-tools/xm.tmpl';
+$CONFIG{ 'template' } = '/etc/xen-tools/xm.tmpl';
 
 
 #
@@ -175,7 +175,7 @@ checkArguments();
 #
 #  If we've been given any administrators then set them up.
 #
-if ( $ENV{'admins'} )
+if ( $ENV{ 'admins' } )
 {
     setupAdminUsers();
 }
@@ -213,16 +213,15 @@ sub parseCommandLineArguments
     #
     #  Parse options.
     #
-    GetOptions(
-                "admins=s",    \$ENV{'admins'},
-                "output=s",    \$CONFIG{'output'},
-                "extension=s", \$CONFIG{'extension'},
-                "template=s",  \$CONFIG{'template'},
-                "verbose",     \$CONFIG{'verbose'},
+    GetOptions( "admins=s",    \$ENV{ 'admins' },
+                "output=s",    \$CONFIG{ 'output' },
+                "extension=s", \$CONFIG{ 'extension' },
+                "template=s",  \$CONFIG{ 'template' },
+                "verbose",     \$CONFIG{ 'verbose' },
                 "help",        \$HELP,
                 "manual",      \$MANUAL,
                 "version",     \$VERSION
-    );
+              );
 
     pod2usage(1) if $HELP;
     pod2usage( -verbose => 2 ) if $MANUAL;
@@ -257,7 +256,7 @@ sub checkArguments
     #
     #  We require an output location.
     #
-    if ( !defined( $CONFIG{'output'} ) )
+    if ( !defined( $CONFIG{ 'output' } ) )
     {
         print "The '--output' argument is mandatory\n";
         exit 1;
@@ -266,10 +265,10 @@ sub checkArguments
     #
     #  The output location should be a directory which exists.
     #
-    if ( !-d $CONFIG{'output'} )
+    if ( !-d $CONFIG{ 'output' } )
     {
         print
-"The output directory we've been given, $CONFIG{'output'}, doesnt exist\n";
+          "The output directory we've been given, $CONFIG{'output'}, doesnt exist\n";
         print "Aborting\n";
         exit 1;
     }
@@ -277,12 +276,12 @@ sub checkArguments
     #
     #  Make sure that any specified template file exists.
     #
-    if ( defined( $CONFIG{'template'} ) )
+    if ( defined( $CONFIG{ 'template' } ) )
     {
-        if ( !-e $CONFIG{'template'} )
+        if ( !-e $CONFIG{ 'template' } )
         {
             print
-"The specified template file, $CONFIG{'template'} does not exist.\n";
+              "The specified template file, $CONFIG{'template'} does not exist.\n";
             exit 1;
         }
     }
@@ -306,21 +305,17 @@ sub importPartitionsFromEnvironment
 {
     @PARTITIONS = ();
 
-    for ( my $i = 1 ; $i <= $ENV{'NUMPARTITIONS'} ; $i++ )
+    for ( my $i = 1 ; $i <= $ENV{ 'NUMPARTITIONS' } ; $i++ )
     {
-        my @parts = split( /:/, $ENV{'PARTITION' . $i}, 7 );
-        push(
-              @PARTITIONS,
-              {
-               'name'       => $parts[0],
-               'size'       => $parts[1],
-               'type'       => $parts[2],
-               'mountpoint' => $parts[3],
-               'options'    => $parts[4],
-               'imagetype'  => $parts[5],
-               'image'      => $parts[6]
-              }
-        );
+        my @parts = split( /:/, $ENV{ 'PARTITION' . $i }, 7 );
+        push( @PARTITIONS,
+              {  'name'       => $parts[0],
+                 'size'       => $parts[1],
+                 'type'       => $parts[2],
+                 'mountpoint' => $parts[3],
+                 'options'    => $parts[4],
+                 'imagetype'  => $parts[5],
+                 'image'      => $parts[6] } );
     }
 }
 
@@ -342,26 +337,27 @@ sub createXenConfig
     #
     #  The output file we're going to process.
     #
-    my $file = $CONFIG{'output'} . '/' . $ENV{'hostname'} . $ENV{'extension'};
+    my $file =
+      $CONFIG{ 'output' } . '/' . $ENV{ 'hostname' } . $ENV{ 'extension' };
 
     #
     #  The template we're going to read from.
     #
     my $template = new Text::Template( TYPE   => 'FILE',
-                                       SOURCE => $CONFIG{'template'} );
+                                       SOURCE => $CONFIG{ 'template' } );
 
 
     #
     #  The device we're using.
     #
     my $device = 'sda';
-    if ( defined( $ENV{'ide'} ) )
+    if ( defined( $ENV{ 'ide' } ) )
     {
         $device = 'hda';
     }
-    elsif ( defined( $ENV{'disk_device'} ) )
+    elsif ( defined( $ENV{ 'disk_device' } ) )
     {
-        $device = $ENV{'disk_device'};
+        $device = $ENV{ 'disk_device' };
 
         # strip /dev/, if present.
         if ( $device =~ /^(.*)\/(.*)$/ )
@@ -369,65 +365,65 @@ sub createXenConfig
             $device = $2;
         }
     }
-    $ENV{'device'} = $device;
+    $ENV{ 'device' } = $device;
 
 
     #
     #  The memory size:  Convert Gb -> Mb.
     #
-    if ( $ENV{'memory'} =~ /^(\d+)Gb*$/i )
+    if ( $ENV{ 'memory' } =~ /^(\d+)Gb*$/i )
     {
-        $ENV{'memory'} = $1 * 1024;
+        $ENV{ 'memory' } = $1 * 1024;
     }
 
     #
     #  Remove any trailing Mb.
     #
-    if ( $ENV{'memory'} =~ /^(\d+)Mb*$/i )
+    if ( $ENV{ 'memory' } =~ /^(\d+)Mb*$/i )
     {
-        $ENV{'memory'} = $1;
+        $ENV{ 'memory' } = $1;
     }
 
 
     #
     # Images as presented to Xen - either loopback images, or LVM partitions.
     #
-    if ( $ENV{'lvm'} )
+    if ( $ENV{ 'lvm' } )
     {
-        $ENV{'image_prefix'} = "phy:$ENV{'lvm'}/$ENV{'hostname'}-";
-        $ENV{'image_suffix'} = '';
+        $ENV{ 'image_prefix' } = "phy:$ENV{'lvm'}/$ENV{'hostname'}-";
+        $ENV{ 'image_suffix' } = '';
         importPartitionsFromEnvironment();
     }
-    elsif ( $ENV{'evms'} )
+    elsif ( $ENV{ 'evms' } )
     {
-        $ENV{'image_prefix'} = "phy:/dev/evms/$ENV{'hostname'}-";
-        $ENV{'image_suffix'} = '';
+        $ENV{ 'image_prefix' } = "phy:/dev/evms/$ENV{'hostname'}-";
+        $ENV{ 'image_suffix' } = '';
         importPartitionsFromEnvironment();
     }
-    elsif ( $ENV{'image-dev'} )
+    elsif ( $ENV{ 'image-dev' } )
     {
-        $ENV{'image_vbd'} = "phy:$ENV{'image-dev'}";
+        $ENV{ 'image_vbd' } = "phy:$ENV{'image-dev'}";
 
-        if ( $ENV{'swap-dev'} )
+        if ( $ENV{ 'swap-dev' } )
         {
-            $ENV{'swap_vbd'} = "phy:$ENV{'swap-dev'}";
+            $ENV{ 'swap_vbd' } = "phy:$ENV{'swap-dev'}";
         }
         else
         {
-            $ENV{'swap_vbd'} = undef;
+            $ENV{ 'swap_vbd' } = undef;
         }
     }
     else
     {
-        $ENV{'image_prefix'} = "file:$ENV{'dir'}/domains/$ENV{'hostname'}/";
-        $ENV{'image_suffix'} = '.img';
+        $ENV{ 'image_prefix' } = "file:$ENV{'dir'}/domains/$ENV{'hostname'}/";
+        $ENV{ 'image_suffix' } = '.img';
         importPartitionsFromEnvironment();
     }
 
     #
     # The xen-tools version.
     #
-    $ENV{'xen_tools_version'} = $RELEASE;
+    $ENV{ 'xen_tools_version' } = $RELEASE;
 
 
     #
@@ -438,9 +434,9 @@ sub createXenConfig
     my %vars;
     foreach my $key ( sort keys %ENV )
     {
-        $vars{$key} = $ENV{$key};
+        $vars{ $key } = $ENV{ $key };
     }
-    $vars{'PARTITIONS'} = \@PARTITIONS;
+    $vars{ 'PARTITIONS' } = \@PARTITIONS;
 
     #
     #  Now output the data.
@@ -510,7 +506,7 @@ sub setupAdminUsers
     #  For each user make sure they exist, and setup the
     # login shell for them.
     #
-    foreach my $user ( split( /,/, $ENV{'admins'} ) )
+    foreach my $user ( split( /,/, $ENV{ 'admins' } ) )
     {
 
         # Strip leading and trailing whitespace.
@@ -525,22 +521,22 @@ sub setupAdminUsers
         {
 
             # Change shell.
-            $CONFIG{'verbose'} && print "Changing shell for $user: $shell\n";
+            $CONFIG{ 'verbose' } && print "Changing shell for $user: $shell\n";
             system( "chsh", "-s", $shell, $user );
         }
         else
         {
 
             # Add a new user.
-            $CONFIG{'verbose'} && print "Adding new user: $user\n";
+            $CONFIG{ 'verbose' } && print "Adding new user: $user\n";
             system( "useradd", "-s", $shell, $user );
         }
 
         #
         #  Add the entry to /etc/sudoers.
         #
-        open( SUDOERS, ">>", "/etc/sudoers" )
-          or warn "Failed to add user to sudoers file : $user - $!";
+        open( SUDOERS, ">>", "/etc/sudoers" ) or
+          warn "Failed to add user to sudoers file : $user - $!";
         print SUDOERS
           "$user ALL = NOPASSWD: /usr/sbin/xm, /usr/bin/xen-create-image\n";
         close(SUDOERS);

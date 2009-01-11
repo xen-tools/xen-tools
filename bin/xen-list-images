@@ -97,7 +97,7 @@ my %CONFIG;
 #
 #  Default prefix
 #
-$CONFIG{'prefix'} = "/etc/xen";
+$CONFIG{ 'prefix' } = "/etc/xen";
 
 #
 # Release number.
@@ -131,7 +131,7 @@ my @instances = findXenInstances();
 my $count = 0;
 foreach my $instance (@instances)
 {
-    if ($count) { print "\n"; }
+    if ($count) {print "\n";}
 
     displayInstance($instance);
     $count += 1;
@@ -214,7 +214,7 @@ sub readConfigurationFile
             }
 
             # Store value.
-            $CONFIG{$key} = $val;
+            $CONFIG{ $key } = $val;
         }
     }
     close(FILE);
@@ -238,8 +238,8 @@ sub parseCommandLineArguments
 
     #  Parse options.
     #
-    GetOptions( "test=s", \$CONFIG{'prefix'}, "help", \$HELP, "manual",
-                \$MANUAL, "version", \$VERSION );
+    GetOptions( "test=s", \$CONFIG{ 'prefix' },
+                "help", \$HELP, "manual", \$MANUAL, "version", \$VERSION );
 
     pod2usage(1) if $HELP;
     pod2usage( -verbose => 2 ) if $MANUAL;
@@ -273,7 +273,7 @@ sub findXenInstances
 {
     my @found;
 
-    foreach my $file ( sort( glob( $CONFIG{'prefix'} . "/*.cfg" ) ) )
+    foreach my $file ( sort( glob( $CONFIG{ 'prefix' } . "/*.cfg" ) ) )
     {
         push @found, $file if ( -e $file );
     }

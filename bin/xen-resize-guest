@@ -143,13 +143,14 @@ testArguments();
 #
 my $path = undef;
 
-if ( $CONFIG{'dir'} )
+if ( $CONFIG{ 'dir' } )
 {
 
     #
     #  Make sure we can find the disk
     #
-    $path = $CONFIG{'dir'} . "/domains/" . $CONFIG{'hostname'} . "/disk.img";
+    $path =
+      $CONFIG{ 'dir' } . "/domains/" . $CONFIG{ 'hostname' } . "/disk.img";
     if ( !-e $path )
     {
         print <<EOF;
@@ -187,7 +188,7 @@ EOF
     #
     #  Allow panic
     #
-    if ( !$CONFIG{'force'} )
+    if ( !$CONFIG{ 'force' } )
     {
         foreach my $i ( 1 .. 10 )
         {
@@ -202,13 +203,13 @@ EOF
     my $cmd = "dd if=/dev/zero bs=1M count=$CONFIG{'add'}k >> $path";
     system($cmd );
 }
-elsif ( $CONFIG{'lvm'} )
+elsif ( $CONFIG{ 'lvm' } )
 {
 
     #
     #  Make sure we can find the disk
     #
-    $path = "/dev/" . $CONFIG{'lvm'} . "/" . $CONFIG{'hostname'} . "-disk";
+    $path = "/dev/" . $CONFIG{ 'lvm' } . "/" . $CONFIG{ 'hostname' } . "-disk";
     if ( !-e $path )
     {
         print <<EOF;
@@ -246,7 +247,7 @@ EOF
     #
     #  Allow panic
     #
-    if ( !$CONFIG{'force'} )
+    if ( !$CONFIG{ 'force' } )
     {
         foreach my $i ( 1 .. 10 )
         {
@@ -355,7 +356,7 @@ sub readConfigurationFile
             }
 
             # Store value.
-            $CONFIG{$key} = $val;
+            $CONFIG{ $key } = $val;
         }
     }
 
@@ -389,16 +390,16 @@ sub parseCommandLineArguments
     GetOptions(
 
         # Misc. options
-        "add=s",      \$CONFIG{'add'},
-        "dir=s",      \$install{'dir'},
-        "lvm=s",      \$install{'lvm'},
-        "hostname=s", \$CONFIG{'hostname'},
-        "force",      \$CONFIG{'force'},
+        "add=s",      \$CONFIG{ 'add' },
+        "dir=s",      \$install{ 'dir' },
+        "lvm=s",      \$install{ 'lvm' },
+        "hostname=s", \$CONFIG{ 'hostname' },
+        "force",      \$CONFIG{ 'force' },
 
         # Help options
         "help",    \$HELP,
         "manual",  \$MANUAL,
-        "verbose", \$CONFIG{'verbose'},
+        "verbose", \$CONFIG{ 'verbose' },
         "version", \$VERSION
     );
 
@@ -417,17 +418,17 @@ sub parseCommandLineArguments
     # they will allow the configuration values to be overriden by
     # the command line.
     #
-    if ( $install{'lvm'} )
+    if ( $install{ 'lvm' } )
     {
-        $CONFIG{'lvm'} = $install{'lvm'};
-        $CONFIG{'dir'} = undef;
-        delete $CONFIG{'dir'};
+        $CONFIG{ 'lvm' } = $install{ 'lvm' };
+        $CONFIG{ 'dir' } = undef;
+        delete $CONFIG{ 'dir' };
     }
-    if ( $install{'dir'} )
+    if ( $install{ 'dir' } )
     {
-        $CONFIG{'dir'} = $install{'dir'};
-        $CONFIG{'lvm'} = undef;
-        delete $CONFIG{'lvm'};
+        $CONFIG{ 'dir' } = $install{ 'dir' };
+        $CONFIG{ 'lvm' } = undef;
+        delete $CONFIG{ 'lvm' };
     }
 }
 
@@ -447,7 +448,7 @@ sub testArguments
     #
     #  Make sure we received a hostname.
     #
-    if ( !$CONFIG{'hostname'} )
+    if ( !$CONFIG{ 'hostname' } )
     {
         print <<EOF;
 
@@ -462,7 +463,7 @@ EOF
     #
     #  Make sure we received a size.
     #
-    if ( !$CONFIG{'add'} )
+    if ( !$CONFIG{ 'add' } )
     {
         print <<EOF;
 
@@ -478,7 +479,7 @@ EOF
     #
     #  Make sure the guest isn't running
     #
-    if ( xenRunning( $CONFIG{'hostname'} ) )
+    if ( xenRunning( $CONFIG{ 'hostname' } ) )
     {
         print "The guest $CONFIG{'hostname'} appears to be running!\n";
         exit 1;
@@ -488,8 +489,10 @@ EOF
     #  We should either have LVM *or* directory - not neither or both.
     #
     my $options = 0;
-    $options += 1 if ( defined( $CONFIG{'lvm'} ) && length( $CONFIG{'lvm'} ) );
-    $options += 1 if ( defined( $CONFIG{'dir'} ) && length( $CONFIG{'dir'} ) );
+    $options += 1
+      if ( defined( $CONFIG{ 'lvm' } ) && length( $CONFIG{ 'lvm' } ) );
+    $options += 1
+      if ( defined( $CONFIG{ 'dir' } ) && length( $CONFIG{ 'dir' } ) );
 
     #
     #  Report
@@ -508,13 +511,13 @@ EOF
     #
     #  Convert from Gb -> Mb;
     #
-    if ( $CONFIG{'add'} =~ /^([0-9.]+)Gb*$/i )
+    if ( $CONFIG{ 'add' } =~ /^([0-9.]+)Gb*$/i )
     {
-        $CONFIG{'add'} = $1 * 1024;
+        $CONFIG{ 'add' } = $1 * 1024;
     }
-    if ( $CONFIG{'add'} =~ /^([0-9.]+)Mb*$/i )
+    if ( $CONFIG{ 'add' } =~ /^([0-9.]+)Mb*$/i )
     {
-        $CONFIG{'add'} = $1;
+        $CONFIG{ 'add' } = $1;
     }
 }
 
@@ -534,8 +537,8 @@ sub xenRunning
 
     my $running = 0;
 
-    open( CMD, "xm list $hostname 2>/dev/null |" )
-      or die "Failed to run 'xm list $hostname'";
+    open( CMD, "xm list $hostname 2>/dev/null |" ) or
+      die "Failed to run 'xm list $hostname'";
     while (<CMD>)
     {
         my $line = $_;

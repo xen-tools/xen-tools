@@ -124,7 +124,7 @@ my %CONFIG;
 #
 #  Default options
 #
-$CONFIG{'template'} = '/etc/xen-tools/xm-nfs.tmpl';
+$CONFIG{ 'template' } = '/etc/xen-tools/xm-nfs.tmpl';
 
 
 #
@@ -134,7 +134,7 @@ my $RELEASE = '4.1';
 
 
 # store version number away.
-$CONFIG{'xen_tools_version'} = $RELEASE;
+$CONFIG{ 'xen_tools_version' } = $RELEASE;
 
 
 #
@@ -161,13 +161,13 @@ testArguments();
 if ( -e "/etc/xen/$CONFIG{'hostname'}.cfg" )
 {
     die "Configuration file for $CONFIG{'hostname'} already exists"
-      unless ( $CONFIG{'force'} );
+      unless ( $CONFIG{ 'force' } );
 }
 
 #
 #  If we've been given any administrators then set them up.
 #
-if ( $CONFIG{'admins'} )
+if ( $CONFIG{ 'admins' } )
 {
     setupAdminUsers();
 }
@@ -258,7 +258,7 @@ sub readConfigurationFile
             }
 
             # Store value.
-            $CONFIG{$key} = $val;
+            $CONFIG{ $key } = $val;
         }
     }
 
@@ -288,30 +288,30 @@ sub parseCommandLineArguments
     GetOptions(
 
         # Networking options
-        "dhcp",        \$CONFIG{'dhcp'},
-        "gateway=s",   \$CONFIG{'gateway'},
-        "broadcast=s", \$CONFIG{'broadcast'},
-        "ip=s",        \$CONFIG{'ip'},
-        "netmask=s",   \$CONFIG{'netmask'},
-        "hostname=s",  \$CONFIG{'hostname'},
-        "memory=s",    \$CONFIG{'memory'},
-        "mac=s",       \$CONFIG{'mac'},
+        "dhcp",        \$CONFIG{ 'dhcp' },
+        "gateway=s",   \$CONFIG{ 'gateway' },
+        "broadcast=s", \$CONFIG{ 'broadcast' },
+        "ip=s",        \$CONFIG{ 'ip' },
+        "netmask=s",   \$CONFIG{ 'netmask' },
+        "hostname=s",  \$CONFIG{ 'hostname' },
+        "memory=s",    \$CONFIG{ 'memory' },
+        "mac=s",       \$CONFIG{ 'mac' },
 
         # NFS options.
-        "nfs_server=s", \$CONFIG{'nfs_server'},
-        "nfs_root=s",   \$CONFIG{'nfs_root'},
+        "nfs_server=s", \$CONFIG{ 'nfs_server' },
+        "nfs_root=s",   \$CONFIG{ 'nfs_root' },
 
         # Misc. options
-        "admins=s",   \$CONFIG{'admins'},
-        "kernel=s",   \$CONFIG{'kernel'},
-        "initrd=s",   \$CONFIG{'initrd'},
-        "force",      \$CONFIG{'force'},
-        "template=s", \$CONFIG{'template'},
+        "admins=s",   \$CONFIG{ 'admins' },
+        "kernel=s",   \$CONFIG{ 'kernel' },
+        "initrd=s",   \$CONFIG{ 'initrd' },
+        "force",      \$CONFIG{ 'force' },
+        "template=s", \$CONFIG{ 'template' },
 
         # Help options
         "help",    \$HELP,
         "manual",  \$MANUAL,
-        "verbose", \$CONFIG{'verbose'},
+        "verbose", \$CONFIG{ 'verbose' },
         "version", \$VERSION
 
     );
@@ -349,33 +349,33 @@ sub testArguments
     #
     #  Hostname is mandatory
     #
-    die "No hostname" unless ( $CONFIG{'hostname'} );
+    die "No hostname" unless ( $CONFIG{ 'hostname' } );
 
     my @network = qw/ ip gateway netmask /;
 
     #
     #  If DHCP then all the other options aren't needed
     #
-    if ( $CONFIG{'dhcp'} )
+    if ( $CONFIG{ 'dhcp' } )
     {
         foreach my $f (@network)
         {
-            delete( $CONFIG{$f} );
+            delete( $CONFIG{ $f } );
         }
     }
     else
     {
         foreach my $f (@network)
         {
-            die "Missing --$f" unless ( $CONFIG{$f} );
+            die "Missing --$f" unless ( $CONFIG{ $f } );
         }
     }
 
     #
     #  We need an NFS server + root
     #
-    die "Missing NFS server." unless ( $CONFIG{'nfs_server'} );
-    die "Missing NFS root."   unless ( $CONFIG{'nfs_root'} );
+    die "Missing NFS server." unless ( $CONFIG{ 'nfs_server' } );
+    die "Missing NFS root."   unless ( $CONFIG{ 'nfs_root' } );
 
 
     # All OK.
@@ -420,7 +420,7 @@ sub setupAdminUsers
     #  For each user make sure they exist, and setup the
     # login shell for them.
     #
-    foreach my $user ( split( /,/, $ENV{'admins'} ) )
+    foreach my $user ( split( /,/, $ENV{ 'admins' } ) )
     {
 
         # Strip leading and trailing whitespace.
@@ -435,22 +435,22 @@ sub setupAdminUsers
         {
 
             # Change shell.
-            $CONFIG{'verbose'} && print "Changing shell for $user: $shell\n";
+            $CONFIG{ 'verbose' } && print "Changing shell for $user: $shell\n";
             system( "chsh", "-s", $shell, $user );
         }
         else
         {
 
             # Add a new user.
-            $CONFIG{'verbose'} && print "Adding new user: $user\n";
+            $CONFIG{ 'verbose' } && print "Adding new user: $user\n";
             system( "useradd", "-s", $shell, $user );
         }
 
         #
         #  Add the entry to /etc/sudoers.
         #
-        open( SUDOERS, ">>", "/etc/sudoers" )
-          or warn "Failed to add user to sudoers file : $user - $!";
+        open( SUDOERS, ">>", "/etc/sudoers" ) or
+          warn "Failed to add user to sudoers file : $user - $!";
         print SUDOERS
           "$user ALL = NOPASSWD: /usr/sbin/xm, /usr/bin/xen-create-image\n";
         close(SUDOERS);
@@ -470,13 +470,13 @@ sub setupAdminUsers
 sub createNewConfigurationFile
 {
     die "Template file missing: $CONFIG{'template'}"
-      unless ( -e $CONFIG{'template'} );
+      unless ( -e $CONFIG{ 'template' } );
 
     #
     #  Load the template.
     #
     my $template = new Text::Template( TYPE   => 'FILE',
-                                       SOURCE => $CONFIG{'template'} );
+                                       SOURCE => $CONFIG{ 'template' } );
 
     my $result = $template->fill_in( HASH => \%CONFIG );
 

@@ -210,11 +210,11 @@ sub updateXenImage
     #  If we're dealing with loopback images find the main one,
     # and mount it.
     #
-    if ( $CONFIG{'dir'} )
+    if ( $CONFIG{ 'dir' } )
     {
 
         # The loopback image.
-        $img = $CONFIG{'dir'} . "/domains/" . $name . "/disk.img";
+        $img = $CONFIG{ 'dir' } . "/domains/" . $name . "/disk.img";
 
         if ( !-e $img )
         {
@@ -224,11 +224,11 @@ sub updateXenImage
 
         $mount_cmd = "mount -t auto -o loop $img $tmp";
     }
-    elsif ( $CONFIG{'lvm'} )
+    elsif ( $CONFIG{ 'lvm' } )
     {
 
         # The LVM volume
-        $img = "/dev/" . $CONFIG{'lvm'} . "/$name-disk";
+        $img = "/dev/" . $CONFIG{ 'lvm' } . "/$name-disk";
 
         # make sure it exists.
         if ( !-e $img )
@@ -239,22 +239,22 @@ sub updateXenImage
 
         $mount_cmd = "mount -t auto $img $tmp";
     }
-    elsif ( $CONFIG{'evms'} )
+    elsif ( $CONFIG{ 'evms' } )
     {
 
-# The EVMS volume  -- note, unlike LVM, you don't need the $CONFIG{'evms'}
-# to see it and mount the volume. $CONFIG{'evms'} is only used for manipulating
-# the underlying object.  Still, I don't want to mess with the parse code and
-# make it confusing - otherwise --evms takes an argument everywhere but here,
-# which will confuse users.  The better solution is to make it so that --evms can
-# take a following container, but doesn't require it.  For the moment, it is
-# better to leave it as it is, take a container, and then ignore it.
+        # The EVMS volume  -- note, unlike LVM, you don't need the $CONFIG{'evms'}
+        # to see it and mount the volume. $CONFIG{'evms'} is only used for manipulating
+        # the underlying object.  Still, I don't want to mess with the parse code and
+        # make it confusing - otherwise --evms takes an argument everywhere but here,
+        # which will confuse users.  The better solution is to make it so that --evms can
+        # take a following container, but doesn't require it.  For the moment, it is
+        # better to leave it as it is, take a container, and then ignore it.
 
- # The best way to do it is to just read it out of the configuration file,
- # tell the user what you got and where you got it from, and not bother the user
- # with picking --dir or --lvm or --evms at all, but infer it from the config
- # file's disk = parameter.  xen-delete-image might work the same way, but
- # it could be *slightly* more dangerous in the context of deleting.
+        # The best way to do it is to just read it out of the configuration file,
+        # tell the user what you got and where you got it from, and not bother the user
+        # with picking --dir or --lvm or --evms at all, but infer it from the config
+        # file's disk = parameter.  xen-delete-image might work the same way, but
+        # it could be *slightly* more dangerous in the context of deleting.
         $img = "/dev/evms/$name-disk";
 
         # make sure it exists.
@@ -279,8 +279,8 @@ sub updateXenImage
     #
     #  Make sure this is a Debian image.
     #
-    if (    ( -e $tmp . "/usr/bin/apt-get" )
-         && ( -x $tmp . "/usr/bin/apt-get" ) )
+    if ( ( -e $tmp . "/usr/bin/apt-get" ) &&
+         ( -x $tmp . "/usr/bin/apt-get" ) )
     {
 
         #
@@ -293,7 +293,7 @@ sub updateXenImage
         #  Now upgrade
         #
         system(
-"DEBIAN_FRONTEND=noninteractive  chroot $tmp /usr/bin/apt-get upgrade --yes --force-yes"
+            "DEBIAN_FRONTEND=noninteractive  chroot $tmp /usr/bin/apt-get upgrade --yes --force-yes"
         );
     }
     else
@@ -326,8 +326,8 @@ sub xenRunning
 
     my $running = 0;
 
-    open( CMD, "xm list 2>/dev/null |" )
-      or die "Failed to run 'xm list $hostname'";
+    open( CMD, "xm list 2>/dev/null |" ) or
+      die "Failed to run 'xm list $hostname'";
     while (<CMD>)
     {
         my $line = $_;
@@ -407,7 +407,7 @@ sub readConfigurationFile
             }
 
             # Store value.
-            $CONFIG{$key} = $val;
+            $CONFIG{ $key } = $val;
         }
     }
 
@@ -432,11 +432,10 @@ sub parseCommandLineArguments
 
     #  Parse options.
     #
-    GetOptions(
-                "dir=s",  \$CONFIG{'dir'},  "lvm=s",   \$CONFIG{'lvm'},
-                "evms=s", \$CONFIG{'evms'}, "help",    \$HELP,
-                "manual", \$MANUAL,         "version", \$VERSION
-    );
+    GetOptions( "dir=s",  \$CONFIG{ 'dir' },  "lvm=s",   \$CONFIG{ 'lvm' },
+                "evms=s", \$CONFIG{ 'evms' }, "help",    \$HELP,
+                "manual", \$MANUAL,           "version", \$VERSION
+              );
 
     pod2usage(1) if $HELP;
     pod2usage( -verbose => 2 ) if $MANUAL;
@@ -475,7 +474,7 @@ sub checkArguments
     my $count = 0;
     foreach my $type (qw/dir lvm evms/)
     {
-        $count += 1 if defined( $CONFIG{$type} );
+        $count += 1 if defined( $CONFIG{ $type } );
     }
 
     #

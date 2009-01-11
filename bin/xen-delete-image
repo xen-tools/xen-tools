@@ -198,7 +198,7 @@ checkArguments();
 #
 #  Abort if non-root user.
 #
-if ( ( !$CONFIG{'test'} ) && ( $EFFECTIVE_USER_ID != 0 ) )
+if ( ( !$CONFIG{ 'test' } ) && ( $EFFECTIVE_USER_ID != 0 ) )
 {
     print <<E_O_ROOT;
 
@@ -231,7 +231,7 @@ while ( my $name = shift )
 #
 #  Also delete any which were specified using the --hostname flag
 #
-my $hosts = $CONFIG{'hostname'};
+my $hosts = $CONFIG{ 'hostname' };
 foreach my $name (@$hosts)
 {
     if ( !xenRunning($name) )
@@ -318,7 +318,7 @@ sub readConfigurationFile
             }
 
             # Store value.
-            $CONFIG{$key} = $val;
+            $CONFIG{ $key } = $val;
         }
     }
 
@@ -343,17 +343,16 @@ sub parseCommandLineArguments
 
     #  Parse options.
     #
-    GetOptions(
-                "dir=s",       \$CONFIG{'dir'},
-                "lvm=s",       \$CONFIG{'lvm'},
-                "evms=s",      \$CONFIG{'evms'},
-                "hostname=s@", \$CONFIG{'hostname'},
-                "test",        \$CONFIG{'test'},
-                "verbose",     \$CONFIG{'verbose'},
+    GetOptions( "dir=s",       \$CONFIG{ 'dir' },
+                "lvm=s",       \$CONFIG{ 'lvm' },
+                "evms=s",      \$CONFIG{ 'evms' },
+                "hostname=s@", \$CONFIG{ 'hostname' },
+                "test",        \$CONFIG{ 'test' },
+                "verbose",     \$CONFIG{ 'verbose' },
                 "help",        \$HELP,
                 "manual",      \$MANUAL,
                 "version",     \$VERSION
-    );
+              );
 
     pod2usage(1) if $HELP;
     pod2usage( -verbose => 2 ) if $MANUAL;
@@ -390,10 +389,10 @@ sub checkArguments
     #
     #  When testing we only care about loopback images, not disk images.
     #
-    if ( $CONFIG{'test'} )
+    if ( $CONFIG{ 'test' } )
     {
-        $CONFIG{'lvm'}  = undef;
-        $CONFIG{'evms'} = undef;
+        $CONFIG{ 'lvm' }  = undef;
+        $CONFIG{ 'evms' } = undef;
     }
 
     #
@@ -402,7 +401,7 @@ sub checkArguments
     my $count = 0;
     foreach my $type (qw/dir lvm evms/)
     {
-        $count += 1 if defined( $CONFIG{$type} );
+        $count += 1 if defined( $CONFIG{ $type } );
     }
 
     #
@@ -435,8 +434,8 @@ sub xenRunning
 
     my $running = 0;
 
-    open( CMD, "xm list $hostname 2>/dev/null |" )
-      or die "Failed to run 'xm list $hostname'";
+    open( CMD, "xm list $hostname 2>/dev/null |" ) or
+      die "Failed to run 'xm list $hostname'";
     while (<CMD>)
     {
         my $line = $_;
@@ -499,9 +498,9 @@ sub deleteXenImage
     }
 
 
-    if ( defined( $CONFIG{'dir'} ) )
+    if ( defined( $CONFIG{ 'dir' } ) )
     {
-        my $prefix = $CONFIG{'dir'} . "/domains/";
+        my $prefix = $CONFIG{ 'dir' } . "/domains/";
 
         #
         #  Now remove the directory.
@@ -512,7 +511,7 @@ sub deleteXenImage
             rmdir( $prefix . $hostname );
         }
     }
-    elsif ( defined( $CONFIG{'lvm'} ) )
+    elsif ( defined( $CONFIG{ 'lvm' } ) )
     {
 
         #
@@ -535,7 +534,7 @@ sub deleteXenImage
         }
 
     }
-    elsif ( defined( $CONFIG{'evms'} ) )
+    elsif ( defined( $CONFIG{ 'evms' } ) )
     {
 
         #
@@ -589,12 +588,12 @@ sub runCommand
     #
     #  Header.
     #
-    $CONFIG{'verbose'} && print "Executing : $cmd\n";
+    $CONFIG{ 'verbose' } && print "Executing : $cmd\n";
 
     #
     #  Hide output unless running with --debug.
     #
-    if ( $CONFIG{'verbose'} )
+    if ( $CONFIG{ 'verbose' } )
     {
 
         #
@@ -624,10 +623,10 @@ sub runCommand
     #
     # All done.
     #
-    $CONFIG{'verbose'} && print "Output\n";
-    $CONFIG{'verbose'} && print "======\n";
-    $CONFIG{'verbose'} && print $output . "\n";
-    $CONFIG{'verbose'} && print "Finished : $cmd\n";
+    $CONFIG{ 'verbose' } && print "Output\n";
+    $CONFIG{ 'verbose' } && print "======\n";
+    $CONFIG{ 'verbose' } && print $output . "\n";
+    $CONFIG{ 'verbose' } && print "Finished : $cmd\n";
 
     return ($output);
 }
