@@ -5,7 +5,8 @@ xen-tools (4.1-2) UNRELEASED; urgency=low
   * Removal of /etc/bash_completion.d/xm from the package since
     bash-completion ships a more elaborate version of that file. (Closes:
     #566683, #550590)
-
+  * Set umask to 0077 before creating disk images (Closes: #548909)
+  
  --
 
 xen-tools (4.1-1) unstable; urgency=low
