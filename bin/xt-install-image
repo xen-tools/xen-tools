@@ -139,7 +139,7 @@ my %dispatch = (
                                      needURL => 1,
                                    },
                  "rinse" => { sub        => \&do_rinse,
-                              needBinary => "/usr/bin/rinse",
+                              needBinary => "/usr/sbin/rinse",
                             },
                  "rpmstrap" => { sub        => \&do_rpmstrap,
                                  needBinary => "/usr/bin/rpmstrap",

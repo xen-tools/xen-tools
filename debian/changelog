@@ -8,6 +8,7 @@ xen-tools (4.2-1) UNRELEASED; urgency=low
   * Set umask to 0077 before creating disk images (Closes: #548909)
   * Make sure, MAKEDEV is found in either /dev/ or /sbin/ (Closes:
     #502798, #515228)
+  * Change rinse path to /usr/sbin/. (Closes: #511211)
 
  --
 
