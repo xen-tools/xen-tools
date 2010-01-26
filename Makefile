@@ -88,7 +88,7 @@ fixup-perms:
 	chmod 644 etc/xen-tools.conf
 	chmod 644 etc/xm.tmpl
 	chmod 644 etc/xm-nfs.tmpl
-	chmod 644 misc/xm misc/xen-tools misc/README
+	chmod 644 misc/xen-tools misc/README
 
 #
 #  Install files to /etc/
@@ -105,7 +105,6 @@ install-etc:
 	cp partitions/*-*     ${prefix}/etc/xen-tools/partitions.d/
 	-mkdir -p             ${prefix}/etc/bash_completion.d
 	cp misc/xen-tools     ${prefix}/etc/bash_completion.d/
-	cp misc/xm            ${prefix}/etc/bash_completion.d/
 
 
 #
@@ -260,7 +259,6 @@ uninstall:
 	-rm -rf ${prefix}/etc/xen-tools/skel
 	-rmdir ${prefix}/etc/xen-tools/
 	-rm -f ${prefix}/etc/bash_completion.d/xen-tools
-	-rm -f ${prefix}/etc/bash_completion.d/xm
 	rm -rf ${prefix}/usr/lib/xen-tools
 	rm -f ${prefix}/usr/share/man/man8/xen-create-image.8.gz
 	rm -f ${prefix}/usr/share/man/man8/xen-delete-image.8.gz
