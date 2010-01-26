@@ -3483,7 +3483,8 @@ sub runXenConfigCreation
             logprint("The Xen configuration file $file exists\n");
             logprint("Specify --force to force overwriting it.\n");
             logprint("Aborting\n");
-            $FAIL = 1;
+	    # FAIL = 2 will keep existing config file
+            $FAIL = 2;
             exit 127;
         }
     }
@@ -3748,7 +3749,7 @@ sub END
     #  Did we fail?  If so then we should remove the broken installation,
     # unless "--keep" was specified.
     #
-    if ( $FAIL && ( !$CONFIG{ 'keep' } ) )
+    if ( ($FAIL == 1) && ( !$CONFIG{ 'keep' } ) )
     {
 
         #
