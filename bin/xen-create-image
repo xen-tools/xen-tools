@@ -2479,8 +2479,16 @@ sub createLoopbackImages
             $image_cmd = "dd if=/dev/zero of=$disk bs=$size count=1024";
         }
 
+        # Set the umask so that the images are not world readable.
+        my $oldumask = umask;
+        umask(0077);
+
+        # run the image creation command
         runCommand( $image_cmd );
         logprint( "Done\n" );
+
+        # Reset the umask to the previous value
+        umask($oldumask);
 
         if ( ! -e $disk )
         {

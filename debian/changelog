@@ -1,3 +1,10 @@
+xen-tools (3.9-4+lenny1) stable; urgency=low
+
+  * Set umask to 0077 before creating disk images (Closes: #548909)
+    (Cherry-picked dfbf591 from master branch)
+
+ --
+
 xen-tools (3.9-4) unstable; urgency=high
 
   * Changed two defaults in xen-tools.conf to conform
