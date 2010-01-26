@@ -15,7 +15,7 @@ xen-tools (4.2-1) UNRELEASED; urgency=low
     #503339)
   * Downgrade reiserfsprogs, xfsprogs and rinse to Suggests. (Closes:
     #561618)
-  * Bump Standards-Version to 3.8. (no changes necessary)
+  * Bump Standards-Version to 3.8.3 (no changes necessary)
 
  --
 
