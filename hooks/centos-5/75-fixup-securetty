@@ -30,7 +30,7 @@ logMessage Script $0 starting
 # If the file doesn't exist exit early.
 #
 if [ ! -e ${prefix}/etc/securetty ]; then
-    logMesage /etc/securetty not found.
+    logMessage /etc/securetty not found.
     exit
 fi
 
