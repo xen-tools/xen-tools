@@ -3,7 +3,7 @@ Section: utils
 Priority: extra
 Maintainer: Axel Beckert <abe@deuxchevaux.org>
 Build-Depends: debhelper (>= 4.0.0), libtest-pod-perl, libtext-template-perl
-Standards-Version: 3.8.0
+Standards-Version: 3.8.3
 Homepage: http://xen-tools.org/software/xen-tools
 
 Package: xen-tools
