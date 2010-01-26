@@ -1,3 +1,10 @@
+xen-tools (4.1-2) UNRELEASED; urgency=low
+
+  * New maintainer and upstream author
+  * Reintroduction into Debian Unstable
+
+ --
+
 xen-tools (4.1-1) unstable; urgency=low
 
   - New command line argument '--no-hosts' to avoid touching /etc/hosts
