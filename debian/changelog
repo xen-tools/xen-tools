@@ -13,6 +13,8 @@ xen-tools (4.2-1) UNRELEASED; urgency=low
     xen-create-image is run. (Closes: #520177)
   * Fix typo in /usr/lib/xen-tools/*.d/75-fixup-securetty (Closes:
     #503339)
+  * Downgrade reiserfsprogs, xfsprogs and rinse to Suggests. (Closes:
+    #561618)
 
  --
 
