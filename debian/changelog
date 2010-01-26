@@ -6,7 +6,9 @@ xen-tools (4.2-1) UNRELEASED; urgency=low
     bash-completion ships a more elaborate version of that file. (Closes:
     #566683, #550590)
   * Set umask to 0077 before creating disk images (Closes: #548909)
-  
+  * Make sure, MAKEDEV is found in either /dev/ or /sbin/ (Closes:
+    #502798)
+
  --
 
 xen-tools (4.1-1) unstable; urgency=low
