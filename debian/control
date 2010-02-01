@@ -1,9 +1,9 @@
 Source: xen-tools
 Section: utils
 Priority: extra
-Maintainer: Axel Beckert <abe@deuxchevaux.org>
+Maintainer: Axel Beckert <abe@debian.org>
 Build-Depends: debhelper (>= 4.0.0), libtest-pod-perl, libtext-template-perl
-Standards-Version: 3.8.3
+Standards-Version: 3.8.4
 Homepage: http://xen-tools.org/software/xen-tools
 
 Package: xen-tools
