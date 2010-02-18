@@ -1,7 +1,7 @@
 xen-tools (4.2-1) UNRELEASED; urgency=low
 
   * New maintainer and upstream author
-  * Reintroduction into Debian Unstable
+  * Reintroduction into Debian Unstable (Closes: #566714)
   * Removal of /etc/bash_completion.d/xm from the package since
     bash-completion ships a more elaborate version of that file. (Closes:
     #566683, #550590)
