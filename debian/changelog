@@ -17,6 +17,8 @@ xen-tools (4.2~rc1-1) UNRELEASED; urgency=low
   * Downgrade reiserfsprogs, xfsprogs and rinse to Suggests. (Closes:
     #561618)
   * Bump Standards-Version to 3.8.4 (no changes necessary)
+  * Bump Debhelper Compatibility to 7
+    - Replace "dh_clean -k" by "dh_prep"
   * Add Vcs-* headers pointing to new upstream and packaging repository
   * Fix some Lintian warnings:
     - [debian/control]: debhelper-but-no-misc-depends
