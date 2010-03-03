@@ -57,6 +57,7 @@ clean:
 	@find . -name '*.tmp' -exec rm \{\} \;
 	@find . -name 'tags' -exec rm \{\} \;
 	@find . -name '*.8.gz' -exec rm \{\} \;
+	@find . -name '*.tdy' -exec rm \{\} \;
 	@if [ -d man ]; then rm -rf man ; fi
 	@if [ -e build-stamp ]; then rm -f build-stamp ; fi
 	@if [ -e configure-stamp ]; then rm -f configure-stamp ; fi
