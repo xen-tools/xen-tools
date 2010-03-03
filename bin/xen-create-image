@@ -66,7 +66,7 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --modules     Set the path to the kernel modules to use for domU.
                  If modules are specified they must exist.
 
-   --output      Specify the output directory to create the xen configuratoin
+   --output      Specify the output directory to create the xen configuration
                 file within.
 
    --install     Specify whether to install the guest system or not.
@@ -217,7 +217,7 @@ Create a Xen configuration file in so that xm can start the new domain.
  have OpenSSH installed upon it, and have most of its basic files
  setup correctly.
 
-  If you wish you can configure arbitary partitioning schemes, rather
+  If you wish you can configure arbitrary partitioning schemes, rather
  than being restricted to just the two standard volumes.  For more
  details on this please see the later section in this manual "PARTITIONING".
 
@@ -334,7 +334,7 @@ Create a Xen configuration file in so that xm can start the new domain.
 
 =for example end
 
-  The first time this ran the machine would recieve an IP address
+  The first time this ran the machine would receive an IP address
  from the pool which we've created.  This IP would be marked as used,
  and would no longer be available.  If all the IP addresses are taken
  then the system will fail.
