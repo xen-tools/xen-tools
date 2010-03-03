@@ -22,6 +22,7 @@ xen-tools (4.2~rc1-1) UNRELEASED; urgency=low
   * Add Vcs-* headers pointing to new upstream and packaging repository
   * Fix some Lintian warnings:
     - [debian/control]: debhelper-but-no-misc-depends
+    - [debian/copyright]: copyright-without-copyright-notice
 
  -- Axel Beckert <abe@debian.org>  Thu, 18 Feb 2010 16:54:04 +0100
 
