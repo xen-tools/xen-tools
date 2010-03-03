@@ -29,10 +29,10 @@ logMessage Script $0 starting
 #
 # Test where MAKEDEV is located, assuming /sbin/ as default
 #
-my $MAKEDEV = "$prefix/sbin/MAKEDEV";
-if ( !-x $MAKEDEV and -x "$prefix/dev/MAKEDEV" ) {
-    $MAKEDEV = "$prefix/dev/MAKEDEV";
-}
+MAKEDEV = "$prefix/sbin/MAKEDEV"
+if [ ! -x $MAKEDEV -a -x "$prefix/dev/MAKEDEV" ]; then
+    MAKEDEV = "$prefix/dev/MAKEDEV"
+fi
 	
 
 
