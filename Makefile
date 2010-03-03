@@ -197,7 +197,7 @@ install: fixup-perms install-bin install-etc install-hooks install-libraries ins
 #
 manpages:
 	-mkdir -p man
-	cd bin; for i in *-*; do pod2man --release=${VERSION} --official --section=8 $$i ../man/$$i.8; done
+	cd bin; for i in *-*[^y]; do pod2man --release=${VERSION} --official --section=8 $$i ../man/$$i.8; done
 	for i in man/*.8; do gzip --force -9 $$i; done
 
 
