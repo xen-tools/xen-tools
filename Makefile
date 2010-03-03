@@ -14,7 +14,7 @@
 #
 TMP        ?= /tmp
 DIST_PREFIX = ${TMP}
-VERSION     = 4.1
+VERSION     = 4.2~rc1
 BASE        = xen-tools
 
 
