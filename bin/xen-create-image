@@ -665,7 +665,7 @@ my $FAIL = 0;
 #
 # Release number.
 #
-my $RELEASE = '4.2~rc1';
+my $RELEASE = '4.2rc1';
 
 
 

@@ -14,7 +14,8 @@
 #
 TMP        ?= /tmp
 DIST_PREFIX = ${TMP}
-VERSION     = 4.2~rc1
+VERSION     = 4.2rc1
+DEBVERSION  = $(shell echo $(VERSION)|sed 's/\(rc\|pre\|beta\|alpha\)/~\1/')
 BASE        = xen-tools
 
 
@@ -230,8 +231,8 @@ release: tidy fixup-perms update-version update-modules clean changelog
 #  Make a new orig.tar.gz for the Debian package
 #
 orig-tar-gz: release
-	mv $(BASE)-$(VERSION).tar.gz ../$(BASE)_$(VERSION).orig.tar.gz
-	mv $(BASE)-$(VERSION).tar.gz.asc ../$(BASE)_$(VERSION).orig.tar.gz.asc
+	mv $(BASE)-$(VERSION).tar.gz ../$(BASE)_$(DEBVERSION).orig.tar.gz
+	mv $(BASE)-$(VERSION).tar.gz.asc ../$(BASE)_$(DEBVERSION).orig.tar.gz.asc
 
 
 #
@@ -254,7 +255,7 @@ test-verbose:
 #
 tidy:
 	if [ -x /usr/bin/perltidy ]; then \
-	for i in bin/*-*; do \
+	for i in bin/*-*[^~]; do \
 		echo "tidying $$i"; \
 		perltidy  $$i \
 	; done \
@@ -307,4 +308,4 @@ update-modules:
 # at the top of this file.  Steve-Specific?
 #
 update-version:
-	perl -pi.bak -e "s/RELEASE = '[0-9]\.[0-9]';/RELEASE = '${VERSION}';/g" bin/*-*
+	perl -pi.bak -e "s/RELEASE = '[0-9]\.[0-9][^']*';/RELEASE = '${VERSION}';/g" bin/*-*[^~]
