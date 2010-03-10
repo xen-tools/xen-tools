@@ -1,4 +1,4 @@
-xen-tools (4.2~rc1-1)
+xen-tools (4.2~rc1-1) unstable; urgency=low
 
   * If the Dom0 is a Debian or Ubuntu, the distribution and suite for
     DomUs defaults to the distribution and suite the Dom0 is
@@ -10,3 +10,4 @@ xen-tools (4.2~rc1-1)
     path ending in /debian/ there.
 
  -- Axel Beckert <abe@debian.org>  Wed, 10 Mar 2010 19:35:42 +0100
+
