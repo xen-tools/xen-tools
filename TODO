@@ -1,16 +1,17 @@
 TODO
 ----
 
-  1. Test and support more file system types.  Actually this should be
-    pretty simple now that the parameters are stored in the configuration
-    hash.  The only issue is that trailing whitespace is missing from the
-    "make_fs_foo" option.
+* Test and support more file system types.
 
-  2. Write more test cases.
+   Actually this should be pretty simple now that the parameters are
+   stored in the configuration hash.  The only issue is that trailing
+   whitespace is missing from the "make_fs_foo" option.
 
-  3. LVM snapshot support as an install source.
+* Write more test cases.
 
-  4. xen-delete-image should unallocate any used IP addresses.
+* LVM snapshot support as an install source.
+
+* xen-delete-image should unallocate any used IP addresses.
 
 Steve
 --
