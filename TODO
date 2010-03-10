@@ -16,8 +16,6 @@ Bugs to fix and Features to add before a 4.2 release
    stored in the configuration hash.  The only issue is that trailing
    whitespace is missing from the "make_fs_foo" option.
 
-   At least --fs=xfs or ext4 doesn't work. Creates an ext3 anyway.
-
 * debian/rules: Add a get-orig-source target
 
    It should probably call $(MAKE) orig-tar-gz
