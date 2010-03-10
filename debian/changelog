@@ -18,6 +18,8 @@ xen-tools (4.2~rc1-1) UNRELEASED; urgency=low
   * Don't write the FQDN into /etc/hostname (Closes: #492583)
   * Dereference pointers before hashing them to generate a MAC
     address. (Closes: #547265)
+  * Calls pwconv and grpconv inside chroot when installing Fedora (Closes:
+    #499476)
   * Fix typo in /usr/lib/xen-tools/*.d/75-fixup-securetty (Closes:
     #503339)
   * Downgrade reiserfsprogs, xfsprogs and rinse to Suggests. (Closes:
