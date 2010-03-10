@@ -1903,7 +1903,14 @@ sub generateMACAddress
     my $hash = '';
     foreach my $key (qw/ hostname ip dhcp dist /)
     {
-        $hash .= $CONFIG{ $key } if ( $CONFIG{ $key } );
+	if ( $CONFIG{ $key } ) {
+	    if (ref($CONFIG{ $key }) eq 'ARRAY') {
+		$hash .= join(',',@{$CONFIG{ $key }});
+	    } elsif (ref($CONFIG{ $key }) eq 'HASH') {
+		$hash .= join(',',values %{$CONFIG{ $key }});
+	    } else {
+		$hash .= $CONFIG{ $key };
+	    }
     }
 
     #
