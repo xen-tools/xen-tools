@@ -65,7 +65,7 @@ my $sources_list_file = '/etc/apt/sources.list';
 
 use File::Slurp;
 use Getopt::Long;
-use Pod::Usage
+use Pod::Usage;
 
 use strict;
 
