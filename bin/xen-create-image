@@ -1812,7 +1812,7 @@ EOF
     {
         print <<EOF;
   The output directory for creating the xen configuration file within
- doesn't exist:
+ doesn\'t exist:
 
            $CONFIG{'dir'}
 
