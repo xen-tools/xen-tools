@@ -6,7 +6,13 @@ Bugs to fix and Features to add before a 4.2 release
 
 * Installs Etch by default. Should use Lenny or Squeeze instead of Etch.
 
-* xen-create-image man page ambiguous with regards to parameters
+* xen-create-image man page overhaul:
+
+- ambiguous option list with regards to parameters
+
+- talks about Sarge and Etch
+
+- copyright statement dates to 2007
 
 * Test and support more file system types.
 
