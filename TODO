@@ -4,15 +4,11 @@ TODO
 Bugs to fix and Features to add before a 4.2 release
 ----------------------------------------------------
 
-* Installs Etch by default. Should use Lenny or Squeeze instead of Etch.
-
 * xen-create-image man page overhaul:
 
 - ambiguous option list with regards to parameters
 
 - talks about Sarge and Etch
-
-- copyright statement dates to 2007
 
 * Test and support more file system types.
 
@@ -20,9 +16,7 @@ Bugs to fix and Features to add before a 4.2 release
    stored in the configuration hash.  The only issue is that trailing
    whitespace is missing from the "make_fs_foo" option.
 
-- Important: ext4
-
-- Less important: btsfs
+   At least --fs=xfs or ext4 doesn't work. Creates an ext3 anyway.
 
 * debian/rules: Add a get-orig-source target
 
@@ -32,6 +26,13 @@ Maybe for a 4.3 or 5.0 release
 ------------------------------
 
 * LVM snapshot support as an install source.
+
+* Clean up mounts on Ctrl-C, causes error while installing otherwise:
+
+   Removing /dev/vg0/acromantula-domu1-disk - since we're forcing the install
+   Can't remove open logical volume "acromantula-domu1-disk"
+
+* btsfs support
 
 Stuff from Steve's TODO list / Generic TODOs
 --------------------------------------------
