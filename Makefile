@@ -147,12 +147,19 @@ install-hooks:
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-5.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-7.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-8.d
+	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-9.d
+	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-10.d
+	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-11.d
+	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-12.d
+	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-13.d
 	mkdir -p ${prefix}/usr/lib/xen-tools/debian.d/
 	cp -R hooks/debian/*-* ${prefix}/usr/lib/xen-tools/debian.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d sarge.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d lenny.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d etch.d
+	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d lenny.d
+	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d squeeze.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d sid.d
+	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d testing.d
 	mkdir -p ${prefix}/usr/lib/xen-tools/gentoo.d/
 	cp -R hooks/gentoo/*-* ${prefix}/usr/lib/xen-tools/gentoo.d
 	 mkdir -p ${prefix}/usr/lib/xen-tools/edgy.d/
@@ -161,6 +168,9 @@ install-hooks:
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s edgy.d gutsy.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s edgy.d hardy.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s edgy.d intrepid.d
+	-cd ${prefix}/usr/lib/xen-tools/ && ln -s edgy.d jaunty.d
+	-cd ${prefix}/usr/lib/xen-tools/ && ln -s edgy.d karmic.d
+	-cd ${prefix}/usr/lib/xen-tools/ && ln -s edgy.d lucid.d
 	mkdir -p ${prefix}/usr/lib/xen-tools/dapper.d/
 	cp -R hooks/dapper/*-* ${prefix}/usr/lib/xen-tools/dapper.d/
 	mkdir -p ${prefix}/usr/lib/xen-tools/edgy.d/
@@ -262,6 +272,7 @@ uninstall:
 	rm -f ${prefix}/usr/bin/xt-install-image
 	rm -f ${prefix}/usr/bin/xt-create-xen-config
 	rm -f ${prefix}/usr/bin/xen-create-nfs
+	rm -f ${prefix}/usr/bin/xt-guess-suite-and-mirror
 	rm -f ${prefix}/etc/xen-tools/xen-tools.conf
 	rm -f ${prefix}/etc/xen-tools/xm.tmpl
 	-rm -rf ${prefix}/etc/xen-tools/skel
