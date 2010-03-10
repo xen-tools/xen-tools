@@ -11,172 +11,198 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
   Help Options:
 
-   --help        Show the help information for this script.
+   --help       Show the help information for this script.
 
-   --manual      Read the manual, and examples, for this script.
+   --manual     Read the manual, and examples, for this script.
 
-   --verbose     Show useful debugging information.
+   --verbose    Show useful debugging information.
 
-   --version     Show the version number and exit.
+   --version    Show the version number and exit.
 
 
 
   Size / General options:
 
-   --accounts    Copy all non-system accounts to the guest image
+   --accounts   Copy all non-system accounts to the guest image
 
-   --admins      Specify that some administrators should be created for
+   --admins     Specify that some administrators should be created for
                 this image, using xen-shell.
 
-   --boot        Boot the new instance after creating it.
+   --boot       Boot the new instance after creating it.
 
-   --cache       Cache .deb files on the host when installing the new guest
+   --cache=str  Cache .deb files on the host when installing the new guest
                 with the debootstrap tool.
 
-   --config      Read the specified file in addition to the global
+   --config     Read the specified file in addition to the global
                 configuration file.
 
-   --copy-cmd    NOP:  Ignored.
+   --copy-cmd   NOP:  Ignored.
 
-   --debootstrap-cmd    NOP: Ignored.
+   --debootstrap-cmd
+                NOP: Ignored.
 
-   --force       Force overwriting existing images.
-                 This will remove existing images or LVM volumes which match
-                those which are liable to be used by the new invocation.
+   --force      Force overwriting existing images. This will remove
+                existing images or LVM volumes which match those which
+                are liable to be used by the new invocation.
 
-   --fs          Specify the filesystem type to use for the new guest.
-                 Valid choices are 'ext2', 'ext3', 'ext4', 'reiserfs', or
-                 'xfs'.
+   --fs=fs      Specify the filesystem type to use for the new guest.
+                Valid choices are 'ext2', 'ext3', 'ext4', 'reiserfs', or
+                'xfs'.
 
 
-   --image       Specify whether to create "sparse" or "full" disk images.
-                 Full images are mandatory when using LVM, so this setting
+   --image      Specify whether to create "sparse" or "full" disk images.
+                Full images are mandatory when using LVM, so this setting
                 is ignored in that case.
 
-   --image-dev    Specify a physical/logical volume for the disk image.
+   --image-dev=dev
+                Specify a physical/logical volume for the disk image.
 
-   --initrd      Specify the initial ramdisk
-                 If an image is specified it must exist.
+   --initrd     Specify the initial ramdisk. If an image is specified it
+                must exist.
 
-   --keep        Don't delete our images if installation fails.
+   --keep       Don't delete our images if installation fails.
 
-   --kernel      Set the path to the kernel to use for domU.
-                 If a kernel is specified it must exist.
+   --kernel=/path/to/kernel
+                Set the path to the kernel to use for domU. If a
+                kernel is specified it must exist.
 
-   --memory      Setup the amount of memory allocated to the new instance.
+   --memory=size
+                Setup the amount of memory allocated to the new instance.
 
-   --modules     Set the path to the kernel modules to use for domU.
-                 If modules are specified they must exist.
+   --modules=/path/to/modules
+                Set the path to the kernel modules to use for domU.
+                If modules are specified they must exist.
 
-   --output      Specify the output directory to create the xen configuration
+   --output=dir Specify the output directory to create the xen configuration
                 file within.
 
-   --install     Specify whether to install the guest system or not.
+   --install=1  Specify whether to install the guest system or not.
 
-   --hooks       Specify whether to run hooks after the image is created.
+   --hooks=1    Specify whether to run hooks after the image is created.
 
-   --no-hosts    Don't touch /etc/hosts on the dom0.
+   --no-hosts   Don't touch /etc/hosts on the dom0.
 
-   --partitions  Use a specific partition layout configuration file.
+   --partitions=file
+                Use a specific partition layout configuration file.
                 Not supported with the image-dev and swap-dev options.
                 Parameters fs, size, swap and noswap are ignored when
                 using this option.
 
-   --passwd      Ask for a root password during setup.
-                 NOTE:  This is done interactively.
+   --passwd     Ask for a root password during setup.
+                NOTE:  This is done interactively.
 
-   --role        Run the specified role script(s) post-install.
+   --role=role  Run the specified role script(s) post-install.
                 Role scripts are discussed later in this manpage.
 
-   --role-args   Pass the named string literally to any role script.
+   --role-args="--arg1 --arg2"
+                Pass the named string literally to any role script.
                 This is useful for site-specific roles.
 
-   --roledir     Specify the directory which contains the role scripts.
-                 This defaults to /etc/xen-tools/role.d/
+   --roledir=dir
+                Specify the directory which contains the role scripts.
+                This defaults to /etc/xen-tools/role.d/
 
-   --size        Set the size of the primary disk image.
+   --size=size  Set the size of the primary disk image.
 
-   --tar-cmd     NOP: Ignored.
+   --tar-cmd    NOP: Ignored.
 
-   --extension   Specify the suffix to give the Xen configuration file.
+   --extension=ext
+                Specify the suffix to give the Xen configuration
+                file. (Default value: ".cfg")
 
-   --swap        Set the size of the swap partition.
+   --swap=size  Set the size of the swap partition.
 
-   --swap-dev    Specify a physical/logical volume for swap usage.
+   --swap-dev=dev
+                Specify a physical/logical volume for swap usage.
 
-   --noswap      Do not create a swap partition.
-                 When this option is used the system will not have a swap
-                entry added to its /etc/fstab file either.
+   --noswap     Do not create a swap partition. When this option is
+                used the system will not have a swap entry added to
+                its /etc/fstab file either.
 
-   --ide         Use IDE names for virtual devices (i.e. hda not sda)
+
+   --ide        Use IDE names for virtual devices (i.e. hda not sda)
 
 
   Installation options:
 
-   --arch            Pass the given architecture to debootstrap, rinse,
-                    or rpmstrap when installing the system.  This argument
-                    is ignored for other install methods.
+   --arch=arch  Pass the given architecture to debootstrap, rinse,
+                or rpmstrap when installing the system.  This argument
+                is ignored for other install methods.
 
-   --dist            Specify the distribution you wish to install.
+   --dist=dist  Specify the distribution you wish to install.
 
-   --install-method  Specify the installation method to use.
+   --install-method=method
+                Specify the installation method to use. (Default
+                value for Debian and Ubuntu: debootstrap)
 
-   --install-source  Specify the source path to use when installing via
-                    a copy or tarball installation.
+   --install-source=tarball
+                Specify the source path to use when installing via
+                a copy or tarball installation.
 
-   --mirror          Setup the mirror to use when installing via debootstrap.
+   --mirror     Setup the mirror to use when installing via
+                debootstrap. (Default value: mirror used in
+                /etc/apt/sources.list or for Debian
+                "http://ftp.debian.org/debian/" and for Ubuntu
+                "http://archive.ubuntu.com/ubuntu/")
 
-   --template        Specify which template file to use when creating the
-                    Xen configuration file.
+   --template=tmpl
+                Specify which template file to use when creating the
+                Xen configuration file.
 
 
 
   Networking options:
 
-   --dhcp        The guest will be configured to fetch its networking
+   --dhcp       The guest will be configured to fetch its networking
                 details via DHCP.
 
-   --gateway     Setup the network gateway for the new instance.
+   --gateway=gw Setup the network gateway for the new instance.
 
-   --ip          Setup the IP address of the machine, multiple IPs
-                are allowed.   When specifying more than one IP the
-                first one is setup as the "system" IP, and the additional
+   --ip=123.456.789.ABC
+                Setup the IP address of the machine, multiple IPs are
+                allowed.  When specifying more than one IP the first
+                one is setup as the "system" IP, and the additional
                 ones are added as aliases.
-                 Note that Xen 3.x supports a maximum of three vif statements
-                per guest.
-                This option conflicts with --dhcp.
 
-   --mac         Specify the MAC address to use for a given interface.
-                 This is only valid for the first IP address specified, or
-                 for DHCP usage.  (ie. you can add multiple --ip flags,
-                 but the specific MAC address will only be used for the
-                 first interface.)
+                Note that Xen 3.x supports a maximum of three vif statements
+                per guest. This option conflicts with --dhcp.
 
-   --netmask     Setup the netmask for the new instance.
+   --mac=AA:BB:CC:DD:EE:FF
+                Specify the MAC address to use for a given interface.
+                This is only valid for the first IP address specified,
+                or for DHCP usage.  (ie. you can add multiple --ip
+                flags, but the specific MAC address will only be used
+                for the first interface.)
 
-   --broadcast   Setup the broadcast address for the new instance.
+   --netmask=123.456.789.ABC
+                Setup the netmask for the new instance.
+
+   --broadcast=123.456.789.ABC
+                Setup the broadcast address for the new instance.
 
 
 
   Mandatory options:
 
-   --dir         Specify where the output images should go.
-                 Subdirectories will be created for each guest
-                 If you do not wish to use loopback images specify --lvm
+   --dir=dir    Specify where the output images should go.
+                Subdirectories will be created for each guest
+                If you do not wish to use loopback images specify --lvm
                 or --evms.  (These three options are mutually exclusive.)
 
-   --lvm         Specify the volume group to save images within.
-                 If you do not wish to use LVM specify --dir or --evms.
+   --lvm=vg     Specify the volume group to save images within.
+                If you do not wish to use LVM specify --dir or --evms.
                 (These three options are mutually exclusive.)
 
-   --evms        Specify the container to save images within, i.e. '--evms
+   --evms=lvm2/container
+                Specify the container to save images within, i.e. '--evms
                 lvm2/mycontainer'.  If you do not wish to use EVMS specify
                 --dir or --lvm.  (These three options are mutually exclusive.)
 
-   --hostname    Set the hostname of the new guest system.
-                 Ideally this will be fully-qualified since several
-                of the hook scripts will expect to be able to parse
-                 a domain name out of it for various purposes.
+   --hostname=host.example.org
+                Set the hostname of the new guest system.  Ideally
+                this will be fully-qualified since several of the hook
+                scripts will expect to be able to parse a domain name
+                out of it for various purposes.
 
 =cut
 
