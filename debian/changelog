@@ -13,6 +13,7 @@ xen-tools (4.2~rc1-1) UNRELEASED; urgency=low
   * Change rinse path to /usr/sbin/. (Closes: #511211)
   * Don't delete configuration file if it already exists when
     xen-create-image is run. (Closes: #520177)
+  * Don't write the FQDN into /etc/hostname (Closes: #492583)
   * Fix typo in /usr/lib/xen-tools/*.d/75-fixup-securetty (Closes:
     #503339)
   * Downgrade reiserfsprogs, xfsprogs and rinse to Suggests. (Closes:

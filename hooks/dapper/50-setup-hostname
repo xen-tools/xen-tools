@@ -31,7 +31,7 @@ logMessage Script $0 starting
 #
 #  Setup the mailname + hostname files.
 #
-echo ${hostname} > ${prefix}/etc/hostname
+echo ${hostname} | sed 's/^\([^\.]*\)\..*/\1/' > ${prefix}/etc/hostname
 echo ${hostname} > ${prefix}/etc/mailname
 
 
