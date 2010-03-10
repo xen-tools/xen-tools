@@ -1,0 +1,12 @@
+xen-tools (4.2~rc1-1)
+
+  * If the Dom0 is a Debian or Ubuntu, the distribution and suite for
+    DomUs defaults to the distribution and suite the Dom0 is
+    running. Otherwise Debian DomUs get "stable" and Ubuntu "lucid" by
+    default.
+
+  * Default Debian/Ubuntu mirror is now determined by looking into
+    /etc/apt/sources.list (if it exists) and taking the first entry with
+    path ending in /debian/ there.
+
+ -- Axel Beckert <abe@debian.org>  Wed, 10 Mar 2010 19:35:42 +0100

@@ -1,0 +1,183 @@
+#!/usr/bin/perl -w
+
+=head1 NAME
+
+xen-guess-debian-mirror - Tries to guess the most suitable mirror and
+suite for DomUs on Debian and Ubuntu Dom0s.
+
+=cut
+
+=head1 SYNOPSIS
+
+  xen-guess-debian-mirror [-s] [-m]
+
+  -s  show suite
+  -m  show mirror
+
+  Shows both if no parameter is given.
+
+=cut
+
+=head1 DESCRIPTION
+
+xen-guess-debian-mirror tries to find the mirror and suite the Xen
+Dom0 is currently using and returns them in a way suitable for
+xen-create-image(1) or the backticks feature in xen-tools.conf.
+
+=cut
+
+=head1 AUTHOR
+
+ Axel Beckert <abe@deuxchevaux.org>, http://noone.org/abe/
+
+=cut
+
+=head1 LICENSE
+
+Copyright (C) 2010 by Steve Kemp.  All rights reserved.
+
+This module is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself. The LICENSE file contains the
+full text of the license.
+
+=cut
+
+###
+### Configuration
+###
+
+# Fallback to Debian or Ubuntu in case we can't find anything
+my $fallback = 'Debian';
+
+# Which mirrors to use if everything else fails
+my %fallback_mirror = ( Debian => 'http://ftp.debian.org/debian/',
+			Ubuntu => 'http://archive.ubuntu.com/ubuntu/' );
+
+# Which suite to use if everything else fails. For Debian "stable"
+# should be the best choice independent of the time. Ubuntu does not
+# have aliases like stable or testing, so we take the nearest LTS
+# release which is 10.04 at the time of writing.
+my %fallback_suite = ( Debian => 'stable',
+		       Ubuntu => 'lucid' );
+
+# Where to look for the sources.list to parse
+my $sources_list_file = '/etc/apt/sources.list';
+
+use File::Slurp;
+use Getopt::Long;
+use Pod::Usage
+
+use strict;
+
+
+#
+# Release number.
+#
+my $RELEASE = '4.2~rc1';
+
+# Init
+my $mirror = '';
+my $suite = '';
+my $found = 0;
+
+# Parsing command line options
+my $want_mirror  = 0;
+my $want_suite   = 0;
+my $want_version = 0;
+my $want_help    = 0;
+my $want_usage    = 0;
+
+my $result = GetOptions ('mirror'  => \$want_mirror,
+			 'suite'   => \$want_suite,
+			 'version' => \$want_version,
+			 'usage'    => \$want_usage,
+			 'help'    => \$want_help);
+
+if ($want_help) {
+    print "Usage: $0 [-m] [-s]\n";
+    exit 0;
+}
+
+if ($want_usage) {
+    pod2usage(0);
+}
+
+if (-r $sources_list_file) {
+    # sources.list exists, so it's something debianoid.
+
+    # read sources.list and split it into lines
+    my @sources_list = read_file($sources_list_file);
+
+    # Find the first line which is a Debian or Ubuntu mirror but not
+    # an updates, backports, volatile or security mirror.
+    foreach my $sources_list_entry (@sources_list) {
+	# Normalize line
+	chomp($sources_list_entry);
+	$sources_list_entry =~ s/^\s*(.*?)\s*$/$1/;
+
+	# Skip definite non-entries
+	next if $sources_list_entry =~ /^\s*($|#)/;
+
+	# Split up into fields
+	my @source_components = split(/\s+/, $sources_list_entry);
+
+	# Minimum number of components is 4
+	next if $#source_components < 3;
+
+	# Don't use deb-src entries.
+	next if $source_components[0] eq 'deb-src';
+
+	# Skip updates, backports, volatile or security mirror.
+	next if $source_components[2] !~ /^[a-z]+$/;
+
+	if ($source_components[1] =~ m(/debian/?$|/ubuntu/?$)) {
+	    # Seems a typical mirror. Let's use that one
+
+	    $mirror = $source_components[1];
+	    $suite = $source_components[2];
+
+	    $found = 1;
+	    last;
+	}
+    }
+
+    warn "Couldn't parse $sources_list_file of the Dom0.\n" unless $found;
+}
+
+my $lsb_release = `which lsb_release`;
+chomp($lsb_release);
+
+if (!$found and $lsb_release and -x $lsb_release) {
+    my $vendor = `$lsb_release -s -i`;
+
+    if ($vendor eq 'Debian' or $vendor eq 'Ubuntu') {
+	$suite = `$lsb_release -s -c`;
+	chomp($suite);
+
+	unless ($suite) {
+	    $suite = $fallback_suite{$vendor};
+	    warn "Dom0 seems to be $vendor, but couldn't determine suite. Falling back to $suite.\n";
+	}
+
+	$mirror = $fallback_mirror{$vendor};
+
+	$found = 1;
+    }
+}
+
+if ($found) {
+    unless ($want_help || $want_version || $want_suite || $want_mirror) {
+	print "$mirror $suite\n";
+    } else {
+	if ($want_mirror) {
+	    print "$mirror";
+	}
+	if ($want_suite) {
+	    print "$suite";
+	}
+	print "\n";
+    }
+} else {
+    $suite  = $fallback_suite{$fallback};
+    $mirror = $fallback_mirror{$fallback};
+}
