@@ -20,6 +20,8 @@ Bugs to fix and Features to add before a 4.2 release
 
    It should probably call $(MAKE) orig-tar-gz
 
+* Should check all integer expection options on other characters than digits.
+
 Maybe for a 4.3 or 5.0 release
 ------------------------------
 
