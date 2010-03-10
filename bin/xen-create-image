@@ -45,7 +45,9 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
                 those which are liable to be used by the new invocation.
 
    --fs          Specify the filesystem type to use for the new guest.
-                 Valid choices are 'ext2', 'ext3', 'reiserfs', or 'xfs'.
+                 Valid choices are 'ext2', 'ext3', 'ext4', 'reiserfs', or
+                 'xfs'.
+
 
    --image       Specify whether to create "sparse" or "full" disk images.
                  Full images are mandatory when using LVM, so this setting
@@ -1212,6 +1214,7 @@ sub setupDefaultOptions
     #
     $CONFIG{ 'make_fs_ext2' }     = 'mkfs.ext2 -F ';
     $CONFIG{ 'make_fs_ext3' }     = 'mkfs.ext3 -F ';
+    $CONFIG{ 'make_fs_ext4' }     = 'mkfs.ext4 -F ';
     $CONFIG{ 'make_fs_xfs' }      = 'mkfs.xfs -f -d name=';
     $CONFIG{ 'make_fs_reiserfs' } = 'mkfs.reiserfs -f -q ';
 
@@ -1223,6 +1226,7 @@ sub setupDefaultOptions
     #
     $CONFIG{ 'mount_fs_ext2' }     = '-t ext2';
     $CONFIG{ 'mount_fs_ext3' }     = '-t ext3';
+    $CONFIG{ 'mount_fs_ext4' }     = '-t ext4';
     $CONFIG{ 'mount_fs_xfs' }      = '-t xfs';
     $CONFIG{ 'mount_fs_reiserfs' } = '-t reiserfs';
 
