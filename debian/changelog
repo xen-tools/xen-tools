@@ -1,27 +1,27 @@
 xen-tools (4.2~rc1-1) UNRELEASED; urgency=low
 
   * New maintainer and upstream author
-  * New upstream release candidate
-    - Add dependency on libfile-slurp-perl
-    - Support for more recent versions of Fedora, Ubuntu and Debian
-      (Closes: #499477)
   * Reintroduction into Debian Unstable (Closes: #566714)
+  * New upstream release candidate
+    - Needs dependency on libfile-slurp-perl
+    - Supports for more recent versions of Fedora, Ubuntu and Debian
+      (Closes: #499477)
+    - Sets umask to 0077 before creating disk images (Closes: #548909)
+    - Makes sure, MAKEDEV is found in either /dev/ or /sbin/
+      (Closes: #502798, #515228)
+    - Changed rinse path to /usr/sbin/. (Closes: #511211)
+    - Doesn't delete configuration file if it already exists when
+      xen-create-image is run. (Closes: #520177)
+    - Doesn't write the FQDN into /etc/hostname (Closes: #492583)
+    - Dereferences pointers before hashing them to generate a MAC
+      address. (Closes: #547265)
+    - Calls pwconv and grpconv inside chroot when installing Fedora
+      (Closes: #499476)
+    - Fixed typo in /usr/lib/xen-tools/*.d/75-fixup-securetty
+      (Closes: #503339)
   * Removal of /etc/bash_completion.d/xm from the package since
     bash-completion ships a more elaborate version of that file. (Closes:
     #566683, #550590)
-  * Set umask to 0077 before creating disk images (Closes: #548909)
-  * Make sure, MAKEDEV is found in either /dev/ or /sbin/ (Closes:
-    #502798, #515228)
-  * Change rinse path to /usr/sbin/. (Closes: #511211)
-  * Don't delete configuration file if it already exists when
-    xen-create-image is run. (Closes: #520177)
-  * Don't write the FQDN into /etc/hostname (Closes: #492583)
-  * Dereference pointers before hashing them to generate a MAC
-    address. (Closes: #547265)
-  * Calls pwconv and grpconv inside chroot when installing Fedora (Closes:
-    #499476)
-  * Fix typo in /usr/lib/xen-tools/*.d/75-fixup-securetty (Closes:
-    #503339)
   * Downgrade reiserfsprogs, xfsprogs and rinse to Suggests. (Closes:
     #561618)
   * Bump Standards-Version to 3.8.4 (no changes necessary)
