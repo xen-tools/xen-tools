@@ -22,7 +22,8 @@ xen-tools (4.2~rc1-1) UNRELEASED; urgency=low
   * Removal of /etc/bash_completion.d/xm from the package since
     bash-completion ships a more elaborate version of that file. (Closes:
     #566683, #550590)
-  * Downgrade reiserfsprogs and xfsprogs to Suggests. (Closes: #561618)
+  * Downgrade reiserfsprogs and xfsprogs to Suggests. (Closes: #561618,
+    LP: #80233)
   * Bump Standards-Version to 3.8.4 (no changes necessary)
   * Bump Debhelper Compatibility to 7
     - Replace "dh_clean -k" by "dh_prep"
