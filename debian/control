@@ -11,8 +11,8 @@ Vcs-Hg: http://noone.org/hg/xen-tools/debian
 Package: xen-tools
 Architecture: all
 Depends: debootstrap, perl-modules, libtext-template-perl, libconfig-inifiles-perl, libfile-slurp-perl, ${misc:Depends}
-Recommends: xen-hypervisor-amd64 | xen-hypervisor-i386 | xen-hypervisor-i386-pae, xen-shell, libexpect-perl
-Suggests: reiserfsprogs, xfsprogs, rinse
+Recommends: xen-hypervisor-amd64 | xen-hypervisor-i386 | xen-hypervisor-i386-pae, rinse, xen-shell, libexpect-perl
+Suggests: reiserfsprogs, xfsprogs
 Description: Tools to manage Xen virtual servers
  This package contains tools to manage Debian based XEN virtual servers.
  .
