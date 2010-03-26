@@ -35,6 +35,7 @@ xen-tools (4.2~rc1-1) UNRELEASED; urgency=low
   * Fix some Lintian warnings:
     - [debian/control]: debhelper-but-no-misc-depends
     - [debian/copyright]: copyright-without-copyright-notice
+    - [debian/source/format]: missing-debian-source-format
 
  -- Axel Beckert <abe@debian.org>  Wed, 10 Mar 2010 16:08:23 +0100
 
