@@ -78,7 +78,7 @@ E_O_APT
 #
 #  If the host system has security support then enable that here too.
 #
-if ( grep ^deb.*security.debian.org /etc/apt/sources.list >/dev/null 2>/dev/null ) ; then
+if ( grep ^deb.*security /etc/apt/sources.list >/dev/null 2>/dev/null ) ; then
 
     cat <<E_O_APT >> ${prefix}/etc/apt/sources.list
 # 
