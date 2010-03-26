@@ -1911,6 +1911,7 @@ sub generateMACAddress
 	    } else {
 		$hash .= $CONFIG{ $key };
 	    }
+	}
     }
 
     #
