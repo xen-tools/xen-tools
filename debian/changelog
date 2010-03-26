@@ -19,6 +19,8 @@ xen-tools (4.2~rc1-1) UNRELEASED; urgency=low
       (Closes: #499476)
     - Fixed typo in /usr/lib/xen-tools/*.d/75-fixup-securetty
       (Closes: #503339)
+    - Makes better decisions about when to enable Debian security updates
+      in the created DomU (LP: #309750)
   * Removal of /etc/bash_completion.d/xm from the package since
     bash-completion ships a more elaborate version of that file. (Closes:
     #566683, #550590, LP: #538917)
