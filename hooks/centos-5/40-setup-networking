@@ -79,6 +79,7 @@ DEVICE=eth0
 BOOTPROTO=dhcp
 ONBOOT=yes
 E_O_DHCP
+    chroot ${prefix} /usr/bin/yum -y install dhclient
 fi
 
 
