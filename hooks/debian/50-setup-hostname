@@ -105,7 +105,7 @@ if [ -z "${dhcp}" ]; then
                 if [ -e /var/run/dnsmasq.pid ]; then
 
                     logMessage Allowing DNSMasq to restart.
-                    kill -HUP `cat /var/run/dnsmasq.pid`
+                    kill -s HUP `cat /var/run/dnsmasq.pid`
                 fi
             fi
         fi
