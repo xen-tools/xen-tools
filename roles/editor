@@ -67,7 +67,7 @@ for i in `find ${source} -name '*.sed' -print`; do
    #
    #  Strip the .sed suffix
    #
-   file=${file/.sed/}
+   file=$(echo "$file" | sed -e 's/\.sed$//')
 
    #
    #  Does the file exist in the new install?
