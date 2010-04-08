@@ -41,6 +41,7 @@ xen-tools (4.2~rc1-1) UNRELEASED; urgency=low
     - kill -HUP → kill -s HUP (found by checkbashism)
     - ${parm/?/pat[/str]} → echo | sed
     - echo -e → printf
+    - read → read dummy
 
  -- Axel Beckert <abe@debian.org>  Fri, 09 Apr 2010 01:30:49 +0200
 
