@@ -39,6 +39,7 @@ xen-tools (4.2~rc1-1) UNRELEASED; urgency=low
   * Fix some bashisms
     - [^y] → [!y] (Thanks to Mathieu Parent!)
     - kill -HUP → kill -s HUP (found by checkbashism)
+    - ${parm/?/pat[/str]} → echo | sed (Closes: #530226)
 
  -- Axel Beckert <abe@debian.org>  Fri, 09 Apr 2010 01:30:49 +0200
 

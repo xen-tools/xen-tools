@@ -31,8 +31,8 @@ logMessage Script $0 starting
 #
 #  We need to split up the hostname into name + domain
 # do this by looking for a dot.
-name=${hostname/.*/}
-domain=${hostname/${name}\./}
+name=$(echo "$hostname" | sed -e 's/\..*$//')
+domain=$(echo "$hostname" | sed -e 's/^[^.]*\.//')
 
 
 #
