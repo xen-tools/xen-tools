@@ -36,10 +36,11 @@ xen-tools (4.2~rc1-1) UNRELEASED; urgency=low
     - [debian/control]: debhelper-but-no-misc-depends
     - [debian/copyright]: copyright-without-copyright-notice
     - [debian/source/format]: missing-debian-source-format
-  * Fix some bashisms
+  * Fix some bashisms (Closes: #530226)
     - [^y] → [!y] (Thanks to Mathieu Parent!)
     - kill -HUP → kill -s HUP (found by checkbashism)
-    - ${parm/?/pat[/str]} → echo | sed (Closes: #530226)
+    - ${parm/?/pat[/str]} → echo | sed
+    - echo -e → printf
 
  -- Axel Beckert <abe@debian.org>  Fri, 09 Apr 2010 01:30:49 +0200
 

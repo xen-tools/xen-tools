@@ -29,6 +29,6 @@ for i in `rgrep '^use ' .. | grep -v Expect | grep -v POSIX | grep -v Xen:: | gr
     do \
      echo "BEGIN{ use_ok( '$i' ); }"; \
      echo "require_ok( '$i' );" ; \
-     echo -e "\n" ; \
+     printf '\n' ; \
 done
 
