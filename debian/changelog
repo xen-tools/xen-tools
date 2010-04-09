@@ -23,7 +23,7 @@ xen-tools (4.2~rc1-1) UNRELEASED; urgency=low
       in the created DomU (LP: #309750)
     - Installs dhclient for CentOS and Fedora if DHCP networking is
       requested (LP: #241446)
-    - Fix some bashisms (Closes: #530226)
+    - Fixes some bashisms (Closes: #530226)
       * [^y] → [!y] (Thanks to Mathieu Parent!)
       * kill -HUP → kill -s HUP (found by checkbashism)
       * ${parm/?/pat[/str]} → echo | sed
