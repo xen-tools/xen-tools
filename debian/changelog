@@ -42,6 +42,8 @@ xen-tools (4.2~rc1-1) UNRELEASED; urgency=low
     - ${parm/?/pat[/str]} → echo | sed
     - echo -e → printf
     - read → read dummy
+  * Added a README.source explaining how to build xen-tools directly from
+    the Mercurial repository.
 
  -- Axel Beckert <abe@debian.org>  Fri, 09 Apr 2010 01:30:49 +0200
 

@@ -1,0 +1,9 @@
+How to build xen-tools directly from the Mercurial repository?
+==============================================================
+
+$ hg clone http://noone.org/hg/xen-tools/
+$ cd xen-tools
+$ make orig-tar-gz
+$ debuild -i'^\.hg'
+
+ -- Axel Beckert <abe@debian.org>, Fri,  9 Apr 2010 02:06:24 +0200
