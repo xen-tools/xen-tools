@@ -23,6 +23,12 @@ xen-tools (4.2~rc1-1) UNRELEASED; urgency=low
       in the created DomU (LP: #309750)
     - Installs dhclient for CentOS and Fedora if DHCP networking is
       requested (LP: #241446)
+    - Fix some bashisms (Closes: #530226)
+      * [^y] → [!y] (Thanks to Mathieu Parent!)
+      * kill -HUP → kill -s HUP (found by checkbashism)
+      * ${parm/?/pat[/str]} → echo | sed
+      * echo -e → printf
+      * read → read dummy
   * Removal of /etc/bash_completion.d/xm from the package since
     bash-completion ships a more elaborate version of that file. (Closes:
     #566683, #550590, LP: #538917, #484098)
@@ -36,12 +42,6 @@ xen-tools (4.2~rc1-1) UNRELEASED; urgency=low
     - [debian/control]: debhelper-but-no-misc-depends
     - [debian/copyright]: copyright-without-copyright-notice
     - [debian/source/format]: missing-debian-source-format
-  * Fix some bashisms (Closes: #530226)
-    - [^y] → [!y] (Thanks to Mathieu Parent!)
-    - kill -HUP → kill -s HUP (found by checkbashism)
-    - ${parm/?/pat[/str]} → echo | sed
-    - echo -e → printf
-    - read → read dummy
   * Added a README.source explaining how to build xen-tools directly from
     the Mercurial repository.
 
