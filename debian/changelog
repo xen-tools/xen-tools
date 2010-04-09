@@ -29,6 +29,9 @@ xen-tools (4.2~rc1-1) UNRELEASED; urgency=low
       * ${parm/?/pat[/str]} → echo | sed
       * echo -e → printf
       * read → read dummy
+    - xt-install-image now exits with return value 127 instead of 0 to
+      indicate errors on running the command given in --install-method.
+      (Closes: #534290)
   * Removal of /etc/bash_completion.d/xm from the package since
     bash-completion ships a more elaborate version of that file. (Closes:
     #566683, #550590, LP: #538917, #484098)

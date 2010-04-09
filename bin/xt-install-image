@@ -576,7 +576,7 @@ sub runCommand
     {
         print "Running command '$cmd' failed.\n";
         print "Aborting\n";
-        exit;
+        exit 127;
     }
 
     #
