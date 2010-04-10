@@ -10,19 +10,28 @@ Bugs to fix and Features to add before a 4.2 release
 
 - talks about Sarge and Etch
 
+* xen-create-image --dist=... should be more fine-grained
+
+   It should over the possibility to enabled/disable
+   security/volatile/backports as well as
+   contrib/non-free/universe/restricted/multiverse for each of them.
+
+   My current idea is to allow parameters like
+
+   --dist="lenny:main,contrib,non-free;security;volatile:main"
+
+   and maybe (if the default will be to include security) to also
+   allow
+
+   --dist="lenny;no-security"
+
 * Test and support more file system types.
 
    Actually this should be pretty simple now that the parameters are
    stored in the configuration hash.  The only issue is that trailing
    whitespace is missing from the "make_fs_foo" option.
 
-* debian/rules: Add a get-orig-source target
-
-   It should probably call $(MAKE) orig-tar-gz
-
 * Should check all integer expection options on other characters than digits.
-
-* Quite some bashisms to check (see also http://bugs.debian.org/530226)
 
 Maybe for a 4.3 or 5.0 release
 ------------------------------
