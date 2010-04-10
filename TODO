@@ -12,7 +12,7 @@ Bugs to fix and Features to add before a 4.2 release
 
 * xen-create-image --dist=... should be more fine-grained
 
-   It should over the possibility to enabled/disable
+   It should offer the possibility to enabled/disable
    security/volatile/backports as well as
    contrib/non-free/universe/restricted/multiverse for each of them.
 
