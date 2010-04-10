@@ -43,7 +43,7 @@ Maybe for a 4.3 or 5.0 release
    Removing /dev/vg0/acromantula-domu1-disk - since we're forcing the install
    Can't remove open logical volume "acromantula-domu1-disk"
 
-* btsfs support
+* btrfs support
 
 Stuff from Steve's TODO list / Generic TODOs
 --------------------------------------------
