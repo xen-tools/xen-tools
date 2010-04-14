@@ -5,8 +5,8 @@ Maintainer: Axel Beckert <abe@debian.org>
 Build-Depends: debhelper (>= 7.0.0), libtest-pod-perl, libtext-template-perl
 Standards-Version: 3.8.4
 Homepage: http://xen-tools.org/software/xen-tools
-Vcs-Browser: http://noone.org/hg/xen-tools
-Vcs-Hg: http://noone.org/hg/xen-tools/debian
+Vcs-Browser: http://gitorious.org/xen-tools/xen-tools
+Vcs-Git: git://gitorious.org/xen-tools/xen-tools.git
 
 Package: xen-tools
 Architecture: all
