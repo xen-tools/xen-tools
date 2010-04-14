@@ -17,7 +17,7 @@ DIST_PREFIX = ${TMP}
 VERSION     = 4.2rc1
 DEBVERSION  = $(shell echo $(VERSION)|sed 's/\(rc\|pre\|beta\|alpha\)/~\1/')
 BASE        = xen-tools
-
+VCS	    = $(shell git st > /dev/null && echo git || hg st > /dev/null && echo hg || echo cannot-determine-used-vcs)
 
 #
 #  Installation prefix, useful for the Debian package.
@@ -44,7 +44,7 @@ nop:
 # with those details.
 #
 changelog:
-	hg log -v > ChangeLog
+	$(VCS) log -v > ChangeLog
 
 
 #
@@ -71,14 +71,14 @@ clean:
 #  If the testsuite runs correctly then commit any pending changes.
 #
 commit: test
-	hg commit
+	$(VCS) commit
 
 
 #
 #  Show what has been changed in the local copy vs. the remote repository.
 #
 diff:
-	hg diff 2>/dev/null
+	$(VCS) diff 2>/dev/null
 
 
 #
@@ -223,6 +223,7 @@ release: tidy fixup-perms update-version update-modules clean changelog
 	cp -R . $(DIST_PREFIX)/$(BASE)-$(VERSION)
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)/debian
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)/.hg*
+	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)/.git*
 	cd $(DIST_PREFIX) && tar -cvf $(DIST_PREFIX)/$(BASE)-$(VERSION).tar $(BASE)-$(VERSION)/
 	gzip $(DIST_PREFIX)/$(BASE)-$(VERSION).tar
 	mv $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz .
@@ -294,7 +295,7 @@ uninstall:
 #  NOTE: Removes empty local directories.
 #
 update:
-	hg pull --update 2>/dev/null
+	$(VCS) pull --update 2>/dev/null
 
 
 #
