@@ -51,14 +51,14 @@ my $fallback = 'Debian';
 
 # Which mirrors to use if everything else fails
 my %fallback_mirror = ( Debian => 'http://ftp.debian.org/debian/',
-			Ubuntu => 'http://archive.ubuntu.com/ubuntu/' );
+                        Ubuntu => 'http://archive.ubuntu.com/ubuntu/' );
 
 # Which suite to use if everything else fails. For Debian "stable"
 # should be the best choice independent of the time. Ubuntu does not
 # have aliases like stable or testing, so we take the nearest LTS
 # release which is 10.04 at the time of writing.
 my %fallback_suite = ( Debian => 'stable',
-		       Ubuntu => 'lucid' );
+                       Ubuntu => 'lucid' );
 
 # Where to look for the sources.list to parse
 my $sources_list_file = '/etc/apt/sources.list';
@@ -88,10 +88,10 @@ my $want_help    = 0;
 my $want_usage    = 0;
 
 my $result = GetOptions ('mirror'  => \$want_mirror,
-			 'suite'   => \$want_suite,
-			 'version' => \$want_version,
-			 'usage'    => \$want_usage,
-			 'help'    => \$want_help);
+                         'suite'   => \$want_suite,
+                         'version' => \$want_version,
+                         'usage'    => \$want_usage,
+                         'help'    => \$want_help);
 
 if ($want_help) {
     print "Usage: $0 [-m] [-s]\n";
@@ -111,34 +111,34 @@ if (-r $sources_list_file) {
     # Find the first line which is a Debian or Ubuntu mirror but not
     # an updates, backports, volatile or security mirror.
     foreach my $sources_list_entry (@sources_list) {
-	# Normalize line
-	chomp($sources_list_entry);
-	$sources_list_entry =~ s/^\s*(.*?)\s*$/$1/;
+        # Normalize line
+        chomp($sources_list_entry);
+        $sources_list_entry =~ s/^\s*(.*?)\s*$/$1/;
 
-	# Skip definite non-entries
-	next if $sources_list_entry =~ /^\s*($|#)/;
+        # Skip definite non-entries
+        next if $sources_list_entry =~ /^\s*($|#)/;
 
-	# Split up into fields
-	my @source_components = split(/\s+/, $sources_list_entry);
+        # Split up into fields
+        my @source_components = split(/\s+/, $sources_list_entry);
 
-	# Minimum number of components is 4
-	next if $#source_components < 3;
+        # Minimum number of components is 4
+        next if $#source_components < 3;
 
-	# Don't use deb-src entries.
-	next if $source_components[0] eq 'deb-src';
+        # Don't use deb-src entries.
+        next if $source_components[0] eq 'deb-src';
 
-	# Skip updates, backports, volatile or security mirror.
-	next if $source_components[2] !~ /^[a-z]+$/;
+        # Skip updates, backports, volatile or security mirror.
+        next if $source_components[2] !~ /^[a-z]+$/;
 
-	if ($source_components[1] =~ m(/debian/?$|/ubuntu/?$)) {
-	    # Seems a typical mirror. Let's use that one
+        if ($source_components[1] =~ m(/debian/?$|/ubuntu/?$)) {
+            # Seems a typical mirror. Let's use that one
 
-	    $mirror = $source_components[1];
-	    $suite = $source_components[2];
+            $mirror = $source_components[1];
+            $suite = $source_components[2];
 
-	    $found = 1;
-	    last;
-	}
+            $found = 1;
+            last;
+        }
     }
 
     warn "Couldn't parse $sources_list_file of the Dom0.\n" unless $found;
@@ -151,31 +151,31 @@ if (!$found and $lsb_release and -x $lsb_release) {
     my $vendor = `$lsb_release -s -i`;
 
     if ($vendor eq 'Debian' or $vendor eq 'Ubuntu') {
-	$suite = `$lsb_release -s -c`;
-	chomp($suite);
+        $suite = `$lsb_release -s -c`;
+        chomp($suite);
 
-	unless ($suite) {
-	    $suite = $fallback_suite{$vendor};
-	    warn "Dom0 seems to be $vendor, but couldn't determine suite. Falling back to $suite.\n";
-	}
+        unless ($suite) {
+            $suite = $fallback_suite{$vendor};
+            warn "Dom0 seems to be $vendor, but couldn't determine suite. Falling back to $suite.\n";
+        }
 
-	$mirror = $fallback_mirror{$vendor};
+        $mirror = $fallback_mirror{$vendor};
 
-	$found = 1;
+        $found = 1;
     }
 }
 
 if ($found) {
     unless ($want_help || $want_version || $want_suite || $want_mirror) {
-	print "$mirror $suite\n";
+        print "$mirror $suite\n";
     } else {
-	if ($want_mirror) {
-	    print "$mirror";
-	}
-	if ($want_suite) {
-	    print "$suite";
-	}
-	print "\n";
+        if ($want_mirror) {
+            print "$mirror";
+        }
+        if ($want_suite) {
+            print "$suite";
+        }
+        print "\n";
     }
 } else {
     $suite  = $fallback_suite{$fallback};

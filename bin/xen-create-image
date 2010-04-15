@@ -1903,15 +1903,15 @@ sub generateMACAddress
     my $hash = '';
     foreach my $key (qw/ hostname ip dhcp dist /)
     {
-	if ( $CONFIG{ $key } ) {
-	    if (ref($CONFIG{ $key }) eq 'ARRAY') {
-		$hash .= join(',',@{$CONFIG{ $key }});
-	    } elsif (ref($CONFIG{ $key }) eq 'HASH') {
-		$hash .= join(',',values %{$CONFIG{ $key }});
-	    } else {
-		$hash .= $CONFIG{ $key };
-	    }
-	}
+        if ( $CONFIG{ $key } ) {
+            if (ref($CONFIG{ $key }) eq 'ARRAY') {
+                $hash .= join(',',@{$CONFIG{ $key }});
+            } elsif (ref($CONFIG{ $key }) eq 'HASH') {
+                $hash .= join(',',values %{$CONFIG{ $key }});
+            } else {
+                $hash .= $CONFIG{ $key };
+            }
+        }
     }
 
     #
@@ -2615,7 +2615,7 @@ sub createLoopbackImages
         my $oldumask = umask;
         umask(0077);
 
-	# run the image creation command
+        # run the image creation command
         runCommand($image_cmd);
         logprint("Done\n");
 
@@ -3521,7 +3521,7 @@ sub runXenConfigCreation
             logprint("The Xen configuration file $file exists\n");
             logprint("Specify --force to force overwriting it.\n");
             logprint("Aborting\n");
-	    # FAIL = 2 will keep existing config file
+            # FAIL = 2 will keep existing config file
             $FAIL = 2;
             exit 127;
         }
