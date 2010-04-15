@@ -24,7 +24,7 @@ plan skip_all => "Moose required for testing Perl syntax"
 #
 find( { wanted => \&checkFile, no_chdir => 1 }, '.' );
 
-
+done_testing();
 
 #
 #  Check a file.
