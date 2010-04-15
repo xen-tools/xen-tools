@@ -85,4 +85,11 @@ sub checkFile
     close( INPUT );
 
     is( $result, 0, "Shell script passes our portability check: $file" );
+
+    if (-x "/usr/bin/checkbashisms") {
+	# Check for bashisms
+	$result = `/usr/bin/checkbashisms '$file'`;
+	is( $result, '', "Shell script passes check for bashisms: $file" );
+    }
+
 }
