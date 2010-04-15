@@ -1,6 +1,8 @@
 #!/usr/bin/perl -w
 #
-#  Test that every perl file we have passes the syntax check.
+#  Test that every perl file we have passes the syntax check. This of
+#  course needs not only build dependencies but also run-time
+#  dependencies like libmoose-perl installed.
 #
 # Steve
 # --
