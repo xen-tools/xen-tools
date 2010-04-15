@@ -11,7 +11,11 @@
 
 use strict;
 use File::Find;
-use Test::More qw( no_plan );
+use Test::More;
+
+eval "use Moose";
+plan skip_all => "Moose required for testing Perl syntax"
+    if $@;
 
 
 #
