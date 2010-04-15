@@ -35,6 +35,13 @@ Bugs to fix and Features to add before a 4.2 release
 
 * Test suite should pass
 
+   Currently failing:
+
+   t/getopt.t
+   t/xen-delete-image.t
+   t/xen-tools.t
+   t/xt-create-xen-config.t
+
 Maybe for a 4.3 or 5.0 release
 ------------------------------
 
