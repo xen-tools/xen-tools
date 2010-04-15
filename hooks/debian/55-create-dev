@@ -33,7 +33,7 @@ MAKEDEV = "$prefix/sbin/MAKEDEV"
 if [ ! -x $MAKEDEV -a -x "$prefix/dev/MAKEDEV" ]; then
     MAKEDEV = "$prefix/dev/MAKEDEV"
 fi
-	
+
 
 
 #
