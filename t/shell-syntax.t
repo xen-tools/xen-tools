@@ -35,7 +35,7 @@ sub checkFile
     return if ( ! -f $file );
 
     # Finally mercurial files are fine.
-    return if ( $file =~ /\.hg\// );
+    return if ( $file =~ /\.(hg|git)\// );
 
     # See if it is a shell script.
     my $isShell = 0;
