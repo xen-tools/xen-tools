@@ -34,6 +34,9 @@ sub checkFile
     # We don't care about directories
     return if ( ! -f $file );
 
+    # Nor about Makefiles
+    return if ( $file =~ /\/Makefile$/ );
+
     # `modules.sh` is a false positive.
     return if ( $file =~ /modules.sh$/ );
 
