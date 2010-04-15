@@ -35,11 +35,14 @@ sub checkFile
     # Nor about backup files.
     return if ( $file =~ /~$/ );
 
+    # Nor about Makefiles
+    return if ( $file =~ /\/Makefile$/ );
+
     # Nor about files which start with ./debian/
     return if ( $file =~ /^\.\/debian\// );
 
-    # Finally mercurial files are fine.
-    return if ( $file =~ /\.hg\// );
+    # Finally mercurial and git files are fine.
+    return if ( $file =~ /\.(hg|git)\// );
     # See if it is a shell/perl file.
     my $isShell        = 0;
     my $isPerl        = 0;
