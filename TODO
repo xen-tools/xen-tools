@@ -47,6 +47,8 @@ Bugs to fix and Features to add before a 4.2 release
    t/xen-tools.t
    t/xt-create-xen-config.t
 
+* Add distro name and release number to pygrub screen
+
 * Hooks
 
 - Add reliable support for Ubuntu Hardy, Karmic and Lucid
