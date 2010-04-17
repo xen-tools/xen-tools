@@ -70,13 +70,6 @@ Bugs to fix and Features to add before a 4.2 release
 
 - Setup locales in the hooks?
 
-* Fixes for debian/control
-
-   Check in which debian package pygrub is contained and suggest it if
-   it isn't already in one of the existing dependencies. (I'm
-   currently offline and can't find it with my offline resources --
-   Axel.)
-
 
 Maybe for a 4.3 or 5.0 release
 ------------------------------

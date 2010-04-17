@@ -6,7 +6,7 @@ xen-tools (4.2~rc1-1) UNRELEASED; urgency=low
     - Needs dependency on libfile-slurp-perl
     - Supports for more recent versions of Fedora, Ubuntu and Debian
       (Closes: #499477)
-    - Supports pygrub.
+    - Supports pygrub. (Added "Suggests: xen-utils" to debian/control)
     - Sets umask to 0077 before creating disk images (Closes: #548909)
     - Makes sure, MAKEDEV is found in either /dev/ or /sbin/
       (Closes: #502798, #515228)
