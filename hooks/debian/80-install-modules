@@ -31,7 +31,9 @@ fi
 #
 logMessage Script $0 starting
 
-
+if [ ${pygrub} ]; then
+    logMessage "pygrub set, skipping module install"
+else
 #
 #  The name of the package containing the correct modules.
 #
@@ -76,6 +78,7 @@ fi
 #
 installDebianPackage ${prefix} module-init-tools
 
+fi # if pygrub
 
 #
 #  Log our finish

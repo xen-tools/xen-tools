@@ -32,7 +32,7 @@ logMessage Script $0 starting
 #
 #  Install ssh
 #
-installDebianPackage ${prefix} ssh
+installDebianPackage ${prefix} openssh-server
 
 
 #

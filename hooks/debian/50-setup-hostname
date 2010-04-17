@@ -42,10 +42,14 @@ echo ${hostname} > ${prefix}/etc/mailname
 if [ -z "${dhcp}" ]; then
 
     # Non-IPv6 stuff.
+	# TODO: Think of a better way of doing this, this may have a lot of trash
+	# depending on the dom0 (i.e. 127.0.0.1 dom0.example.com)
     grep -v '\(::\|IPv6\)' /etc/hosts > ${prefix}/etc/hosts
 
     # New entry.
-    echo "${ip1}    ${hostname}" >> ${prefix}/etc/hosts
+	# echo "127.0.0.1	localhost" >> ${prefix}/etc/hosts
+    echo "127.0.1.1	$(echo ${hostname} | awk -F '.' '{ print $1 }')" >> ${prefix}/etc/hosts
+    echo "${ip1}	${hostname}" >> ${prefix}/etc/hosts
     echo " " >> ${prefix}/etc/hosts
 
     # IPv6 stuff.
@@ -57,7 +61,8 @@ else
     #  Stub /etc/hosts for DHCP clients.
     #
     cat >> ${prefix}/etc/hosts <<EOF
-127.0.0.1       localhost
+127.0.0.1	localhost
+127.0.1.1	$(echo ${hostname} | awk -F '.' '{ print $1 }') ${hostname}
 
 # The following lines are desirable for IPv6 capable hosts
 ::1     ip6-localhost ip6-loopback
