@@ -1,0 +1,106 @@
+#!/bin/sh
+#
+#  This script sets up the /etc/apt/sources.list for APT.
+#
+# Steve
+# --
+#
+
+
+
+
+prefix=$1
+
+
+#
+#  Source our common functions
+#
+if [ -e /usr/lib/xen-tools/common.sh ]; then
+    . /usr/lib/xen-tools/common.sh
+else
+    . ./hooks/common.sh
+fi
+
+
+#
+# Log our start
+#
+logMessage Script $0 starting
+
+
+#
+#  You will probably need DNS to run "apt-get update"
+#
+cp /etc/resolv.conf ${prefix}/etc
+
+
+#
+# Attempt to auto-magically detect the use of a Proxy for apt-get, and
+# replicate that setup in our new guest.
+#
+#
+#  Process any of the present apt-conf setup lines.
+#
+for i in /etc/apt/apt.conf $(run-parts --list /etc/apt/apt.conf.d) ; do
+
+
+    #
+    # If the file exists.  (Need this in case the literal glob fails.)
+    #
+    if [ -e $i ] ; then
+
+        #
+        # Save the matching line(s) to the proxy guess file.
+        #
+        logMessage The use of a proxy detected.
+
+        grep -v '^//' $i | grep -i HTTP::Proxy >>${prefix}/etc/apt/apt.conf.d/proxy-guess
+    fi
+done
+
+
+
+cat <<E_O_APT > ${prefix}/etc/apt/sources.list
+#
+#  /etc/apt/sources.list
+#
+
+
+#
+# ${dist}
+#
+deb     ${mirror}     ${dist} main restricted universe multiverse
+deb-src ${mirror}     ${dist} main restricted universe
+deb     ${mirror}     ${dist}-updates main restricted universe multiverse
+deb-src ${mirror}     ${dist}-updates main restricted universe
+deb http://security.ubuntu.com/ubuntu ${dist}-security main restricted universe
+deb-src http://security.ubuntu.com/ubuntu ${dist}-security main restricted universe
+
+E_O_APT
+
+
+
+#
+#  Now that the sources have been setup make sure the system is up to date.
+#
+chroot ${prefix} /usr/bin/apt-get update
+
+
+#
+#  Now fixup TLS on non-64bit systems.
+#
+if [ "`uname -m`" = "x86_64" ]; then
+
+    logMessage "Ignoring TLS since we're a 64 bit host."
+
+else
+
+    logMessage "Installing libc6-xen"
+    installDebianPackage ${prefix} libc6-xen
+fi
+
+
+#
+#  Log our finish
+#
+logMessage Script $0 finished

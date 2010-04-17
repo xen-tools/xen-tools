@@ -165,21 +165,18 @@ install-hooks:
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d testing.d
 	mkdir -p ${prefix}/usr/lib/xen-tools/gentoo.d/
 	cp -R hooks/gentoo/*-* ${prefix}/usr/lib/xen-tools/gentoo.d
-	 mkdir -p ${prefix}/usr/lib/xen-tools/edgy.d/
+	mkdir -p ${prefix}/usr/lib/xen-tools/dapper.d/
+	cp -R hooks/dapper/*-* ${prefix}/usr/lib/xen-tools/dapper.d/
+	mkdir -p ${prefix}/usr/lib/xen-tools/edgy.d/
 	cp -R hooks/edgy/*-* ${prefix}/usr/lib/xen-tools/edgy.d/
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s edgy.d feisty.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s edgy.d gutsy.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s edgy.d hardy.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s edgy.d intrepid.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s edgy.d jaunty.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s edgy.d karmic.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s edgy.d lucid.d
-	mkdir -p ${prefix}/usr/lib/xen-tools/dapper.d/
-	cp -R hooks/dapper/*-* ${prefix}/usr/lib/xen-tools/dapper.d/
-	mkdir -p ${prefix}/usr/lib/xen-tools/edgy.d/
-	cp -R hooks/edgy/*-* ${prefix}/usr/lib/xen-tools/edgy.d/
-	mkdir -p ${prefix}/usr/lib/xen-tools/dapper.d/
-	cp -R hooks/dapper/*-* ${prefix}/usr/lib/xen-tools/dapper.d/
+	mkdir -p ${prefix}/usr/lib/xen-tools/karmic.d/
+	cp -R hooks/karmic/*-* ${prefix}/usr/lib/xen-tools/karmic.d/
+	-cd ${prefix}/usr/lib/xen-tools/ && ln -s karmic.d lucid.d
 	cp hooks/common.sh ${prefix}/usr/lib/xen-tools
 
 

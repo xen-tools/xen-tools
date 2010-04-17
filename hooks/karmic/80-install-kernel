@@ -1,0 +1,90 @@
+#!/bin/sh
+#
+#  If the pygrub flag is set, this script will install the necessary
+# packages to boot the VM from the dom0 via pygrub. This script installs
+# the kernel and modules and generates a grub menu.lst in the newly
+# created maschine.
+#
+# Dmitry Nedospasov
+# --
+# http://nedos.net
+
+
+prefix=$1
+
+
+#
+#  Source our common functions
+#
+if [ -e /usr/lib/xen-tools/common.sh ]; then
+    . /usr/lib/xen-tools/common.sh
+else
+    . ./hooks/common.sh
+fi
+
+if [ ${pygrub} ]; then
+#
+# Log our start
+#
+logMessage Script $0 starting
+
+
+#
+# The type of kernel that we will be installing
+#
+# linux_kernel_type="desktop"
+# 
+linux_kernel_type="server"
+
+linux_kernel_package="linux-image-${linux_kernel_type}"
+
+logMessage "Installing the ${linux_kernel_package} kernel image"
+if chroot ${prefix} /usr/bin/apt-cache show ${linux_kernel_package} >/dev/null 2>/dev/null; then
+    logMessage "Package '${linux_kernel_package}' is available - installing"
+    installDebianPackage ${prefix} initramfs-tools
+    installDebianPackage ${prefix} ${linux_kernel_package}
+
+# Force initrd if none exists
+echo ${prefix}/boot/initrd* | grep -q 2\\.6
+if [ $? -ne 0 ]; then
+        chroot ${prefix} update-initramfs -c -k `ls -1 
+${prefix}/lib/modules/ | head -n 1`
+fi
+
+# Generate grub menu.lst
+LNZ=`basename \`ls -1 ${prefix}/boot/vmlinuz*|tail -n 1\``
+RD=`basename \`ls -1 ${prefix}/boot/initrd*|tail -n 1\``
+mkdir -p ${prefix}/boot/grub
+cat - <<-EOF > ${prefix}/boot/grub/menu.lst
+default         0
+timeout         2
+
+title           Ubuntu
+root            (hd0,0)
+kernel          /boot/$LNZ root=/dev/xvda2 ro 
+initrd          /boot/$RD
+
+title           Ubuntu (Single-User)
+root            (hd0,0)
+kernel          /boot/$LNZ root=/dev/xvda2 ro single
+initrd          /boot/$RD
+
+EOF
+
+else
+    logMessage "Package '${linux_kernel_package}' is not available"
+fi
+
+#
+#  Install the module-init-tools package.
+#
+installDebianPackage ${prefix} module-init-tools
+
+else
+    logMessage pygrub not set, skipping kernel install
+fi # if pygrub
+
+#
+#  Log our finish
+#
+logMessage Script $0 finished
