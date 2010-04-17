@@ -33,6 +33,11 @@ Bugs to fix and Features to add before a 4.2 release
 
 * Should check all integer expection options on other characters than digits.
 
+* xen-create-image --bridge
+
+   Currently specifiying a bridge is only possible, by editing the
+   .cfg file by hand, after xen-create-image is done
+
 * Test suite should pass
 
    Currently failing:
@@ -41,6 +46,16 @@ Bugs to fix and Features to add before a 4.2 release
    t/xen-delete-image.t
    t/xen-tools.t
    t/xt-create-xen-config.t
+
+* Hooks
+
+- Add reliable support for Ubuntu Hardy, Karmic and Lucid
+
+--passwd shouldn't give up after only one password missmatch
+
+- Clean up setup-hostname - copying the dom0s /etc/hosts isn't reliable
+
+- Setup locales in the hooks?
 
 Maybe for a 4.3 or 5.0 release
 ------------------------------
@@ -68,6 +83,24 @@ Maybe for a 4.3 or 5.0 release
    so) which has symbolic links to everything which can be used
    unchanged from the common directory and new files for everything
    which has to be different or only there.
+
+* Create users, add ssh pubkeys to .ssh/authorized_keys
+
+   Still have to think of a good way of doing this. It would be nice
+   To specify a directory of public keys, parsing the hostnames
+   parsing the usernames from the ssh comment line
+
+* More generic hooks
+
+   Deploy a web server or setup ssmtp directly via flag when setting up
+   the machine. Open to suggestions, should just be simple applications
+
+* Sections for the xen-tools.conf file
+
+   Currently it's really annoying when you are trying to create VMs
+   on multiple subnets. It would be nice to specify with a flag what
+   "type" of configuration you want, and a set of options specific to
+   that flag could be parsed from xen-tools.conf
 
 Stuff from Steve's TODO list / Generic TODOs
 --------------------------------------------
