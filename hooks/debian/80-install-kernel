@@ -51,24 +51,26 @@ ${prefix}/lib/modules/ | head -n 1`
 fi
 
 # Generate grub menu.lst
-LNZ=`basename \`ls -1 ${prefix}/boot/vmlinuz*|tail -n 1\``
-RD=`basename \`ls -1 ${prefix}/boot/initrd*|tail -n 1\``
+DOMU_KERNEL=$(basename $(ls -1 ${prefix}/boot/vmlinuz* | tail -n 1))
+DOMU_RAMDISK=$(basename $(ls -1 ${prefix}/boot/initrd*|tail -n 1))
+DOMU_ISSUE=$(head -n 1 ${prefix}/etc/issue | awk -F '\' '{ print $1 }' | sed 's/[ \t]*$//')
+
 mkdir -p ${prefix}/boot/grub
-cat - <<-EOF > ${prefix}/boot/grub/menu.lst
+cat << E_O_MENU > ${prefix}/boot/grub/menu.lst
 default         0
 timeout         2
 
-title           Debian
+title           $DOMU_ISSUE
 root            (hd0,0)
-kernel          /boot/$LNZ root=/dev/xvda2 ro 
-initrd          /boot/$RD
+kernel          /boot/$DOMU_KERNEL root=/dev/xvda2 ro 
+initrd          /boot/$DOMU_RAMDISK
 
-title           Debian (Single-User)
+title           $DOMU_ISSUE (Single-User)
 root            (hd0,0)
-kernel          /boot/$LNZ root=/dev/xvda2 ro single
-initrd          /boot/$RD
+kernel          /boot/$DOMU_KERNEL root=/dev/xvda2 ro single
+initrd          /boot/$DOMU_RAMDISK
 
-EOF
+E_O_MENU
 
 else
     logMessage "Package '${linux_kernel_package}' is not available"
