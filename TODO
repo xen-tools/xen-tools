@@ -10,13 +10,14 @@ Bugs to fix and Features to add before a 4.2 release
 
 - talks about Sarge and Etch
 
-* xen-create-image --dist=... should be more fine-grained
+* xen-create-image --dist=... / sources.list generation should be more fine-grained
 
-   It should offer the possibility to enabled/disable
+   xen-tools should offer the possibility to enabled/disable
    security/volatile/backports as well as
-   contrib/non-free/universe/restricted/multiverse for each of them.
+   contrib/non-free/universe/restricted/multiverse for each of them
+   not only based on defaults plus the Dom0's sources.list
 
-   My current idea is to allow parameters like
+   One idea is to allow parameters like
 
    --dist="lenny:main,contrib,non-free;security;volatile:main"
 
@@ -24,6 +25,18 @@ Bugs to fix and Features to add before a 4.2 release
    allow
 
    --dist="lenny;no-security"
+
+   The second idea (by Mathieu Parent) is to have an
+   /etc/xen-tools/sources.list.d/ which then contains files like
+   lenny.list, lenny-server.list, karmic.list, etc. which defaults to
+   $dist.list, but can be also select with --sources-list=lenny-server
+   (which looks for ./lenny-server.list, ./lenny-server,
+   /etc/xen-tools/sources.list.d/lenny-server.list and
+   /etc/xen-tools/sources.list.d/lenny-server in that order).
+
+   Third variant is to use /etc/xen-tools/sources.lists/ instead of
+   /etc/xen-tools/sources.list.d/ because that directory is no
+   runparts-like directory.
 
 * Test and support more file system types.
 
@@ -53,11 +66,12 @@ Bugs to fix and Features to add before a 4.2 release
 
 - Add reliable support for Ubuntu Hardy, Karmic and Lucid
 
---passwd shouldn't give up after only one password missmatch
+- --passwd shouldn't give up after only one password missmatch
 
 - Clean up setup-hostname - copying the dom0s /etc/hosts isn't reliable
 
 - Setup locales in the hooks?
+
 
 Maybe for a 4.3 or 5.0 release
 ------------------------------

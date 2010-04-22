@@ -34,8 +34,9 @@ logMessage Script $0 starting
 #
 # linux_kernel_type="desktop"
 # 
+linux_kernel_type="server"
 
-linux_kernel_package="linux-image-2.6-xen-${arch}"
+linux_kernel_package="linux-image-${linux_kernel_type}"
 
 logMessage "Installing the ${linux_kernel_package} kernel image"
 if chroot ${prefix} /usr/bin/apt-cache show ${linux_kernel_package} >/dev/null 2>/dev/null; then
@@ -80,10 +81,11 @@ fi
 #  Install the module-init-tools package.
 #
 installDebianPackage ${prefix} module-init-tools
+
 else
     logMessage pygrub not set, skipping kernel install
-
 fi # if pygrub
+
 #
 #  Log our finish
 #
