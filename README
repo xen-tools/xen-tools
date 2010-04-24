@@ -2,8 +2,8 @@
 Homepage:
     http://www.xen-tools.org/software/xen-tools
 
-Mercurial Repository:
-    http://xen-tools.repository.steve.org.uk/
+Git Repository:
+    http://gitorious.org/xen-tools
 
 Mailing Lists:
     http://xen-tools.org/software/xen-tools/lists.html
@@ -20,11 +20,32 @@ xen-tools
  to be accessible over your local network and complete with an installed
  copy of OpenSSH.
 
-  This software is primarily aimed at users who wish to create virtual 
- instances of Debian Sarge, Etch, or Sid.  Although other distributions
- such as Ubuntu Dapper, Edgy, and Feisty are supported if you have the
- appropriate packages installed.
+  xen-tools currently has scripts to install all distributions of Debian
+ and Ubuntu and some RPM-based distributions, however only the following
+ are considered "supported":
 
+	Debian:
+	  * Etch 4.0
+	  * Lenny 5.0
+	  * Squeeze 6.0
+	  * Sid
+
+	Ubuntu:
+	  * Hardy Heron 8.04 (see [1])
+	  * Interpid Ibex 8.10
+	  * Jaunty Jackaplope 9.04
+	  * Karmic Koala 9.10
+	  * Lucid Lynx 10.04 (see [2])
+
+  [1] There is an issue with debootstrap on hardy not installing ksyslogd
+      This can be fixed by chrooting into the newly installed system
+      and removing the startup scripts. See:
+      http://www.linux-vserver.org/Installing_Ubuntu_8.04_Hardy_as_guest
+
+  [2] As of writing this 24.04.10, there is an issue with tar on
+      Lucid with kernels < 2.6.22 this should however be patched right
+      after release. See:
+      https://bugs.launchpad.net/ubuntu/+source/tar/+bug/539814
 
 Requirements
 ------------
@@ -37,18 +58,11 @@ Requirements
         * The Perl module "Config::IniFiles"
           - Both of these modules are available as Debian packages,
             or direct from http://www.cpan.org/ for non-Debian distributions.
+        * Make, if you are not installing through a package manager
 
-
-  In order to install RPM-based distributions such as CentOS, or
+  You can try to install RPM-based distributions such as CentOS, or
  Fedora Core you will need a correctly installed and configured
- "rinse" package.
-
-  To install Ubuntu distributions upon a Debian host system you will
- need either:
-
-        * The Ubuntu version of debootstrap installed.
-        * A patched debootstrap package from:
-                http://steve.org.uk/Software/tmp/debootstrap/
+ "rinse" package. This is currently not supported.
 
   If you wish to create new Xen instances which may be controlled by
  users via a login shell you should also install the xen-shell package
