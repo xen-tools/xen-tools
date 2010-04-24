@@ -64,8 +64,6 @@ Bugs to fix and Features to add before a 4.2 release
 
 * Hooks
 
-- Add reliable support for Ubuntu Hardy, Karmic and Lucid
-
 - --passwd shouldn't give up after only one password missmatch
 
 - Clean up setup-hostname - copying the dom0s /etc/hosts isn't reliable
