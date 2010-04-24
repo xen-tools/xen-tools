@@ -9,52 +9,74 @@
 # --
 # http://nedos.net
 
-
 prefix=$1
-
 
 #
 #  Source our common functions
 #
+
 if [ -e /usr/lib/xen-tools/common.sh ]; then
     . /usr/lib/xen-tools/common.sh
 else
     . ./hooks/common.sh
 fi
 
-if [ ${pygrub} ]; then
 #
 # Log our start
 #
+
 logMessage Script $0 starting
 
+if [ ${pygrub} ]; then
 
 #
-# The type of kernel that we will be installing
+# Attempt to install a xen kernel, if that fails, then install a normal one
 #
-# linux_kernel_type="desktop"
-# 
-linux_kernel_type="xen"
 
-linux_kernel_package="linux-image-${linux_kernel_type}"
+KERNEL_XEN_PKG="linux-image-xen"
+KERNEL_PKG="linux-image-server"
 
-logMessage "Installing the ${linux_kernel_package} kernel image"
-if chroot ${prefix} /usr/bin/apt-cache show ${linux_kernel_package} >/dev/null 2>/dev/null; then
-    logMessage "Package '${linux_kernel_package}' is available - installing"
+logMessage Attempting to install the $KERNEL_XEN_PKG kernel image
+if chroot ${prefix} /usr/bin/apt-cache show $KERNEL_XEN_PKG > /dev/null 2>&1; then
+    logMessage Package $KERNEL_XEN_PKG is available - installing
     installDebianPackage ${prefix} initramfs-tools
-    installDebianPackage ${prefix} ${linux_kernel_package}
+    installDebianPackage ${prefix} $KERNEL_XEN_PKG
 
-# Force initrd if none exists
-echo ${prefix}/boot/initrd* | grep -q 2\\.6
-if [ $? -ne 0 ]; then
-        chroot ${prefix} update-initramfs -c -k `ls -1 
-${prefix}/lib/modules/ | head -n 1`
+else
+	logMessage Package $KERNEL_XEN_PKG is not available
+	logMessage Attempting to install the $KERNEL_PKG kernel image
+	logMessage WARNING: This kernel may not have pvops
+	if chroot ${prefix} /usr/bin/apt-cache show $KERNEL_PKG > /dev/null 2>&1; then
+		logMessage Package $KERNEL_PKG is available - installing
+	    installDebianPackage ${prefix} initramfs-tools
+	    installDebianPackage ${prefix} $KERNEL_PKG
+	else
+		logMessage Package $KERNEL_PKG is not available
+		logMessage pygrub set, but kernel could not be installed
+		logMessage Script $0 failed
+		exit 1
+	fi
 fi
 
-# Generate grub menu.lst
 DOMU_KERNEL=$(basename $(ls -1 ${prefix}/boot/vmlinuz* | tail -n 1))
-DOMU_RAMDISK=$(basename $(ls -1 ${prefix}/boot/initrd*|tail -n 1))
-DOMU_ISSUE=$(head -n 1 ${prefix}/etc/issue | awk -F '\' '{ print $1 }' | sed 's/[ \t]*$//')
+KERNEL_REV=$(echo $DOMU_KERNEL | sed "s/vmlinuz-//g")
+DOMU_RAMDISK="initrd.img-$KERNEL_REV"
+DOMU_ISSUE=$(sed -re "s/ *\\\.*//g" -e1q < ${prefix}/etc/issue)
+
+#
+# Generate initrd if it does not exist
+#
+
+if [ -f ${prefix}/boot/$DOMU_RAMDISK ]; then
+	logMessage initrd exists, skipping generation
+else
+	logMessage initrd missing, generating
+	chroot ${prefix} update-initramfs -c -k $KERNEL_REV
+fi
+
+#
+# Generate a menu.lst for pygrub
+#
 
 mkdir -p ${prefix}/boot/grub
 cat << E_O_MENU > ${prefix}/boot/grub/menu.lst
@@ -73,20 +95,18 @@ initrd          /boot/$DOMU_RAMDISK
 
 E_O_MENU
 
-else
-    logMessage "Package '${linux_kernel_package}' is not available"
-fi
-
 #
 #  Install the module-init-tools package.
 #
+
 installDebianPackage ${prefix} module-init-tools
 
 else
     logMessage pygrub not set, skipping kernel install
-fi # if pygrub
+fi
 
 #
 #  Log our finish
 #
+
 logMessage Script $0 finished

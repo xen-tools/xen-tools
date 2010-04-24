@@ -172,8 +172,9 @@ install-hooks:
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s edgy.d feisty.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s edgy.d gutsy.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s edgy.d hardy.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s edgy.d intrepid.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s edgy.d jaunty.d
+	mkdir -p ${prefix}/usr/lib/xen-tools/intrepid.d/
+	cp -R hooks/intrepid/*-* ${prefix}/usr/lib/xen-tools/intrepid.d/
+	-cd ${prefix}/usr/lib/xen-tools/ && ln -s intrepid.d jaunty.d
 	mkdir -p ${prefix}/usr/lib/xen-tools/karmic.d/
 	cp -R hooks/karmic/*-* ${prefix}/usr/lib/xen-tools/karmic.d/
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s karmic.d lucid.d

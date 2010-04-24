@@ -47,6 +47,10 @@ xen-tools
       after release. See:
       https://bugs.launchpad.net/ubuntu/+source/tar/+bug/539814
 
+  Older versions of ubuntu may work, however you will have to have to find
+ a mirror that still hosts them. Currently the oldest Ubuntu Distribution
+ on Canonical's archive.ubuntu.com is Hardy Heron.
+
 Requirements
 ------------
 

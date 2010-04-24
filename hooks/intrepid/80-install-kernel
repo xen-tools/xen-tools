@@ -30,46 +30,22 @@ logMessage Script $0 starting
 if [ ${pygrub} ]; then
 
 #
-# Resolve the correct architecutre
-#
-
-if [ "${arch}" == "i386" ]; then
-	XEN_ARCH="686"
-elif [ "${arch}" == "amd64" ]; then
-	XEN_ARCH="amd64"
-else
-	logMessage Unkown kernel arhcitechture ${arch}
-	logMessage Script $0 failed
-	exit 1
-fi
-
-#
 # Attempt to install a xen kernel, if that fails, then install a normal one
 #
 
-KERNEL_XEN_PKG="linux-image-xen-$XEN_ARCH"
-KERNEL_PKG="linux-image-$XEN_ARCH"
+KERNEL_PKG="linux-image-server"
 
-logMessage Attempting to install the $KERNEL_XEN_PKG kernel image
-if chroot ${prefix} /usr/bin/apt-cache show $KERNEL_XEN_PKG > /dev/null 2>&1; then
-    logMessage Package $KERNEL_XEN_PKG is available - installing
+logMessage Attempting to install the $KERNEL_PKG kernel image
+logMessage WARNING: This kernel may not have pvops
+if chroot ${prefix} /usr/bin/apt-cache show $KERNEL_PKG > /dev/null 2>&1; then
+	logMessage Package $KERNEL_PKG is available - installing
     installDebianPackage ${prefix} initramfs-tools
-    installDebianPackage ${prefix} $KERNEL_XEN_PKG
-
+    installDebianPackage ${prefix} $KERNEL_PKG
 else
-	logMessage Package $KERNEL_XEN_PKG is not available
-	logMessage Attempting to install the $KERNEL_PKG kernel image
-	logMessage WARNING: This kernel may not have pvops
-	if chroot ${prefix} /usr/bin/apt-cache show $KERNEL_PKG > /dev/null 2>&1; then
-		logMessage Package $KERNEL_PKG is available - installing
-	    installDebianPackage ${prefix} initramfs-tools
-	    installDebianPackage ${prefix} $KERNEL_PKG
-	else
-		logMessage Package $KERNEL_PKG is not available
-		logMessage pygrub set, but kernel could not be installed
-		logMessage Script $0 failed
-		exit 1
-	fi
+	logMessage Package $KERNEL_PKG is not available
+	logMessage pygrub set, but kernel could not be installed
+	logMessage Script $0 failed
+	exit 1
 fi
 
 DOMU_KERNEL=$(basename $(ls -1 ${prefix}/boot/vmlinuz* | tail -n 1))
