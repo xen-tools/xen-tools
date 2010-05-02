@@ -46,10 +46,6 @@ Bugs to fix and Features to add before a 4.2 release
 
 * Should check all integer expection options on other characters than digits.
 
-* xen-create-image --bridge
-
-   Currently specifiying a bridge is only possible, by editing the
-   .cfg file by hand, after xen-create-image is done
 
 * Test suite should pass
 
@@ -63,8 +59,14 @@ Bugs to fix and Features to add before a 4.2 release
 * Add distro name and release number to pygrub screen
 
 * Hooks
+- --vcpus
+   This one is trivial
 
-- --passwd shouldn't give up after only one password missmatch
+- --bridge 
+   This one is also trivial
+
+- --passwd
+   shouldn't give up after only one password missmatch
 
 - Clean up setup-hostname - copying the dom0s /etc/hosts isn't reliable
 
