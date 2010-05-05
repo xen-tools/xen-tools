@@ -3497,7 +3497,8 @@ sub runRoleScript
     #
     #  The complete path to the role script
     #
-    my $file = $roleDir . "/" . $role;
+    my $file = $role;
+    $file = $roleDir . "/" . $file unless $file =~ /\//;
 
     if ( -x $file )
     {
