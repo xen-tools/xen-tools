@@ -1410,6 +1410,9 @@ sub parseCommandLineArguments
             "lvm=s",       \$install{ 'lvm' },
             "image-dev=s", \$install{ 'image-dev' },
             "swap-dev=s",  \$install{ 'swap-dev' },
+            "serial_device=s", \$CONFIG{ 'serial_device' },
+            "disk_device=s", \$CONFIG{ 'disk_device' },
+          
 
             # Host options
             "no-hosts", \$CONFIG{ 'nohosts' },
