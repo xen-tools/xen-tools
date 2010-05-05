@@ -220,6 +220,28 @@ installCentOS4Package ()
 }
 
 
+
+#
+#  Install a package using whatever package management tool is available
+#
+installPackage ()
+{
+	prefix=$1
+	package=$2
+
+	if [ -x ${prefix}/usr/bin/apt-get ] ; then
+		installDebianPackage "$@"
+
+	elif [ -x ${prefix}/usr/bin/yum ] ; then
+		installCentOS4Package "$@"
+
+	else
+		logMessage "Unable to install package ${package}; no package manager found"
+	fi
+}
+
+
+
 #
 #  Install a package upon a gentoo system via emerge.
 #
