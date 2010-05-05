@@ -98,7 +98,9 @@ installDebianPackage ()
     #
     # Install the packages
     #
+    mount -t devpts devpts ${prefix}/dev/pts
     DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes --force-yes install "$@"
+    umount ${prefix}/dev/pts
 
     #
     #  Remove the policy-rc.d script.
