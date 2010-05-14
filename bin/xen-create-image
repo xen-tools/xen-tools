@@ -1209,7 +1209,7 @@ sub setupDefaultOptions
     #
     $CONFIG{ 'mirror' }        = 'http://ftp.us.debian.org/debian';
     $CONFIG{ 'arch' }          = '';
-    $CONFIG{ 'dist' }          = 'lenny';
+    $CONFIG{ 'dist' }          = 'stable';
     $CONFIG{ 'fs' }            = 'ext3';
     $CONFIG{ 'force' }         = 0;
     $CONFIG{ 'install' }       = 1;
