@@ -85,6 +85,9 @@ Maybe for a 4.3 or 5.0 release
 
 * btrfs support
 
+* Move the hooks directory to /etc/xen-tools/ to officially allow
+  added and modified hooks.
+
 * Clean up the hooks directory
 
    Currently we have one directory for Ubuntu and Fedora named after
