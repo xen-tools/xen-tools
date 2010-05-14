@@ -1207,9 +1207,21 @@ sub setupDefaultOptions
     #
     # Misc. options.
     #
+
+    # Default distribution is Debian Stable
+    $CONFIG{ 'dist' }          = 'stable';
+    $CONFIG{ 'mirror' }        = 'http://ftp.us.debian.org/debian';
+
+    # Initialize per distribution mirror defaults: Debian
+    foreach my $debdist (qw(sarge etch lenny squeeze sid testing stable unstable)) {
+	$CONFIG{ 'mirror_'.$debdist } = $CONFIG{ 'mirror' }
+    }
+    # Initialize per distribution mirror defaults: Ubuntu
+    foreach my $ubuntudist (qw(feisty gutsy hardy intrepid jaunty karmic lucid)) {
+	$CONFIG{ 'mirror_'.$ubuntudist } = 'http://archive.ubuntu.com/ubuntu';
+    }
     $CONFIG{ 'mirror' }        = 'http://ftp.us.debian.org/debian';
     $CONFIG{ 'arch' }          = '';
-    $CONFIG{ 'dist' }          = 'stable';
     $CONFIG{ 'fs' }            = 'ext3';
     $CONFIG{ 'force' }         = 0;
     $CONFIG{ 'install' }       = 1;
