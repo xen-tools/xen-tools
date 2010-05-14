@@ -181,6 +181,7 @@ install-hooks:
 	mkdir -p ${prefix}/usr/lib/xen-tools/karmic.d/
 	cp -R hooks/karmic/*-* ${prefix}/usr/lib/xen-tools/karmic.d/
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s karmic.d lucid.d
+	-cd ${prefix}/usr/lib/xen-tools/ && ln -s karmic.d maverick.d
 	cp hooks/common.sh ${prefix}/usr/lib/xen-tools
 
 

@@ -1217,7 +1217,7 @@ sub setupDefaultOptions
 	$CONFIG{ 'mirror_'.$debdist } = $CONFIG{ 'mirror' }
     }
     # Initialize per distribution mirror defaults: Ubuntu
-    foreach my $ubuntudist (qw(feisty gutsy hardy intrepid jaunty karmic lucid)) {
+    foreach my $ubuntudist (qw(feisty gutsy hardy intrepid jaunty karmic lucid maverick)) {
 	$CONFIG{ 'mirror_'.$ubuntudist } = 'http://archive.ubuntu.com/ubuntu';
     }
     $CONFIG{ 'mirror' }        = 'http://ftp.us.debian.org/debian';
