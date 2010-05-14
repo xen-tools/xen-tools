@@ -30,6 +30,9 @@ fi
 if [ -L "/usr/lib/xen-tools/intrepid.d" ]; then
         rm /usr/lib/xen-tools/intrepid.d
 fi
+if [ -L "/usr/lib/xen-tools/karmic.d" ]; then
+        rm /usr/lib/xen-tools/karmic.d
+fi
 
 #DEBHELPER#
 exit 0
