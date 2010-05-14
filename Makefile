@@ -165,6 +165,7 @@ install-hooks:
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d squeeze.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d sid.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d testing.d
+	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d stable.d
 	mkdir -p ${prefix}/usr/lib/xen-tools/gentoo.d/
 	cp -R hooks/gentoo/*-* ${prefix}/usr/lib/xen-tools/gentoo.d
 	mkdir -p ${prefix}/usr/lib/xen-tools/dapper.d/
