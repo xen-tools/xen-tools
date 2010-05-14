@@ -46,7 +46,6 @@ Bugs to fix and Features to add before a 4.2 release
 
 * Should check all integer expection options on other characters than digits.
 
-
 * Test suite should pass
 
    Currently failing:
