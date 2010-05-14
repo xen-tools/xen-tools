@@ -17,7 +17,7 @@ DIST_PREFIX = ${TMP}
 VERSION     = 4.2rc1
 DEBVERSION  = $(shell echo $(VERSION)|sed 's/\(rc\|pre\|beta\|alpha\)/~\1/')
 BASE        = xen-tools
-VCS	    = $(shell git st > /dev/null && echo git || hg st > /dev/null && echo hg || echo cannot-determine-used-vcs)
+VCS	    = $(shell if git st > /dev/null; then echo git; elif hg st > /dev/null; then echo hg; else echo cannot-determine-used-vcs; fi)
 
 #
 #  Installation prefix, useful for the Debian package.
