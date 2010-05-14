@@ -23,5 +23,13 @@ if [ -d "/usr/lib/xen-tools/ubuntu.d" ]; then
 	rm -r /usr/lib/xen-tools/ubuntu.d
 fi
 
+#
+# 4.1 -> 4.2
+#
+
+if [ -L "/usr/lib/xen-tools/intrepid.d" ]; then
+        rm /usr/lib/xen-tools/intrepid.d
+fi
+
 #DEBHELPER#
 exit 0
