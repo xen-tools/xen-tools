@@ -120,7 +120,9 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
                 its /etc/fstab file either.
 
 
-   --ide        Use IDE names for virtual devices (i.e. hda not sda)
+   --ide        Use IDE names for virtual devices (i.e. hda not xvda)
+
+   --scsi       Use SCSI names for virtual devices (i.e. sda not xvda)
 
 
   Installation options:
@@ -1436,6 +1438,7 @@ sub parseCommandLineArguments
             "cache=s",      \$CONFIG{ 'cache' },
             "config=s",     \$CONFIG{ 'config' },
             "ide",          \$CONFIG{ 'ide' },
+            "scsi",         \$CONFIG{ 'scsi' },
             "install=i",    \$CONFIG{ 'install' },
             "hooks=i",      \$CONFIG{ 'hooks' },
             "pygrub",       \$CONFIG{ 'pygrub' },

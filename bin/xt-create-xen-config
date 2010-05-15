@@ -350,10 +350,14 @@ sub createXenConfig
     #
     #  The device we're using.
     #
-    my $device = 'sda';
+    my $device = 'xvda';
     if ( defined( $ENV{ 'ide' } ) )
     {
         $device = 'hda';
+    }
+    elsif ( defined( $ENV{ 'scsi' } ) )
+    {
+        $device = 'sda';
     }
     elsif ( defined( $ENV{ 'disk_device' } ) )
     {
