@@ -1590,7 +1590,7 @@ sub checkArguments
     #
     #  Lucid doesn't work without pygrub
     #
-    if ( $CONFIG{ 'dist' } =~ s/lucid|maverick/ )
+    if ( $CONFIG{ 'dist' } =~ /lucid|maverick/ )
     {
         $CONFIG{ 'pygrub' } = 1;
     }
