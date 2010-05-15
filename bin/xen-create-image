@@ -119,6 +119,7 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
                 used the system will not have a swap entry added to
                 its /etc/fstab file either.
 
+   --pygrub     DomU should be booted using pygrub.
 
    --ide        Use IDE names for virtual devices (i.e. hda not xvda)
 
