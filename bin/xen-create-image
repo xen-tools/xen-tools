@@ -2312,6 +2312,7 @@ sub showSummary
     logprint("--------------------\n");
     logprint("Hostname       :  $CONFIG{'hostname'}\n");
     logprint("Distribution   :  $CONFIG{'dist'}\n");
+    logprint("Mirror         :  $CONFIG{'mirror'}\n");
 
     if ( defined $CONFIG{ 'image-dev' } )
     {
