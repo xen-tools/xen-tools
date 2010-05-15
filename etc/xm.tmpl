@@ -19,7 +19,19 @@
 {
   if ( $pygrub )
   {
-    $OUT .= "bootloader = '/usr/bin/pygrub'\n";
+    my $pygrub_bin = '';
+    foreach my $pygrub_path (reverse glob('/usr/lib/xen-*/bin/pygrub
+                                           /usr/lib/xen-default/bin/pygrub
+                                           /usr/*bin/pygrub')) {
+      if (-x $pygrub_path) {
+        $pygrub_bin = $pygrub_path;
+        last;
+      }
+    }
+
+    die "pygrub not found" unless $pygrub_bin;
+
+    $OUT .= "bootloader = '$pygrub_bin'\n";
   }
 }
 memory      = '{$memory}'
