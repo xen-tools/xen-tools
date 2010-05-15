@@ -1212,7 +1212,7 @@ sub setupDefaultOptions
 
     # Default distribution is Debian Stable
     $CONFIG{ 'dist' }          = 'stable';
-    $CONFIG{ 'mirror' }        = 'http://ftp.us.debian.org/debian';
+    $CONFIG{ 'mirror' }        = 'http://ftp.debian.org/debian';
 
     # Initialize per distribution mirror defaults: Debian
     foreach my $debdist (qw(etch lenny squeeze sid testing stable unstable)) {
