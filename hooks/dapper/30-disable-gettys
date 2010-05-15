@@ -28,7 +28,7 @@ logMessage Script $0 starting
 #
 # Switch off the gettys for everything other than tty1.
 #
-sed -i -e 's/^\([2-6].*:respawn*\)/#\1/' -e 's/^T/#\t/' ${prefix}/etc/inittab
+sed -i -e 's/^\([2-6].*:respawn*\)/#\1/' -e 's/^T/#\t/' -e 's/tty1$/hvc0/' ${prefix}/etc/inittab
 
 
 #
