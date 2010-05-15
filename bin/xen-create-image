@@ -1588,6 +1588,14 @@ sub checkArguments
     }
 
     #
+    #  Lucid doesn't work without pygrub
+    #
+    if ( $CONFIG{ 'dist' } eq 'lucid' )
+    {
+        $CONFIG{ 'pygrub' } = 1;
+    }
+
+    #
     #  NOTE: FAKE!
     #
     if ( $CONFIG{ 'dist' } eq 'fedora-core4' )
