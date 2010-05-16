@@ -3177,7 +3177,7 @@ sub installSystem
 
 
     #
-    #  Propogate --verbose
+    #  Propagate --verbose
     #
     if ( $CONFIG{ 'verbose' } )
     {
@@ -3185,7 +3185,7 @@ sub installSystem
     }
 
     #
-    #  Propogate --arche
+    #  Propagate --arch
     #
     if ( $CONFIG{ 'arch' } )
     {
