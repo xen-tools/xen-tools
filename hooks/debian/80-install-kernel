@@ -32,9 +32,9 @@ logMessage Script $0 starting
 # Resolve the correct architecutre
 #
 
-if [ "${arch}" == "i386" ]; then
+if [ "${arch}" = "i386" ]; then
 	XEN_ARCH="686"
-elif [ "${arch}" == "amd64" ]; then
+elif [ "${arch}" = "amd64" ]; then
 	XEN_ARCH="amd64"
 else
 	logMessage Unkown kernel arhcitechture ${arch}
