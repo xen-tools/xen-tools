@@ -25,10 +25,11 @@ xen-tools
  are considered "supported":
 
 	Debian:
+	  * Sarge 3.1 (i386 only)
 	  * Etch 4.0
 	  * Lenny 5.0
 	  * Squeeze 6.0
-	  * Sid
+	  * Sid (works at least at the moment of writing :-)
 
 	Ubuntu:
 	  * Hardy Heron 8.04 (see [1])
@@ -36,6 +37,7 @@ xen-tools
 	  * Jaunty Jackaplope 9.04
 	  * Karmic Koala 9.10
 	  * Lucid Lynx 10.04 (see [2])
+	  * Maverick Meerkat 10.10 (works at least at the moment of writing :-)
 
   [1] There is an issue with debootstrap on hardy not installing ksyslogd
       This can be fixed by chrooting into the newly installed system
