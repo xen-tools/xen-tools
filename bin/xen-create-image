@@ -3706,20 +3706,24 @@ sub runCommand
     #
     #  Copy stderr to stdout, so we can see it, and make sure we log it.
     #
-    $cmd .= " 2>&1 | tee --append /var/log/xen-tools/$CONFIG{'hostname'}.log";
+    $cmd .= " 2>&1";
 
     #
     #  Run it.
     #
     my $output = `$cmd`;
+    my $rc = $?;
 
+    logprint($output);
 
     $CONFIG{ 'verbose' } && print "Finished : $cmd\n";
 
-    if ( $? != 0 )
+    if ( $rc != 0 )
     {
         logprint("Running command '$cmd' failed.\n");
         logprint("Aborting\n");
+        print "Running command '$cmd' failed.\n";
+	print "See /var/log/xen-tools/$CONFIG{'hostname'}.log for details\n";
         $FAIL = 1;
         exit 127;
     }
