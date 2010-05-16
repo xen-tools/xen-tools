@@ -29,12 +29,16 @@ logMessage Script $0 starting
 #
 # Test where MAKEDEV is located, assuming /sbin/ as default
 #
-MAKEDEV="${prefix}/sbin/MAKEDEV"
-if [ ! -x "${MAKEDEV}" -a -x "${prefix}/dev/MAKEDEV" ]; then
-    MAKEDEV="${prefix}/dev/MAKEDEV"
-fi
+MAKEDEV=''
+MAKEDEV_PATHS="/sbin/MAKEDEV /dev/MAKEDEV"
+for MAKEDEV_PATH in ${MAKEDEV_PATHS}; do
+    if [ -x "${prefix}${MAKEDEV_PATH}" ]; then
+	MAKEDEV="${prefix}${MAKEDEV_PATH}"
+	break
+    fi
+done
 
-
+if [ -n "${MAKEDEV}" ]; then
 
 #
 # Early termination if we have a couple of common devices present
@@ -62,6 +66,7 @@ cd ${prefix}/dev
 ${MAKEDEV} generic
 ${MAKEDEV} std
 
+fi # -n ${MAKEDEV}
 
 #
 #  Log our finish
