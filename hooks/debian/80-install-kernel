@@ -21,13 +21,12 @@ else
     . ./hooks/common.sh
 fi
 
+if [ ${pygrub} ]; then
 #
 # Log our start
 #
 
 logMessage Script $0 starting
-
-if [ ${pygrub} ]; then
 
 #
 # Resolve the correct architecutre
