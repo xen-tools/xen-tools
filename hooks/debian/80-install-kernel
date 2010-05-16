@@ -116,7 +116,7 @@ installDebianPackage ${prefix} module-init-tools
 
 else
     logMessage pygrub not set, skipping kernel install
-fi
+fi # if pygrub
 
 #
 #  Log our finish

@@ -78,6 +78,7 @@ fi
 #
 #  Install the module-init-tools package.
 #
+
 installDebianPackage ${prefix} module-init-tools
 
 else
@@ -87,4 +88,5 @@ fi # if pygrub
 #
 #  Log our finish
 #
+
 logMessage Script $0 finished
