@@ -36,8 +36,20 @@ if [ "${arch}" = "i386" ]; then
 	XEN_ARCH="686"
 elif [ "${arch}" = "amd64" ]; then
 	XEN_ARCH="amd64"
+elif [ -z "${arch}" ]; then
+	UNAME_ARCH=`uname -m`
+	if [ "${UNAME_ARCH}" = "i686" ]; then
+		XEN_ARCH="686"
+	elif [ "${UNAME_ARCH}" = "x86_64" ]; then
+		XEN_ARCH="amd64"
+	else
+		logMessage Unknown kernel architecture ${UNAME_ARCH}.
+		logMessage Please report this as bug to xen-tools-dev@xen-tools.org.
+		logMessage Script $0 failed
+		exit 1
+	fi
 else
-	logMessage Unkown kernel arhcitechture ${arch}
+	logMessage Unknown kernel architecture ${arch}
 	logMessage Script $0 failed
 	exit 1
 fi
