@@ -49,6 +49,7 @@ xen-tools (4.2~rc1-1) UNRELEASED; urgency=low
     - [debian/source/format]: missing-debian-source-format
   * Added a README.source explaining how to build xen-tools directly from
     the Git repository.
+  * Overhauled package description
 
  -- Axel Beckert <abe@debian.org>  Mon, 17 May 2010 13:32:04 +0200
 

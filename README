@@ -20,9 +20,12 @@ xen-tools
  to be accessible over your local network and complete with an installed
  copy of OpenSSH.
 
-  xen-tools currently has scripts to install all distributions of Debian
- and Ubuntu and some RPM-based distributions, however only the following
- are considered "supported":
+  xen-tools currently has scripts to install most releases of Debian
+ (starting with 3.1 "Sarge") and Ubuntu (starting with 6.06 LTS
+ "Dapper") and some RPM-based distributions.
+
+  However currently only Debian and Ubuntu releases are tested and
+  known to work, i.e.:
 
 	Debian:
 	  * Sarge 3.1 (i386 only)
@@ -32,6 +35,10 @@ xen-tools
 	  * Sid (works at least at the moment of writing :-)
 
 	Ubuntu:
+	  * Dapper Drake 6.06
+	  * Edgy Eft 6.10
+	  * Feisty Fawn 7.04
+	  * Gutsy Gibbon 7.10
 	  * Hardy Heron 8.04 (see [1])
 	  * Interpid Ibex 8.10
 	  * Jaunty Jackaplope 9.04
