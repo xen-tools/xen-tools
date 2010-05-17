@@ -84,9 +84,11 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --partitions=file
                 Use a specific partition layout configuration file.
-                Not supported with the image-dev and swap-dev options.
-                Parameters fs, size, swap and noswap are ignored when
-                using this option.
+                See /etc/xen-tools/partitions.d/sample-server for an
+                example partitioning configuration.  Not supported
+                with the image-dev and swap-dev options.  Parameters
+                fs, size, swap and noswap are ignored when using this
+                option.
 
    --passwd     Ask for a root password during setup.
                 NOTE:  This is done interactively.
