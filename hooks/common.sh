@@ -98,7 +98,9 @@ installDebianPackage ()
     #
     # Install the packages
     #
+    mount -t devpts devpts ${prefix}/dev/pts
     DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes --force-yes install "$@"
+    umount ${prefix}/dev/pts
 
     #
     #  Remove the policy-rc.d script.
@@ -216,6 +218,28 @@ installCentOS4Package ()
     #
     chroot ${prefix} /usr/bin/yum -y install ${package}
 }
+
+
+
+#
+#  Install a package using whatever package management tool is available
+#
+installPackage ()
+{
+	prefix=$1
+	package=$2
+
+	if [ -x ${prefix}/usr/bin/apt-get ] ; then
+		installDebianPackage "$@"
+
+	elif [ -x ${prefix}/usr/bin/yum ] ; then
+		installCentOS4Package "$@"
+
+	else
+		logMessage "Unable to install package ${package}; no package manager found"
+	fi
+}
+
 
 
 #

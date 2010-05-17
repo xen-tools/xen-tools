@@ -93,6 +93,8 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --role=role  Run the specified role script(s) post-install.
                 Role scripts are discussed later in this manpage.
+                Can be an absolute path. Otherwise it's relative to the
+                value of --roledir.
 
    --role-args="--arg1 --arg2"
                 Pass the named string literally to any role script.
@@ -124,6 +126,14 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --ide        Use IDE names for virtual devices (i.e. hda not xvda)
 
    --scsi       Use SCSI names for virtual devices (i.e. sda not xvda)
+
+   --disk_device=diskname
+                Use specified device name for virtual devices instead of
+                the default value "xvda".
+
+   --serial_device=serialname
+                Install a getty on the specified serial device instead
+                of the default device.
 
 
   Installation options:
@@ -1410,6 +1420,9 @@ sub parseCommandLineArguments
             "lvm=s",       \$install{ 'lvm' },
             "image-dev=s", \$install{ 'image-dev' },
             "swap-dev=s",  \$install{ 'swap-dev' },
+            "serial_device=s", \$CONFIG{ 'serial_device' },
+            "disk_device=s", \$CONFIG{ 'disk_device' },
+          
 
             # Host options
             "no-hosts", \$CONFIG{ 'nohosts' },
@@ -3494,7 +3507,8 @@ sub runRoleScript
     #
     #  The complete path to the role script
     #
-    my $file = $roleDir . "/" . $role;
+    my $file = $role;
+    $file = $roleDir . "/" . $file unless $file =~ /\//;
 
     if ( -x $file )
     {
