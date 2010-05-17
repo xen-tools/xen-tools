@@ -1,6 +1,6 @@
 xen-tools (4.2~rc1-1) UNRELEASED; urgency=low
 
-  * New maintainer and upstream author
+  * New maintainer and upstream authors
   * Reintroduction into Debian Unstable (Closes: #566714)
   * New upstream release candidate
     - Needs dependency on libfile-slurp-perl
