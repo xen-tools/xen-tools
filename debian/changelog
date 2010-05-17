@@ -48,9 +48,9 @@ xen-tools (4.2~rc1-1) UNRELEASED; urgency=low
     - [debian/copyright]: copyright-without-copyright-notice
     - [debian/source/format]: missing-debian-source-format
   * Added a README.source explaining how to build xen-tools directly from
-    the Mercurial repository.
+    the Git repository.
 
- -- Axel Beckert <abe@debian.org>  Fri, 09 Apr 2010 01:30:49 +0200
+ -- Axel Beckert <abe@debian.org>  Mon, 17 May 2010 13:32:04 +0200
 
 xen-tools (4.1-1) unstable; urgency=low
 

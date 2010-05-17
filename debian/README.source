@@ -1,9 +1,21 @@
-How to build xen-tools directly from the Mercurial repository?
-==============================================================
+How to build xen-tools directly from the Git repository?
+========================================================
 
-$ hg clone http://noone.org/hg/xen-tools/
+Clone the git repository and change to the directory of your local
+working copy.
+
+$ git clone git://gitorious.org/xen-tools/xen-tools.git
 $ cd xen-tools
-$ make orig-tar-gz
-$ debuild -i'^\.hg'
 
- -- Axel Beckert <abe@debian.org>, Fri,  9 Apr 2010 02:06:24 +0200
+If you just want to build the binary package, run
+
+$ dpkg-buildpackage -uc -us -b
+
+If you want to build source and binary packages, e.g. for an upload to
+Debian or Ubuntu:
+
+$ make orig-tar-gz
+$ dpkg-buildpackage
+
+
+ -- Axel Beckert <abe@debian.org>, Mon, 17 May 2010 13:31:31 +0200
