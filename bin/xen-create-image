@@ -709,6 +709,25 @@ my $RELEASE = '4.2rc1';
 
 
 #
+# Release Aliases
+#
+my %RELEASE_ALIASES = (qw(
+    stentz      fedora-core-4
+    bordeaux    fedora-core-5
+    zod         fedora-core-6
+    moonshine   fedora-7
+    werewolf    fedora-8
+    sulphur     fedora-9
+    cambridge   fedora-10
+    leonidas    fedora-11
+    constantine fedora-12
+    goddard     fedora-13
+    laughlin    fedora-14
+));
+
+
+
+#
 #  Setup default options.
 #
 setupDefaultOptions();
@@ -1631,11 +1650,10 @@ sub checkArguments
     }
 
     #
-    #  NOTE: FAKE!
+    #  Check for release alias names
     #
-    if ( $CONFIG{ 'dist' } eq 'fedora-core4' )
-    {
-        $CONFIG{ 'dist' } = 'stentz';
+    if (exists $RELEASE_ALIASES{$CONFIG{ 'dist' }}) {
+	$CONFIG{ 'dist' } = $RELEASE_ALIASES{$CONFIG{ 'dist' }};
     }
 
     #
