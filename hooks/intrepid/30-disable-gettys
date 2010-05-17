@@ -28,7 +28,9 @@ logMessage Script $0 starting
 #  Remove the links for upstart
 #
 rm ${prefix}/etc/event.d/tty[!1]
-
+sed -i -e s/tty1/hvc0/ ${prefix}/etc/event.d/tty1
+mv ${prefix}/etc/event.d/tty1 ${prefix}/etc/event.d/hvc0
+[ -f ${prefix}/etc/inittab ] && sed -i -e s/tty1/hvc0/ ${prefix}/etc/inittab
 
 #
 #  Are we using an alternative serial device?
@@ -41,9 +43,9 @@ if [ ! -z "${serial_device}" ]; then
     logMessage "Replacing default serial device (tty1) with ${serial_device}"
 
     # replace existing device.
-    mv ${prefix}/etc/event.d/tty1  ${prefix}/etc/event.d/${serial_device}
-    sed -i -e s/tty1/${serial_device}/ ${prefix}/etc/event.d/${serial_device}
-    [ -f ${prefix}/etc/inittab ] && sed -i -e s/tty1/${serial_device}/ ${prefix}/etc/inittab
+    mv ${prefix}/etc/event.d/hvc0  ${prefix}/etc/event.d/${serial_device}
+    sed -i -e s/hvc0/${serial_device}/ ${prefix}/etc/event.d/${serial_device}
+    [ -f ${prefix}/etc/inittab ] && sed -i -e s/hvc0/${serial_device}/ ${prefix}/etc/inittab
 
 
 
