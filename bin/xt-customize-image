@@ -320,14 +320,22 @@ sub runDistributionHooks
             {
                 print "Running hook $name ['$cmd']\n";
                 print "--\n";
-                system($cmd );
+                my $rc = system($cmd);
+                if ($rc != 0) {
+		    print "hook $name failed: $?\n";
+		    exit 1;
+		}
                 print "--\n";
                 print "Done\n\n";
             }
             else
             {
                 print "Running hook $name\n";
-                system($cmd );
+                my $rc = system($cmd);
+                if ($rc != 0) {
+		    print "hook $name failed: $?\n";
+		    exit 1;
+		}
                 print "hook $name: done.\n";
             }
         }

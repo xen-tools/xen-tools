@@ -916,7 +916,7 @@ sub do_image_server
 
 =begin doc
 
-  Install a new distribution of GNU/Linux using the rpmstrap tool.
+  Install a new distribution of GNU/Linux using the rinse tool.
 
 =end doc
 

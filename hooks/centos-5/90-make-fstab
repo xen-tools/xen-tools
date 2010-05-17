@@ -37,15 +37,19 @@ logMessage Filesystem options are ${options}
 #
 # Find the root device.
 #
-#  1.  default to sda.
+#  1.  default to xvda.
 #
 #  2.  If --ide is specified use hda.
 #
-#  3.  Otherwise use a named $disk_device
+#  3.  If --scsi is specified use sda.
 #
-device=sda
+#  4.  Otherwise use a named $disk_device
+#
+device=xvda
 if [ "${ide}" ]; then
     device=hda
+elif [ "${scsi}" ]; then
+    device=sda
 else
     if [ ! -z "${disk_device}" ]; then
         device=`basename $disk_device`

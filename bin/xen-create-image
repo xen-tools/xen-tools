@@ -84,15 +84,19 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --partitions=file
                 Use a specific partition layout configuration file.
-                Not supported with the image-dev and swap-dev options.
-                Parameters fs, size, swap and noswap are ignored when
-                using this option.
+                See /etc/xen-tools/partitions.d/sample-server for an
+                example partitioning configuration.  Not supported
+                with the image-dev and swap-dev options.  Parameters
+                fs, size, swap and noswap are ignored when using this
+                option.
 
    --passwd     Ask for a root password during setup.
                 NOTE:  This is done interactively.
 
    --role=role  Run the specified role script(s) post-install.
                 Role scripts are discussed later in this manpage.
+                Can be an absolute path. Otherwise it's relative to the
+                value of --roledir.
 
    --role-args="--arg1 --arg2"
                 Pass the named string literally to any role script.
@@ -119,8 +123,19 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
                 used the system will not have a swap entry added to
                 its /etc/fstab file either.
 
+   --pygrub     DomU should be booted using pygrub.
 
-   --ide        Use IDE names for virtual devices (i.e. hda not sda)
+   --ide        Use IDE names for virtual devices (i.e. hda not xvda)
+
+   --scsi       Use SCSI names for virtual devices (i.e. sda not xvda)
+
+   --disk_device=diskname
+                Use specified device name for virtual devices instead of
+                the default value "xvda".
+
+   --serial_device=serialname
+                Install a getty on the specified serial device instead
+                of the default device.
 
 
   Installation options:
@@ -1207,9 +1222,26 @@ sub setupDefaultOptions
     #
     # Misc. options.
     #
-    $CONFIG{ 'mirror' }        = 'http://ftp.us.debian.org/debian';
+
+    # Default distribution is Debian Stable
+    $CONFIG{ 'dist' }          = 'stable';
+    $CONFIG{ 'mirror' }        = '';
+
+    # Initialize per distribution mirror defaults: Debian
+    foreach my $debdist (qw(etch lenny squeeze sid testing stable unstable)) {
+	$CONFIG{ 'mirror_'.$debdist } = $CONFIG{ 'mirror' }
+    }
+    foreach my $debdist (qw(sarge)) {
+	$CONFIG{ 'mirror_'.$debdist } = 'http://archive.debian.org/debian';
+    }
+    # Initialize per distribution mirror defaults: Ubuntu
+    foreach my $ubuntudist (qw(dapper hardy intrepid jaunty karmic lucid maverick)) {
+	$CONFIG{ 'mirror_'.$ubuntudist } = 'http://archive.ubuntu.com/ubuntu';
+    }
+    foreach my $ubuntudist (qw(edgy feisty gutsy)) {
+	$CONFIG{ 'mirror_'.$ubuntudist } = 'http://old-releases.ubuntu.com/ubuntu';
+    }
     $CONFIG{ 'arch' }          = '';
-    $CONFIG{ 'dist' }          = 'sarge';
     $CONFIG{ 'fs' }            = 'ext3';
     $CONFIG{ 'force' }         = 0;
     $CONFIG{ 'install' }       = 1;
@@ -1393,6 +1425,9 @@ sub parseCommandLineArguments
             "lvm=s",       \$install{ 'lvm' },
             "image-dev=s", \$install{ 'image-dev' },
             "swap-dev=s",  \$install{ 'swap-dev' },
+            "serial_device=s", \$CONFIG{ 'serial_device' },
+            "disk_device=s", \$CONFIG{ 'disk_device' },
+          
 
             # Host options
             "no-hosts", \$CONFIG{ 'nohosts' },
@@ -1424,6 +1459,7 @@ sub parseCommandLineArguments
             "cache=s",      \$CONFIG{ 'cache' },
             "config=s",     \$CONFIG{ 'config' },
             "ide",          \$CONFIG{ 'ide' },
+            "scsi",         \$CONFIG{ 'scsi' },
             "install=i",    \$CONFIG{ 'install' },
             "hooks=i",      \$CONFIG{ 'hooks' },
             "pygrub",       \$CONFIG{ 'pygrub' },
@@ -1566,6 +1602,34 @@ sub checkArguments
     {
         logprint("The '--hostname' argument is mandatory.\n");
         exit 127;
+    }
+
+    #
+    #  Lucid doesn't work without pygrub
+    #
+    if ( $CONFIG{ 'dist' } =~ /lucid|maverick/ )
+    {
+        $CONFIG{ 'pygrub' } = 1;
+    }
+
+    #
+    #  Sarge amd64 needs different default mirror
+    #
+    if ( $CONFIG{ 'dist' } =~ /sarge/ and
+	 $CONFIG{ 'mirror_sarge' } eq 'http://archive.debian.org/debian' )
+    {
+        $CONFIG{ 'mirror_sarge' } = 'http://amd64.debian.net/debian';
+    }
+
+    #
+    #  If no mirror is set, use the default per-distro mirror
+    #
+    my $distMirror = "mirror_" . $CONFIG{ 'dist' };
+    if ( !$CONFIG{ 'mirror' } and
+	 $CONFIG{ $distMirror } and
+	 length( $CONFIG{ $distMirror } ) )
+    {
+        $CONFIG{ 'mirror' } = $CONFIG{ $distMirror };
     }
 
     #
@@ -2294,6 +2358,7 @@ sub showSummary
     logprint("--------------------\n");
     logprint("Hostname       :  $CONFIG{'hostname'}\n");
     logprint("Distribution   :  $CONFIG{'dist'}\n");
+    logprint("Mirror         :  $CONFIG{'mirror'}\n");
 
     if ( defined $CONFIG{ 'image-dev' } )
     {
@@ -3103,14 +3168,6 @@ sub installSystem
 {
 
     #
-    #  We might have a per-distro mirror.
-    my $distMirror = "mirror_" . $CONFIG{ 'dist' };
-    if ( $CONFIG{ $distMirror } && length( $CONFIG{ $distMirror } ) )
-    {
-        $CONFIG{ 'mirror' } = $CONFIG{ $distMirror };
-    }
-
-    #
     #
     #  Basic command
     #
@@ -3140,7 +3197,7 @@ sub installSystem
 
 
     #
-    #  Propogate --verbose
+    #  Propagate --verbose
     #
     if ( $CONFIG{ 'verbose' } )
     {
@@ -3148,7 +3205,7 @@ sub installSystem
     }
 
     #
-    #  Propogate --arche
+    #  Propagate --arch
     #
     if ( $CONFIG{ 'arch' } )
     {
@@ -3455,7 +3512,8 @@ sub runRoleScript
     #
     #  The complete path to the role script
     #
-    my $file = $roleDir . "/" . $role;
+    my $file = $role;
+    $file = $roleDir . "/" . $file unless $file =~ /\//;
 
     if ( -x $file )
     {
@@ -3582,6 +3640,28 @@ sub setupRootPassword
 
 =begin doc
 
+  Print the given string to the logfile.
+
+=end doc
+
+=cut
+
+sub logonly
+{
+    my ($text) = (@_);
+
+    if ( $CONFIG{ 'hostname' } )
+    {
+        open( LOGFILE, ">>", "/var/log/xen-tools/$CONFIG{'hostname'}.log" ) or
+          return;
+        print LOGFILE $text;
+        close(LOGFILE);
+    }
+}
+
+
+=begin doc
+
   Print the given string both to our screen, and to the logfile.
 
 =end doc
@@ -3593,17 +3673,7 @@ sub logprint
     my ($text) = (@_);
 
     print $text;
-
-    #
-    #  Log.
-    #
-    if ( $CONFIG{ 'hostname' } )
-    {
-        open( LOGFILE, ">>", "/var/log/xen-tools/$CONFIG{'hostname'}.log" ) or
-          return;
-        print LOGFILE $text;
-        close(LOGFILE);
-    }
+    logonly($text);
 }
 
 
@@ -3669,20 +3739,33 @@ sub runCommand
     #
     #  Copy stderr to stdout, so we can see it, and make sure we log it.
     #
-    $cmd .= " 2>&1 | tee --append /var/log/xen-tools/$CONFIG{'hostname'}.log";
+    $cmd .= " 2>&1";
 
     #
     #  Run it.
     #
-    my $output = `$cmd`;
+    my $rcopen = open(CMD, '-|', $cmd);
+    if (!defined($rcopen)) {
+        logprint("Starting command '$cmd' failed: $!\n");
+        logprint("Aborting\n");
+	print "See /var/log/xen-tools/$CONFIG{'hostname'}.log for details\n";
+        $FAIL = 1;
+        exit 127;
+    }
 
+    while (my $line = <CMD>) {
+	logonly $line;
+    }
+
+    my $rcclose = close(CMD);
 
     $CONFIG{ 'verbose' } && print "Finished : $cmd\n";
 
-    if ( $? != 0 )
+    if (!$rcclose)
     {
-        logprint("Running command '$cmd' failed.\n");
+        logprint("Running command '$cmd' failed with exit code $?.\n");
         logprint("Aborting\n");
+	print "See /var/log/xen-tools/$CONFIG{'hostname'}.log for details\n";
         $FAIL = 1;
         exit 127;
     }

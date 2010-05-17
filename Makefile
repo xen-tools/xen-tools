@@ -17,7 +17,9 @@ DIST_PREFIX = ${TMP}
 VERSION     = 4.2rc1
 DEBVERSION  = $(shell echo $(VERSION)|sed 's/\(rc\|pre\|beta\|alpha\)/~\1/')
 BASE        = xen-tools
-VCS	    = $(shell git st > /dev/null && echo git || hg st > /dev/null && echo hg || echo cannot-determine-used-vcs)
+VCS         = $(shell if git st > /dev/null; then echo git; \
+                    elif hg st  > /dev/null; then echo hg; \
+                    else                          echo cannot-determine-used-vcs; fi)
 
 #
 #  Installation prefix, useful for the Debian package.
@@ -163,6 +165,7 @@ install-hooks:
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d squeeze.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d sid.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d testing.d
+	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d stable.d
 	mkdir -p ${prefix}/usr/lib/xen-tools/gentoo.d/
 	cp -R hooks/gentoo/*-* ${prefix}/usr/lib/xen-tools/gentoo.d
 	mkdir -p ${prefix}/usr/lib/xen-tools/dapper.d/
@@ -178,6 +181,7 @@ install-hooks:
 	mkdir -p ${prefix}/usr/lib/xen-tools/karmic.d/
 	cp -R hooks/karmic/*-* ${prefix}/usr/lib/xen-tools/karmic.d/
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s karmic.d lucid.d
+	-cd ${prefix}/usr/lib/xen-tools/ && ln -s karmic.d maverick.d
 	cp hooks/common.sh ${prefix}/usr/lib/xen-tools
 
 

@@ -46,7 +46,6 @@ Bugs to fix and Features to add before a 4.2 release
 
 * Should check all integer expection options on other characters than digits.
 
-
 * Test suite should pass
 
    Currently failing:
@@ -86,6 +85,9 @@ Maybe for a 4.3 or 5.0 release
    Can't remove open logical volume "acromantula-domu1-disk"
 
 * btrfs support
+
+* Move the hooks directory to /etc/xen-tools/ to officially allow
+  added and modified hooks.
 
 * Clean up the hooks directory
 

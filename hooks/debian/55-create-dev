@@ -29,12 +29,16 @@ logMessage Script $0 starting
 #
 # Test where MAKEDEV is located, assuming /sbin/ as default
 #
-MAKEDEV = "$prefix/sbin/MAKEDEV"
-if [ ! -x $MAKEDEV -a -x "$prefix/dev/MAKEDEV" ]; then
-    MAKEDEV = "$prefix/dev/MAKEDEV"
-fi
+MAKEDEV=''
+MAKEDEV_PATHS="/sbin/MAKEDEV /dev/MAKEDEV"
+for MAKEDEV_PATH in ${MAKEDEV_PATHS}; do
+    if [ -x "${prefix}${MAKEDEV_PATH}" ]; then
+	MAKEDEV="${prefix}${MAKEDEV_PATH}"
+	break
+    fi
+done
 
-
+if [ -n "${MAKEDEV}" ]; then
 
 #
 # Early termination if we have a couple of common devices present
@@ -45,10 +49,10 @@ if ( test `ls -1 ${prefix}/dev | wc -l` -gt 10 ); then
     # We still need to make sure the basic devices are present
     #
     cd ${prefix}/dev
-    $MAKEDEV std
-    $MAKEDEV hda
-    $MAKEDEV sda
-    $MAKEDEV tty1
+    ${MAKEDEV} std
+    ${MAKEDEV} hda
+    ${MAKEDEV} sda
+    ${MAKEDEV} tty1
 
     logMessage "Terminating because there appear to be files in /dev already"
     exit
@@ -59,9 +63,10 @@ fi
 #  Make the device nodes.
 #
 cd ${prefix}/dev
-$MAKEDEV generic
-$MAKEDEV std
+${MAKEDEV} generic
+${MAKEDEV} std
 
+fi # -n ${MAKEDEV}
 
 #
 #  Log our finish

@@ -57,6 +57,9 @@ Contributions
    - Several suggestions and code for disabling start-stop-daemon
    - Compatibility fixups for Ubuntu.
 
+  Nathan O'Sullivan <nathan [at] au.com.mammoth>
+   - New features wrt. options and helper functions
+
   Walter Reiner <walter [at] at.wreiner>
    - Provided --image-dev + --swap-dev patch.
 

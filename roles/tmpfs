@@ -1,0 +1,44 @@
+#!/bin/sh
+#
+#  This script is responsible for setting up /etc/fstab upon the
+# new instance.
+#
+#  This should be a simple job, but it is complicated by some of the
+# differences between filesystems - some root filesystems will require
+# the installation of new packages, and we have to handle that here.
+#
+# Steve
+# --
+# http://www.steve.org.uk/
+
+prefix=$1
+
+#
+#  Source our common functions
+#
+if [ -e /usr/lib/xen-tools/common.sh ]; then
+    . /usr/lib/xen-tools/common.sh
+else
+    . ./hooks/common.sh
+fi
+
+
+#
+# Log our start
+#
+logMessage Script $0 starting
+
+
+#
+#  Now let's fixup the fstab
+#
+cat <<END_OF_TMPFS_FSTAB >> ${prefix}/etc/fstab
+tmpfs           /tmp            tmpfs   rw,nosuid,nodev 0 0
+tmpfs           /var/run        tmpfs   rw,nosuid,nodev,noexec,mode=1755 0 0
+tmpfs           /var/lock       tmpfs   rw,nosuid,nodev,noexec 0 0
+END_OF_TMPFS_FSTAB
+
+#
+#  Log our finish
+#
+logMessage Script $0 finished
