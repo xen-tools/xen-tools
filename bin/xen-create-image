@@ -3619,6 +3619,28 @@ sub setupRootPassword
 
 =begin doc
 
+  Print the given string to the logfile.
+
+=end doc
+
+=cut
+
+sub logonly
+{
+    my ($text) = (@_);
+
+    if ( $CONFIG{ 'hostname' } )
+    {
+        open( LOGFILE, ">>", "/var/log/xen-tools/$CONFIG{'hostname'}.log" ) or
+          return;
+        print LOGFILE $text;
+        close(LOGFILE);
+    }
+}
+
+
+=begin doc
+
   Print the given string both to our screen, and to the logfile.
 
 =end doc
@@ -3630,17 +3652,7 @@ sub logprint
     my ($text) = (@_);
 
     print $text;
-
-    #
-    #  Log.
-    #
-    if ( $CONFIG{ 'hostname' } )
-    {
-        open( LOGFILE, ">>", "/var/log/xen-tools/$CONFIG{'hostname'}.log" ) or
-          return;
-        print LOGFILE $text;
-        close(LOGFILE);
-    }
+    logonly($text);
 }
 
 
