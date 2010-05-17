@@ -69,6 +69,8 @@ Bugs to fix and Features to add before a 4.2 release
 
 - Clean up setup-hostname - copying the dom0s /etc/hosts isn't reliable
 
+- Add a flag to not copy /etc/hosts file
+
 - Setup locales in the hooks?
 
 

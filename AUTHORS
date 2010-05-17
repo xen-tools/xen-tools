@@ -53,6 +53,10 @@ Contributions
   Gordon Messmer <gmessmer [at] edu.washington.u>
    - Supplied .spec file for building .rpm packages.
 
+  Wilson Neil <neil [at] uk.co.aldur>
+   - Several suggestions and code for disabling start-stop-daemon
+   - Compatibility fixups for Ubuntu.
+
   Nathan O'Sullivan <nathan [at] au.com.mammoth>
    - New features wrt. options and helper functions
 
@@ -61,6 +65,9 @@ Contributions
 
   Jameson Rollins <jrollins [at] edu.columbia.phys>
    - Provided --output + --extension code.
+
+  Michal Safranek (Wejn) <wejn [at] box.cz>
+   - Inspiration for pygrub in the install-kernel scripts
 
   Felipe Scarel <fbscarel [at] com.gmail>
    - Bugfix for --no-swap + LVM
@@ -81,6 +88,3 @@ Contributions
   Ward Vandewege <ward [at] be.pong>
    - Made several updates for Ubuntu support.
 
-  Wilson Neil <neil [at] uk.co.aldur>
-   - Several suggestions and code for disabling start-stop-daemon
-   - Compatibility fixups for Ubuntu.
