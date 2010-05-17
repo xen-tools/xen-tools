@@ -93,6 +93,8 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --role=role  Run the specified role script(s) post-install.
                 Role scripts are discussed later in this manpage.
+                Can be an absolute path. Otherwise it's relative to the
+                value of --roledir.
 
    --role-args="--arg1 --arg2"
                 Pass the named string literally to any role script.
