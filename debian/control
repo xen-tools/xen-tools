@@ -20,4 +20,5 @@ Description: Tools to manage Xen virtual servers
  domains (DomU) which can be listed, updated, or copied easily.
  .
  Currently installs Debian Sarge (i386 only), Etch, Lenny, Squeeze,
- and Sid; and Ubuntu Jaunty, Karmic, Lucid, and Maverick.
+ and Sid; and Ubuntu Hardy, Intrepid, Jaunty, Karmic, Lucid, and
+ Maverick.
