@@ -3723,18 +3723,27 @@ sub runCommand
     #
     #  Run it.
     #
-    my $output = `$cmd`;
-    my $rc = $?;
+    my $rcopen = open(CMD, '-|', $cmd);
+    if (!defined($rcopen)) {
+        logprint("Starting command '$cmd' failed: $!\n");
+        logprint("Aborting\n");
+	print "See /var/log/xen-tools/$CONFIG{'hostname'}.log for details\n";
+        $FAIL = 1;
+        exit 127;
+    }
 
-    logprint($output);
+    while (my $line = <CMD>) {
+	logonly $line;
+    }
+
+    my $rcclose = close(CMD);
 
     $CONFIG{ 'verbose' } && print "Finished : $cmd\n";
 
-    if ( $rc != 0 )
+    if (!$rcclose)
     {
-        logprint("Running command '$cmd' failed.\n");
+        logprint("Running command '$cmd' failed with exit code $?.\n");
         logprint("Aborting\n");
-        print "Running command '$cmd' failed.\n";
 	print "See /var/log/xen-tools/$CONFIG{'hostname'}.log for details\n";
         $FAIL = 1;
         exit 127;
