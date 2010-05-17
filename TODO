@@ -120,6 +120,10 @@ Maybe for a 4.3 or 5.0 release
    "type" of configuration you want, and a set of options specific to
    that flag could be parsed from xen-tools.conf
 
+* Do not run copyDebFiles on RPM based installations.
+
+  Write a proper clone of it for caching RPMs.
+
 Stuff from Steve's TODO list / Generic TODOs
 --------------------------------------------
 
