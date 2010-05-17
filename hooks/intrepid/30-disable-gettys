@@ -40,7 +40,7 @@ if [ ! -z "${serial_device}" ]; then
     serial_device=`basename ${serial_device}`
 
     # Let the user know.
-    logMessage "Replacing default serial device (tty1) with ${serial_device}"
+    logMessage "Replacing default serial device (hvc0) with ${serial_device}"
 
     # replace existing device.
     mv ${prefix}/etc/event.d/hvc0  ${prefix}/etc/event.d/${serial_device}
