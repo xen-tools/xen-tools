@@ -19,6 +19,20 @@ Description: Tools to manage Xen virtual servers
  Using the scripts you can easily create fully configured Xen guest
  domains (DomU) which can be listed, updated, or copied easily.
  .
- Currently installs Debian Sarge (i386 only), Etch, Lenny, Squeeze,
- and Sid; and Ubuntu Hardy, Intrepid, Jaunty, Karmic, Lucid, and
- Maverick.
+ xen-tools currently can install:
+ .
+ * Debian 3.1 Sarge (i386 only)
+ * Debian 4.0 Etch
+ * Debian 5.0 Lenny
+ * Debian 6.0 Squeeze
+ * Debian Sid (Unstable)
+ * Ubuntu 6.06 Dapper Drake (LTS)
+ * Ubuntu 6.10 Edgy Eft
+ * Ubuntu 7.04 Feisty Fawn
+ * Ubuntu 7.10 Gutsy Gibbon
+ * Ubuntu 8.04 Hardy Heron (LTS)
+ * Ubuntu 8.10 Intrepid Ibex
+ * Ubuntu 9.04 Jaunty Jackaplope
+ * Ubuntu 9.10 Karmic Koala
+ * Ubuntu 10.04 Lucid Lynx (LTS)
+ * Ubuntu 10.10 Maverick Meerkat

@@ -2,3 +2,10 @@
 .hgtags
 ChangeLog
 *~
+build-stamp
+configure-stamp
+man
+debian/files
+debian/xen-tools
+debian/xen-tools.debhelper.log
+debian/xen-tools.substvars

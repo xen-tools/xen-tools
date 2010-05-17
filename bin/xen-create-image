@@ -1233,8 +1233,11 @@ sub setupDefaultOptions
 	$CONFIG{ 'mirror_'.$debdist } = 'http://archive.debian.org/debian';
     }
     # Initialize per distribution mirror defaults: Ubuntu
-    foreach my $ubuntudist (qw(feisty gutsy hardy intrepid jaunty karmic lucid maverick)) {
+    foreach my $ubuntudist (qw(dapper hardy intrepid jaunty karmic lucid maverick)) {
 	$CONFIG{ 'mirror_'.$ubuntudist } = 'http://archive.ubuntu.com/ubuntu';
+    }
+    foreach my $ubuntudist (qw(edgy feisty gutsy)) {
+	$CONFIG{ 'mirror_'.$ubuntudist } = 'http://old-releases.ubuntu.com/ubuntu';
     }
     $CONFIG{ 'arch' }          = '';
     $CONFIG{ 'fs' }            = 'ext3';
