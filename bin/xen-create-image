@@ -1213,7 +1213,7 @@ sub setupDefaultOptions
 
     # Default distribution is Debian Stable
     $CONFIG{ 'dist' }          = 'stable';
-    $CONFIG{ 'mirror' }        = 'http://ftp.debian.org/debian';
+    $CONFIG{ 'mirror' }        = '';
 
     # Initialize per distribution mirror defaults: Debian
     foreach my $debdist (qw(etch lenny squeeze sid testing stable unstable)) {
@@ -1598,9 +1598,20 @@ sub checkArguments
     #  Sarge amd64 needs different default mirror
     #
     if ( $CONFIG{ 'dist' } =~ /sarge/ and
-	 $CONFIG{ 'mirror' } eq 'http://archive.debian.org/debian' )
+	 $CONFIG{ 'mirror_sarge' } eq 'http://archive.debian.org/debian' )
     {
-        $CONFIG{ 'mirror' } = 'http://amd64.debian.net/debian';
+        $CONFIG{ 'mirror_sarge' } = 'http://amd64.debian.net/debian';
+    }
+
+    #
+    #  If no mirror is set, use the default per-distro mirror
+    #
+    my $distMirror = "mirror_" . $CONFIG{ 'dist' };
+    if ( !$CONFIG{ 'mirror' } and
+	 $CONFIG{ $distMirror } and
+	 length( $CONFIG{ $distMirror } ) )
+    {
+        $CONFIG{ 'mirror' } = $CONFIG{ $distMirror };
     }
 
     #
@@ -3137,14 +3148,6 @@ sub mountImage
 
 sub installSystem
 {
-
-    #
-    #  We might have a per-distro mirror.
-    my $distMirror = "mirror_" . $CONFIG{ 'dist' };
-    if ( $CONFIG{ $distMirror } && length( $CONFIG{ $distMirror } ) )
-    {
-        $CONFIG{ 'mirror' } = $CONFIG{ $distMirror };
-    }
 
     #
     #
