@@ -129,7 +129,7 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
   Installation options:
 
    --arch=arch  Pass the given architecture to debootstrap, rinse,
-                or rpmstrap when installing the system.  This argument
+                or febootstrap when installing the system.  This argument
                 is ignored for other install methods.
 
    --dist=dist  Specify the distribution you wish to install.
@@ -318,7 +318,7 @@ Create a Xen configuration file in so that xm can start the new domain.
 
   #
   # Installation method:
-  # One of "copy", "debootstrap", "rinse", "rpmstrap", or "tar".
+  # One of "copy", "debootstrap", "rinse", "febootstrap", or "tar".
   #
   install-method = debootstrap
 
@@ -494,7 +494,7 @@ Create a Xen configuration file in so that xm can start the new domain.
   The new guest images may be installed in several different ways:
 
   1.  Using the debootstrap command, which must be installed and present.
-  2.  Using the rpmstrap command, which must be installed and present.
+  2.  Using the febootstrap command, which must be installed and present.
   3.  using the rinse command, which must be installed and present.
   4.  By copying an existing installation.
   5.  By untarring a file containing a previous installation.
@@ -1680,7 +1680,7 @@ E_OR
     if ( defined( $CONFIG{ 'install-method' } ) )
     {
         foreach my $recognised (
-                         qw/ copy debootstrap image-server rinse rpmstrap tar /)
+                         qw/ copy debootstrap image-server rinse febootstrap tar /)
         {
             $valid = 1
               if ( lc( $CONFIG{ 'install-method' } ) eq lc($recognised) );
@@ -1715,7 +1715,7 @@ E_OR
      --install-method=copy        --install-source=/some/path
      --install-method=debootstrap
      --install-method=rinse
-     --install-method=rpmstrap
+     --install-method=febootstrap
      --install-method=tar         --install-source=/some/file.tar
 
 EOF
