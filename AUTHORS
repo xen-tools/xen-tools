@@ -53,6 +53,9 @@ Contributions
   Gordon Messmer <gmessmer [at] edu.washington.u>
    - Supplied .spec file for building .rpm packages.
 
+  Nathan O'Sullivan <nathan [at] au.com.mammoth>
+   - New features wrt. options and helper functions
+
   Walter Reiner <walter [at] at.wreiner>
    - Provided --image-dev + --swap-dev patch.
 
