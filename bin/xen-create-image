@@ -1226,7 +1226,6 @@ sub setupDefaultOptions
     foreach my $ubuntudist (qw(feisty gutsy hardy intrepid jaunty karmic lucid maverick)) {
 	$CONFIG{ 'mirror_'.$ubuntudist } = 'http://archive.ubuntu.com/ubuntu';
     }
-    $CONFIG{ 'mirror' }        = 'http://ftp.us.debian.org/debian';
     $CONFIG{ 'arch' }          = '';
     $CONFIG{ 'fs' }            = 'ext3';
     $CONFIG{ 'force' }         = 0;
