@@ -127,6 +127,14 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --scsi       Use SCSI names for virtual devices (i.e. sda not xvda)
 
+   --disk_device=diskname
+                Use specified device name for virtual devices instead of
+                the default value "xvda".
+
+   --serial_device=serialname
+                Install a getty on the specified serial device instead
+                of the default device.
+
 
   Installation options:
 
