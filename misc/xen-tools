@@ -119,7 +119,7 @@ _xen_create_image()
 	    return 0
 	    ;;
 	--install-method)
-	    COMPREPLY=( $( compgen -W 'copy debootstrap rinse rpmstrap tar'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+	    COMPREPLY=( $( compgen -W 'copy debootstrap rinse febootstrap tar'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
 	    return 0
 	    ;;
 	--ip)
@@ -360,7 +360,7 @@ complete -F _xt-create-xen-config xt-create-xen-config
 #
 _xt-customize-image()
 {
-    local cur prev dists
+    local cur prev
 
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
@@ -369,16 +369,9 @@ _xt-customize-image()
     # Determine arguments dynamically.  Avoids out-of-dateness.
     opts=$(xt-customize-image  --help|grep -- --|awk '{print $1}'|grep -- -- | sort -u)
     
-    #
-    # Available distributions, from rpmstrap
-    #
-    if [ -d /usr/lib/rpmstrap/scripts ]; then
-       dists=`/bin/ls -1 /usr/lib/rpmstrap/scripts`
-    fi
-    
     case "$prev" in
 	--dist)
-	    COMPREPLY=( $( compgen -W '${dists} sid sarge etch lenny'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+	    COMPREPLY=( $( compgen -W 'sid sarge etch lenny'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
 	    return 0
 	    ;;
 	--location)
@@ -401,7 +394,7 @@ complete -F _xt-customize-image xt-customize-image
 #
 _xt-install-image()
 {
-    local cur prev dists
+    local cur prev
 
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
@@ -411,14 +404,6 @@ _xt-install-image()
     opts=$(xt-install-image  --help|grep -- --|awk '{print $1}'|grep -- -- | sort -u)
 
    
-    #
-    # Available distributions, from rpmstrap
-    #
-    if [ -d /usr/lib/rpmstrap/scripts ]; then
-       dists=`/bin/ls -1 /usr/lib/rpmstrap/scripts`
-    fi
-
-
     case "$prev" in
 	--cache)
 	    COMPREPLY=( $( compgen -W 'yes no'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
@@ -429,11 +414,11 @@ _xt-install-image()
 	    return 0
 	    ;;
 	--dist)
-	    COMPREPLY=( $( compgen -W '${dists} sid sarge etch lenny'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+	    COMPREPLY=( $( compgen -W 'sid sarge etch lenny'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
 	    return 0
 	    ;;
 	--install-method)
-	    COMPREPLY=( $( compgen -W 'copy debootstrap rinse rpmstrap tar'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+	    COMPREPLY=( $( compgen -W 'copy debootstrap rinse febootstrap tar'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
 	    return 0
 	    ;;
 	--location)
