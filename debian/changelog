@@ -39,7 +39,6 @@ xen-tools (4.2~rc1-1) UNRELEASED; urgency=low
     #566683, #550590, LP: #538917, #484098)
   * Downgrade reiserfsprogs and xfsprogs to Suggests. (Closes: #561618,
     LP: #80233)
-  * Added "Suggests: libwww-perl" (needed if --image-server is used)
   * Bump Standards-Version to 3.8.4 (no changes necessary)
   * Bump Debhelper Compatibility to 7
     - Replace "dh_clean -k" by "dh_prep"

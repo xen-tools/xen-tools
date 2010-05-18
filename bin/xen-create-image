@@ -154,7 +154,6 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
                 * rpmstrap (deprecated)
                 * tar (needs --install-source=tarball.tar)
                 * copy (needs --install-source=/path/to/copy/from)
-                * image-server
 
                 (Default value for Debian and Ubuntu: debootstrap)
 
@@ -1706,18 +1705,16 @@ E_OR
     if ( defined( $CONFIG{ 'install-method' } ) )
     {
         foreach my $recognised (
-                         qw/ copy debootstrap image-server rinse rpmstrap tar /)
+                         qw/ copy debootstrap rinse rpmstrap tar /)
         {
             $valid = 1
               if ( lc( $CONFIG{ 'install-method' } ) eq lc($recognised) );
         }
 
         #
-        #  If we have "copy", "image-server", or "tar" method
-        # then make sure we have a source.
+        #  If we have "copy", or "tar" method then make sure we have a source.
         #
         if ( ( lc( $CONFIG{ 'install-method' } ) eq "copy" ) ||
-             ( lc( $CONFIG{ 'install-method' } ) eq "image-server" ) ||
              ( lc( $CONFIG{ 'install-method' } ) eq "tar" ) )
         {
 
@@ -3230,7 +3227,6 @@ sub installSystem
     #  And where from, if relevant.
     #
     if ( ( lc( $CONFIG{ 'install-method' } ) eq "copy" ) ||
-         ( lc( $CONFIG{ 'install-method' } ) eq "image-server" ) ||
          ( lc( $CONFIG{ 'install-method' } ) eq "tar" ) )
     {
         logprint("(Source: $CONFIG{'install-source'})\n");
