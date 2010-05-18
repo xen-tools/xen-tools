@@ -784,7 +784,7 @@ sub do_image_server
     eval($test);
     if ($@)
     {
-        die "The module LDP::UserAgent wasn't found...\n";
+        die "The module LWP::UserAgent wasn't found...\n";
     }
 
 
