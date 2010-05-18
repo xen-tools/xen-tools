@@ -119,7 +119,7 @@ _xen_create_image()
 	    return 0
 	    ;;
 	--install-method)
-	    COMPREPLY=( $( compgen -W 'copy debootstrap image-server rpmstrap tar'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+	    COMPREPLY=( $( compgen -W 'copy debootstrap rinse rpmstrap tar'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
 	    return 0
 	    ;;
 	--ip)
@@ -433,7 +433,7 @@ _xt-install-image()
 	    return 0
 	    ;;
 	--install-method)
-	    COMPREPLY=( $( compgen -W 'copy debootstrap rpmstrap tar'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+	    COMPREPLY=( $( compgen -W 'copy debootstrap rinse rpmstrap tar'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
 	    return 0
 	    ;;
 	--location)

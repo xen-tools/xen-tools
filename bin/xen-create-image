@@ -147,8 +147,15 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --dist=dist  Specify the distribution you wish to install.
 
    --install-method=method
-                Specify the installation method to use. (Default
-                value for Debian and Ubuntu: debootstrap)
+                Specify the installation method to use. Valid methods are:
+
+                * debootstrap
+                * rinse
+                * rpmstrap (deprecated)
+                * tar (needs --install-source=tarball.tar)
+                * copy (needs --install-source=/path/to/copy/from)
+
+                (Default value for Debian and Ubuntu: debootstrap)
 
    --install-source=tarball
                 Specify the source path to use when installing via
@@ -1716,18 +1723,16 @@ E_OR
     if ( defined( $CONFIG{ 'install-method' } ) )
     {
         foreach my $recognised (
-                         qw/ copy debootstrap image-server rinse febootstrap tar /)
+                         qw/ copy debootstrap rinse febootstrap tar /)
         {
             $valid = 1
               if ( lc( $CONFIG{ 'install-method' } ) eq lc($recognised) );
         }
 
         #
-        #  If we have "copy", "image-server", or "tar" method
-        # then make sure we have a source.
+        #  If we have "copy", or "tar" method then make sure we have a source.
         #
         if ( ( lc( $CONFIG{ 'install-method' } ) eq "copy" ) ||
-             ( lc( $CONFIG{ 'install-method' } ) eq "image-server" ) ||
              ( lc( $CONFIG{ 'install-method' } ) eq "tar" ) )
         {
 
@@ -3240,7 +3245,6 @@ sub installSystem
     #  And where from, if relevant.
     #
     if ( ( lc( $CONFIG{ 'install-method' } ) eq "copy" ) ||
-         ( lc( $CONFIG{ 'install-method' } ) eq "image-server" ) ||
          ( lc( $CONFIG{ 'install-method' } ) eq "tar" ) )
     {
         logprint("(Source: $CONFIG{'install-source'})\n");
