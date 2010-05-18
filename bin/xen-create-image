@@ -147,8 +147,16 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --dist=dist  Specify the distribution you wish to install.
 
    --install-method=method
-                Specify the installation method to use. (Default
-                value for Debian and Ubuntu: debootstrap)
+                Specify the installation method to use. Valid methods are:
+
+                * debootstrap
+                * rinse
+                * rpmstrap (deprecated)
+                * tar (needs --install-source=tarball.tar)
+                * copy (needs --install-source=/path/to/copy/from)
+                * image-server
+
+                (Default value for Debian and Ubuntu: debootstrap)
 
    --install-source=tarball
                 Specify the source path to use when installing via
