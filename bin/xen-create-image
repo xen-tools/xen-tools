@@ -137,6 +137,10 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
                 Install a getty on the specified serial device instead
                 of the default device.
 
+   --vcpus=num
+                Set the number of vcpus that the new instance will have
+		instead of the default value of "1".
+
 
   Installation options:
 
@@ -202,6 +206,10 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --broadcast=123.456.789.ABC
                 Setup the broadcast address for the new instance.
 
+   --bridge=brname
+                Optionally, set a specific bridge for the new instance.
+                This can be especially useful when running multiple
+		bridges on a machine.
 
 
   Mandatory options:
@@ -1225,6 +1233,7 @@ sub setupDefaultOptions
     $CONFIG{ 'swap' }   = '128M';
     $CONFIG{ 'cache' }  = 'yes';
     $CONFIG{ 'image' }  = 'sparse';
+    $CONFIG{ 'vcpus' } = '1';
 
     #
     # Misc. options.
@@ -1421,6 +1430,7 @@ sub parseCommandLineArguments
             "noswap",   \$CONFIG{ 'noswap' },
             "image=s",  \$CONFIG{ 'image' },
             "memory=s", \$CONFIG{ 'memory' },
+            "vcpus=s",  \$CONFIG{ 'vcpus' },
 
             # Locations
             "dir=s",       \$install{ 'dir' },
@@ -1441,6 +1451,7 @@ sub parseCommandLineArguments
 
             # Networking options
             "dhcp",        \$CONFIG{ 'dhcp' },
+            "bridge=s",    \$CONFIG{ 'bridge' },
             "gateway=s",   \$CONFIG{ 'gateway' },
             "hostname=s",  \$CONFIG{ 'hostname' },
             "ip=s@",       \$CONFIG{ 'ip' },
