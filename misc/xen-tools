@@ -47,7 +47,7 @@ function _find_xen_images
 #
 _xen_create_image()
 {
-    local cur prev ip roles partitions dists vgs
+    local cur prev ip evmscontainers roles partitions dists vgs
 
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
@@ -158,7 +158,7 @@ complete -F _xen_create_image xen-create-image
 #
 _xen_create_nfs()
 {
-    local cur prev ip roles dists vgs
+    local cur prev
 
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
@@ -251,7 +251,7 @@ complete -F _xen_delete_image xen-delete-image
 #
 _xen_update_image() 
 {
-    local cur prev opts base names vgs
+    local cur prev opts evmscontainers names vgs
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
@@ -303,7 +303,7 @@ complete -F _xen_update_image xen-update-image
 #
 _xen_list_images() 
 {
-    local cur prev opts vgs
+    local cur prev opts
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
@@ -325,7 +325,7 @@ complete -F _xen_list_images xen-list-images
 #
 _xt-create-xen-config()
 {
-    local cur prev
+    local cur prev opts
 
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
@@ -360,7 +360,7 @@ complete -F _xt-create-xen-config xt-create-xen-config
 #
 _xt-customize-image()
 {
-    local cur prev dists
+    local cur prev dists opts
 
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
@@ -401,7 +401,7 @@ complete -F _xt-customize-image xt-customize-image
 #
 _xt-install-image()
 {
-    local cur prev dists
+    local cur prev dists opts
 
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
