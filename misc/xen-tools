@@ -208,6 +208,7 @@ _xen_delete_image()
     # Complete the options + all available hostnames.
     # Determine arguments dynamically.  Avoids out-of-dateness.
     #
+    names=`_find_xen_images`
     opts=$(xen-delete-image  --help|grep -- --|awk '{print $1}'|grep -- -- | sort -u)
     opts="${opts} ${names}"
 
@@ -221,7 +222,6 @@ _xen_delete_image()
 	    return 0
 	    ;;
         --hostname)
-            names=`_find_xen_images`
             COMPREPLY=( $(compgen -W "${names}" -- ${cur}) )
 	    return 0
             ;;
