@@ -31,7 +31,9 @@ xt-install-image - Install a fresh copy of GNU/Linux into a directory
   Installation Options:
    --install-method  Specify the installation method to use.
    --install-source  Specify the installation source to use.
-   --debootstrap-cmd Specify which debootstrap command to use.
+   --debootstrap-cmd Specify which debootstrap command to
+                     use. Defaults to debootstrap if both, debootstrap
+                     and cdebootstrap are installed.
 
   All other options from xen-create-image will be passed as environmental
  variables.
@@ -690,8 +692,15 @@ sub do_debootstrap
     my $cmd = $CONFIG{ 'debootstrap-cmd' };
     if ( !$cmd )
     {
-        print "Falling back to default debootstrap command\n";
-        $cmd = '/usr/sbin/debootstrap';
+	if (-x '/usr/sbin/debootstrap') {
+	    $cmd = '/usr/sbin/debootstrap';
+	} elsif (-x '/usr/sbin/cdebootstrap') {
+	    $cmd = '/usr/sbin/cdebootstrap';
+	} else {
+	    print STDERR "Found neither debootstrap nor cdebootstrap and no --debootstrap-cmd given\n";
+	    exit 1;
+	}
+	print "Using $cmd as debootstrap command\n";
     }
 
 
