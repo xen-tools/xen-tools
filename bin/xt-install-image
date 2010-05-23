@@ -29,8 +29,9 @@ xt-install-image - Install a fresh copy of GNU/Linux into a directory
    --mirror         The mirror to use when installing with 'debootstrap'.
 
   Installation Options:
-   --install-method Specify the installation method to use.
-   --install-source Specify the installation source to use.
+   --install-method  Specify the installation method to use.
+   --install-source  Specify the installation source to use.
+   --debootstrap-cmd Specify which debootstrap command to use.
 
   All other options from xen-create-image will be passed as environmental
  variables.
@@ -401,6 +402,7 @@ sub parseCommandLineArguments
         # Installation method
         "install-method=s", \$CONFIG{ 'install-method' },
         "install-source=s", \$CONFIG{ 'install-source' },
+        "debootstrap-cmd=s", \$CONFIG{ 'debootstrap-cmd' },
 
         # Misc
         "arch=s",   \$CONFIG{ 'arch' },
@@ -686,7 +688,7 @@ sub do_debootstrap
     # to use cdebootstrap.
     #
     my $cmd = $CONFIG{ 'debootstrap-cmd' };
-    if ( !defined($cmd) )
+    if ( !$cmd )
     {
         print "Falling back to default debootstrap command\n";
         $cmd = '/usr/sbin/debootstrap';

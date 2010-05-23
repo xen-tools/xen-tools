@@ -39,7 +39,8 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --copy-cmd   NOP:  Ignored.
 
    --debootstrap-cmd
-                NOP: Ignored.
+                Specify which debootstrap command is used, either
+                debootstrap (default) or cdebootstrap.
 
    --force      Force overwriting existing images. This will remove
                 existing images or LVM volumes which match those which
@@ -1272,9 +1273,11 @@ sub setupDefaultOptions
     $CONFIG{ 'extension' }     = '.cfg';
 
     #
-    #  Installation method defaults to "debootstrap".
+    #  Installation method defaults to "debootstrap" using
+    #  "debootstrap" (instead of cdebootstrap).
     #
     $CONFIG{ 'install-method' } = 'debootstrap';
+    $CONFIG{ 'debootstrap-cmd' } = '';
 
     #
     #  The program to run to create a filesystem.
@@ -1465,8 +1468,9 @@ sub parseCommandLineArguments
             #
             #  NOTE:  We set the local variable here, not the global.
             #
-            "install-method=s", \$CONFIG{ 'install-method' },
-            "install-source=s", \$CONFIG{ 'install-source' },
+            "install-method=s",  \$CONFIG{ 'install-method' },
+            "install-source=s",  \$CONFIG{ 'install-source' },
+            "debootstrap-cmd=s", \$CONFIG{ 'debootstrap-cmd' },
 
             # Misc. options
             "accounts",     \$CONFIG{ 'accounts' },
@@ -3226,6 +3230,16 @@ sub installSystem
     if ( $CONFIG{ 'arch' } )
     {
         $cmd .= " --arch=$CONFIG{'arch'}";
+    }
+
+
+    #
+    #  Propagate --debootstrap-cmd if install-method is debootstrap
+    #
+    if ( $CONFIG{ 'install-method' } eq 'debootstrap' and
+	 $CONFIG{ 'debootstrap-cmd' } )
+    {
+        $cmd .= " --debootstrap-cmd=$CONFIG{'debootstrap-cmd'}";
     }
 
 
