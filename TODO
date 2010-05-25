@@ -44,6 +44,13 @@ Bugs to fix and Features to add before a 4.2 release
    stored in the configuration hash.  The only issue is that trailing
    whitespace is missing from the "make_fs_foo" option.
 
+* xen-delete-image doesn't remove all logical volumes if --partitions is used.
+
+   See the link below for details how to reproduce. Reproducable at
+   least with --lvm. Thanks to Antoine Benkemoun for reporting.
+
+   http://xen-tools.org/pipermail/xen-tools-discuss/2010-May/000757.html
+
 * Should check all integer expection options on other characters than digits.
 
 * Test suite should pass
