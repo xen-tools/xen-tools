@@ -8,9 +8,9 @@ Bugs to fix and Features to add before a 4.2 release
 
 - ambiguous option list with regards to parameters
 
-* Interactive Password Handling
+* Interactive Password Handling (maybe also the passwd role)
 
-   Allow setting the password again if we failed on the first try.
+   Shouldn't give up after only one password missmatch.
 
 * Non-Interactive Password Handling
 
@@ -50,9 +50,6 @@ Bugs to fix and Features to add before a 4.2 release
 
 - --bridge 
    This one is also trivial
-
-- --passwd
-   shouldn't give up after only one password missmatch
 
 - Clean up setup-hostname - copying the dom0s /etc/hosts isn't reliable
 
