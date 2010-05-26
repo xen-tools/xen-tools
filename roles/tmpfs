@@ -3,10 +3,6 @@
 #  This script is responsible for setting up /etc/fstab upon the
 # new instance.
 #
-#  This should be a simple job, but it is complicated by some of the
-# differences between filesystems - some root filesystems will require
-# the installation of new packages, and we have to handle that here.
-#
 # Axel
 # --
 #
