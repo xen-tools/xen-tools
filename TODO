@@ -38,6 +38,16 @@ Bugs to fix and Features to add before a 4.2 release
    /etc/xen-tools/sources.list.d/ because that directory is no
    runparts-like directory.
 
+* Interactive Password Handling
+
+   Allow setting the password again if we failed on the first try.
+
+* Non-Interactive Password Handling
+
+   Option to generate passwords (check pwgen, apg, makepasswd, and
+   gpw which of them are best suited for generating complete
+   /etc/passwd and /etc/shadow lines).
+
 * Test and support more file system types.
 
    Actually this should be pretty simple now that the parameters are
