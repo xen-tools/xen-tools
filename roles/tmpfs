@@ -7,9 +7,9 @@
 # differences between filesystems - some root filesystems will require
 # the installation of new packages, and we have to handle that here.
 #
-# Steve
+# Axel
 # --
-# http://www.steve.org.uk/
+#
 
 prefix=$1
 
