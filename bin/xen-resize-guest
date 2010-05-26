@@ -15,10 +15,11 @@ xen-resize-guest - Resize a loopback or LVM based xen guest.
    --verbose  Show diagnostic output.
 
   General Options:
-   --add      Specify the amount of space to add, e.g. --add=1gb
-   --dir      Specify the path to the loopback image root.
-   --force    Force the resize to happen without a last-chance delay.
-   --hostname Specify the hostname of the guest to resize.
+   --add       Specify the amount of space to add, e.g. --add=1gb
+   --dir       Specify the path to the loopback image root. (old style)
+   --domaindir Specify the path to the loopback image root. (new style)
+   --force     Force the resize to happen without a last-chance delay.
+   --hostname  Specify the hostname of the guest to resize.
 
 =cut
 
@@ -28,10 +29,14 @@ xen-resize-guest - Resize a loopback or LVM based xen guest.
 =over 8
 
 =item B<--add>
-Specify the amount of storage to add to the primary disk.
+Specify the amount of storage to add to the primary disk. Looks
+for directories named after the hostname in a subdirectory
+"domains". (old style, see xen-create-image(1) for details)
 
-=item B<--dir>
-Specify the directory where the loopback files are based.
+=item B<--domaindir>
+Specify the directory where the loopback files are based. Looks
+for directories named after the hostname directorly in this
+directory. (new style, see xen-create-image(1) for details)
 
 =item B<--force>
 Don't pause for 10 seconds prior to commencing.
@@ -143,14 +148,14 @@ testArguments();
 #
 my $path = undef;
 
-if ( $CONFIG{ 'dir' } )
+if ( $CONFIG{ 'domaindir' } )
 {
 
     #
     #  Make sure we can find the disk
     #
     $path =
-      $CONFIG{ 'dir' } . "/domains/" . $CONFIG{ 'hostname' } . "/disk.img";
+      $CONFIG{ 'domaindir' } . '/' . $CONFIG{ 'hostname' } . "/disk.img";
     if ( !-e $path )
     {
         print <<EOF;
@@ -392,6 +397,7 @@ sub parseCommandLineArguments
         # Misc. options
         "add=s",      \$CONFIG{ 'add' },
         "dir=s",      \$install{ 'dir' },
+        "domaindir=s",\$install{ 'domaindir' },
         "lvm=s",      \$install{ 'lvm' },
         "hostname=s", \$CONFIG{ 'hostname' },
         "force",      \$CONFIG{ 'force' },
@@ -426,7 +432,15 @@ sub parseCommandLineArguments
     }
     if ( $install{ 'dir' } )
     {
-        $CONFIG{ 'dir' } = $install{ 'dir' };
+        $CONFIG{ 'domaindir' } = $install{ 'dir' }.'/domains';
+        $CONFIG{ 'dir' } = undef;
+        $CONFIG{ 'lvm' } = undef;
+        delete $CONFIG{ 'lvm' };
+    }
+    if ( $install{ 'domaindir' } )
+    {
+        $CONFIG{ 'domaindir' } = $install{ 'domaindir' };
+        $CONFIG{ 'dir' } = undef;
         $CONFIG{ 'lvm' } = undef;
         delete $CONFIG{ 'lvm' };
     }
@@ -493,18 +507,20 @@ EOF
       if ( defined( $CONFIG{ 'lvm' } ) && length( $CONFIG{ 'lvm' } ) );
     $options += 1
       if ( defined( $CONFIG{ 'dir' } ) && length( $CONFIG{ 'dir' } ) );
+    $options += 1
+      if ( defined( $CONFIG{ 'domaindir' } ) && length( $CONFIG{ 'domaindir' } ) );
 
     #
     #  Report
     #
     if ( $options == 0 )
     {
-        print "Please specify one of --lvm or --dir\n";
+        print "Please specify one of --lvm, --domaindir or --dir\n";
         exit 1;
     }
     if ( $options > 1 )
     {
-        print "Please specify only one of --lvm or --dir - not both!\n";
+        print "Please specify only one of --lvm, --domaindir or --dir - not several of them!\n";
         exit 1;
     }
 

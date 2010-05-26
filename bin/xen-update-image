@@ -14,7 +14,8 @@ xen-update-image - Update the software installed upon offline Xen images.
    --version   Show the version number and exit.
 
   General Options:
-   --dir       Specify the directory which contains the image(s).
+   --dir       Specify the directory which contains the image(s). (old style)
+   --domaindir Specify the directory which contains the image(s). (new style)
    --lvm       Specify the LVM volume group which contains the image(s).
    --evms      Specify the EVMS container which contains the image(s).
 
@@ -27,7 +28,14 @@ xen-update-image - Update the software installed upon offline Xen images.
 =over 8
 
 =item B<--dir>
-Specify the directory which contains the image(s).
+Specify the directory which contains the image(s). Looks
+for directories named after the hostname in a subdirectory
+"domains". (old style, see xen-create-image(1) for details)
+
+=item B<--domaindir>
+Specify the directory which contains the image(s). Looks
+for directories named after the hostname directorly in this
+directory. (new style, see xen-create-image(1) for details)
 
 =item B<--evms>
 Specify the EVMS container which contains the image(s).
@@ -214,7 +222,7 @@ sub updateXenImage
     {
 
         # The loopback image.
-        $img = $CONFIG{ 'dir' } . "/domains/" . $name . "/disk.img";
+        $img = $CONFIG{ 'domaindir' } . '/' . $name . "/disk.img";
 
         if ( !-e $img )
         {
@@ -438,6 +446,7 @@ sub parseCommandLineArguments
     #  Parse options.
     #
     GetOptions( "dir=s",  \$CONFIG{ 'dir' },  "lvm=s",   \$CONFIG{ 'lvm' },
+                "domaindir=s", \$CONFIG{ 'dir' },
                 "evms=s", \$CONFIG{ 'evms' }, "help",    \$HELP,
                 "manual", \$MANUAL,           "version", \$VERSION
               );
@@ -456,6 +465,11 @@ sub parseCommandLineArguments
         print "xen-update-image release $RELEASE - CVS: $REVISION\n";
         exit;
 
+    }
+
+    if ($CONFIG{ 'dir' }) {
+	$CONFIG{ 'domaindir' } = $CONFIG{ 'dir' }.'/domains';
+	$CONFIG{ 'dir' } = undef;
     }
 }
 
@@ -477,7 +491,7 @@ sub checkArguments
     #  Make sure we got one and only one installation method.
     #
     my $count = 0;
-    foreach my $type (qw/dir lvm evms/)
+    foreach my $type (qw/dir domaindir lvm evms/)
     {
         $count += 1 if defined( $CONFIG{ $type } );
     }
@@ -490,6 +504,7 @@ sub checkArguments
     {
         print "Please select one and only one of the installation methods:\n";
         print " --dir\n";
+        print " --domaindir\n";
         print " --evms\n";
         print " --lvm\n";
         exit;
