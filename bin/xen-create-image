@@ -603,6 +603,10 @@ Create a Xen configuration file in so that xm can start the new domain.
 Setup the new virtual images with commonly used packages for rebuilding
 Debian packages from their source.
 
+=item cfengine
+Install cfengine2 on the virtual image and copy the cfengine
+configuration from Dom0.
+
 =item gdm
 Install an X11 server, using VNC and GDM
 

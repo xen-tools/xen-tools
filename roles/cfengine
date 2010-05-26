@@ -26,14 +26,14 @@ logMessage Script $0 starting
 
 
 #
-#  Install ssh
+#  Install CFengine
 #
 installDebianPackage ${prefix} cfengine2
 
 
 #
-#  Make sure sshd isn't running, this will cause our unmounting of the
-# disk image to fail..
+#  Make sure the CFengine server isn't running, this will cause our
+# unmounting of the disk image to fail..
 #
 chroot ${prefix} /etc/init.d/cfengine2 stop
 
