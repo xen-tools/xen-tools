@@ -628,6 +628,10 @@ Install an X11 server, using VNC and GDM
 =item minimal
 Customise the generated images to remove some packages.
 
+=item puppet
+Install puppet on the virtual image and copy the cfengine
+configuration from Dom0.
+
 =item xdm
 Install an X11 server, using VNC and XDM
 
