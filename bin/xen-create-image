@@ -329,7 +329,7 @@ Create a Xen configuration file in so that xm can start the new domain.
   memory     = 128Mb    # Memory size
   swap       = 128Mb    # Swap size
   fs         = ext3     # use EXT3 filesystems
-  dist       = sarge    # Default distribution to install.
+  dist       = stable   # Default distribution to install.
 
   #
   # Kernel options.
@@ -440,9 +440,9 @@ Create a Xen configuration file in so that xm can start the new domain.
 =head1 LOOPBACK EXAMPLES
 
   The following will create a 2Gb disk image, along with a 128Mb
- swap file with Debian Sarge setup and running via DHCP.
+ swap file with Debian Stable setup and running via DHCP.
 
-     xen-create-image --size=2Gb --swap=128Mb --dhcp \
+     xen-create-image --size=2Gb --swap=128Mb --dhcp --dist=stable \
           --dir=/home/xen --hostname=vm01.my.flat
 
   This next example sets up a host which has the name 'vm02.my.flat' and
@@ -592,7 +592,7 @@ Create a Xen configuration file in so that xm can start the new domain.
 =head1 ROLES
 
   Currently there are some roles scripts included which work for
- the Debian Sarge and Etch distrubtions only.   They are included
+ the Debian and Ubuntu distrubtions only.   They are included
  primarily as examples of the kind of things you could accomplish.
 
   The supplied scripts are:
