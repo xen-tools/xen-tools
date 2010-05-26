@@ -607,6 +607,21 @@ Debian packages from their source.
 Install cfengine2 on the virtual image and copy the cfengine
 configuration from Dom0.
 
+=item editor
+Allows generalised editing of files for guests.
+
+This script works via a skeleton directory containing small sed files
+which will contain edits to be applied to an arbitary tree of files
+upon the new domU.
+
+For example if we have the following sed file:
+
+  /etc/xen-tools/sed.d/etc/ssh/sshd_config.sed
+
+this will be applied to /etc/ssh/sshd_config upon the new guest *if*
+it exists.  If the file encoded in the name doesn't exist then it will
+be ignored.
+
 =item gdm
 Install an X11 server, using VNC and GDM
 
