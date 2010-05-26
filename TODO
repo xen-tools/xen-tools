@@ -39,12 +39,25 @@ Bugs to fix and Features to add before a 4.2 release
 * Interactive Password Handling
 
    Allow setting the password again if we failed on the first try.
+   This is just a mater of wrapping the passwd call in a loop.
 
 * Non-Interactive Password Handling
 
    Option to generate passwords (check pwgen, apg, makepasswd, and
    gpw which of them are best suited for generating complete
-   /etc/passwd and /etc/shadow lines).
+   /etc/passwd and /etc/shadow lines). The password should be echo'ed
+   after installation in a way that can be easily grep'ed into other
+   scripts.
+
+* Fix 70-install-ssh
+
+   Currently 70-install-ssh fails to finish installing the ssh-server
+   because it does not have a random seed to generate the host keys.
+   Mounting /proc and /dev in chroot prior to calling the install
+   function should fix this. If ssh-server is successfully installed
+   in the domU, it's key fingerprint should be echo'd in a way that
+   can easily be grep'ed into other scripts.
+
 
 * Test and support more file system types.
 
@@ -70,23 +83,16 @@ Bugs to fix and Features to add before a 4.2 release
    t/xen-tools.t
    t/xt-create-xen-config.t
 
-* Add distro name and release number to pygrub screen
+* Clean up setup-hostname - copying /etc/hosts isn't reliable
 
-* Hooks
-- --vcpus
-   This one is trivial
+   One could argue that that this gives "extra" information to the domU, since
+   the /etc/hosts file may contain more than just hosts on the same subnet.
+   This should atleast be disabled via a flag.
 
-- --bridge 
-   This one is also trivial
+* Setup locales in the hooks?
 
-- --passwd
-   shouldn't give up after only one password missmatch
-
-- Clean up setup-hostname - copying the dom0s /etc/hosts isn't reliable
-
-- Add a flag to not copy /etc/hosts file
-
-- Setup locales in the hooks?
+   Currently no locales are set and this causes several domU errors which appear
+   in the domU's logs.
 
 
 Maybe for a 4.3 or 5.0 release
@@ -97,12 +103,18 @@ Maybe for a 4.3 or 5.0 release
 * Clean up mounts on Ctrl-C, causes error while installing otherwise:
 
    Removing /dev/vg0/acromantula-domu1-disk - since we're forcing the install
-   Can't remove open logical volume "acromantula-domu1-disk"
+   Can't remove open logical volume "acromantula-domu1-disk" this should be a
+   matter of unmounting the mounted volume from /tmp.
 
-* btrfs support
+* Generic grub support
+
+   This will generate a much nicer menu.lst as a side effect, as its currently
+   generated once at install, and is never updated. Installing a full grub into
+   the domU should update the menu.lst every time a new kernel is installed and
+   will also use the domU distro's menu.lst conform.
 
 * Move the hooks directory to /etc/xen-tools/ to officially allow
-  added and modified hooks.
+   added and modified hooks.
 
 * Clean up the hooks directory
 
@@ -128,7 +140,8 @@ Maybe for a 4.3 or 5.0 release
 * More generic hooks
 
    Deploy a web server or setup ssmtp directly via flag when setting up
-   the machine. Open to suggestions, should just be simple applications
+   the machine. Open to suggestions, should just be some general use-cases
+   that are fairly common.
 
 * Sections for the xen-tools.conf file
 
