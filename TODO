@@ -13,14 +13,6 @@ Bugs to fix and Features to add before a 4.2 release
    Shouldn't give up after only one password missmatch. This is just
    a mater of wrapping the passwd call in a loop.
 
-* Non-Interactive Password Handling
-
-   Option to generate passwords (check pwgen, apg, makepasswd, and
-   gpw which of them are best suited for generating complete
-   /etc/passwd and /etc/shadow lines). The password should be echo'ed
-   after installation in a way that can be easily grep'ed into other
-   scripts.
-
 * Fix 70-install-ssh
 
    Currently 70-install-ssh fails to finish installing the ssh-server
@@ -104,6 +96,14 @@ Maybe for a 4.3 or 5.0 release
    Removing /dev/vg0/acromantula-domu1-disk - since we're forcing the install
    Can't remove open logical volume "acromantula-domu1-disk" this should be a
    matter of unmounting the mounted volume from /tmp.
+
+* Non-Interactive Password Handling
+
+   Option to generate passwords (check pwgen, apg, makepasswd, and
+   gpw which of them are best suited for generating complete
+   /etc/passwd and /etc/shadow lines). The password should be echo'ed
+   after installation in a way that can be easily grep'ed into other
+   scripts.
 
 * Generic grub support
 
