@@ -611,7 +611,7 @@ configuration from Dom0.
 Allows generalised editing of files for guests.
 
 This script works via a skeleton directory containing small sed files
-which will contain edits to be applied to an arbitary tree of files
+which will contain edits to be applied to an arbitrary tree of files
 upon the new domU.
 
 For example if we have the following sed file:
