@@ -633,8 +633,12 @@ Install puppet on the virtual image and copy the cfengine
 configuration from Dom0.
 
 =item tmpfs
-Install puppet on the virtual image and copy the cfengine
-configuration from Dom0.
+Sets up /tmp, /var/run and /var/lock as tmpfs in the DomU.
+
+=item udev
+Install udev in the DomU. Most distributions install udev by default
+nowadays, so this role is probably only interesting for legacy systems
+which need udev anyway.
 
 =item xdm
 Install an X11 server, using VNC and XDM
