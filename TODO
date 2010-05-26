@@ -8,6 +8,8 @@ Bugs to fix and Features to add before a 4.2 release
 
 - ambiguous option list with regards to parameters
 
+- not all roles are listed
+
 * xen-create-image --dist=... / sources.list generation should be more fine-grained
 
    xen-tools should offer the possibility to enabled/disable
