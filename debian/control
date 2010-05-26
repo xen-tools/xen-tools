@@ -12,7 +12,7 @@ Package: xen-tools
 Architecture: all
 Depends: debootstrap | cdebootstrap, perl-modules, libtext-template-perl, libconfig-inifiles-perl, libfile-slurp-perl, ${misc:Depends}
 Recommends: xen-hypervisor-amd64 | xen-hypervisor-i386 | xen-hypervisor-i386-pae, rinse, xen-shell, libexpect-perl
-Suggests: reiserfsprogs, xfsprogs, xen-utils, cfengine2
+Suggests: reiserfsprogs, xfsprogs, xen-utils, cfengine2, evms-cli
 Description: Tools to manage Xen virtual servers
  This package contains tools to manage Debian based Xen virtual servers.
  .
