@@ -1956,7 +1956,7 @@ EOF
   The output directory for creating the xen configuration file within
  doesn\'t exist:
 
-           $CONFIG{'dir'}
+           $CONFIG{ 'output' }
 
   Aborting.
 
