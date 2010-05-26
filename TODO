@@ -45,11 +45,6 @@ Bugs to fix and Features to add before a 4.2 release
 * Add distro name and release number to pygrub screen
 
 * Hooks
-- --vcpus
-   This one is trivial
-
-- --bridge 
-   This one is also trivial
 
 - Clean up setup-hostname - copying the dom0s /etc/hosts isn't reliable
 
