@@ -632,6 +632,10 @@ Customise the generated images to remove some packages.
 Install puppet on the virtual image and copy the cfengine
 configuration from Dom0.
 
+=item tmpfs
+Install puppet on the virtual image and copy the cfengine
+configuration from Dom0.
+
 =item xdm
 Install an X11 server, using VNC and XDM
 
