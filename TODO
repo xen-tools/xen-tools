@@ -123,12 +123,14 @@ Maybe for a 4.3 or 5.0 release
 
    I'm sure this won't scale forever. So to minimise code duplication
    I'd like to have one common directory per distribution (e.g. called
-   ubuntu-common, fedora-common, etc.) with generic hooks valid for
-   all or most of the releases of one distribution and then one hook
-   directory per release (e.g. called ubuntu-10.04 or ubuntu-lucid or
-   so) which has symbolic links to everything which can be used
-   unchanged from the common directory and new files for everything
-   which has to be different or only there.
+   ubuntu-common, fedora-common, debian-common, maybe even deb-common,
+   rpm-common or yum-common for dpkg/apt-, rpm/yum-based
+   distributions, etc.) with generic hooks valid for all or most of
+   the releases of one distribution and then one hook directory per
+   release (e.g. called ubuntu-10.04 or ubuntu-lucid or so) which has
+   symbolic links to everything which can be used unchanged from the
+   common directory and new files for everything which has to be
+   different or only there.
 
 * Create users, add ssh pubkeys to .ssh/authorized_keys
 
