@@ -8,11 +8,64 @@ Bugs to fix and Features to add before a 4.2 release
 
 - ambiguous option list with regards to parameters
 
-- talks about Sarge and Etch
+* Interactive Password Handling (maybe also the passwd role)
+
+   Shouldn't give up after only one password missmatch. This is just
+   a mater of wrapping the passwd call in a loop.
+
+* Fix 70-install-ssh
+
+   Currently 70-install-ssh fails to finish installing the ssh-server
+   because it does not have a random seed to generate the host keys.
+   Mounting /proc and /dev in chroot prior to calling the install
+   function should fix this. If ssh-server is successfully installed
+   in the domU, it's key fingerprint should be echo'd in a way that
+   can easily be grep'ed into other scripts.
+
+
+* Test and support more file system types.
+
+   Actually this should be pretty simple now that the parameters are
+   stored in the configuration hash.  The only issue is that trailing
+   whitespace is missing from the "make_fs_foo" option.
+
+* xen-delete-image doesn't remove all logical volumes if --partitions is used.
+
+   See the link below for details how to reproduce. Reproducable at
+   least with --lvm. Thanks to Antoine Benkemoun for reporting.
+
+   http://xen-tools.org/pipermail/xen-tools-discuss/2010-May/000757.html
+
+* xen-delete-image ignores extension setting
+
+* xen-create-image should check all integer options on non-digits.
+
+* Test suite should pass
+
+   Currently failing:
+
+   t/getopt.t
+   t/xen-delete-image.t
+   t/xen-tools.t
+   t/xt-create-xen-config.t
+
+* Clean up setup-hostname - copying /etc/hosts isn't reliable
+
+   One could argue that that this gives "extra" information to the domU, since
+   the /etc/hosts file may contain more than just hosts on the same subnet.
+   This should atleast be disabled via a flag.
+
+* Setup locales in the hooks?
+
+   Currently no locales are set and this causes several domU errors which appear
+   in the domU's logs.
+
+Maybe for a 4.3 or 5.0 release
+------------------------------
 
 * xen-create-image --dist=... / sources.list generation should be more fine-grained
 
-   xen-tools should offer the possibility to enabled/disable
+   xen-tools should offer the possibility to enable/disable
    security/volatile/backports as well as
    contrib/non-free/universe/restricted/multiverse for each of them
    not only based on defaults plus the Dom0's sources.list
@@ -38,56 +91,31 @@ Bugs to fix and Features to add before a 4.2 release
    /etc/xen-tools/sources.list.d/ because that directory is no
    runparts-like directory.
 
-* Test and support more file system types.
-
-   Actually this should be pretty simple now that the parameters are
-   stored in the configuration hash.  The only issue is that trailing
-   whitespace is missing from the "make_fs_foo" option.
-
-* Should check all integer expection options on other characters than digits.
-
-* Test suite should pass
-
-   Currently failing:
-
-   t/getopt.t
-   t/xen-delete-image.t
-   t/xen-tools.t
-   t/xt-create-xen-config.t
-
-* Add distro name and release number to pygrub screen
-
-* Hooks
-- --vcpus
-   This one is trivial
-
-- --bridge 
-   This one is also trivial
-
-- --passwd
-   shouldn't give up after only one password missmatch
-
-- Clean up setup-hostname - copying the dom0s /etc/hosts isn't reliable
-
-- Add a flag to not copy /etc/hosts file
-
-- Setup locales in the hooks?
-
-
-Maybe for a 4.3 or 5.0 release
-------------------------------
-
 * LVM snapshot support as an install source.
 
 * Clean up mounts on Ctrl-C, causes error while installing otherwise:
 
    Removing /dev/vg0/acromantula-domu1-disk - since we're forcing the install
-   Can't remove open logical volume "acromantula-domu1-disk"
+   Can't remove open logical volume "acromantula-domu1-disk" this should be a
+   matter of unmounting the mounted volume from /tmp.
 
-* btrfs support
+* Non-Interactive Password Handling
+
+   Option to generate passwords (check pwgen, apg, makepasswd, and
+   gpw which of them are best suited for generating complete
+   /etc/passwd and /etc/shadow lines). The password should be echo'ed
+   after installation in a way that can be easily grep'ed into other
+   scripts.
+
+* Generic grub support
+
+   This will generate a much nicer menu.lst as a side effect, as its currently
+   generated once at install, and is never updated. Installing a full grub into
+   the domU should update the menu.lst every time a new kernel is installed and
+   will also use the domU distro's menu.lst conform.
 
 * Move the hooks directory to /etc/xen-tools/ to officially allow
-  added and modified hooks.
+   added and modified hooks.
 
 * Clean up the hooks directory
 
@@ -97,12 +125,14 @@ Maybe for a 4.3 or 5.0 release
 
    I'm sure this won't scale forever. So to minimise code duplication
    I'd like to have one common directory per distribution (e.g. called
-   ubuntu-common, fedora-common, etc.) with generic hooks valid for
-   all or most of the releases of one distribution and then one hook
-   directory per release (e.g. called ubuntu-10.04 or ubuntu-lucid or
-   so) which has symbolic links to everything which can be used
-   unchanged from the common directory and new files for everything
-   which has to be different or only there.
+   ubuntu-common, fedora-common, debian-common, maybe even deb-common,
+   rpm-common or yum-common for dpkg/apt-, rpm/yum-based
+   distributions, etc.) with generic hooks valid for all or most of
+   the releases of one distribution and then one hook directory per
+   release (e.g. called ubuntu-10.04 or ubuntu-lucid or so) which has
+   symbolic links to everything which can be used unchanged from the
+   common directory and new files for everything which has to be
+   different or only there.
 
 * Create users, add ssh pubkeys to .ssh/authorized_keys
 
@@ -113,7 +143,8 @@ Maybe for a 4.3 or 5.0 release
 * More generic hooks
 
    Deploy a web server or setup ssmtp directly via flag when setting up
-   the machine. Open to suggestions, should just be simple applications
+   the machine. Open to suggestions, should just be some general use-cases
+   that are fairly common.
 
 * Sections for the xen-tools.conf file
 

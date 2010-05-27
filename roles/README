@@ -1,0 +1,6 @@
+These files are roles which you can use with xen-create-image(1) with
+the --role= option.
+
+If you add new roles to the xen-tools distribution in this directory,
+please document them in the POD code of bin/xen-create-image under
+"ROLES".

@@ -39,7 +39,9 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --copy-cmd   NOP:  Ignored.
 
    --debootstrap-cmd
-                NOP: Ignored.
+                Specify which debootstrap command is used. Defaults to
+                debootstrap if both, debootstrap and cdebootstrap are
+                installed.
 
    --force      Force overwriting existing images. This will remove
                 existing images or LVM volumes which match those which
@@ -327,7 +329,7 @@ Create a Xen configuration file in so that xm can start the new domain.
   memory     = 128Mb    # Memory size
   swap       = 128Mb    # Swap size
   fs         = ext3     # use EXT3 filesystems
-  dist       = sarge    # Default distribution to install.
+  dist       = stable   # Default distribution to install.
 
   #
   # Kernel options.
@@ -438,9 +440,9 @@ Create a Xen configuration file in so that xm can start the new domain.
 =head1 LOOPBACK EXAMPLES
 
   The following will create a 2Gb disk image, along with a 128Mb
- swap file with Debian Sarge setup and running via DHCP.
+ swap file with Debian Stable setup and running via DHCP.
 
-     xen-create-image --size=2Gb --swap=128Mb --dhcp \
+     xen-create-image --size=2Gb --swap=128Mb --dhcp --dist=stable \
           --dir=/home/xen --hostname=vm01.my.flat
 
   This next example sets up a host which has the name 'vm02.my.flat' and
@@ -590,7 +592,7 @@ Create a Xen configuration file in so that xm can start the new domain.
 =head1 ROLES
 
   Currently there are some roles scripts included which work for
- the Debian Sarge and Etch distrubtions only.   They are included
+ the Debian and Ubuntu distrubtions only.   They are included
  primarily as examples of the kind of things you could accomplish.
 
   The supplied scripts are:
@@ -601,11 +603,42 @@ Create a Xen configuration file in so that xm can start the new domain.
 Setup the new virtual images with commonly used packages for rebuilding
 Debian packages from their source.
 
+=item cfengine
+Install cfengine2 on the virtual image and copy the cfengine
+configuration from Dom0.
+
+=item editor
+Allows generalised editing of files for guests.
+
+This script works via a skeleton directory containing small sed files
+which will contain edits to be applied to an arbitrary tree of files
+upon the new domU.
+
+For example if we have the following sed file:
+
+  /etc/xen-tools/sed.d/etc/ssh/sshd_config.sed
+
+this will be applied to /etc/ssh/sshd_config upon the new guest *if*
+it exists.  If the file encoded in the name doesn't exist then it will
+be ignored.
+
 =item gdm
 Install an X11 server, using VNC and GDM
 
 =item minimal
 Customise the generated images to remove some packages.
+
+=item puppet
+Install puppet on the virtual image and copy the cfengine
+configuration from Dom0.
+
+=item tmpfs
+Sets up /tmp, /var/run and /var/lock as tmpfs in the DomU.
+
+=item udev
+Install udev in the DomU. Most distributions install udev by default
+nowadays, so this role is probably only interesting for legacy systems
+which need udev anyway.
 
 =item xdm
 Install an X11 server, using VNC and XDM
@@ -1272,9 +1305,11 @@ sub setupDefaultOptions
     $CONFIG{ 'extension' }     = '.cfg';
 
     #
-    #  Installation method defaults to "debootstrap".
+    #  Installation method defaults to "debootstrap" using
+    #  "debootstrap" (instead of cdebootstrap).
     #
     $CONFIG{ 'install-method' } = 'debootstrap';
+    $CONFIG{ 'debootstrap-cmd' } = '';
 
     #
     #  The program to run to create a filesystem.
@@ -1465,8 +1500,9 @@ sub parseCommandLineArguments
             #
             #  NOTE:  We set the local variable here, not the global.
             #
-            "install-method=s", \$CONFIG{ 'install-method' },
-            "install-source=s", \$CONFIG{ 'install-source' },
+            "install-method=s",  \$CONFIG{ 'install-method' },
+            "install-source=s",  \$CONFIG{ 'install-source' },
+            "debootstrap-cmd=s", \$CONFIG{ 'debootstrap-cmd' },
 
             # Misc. options
             "accounts",     \$CONFIG{ 'accounts' },
@@ -1920,7 +1956,7 @@ EOF
   The output directory for creating the xen configuration file within
  doesn\'t exist:
 
-           $CONFIG{'dir'}
+           $CONFIG{ 'output' }
 
   Aborting.
 
@@ -3226,6 +3262,16 @@ sub installSystem
     if ( $CONFIG{ 'arch' } )
     {
         $cmd .= " --arch=$CONFIG{'arch'}";
+    }
+
+
+    #
+    #  Propagate --debootstrap-cmd if install-method is debootstrap
+    #
+    if ( $CONFIG{ 'install-method' } eq 'debootstrap' and
+	 $CONFIG{ 'debootstrap-cmd' } )
+    {
+        $cmd .= " --debootstrap-cmd=$CONFIG{'debootstrap-cmd'}";
     }
 
 

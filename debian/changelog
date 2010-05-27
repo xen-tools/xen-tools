@@ -34,11 +34,25 @@ xen-tools (4.2~rc1-1) UNRELEASED; urgency=low
     - xt-install-image now exits with return value 127 instead of 0 to
       indicate errors on running the command given in --install-method.
       (Closes: #534290)
+    - The debootstrap command now also can be configured on the
+      commandline with --debootstrap-cmd in xen-create-image and
+      xt-install-image (Enhances fix for #436480 which added the
+      debootstrap-cmd config file option)
+    - Checks for debootstrap and cdebootstrap, uses debootstrap if both
+      are installed (Changed "Depends: debootstrap" to "Depends:
+      debootstrap | cdebootstrap" in debian/control)
   * Removal of /etc/bash_completion.d/xm from the package since
     bash-completion ships a more elaborate version of that file. (Closes:
     #566683, #550590, LP: #538917, #484098)
   * Downgrade reiserfsprogs and xfsprogs to Suggests. (Closes: #561618,
     LP: #80233)
+  * Added evms-cli to Suggests. It has been removed from Debian before
+    Lenny, but it is necessary for some optional functionality of
+    xen-tools. And since some Debian derived distributions (e.g. Ubuntu
+    LTS and grml) still support it, it's included for the sake of
+    completeness and correctness.
+  * Added cfengine2 to Suggests. It is helpful to have it installed when
+    using the cfengine2 role.
   * Bump Standards-Version to 3.8.4 (no changes necessary)
   * Bump Debhelper Compatibility to 7
     - Replace "dh_clean -k" by "dh_prep"
