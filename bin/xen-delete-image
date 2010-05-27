@@ -172,7 +172,6 @@ my %CONFIG;
 my $RELEASE = '4.2rc1';
 
 
-
 #
 # Read the global configuration file if it exists.
 #
@@ -220,7 +219,21 @@ while ( my $name = shift )
 {
     if ( !xenRunning($name) )
     {
-        deleteXenImage($name);
+	#
+	#  Partition layout information values read from the
+	# partitions file, or constructed automatically if no
+	# partitions file is specified.
+	#
+
+	my @PARTITIONS = undef;
+
+	#
+	#  Check for partitions to delete by reading the DomU's
+	# configuration file
+	#
+	my @PARTITIONS = findPartitions($host
+
+        deleteXenImage($name, @PARTITIONS);
     }
     else
     {
@@ -449,6 +462,70 @@ sub xenRunning
 }
 
 
+
+=begin doc
+
+  Read the (usually to be deleted) DomU configuration file specified
+  and returns the list of used partitions found in the file.
+
+=end doc
+
+=cut
+
+sub findPartitions
+{
+    my ($hostname) = (@_);
+    my $file = "/etc/xen/$hostname.cfg";
+
+    if ( -e $file )
+    {
+	open( FILE, "<", $file ) or die "Cannot read file '$file' - $!";
+
+	my $line = "";
+	my $contents = "";
+
+	while ( defined( $line = <FILE> ) )
+	{
+	    chomp $line;
+	    if ( $line =~ s/\\$// )
+	    {
+		$line .= <FILE>;
+		redo unless eof(FILE);
+	    }
+
+	    # Skip lines beginning with comments
+	    next if ( $line =~ /^([ \t]*)\#/ );
+
+	    # Skip blank lines
+	    next if ( length($line) < 1 );
+
+	    # Strip trailing comments.
+	    if ( $line =~ /(.*)\#(.*)/ )
+	    {
+		$line = $1;
+	    }
+
+	    $contents .= $line;
+	}
+
+	close(FILE);
+
+	if ($contents =~ /\ndisk\s*=\s*\[\s*(.*?)\s*\]\s*\n/) {
+	    my $disks = $1;
+	    my @disks = split(/\n/, $disks);
+	    foreach (@disks) {
+		s/^\s*'phy:(.*),\w*,\w*',\s*$/$1/;
+	    }
+	    return @disks;
+	}
+    } else {
+	warn "Couldn't find $file.\n";
+	return ();
+    }
+}
+
+
+
 =begin doc
 
   Delete the named image, and the corresponding configuration file
@@ -460,7 +537,9 @@ sub xenRunning
 
 sub deleteXenImage
 {
-    my ($hostname) = (@_);
+    my $hostname = shift;
+    my @partitions = @_;
+
 
     #
     #  Collect the names of files to delete.
