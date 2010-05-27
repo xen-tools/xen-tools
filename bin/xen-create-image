@@ -216,19 +216,35 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
   Mandatory options:
 
+   --domaindir=dir
    --dir=dir    Specify where the output images should go.
-                Subdirectories will be created for each guest
-                If you do not wish to use loopback images specify --lvm
-                or --evms.  (These three options are mutually exclusive.)
+                Subdirectories will be created for each guest.
+
+                Using --dir will create subdirectory domains as before
+                for backwards compatibility, e.g. if you use
+                --dir=foo, the default disk image will go to
+                foo/domains/$hostname/disk.img.
+
+                Using --domaindir will create direct subdirectories
+                named after the hostname as discussed in
+                http://bugs.debian.org/477238, e.g. if you use
+                --domaindir=foo, the default disk image will go to
+                foo/$hostname/disk.img.
+
+                If you do not wish to use loopback images specify
+                --lvm or --evms.  (These three respectively four
+                options are mutually exclusive.)
 
    --lvm=vg     Specify the volume group to save images within.
-                If you do not wish to use LVM specify --dir or --evms.
-                (These three options are mutually exclusive.)
+                If you do not wish to use LVM specify --evms. or
+                --dir/--domaindir (These three respectively four
+                options are mutually exclusive.)
 
    --evms=lvm2/container
                 Specify the container to save images within, i.e. '--evms
                 lvm2/mycontainer'.  If you do not wish to use EVMS specify
-                --dir or --lvm.  (These three options are mutually exclusive.)
+                --dir/--domaindir or --lvm.  (These three respectively
+                four options are mutually exclusive.)
 
    --hostname=host.example.org
                 Set the hostname of the new guest system.  Ideally
@@ -862,7 +878,7 @@ checkBinariesPresent();
 if ( !$#PARTITIONS )
 {
     populatePartitionsData()
-      if ( ( $CONFIG{ 'dir' } ) ||
+      if ( ( $CONFIG{ 'domaindir' } ) ||
            ( $CONFIG{ 'evms' } ) ||
            ( $CONFIG{ 'lvm' } ) );
 }
@@ -878,7 +894,7 @@ showSummary();
 #
 #  Create and format the images if we're using loopback filesystems.
 #
-if ( $CONFIG{ 'dir' } )
+if ( $CONFIG{ 'domaindir' } )
 {
 
     #
@@ -1447,6 +1463,7 @@ sub parseCommandLineArguments
     my %install;
     $install{ 'evms' }      = undef;
     $install{ 'dir' }       = undef;
+    $install{ 'domaindir' } = undef;
     $install{ 'lvm' }       = undef;
     $install{ 'image-dev' } = undef;
 
@@ -1469,6 +1486,7 @@ sub parseCommandLineArguments
 
             # Locations
             "dir=s",       \$install{ 'dir' },
+            "domaindir=s", \$install{ 'domaindir' },
             "evms=s",      \$install{ 'evms' },
             "kernel=s",    \$CONFIG{ 'kernel' },
             "initrd=s",    \$CONFIG{ 'initrd' },
@@ -1557,12 +1575,22 @@ sub parseCommandLineArguments
 
 
     #
-    #  Now make ensure that the command line setting of '--lvm', '--evms'
-    # and '--dir=x' override anything specified in the configuration file.
+    #  Now make ensure that the command line setting of '--lvm', '--evms',
+    # '--domaindir=x' and '--dir=x' override anything specified in the
+    # configuration file.
     #
     if ( $install{ 'dir' } )
     {
-        $CONFIG{ 'dir' }       = $install{ 'dir' };
+        $CONFIG{ 'dir' }       = undef;
+        $CONFIG{ 'domaindir' } = $install{ 'dir' }.'/domains';
+        $CONFIG{ 'evms' }      = undef;
+        $CONFIG{ 'lvm' }       = undef;
+        $CONFIG{ 'image-dev' } = undef;
+    }
+    if ( $install{ 'domaindir' } )
+    {
+        $CONFIG{ 'dir' }       = undef;
+        $CONFIG{ 'domaindir' } = $install{ 'domaindir' };
         $CONFIG{ 'evms' }      = undef;
         $CONFIG{ 'lvm' }       = undef;
         $CONFIG{ 'image-dev' } = undef;
@@ -1570,6 +1598,7 @@ sub parseCommandLineArguments
     if ( $install{ 'evms' } )
     {
         $CONFIG{ 'dir' }       = undef;
+        $CONFIG{ 'domaindir' } = undef;
         $CONFIG{ 'evms' }      = $install{ 'evms' };
         $CONFIG{ 'lvm' }       = undef;
         $CONFIG{ 'image-dev' } = undef;
@@ -1577,6 +1606,7 @@ sub parseCommandLineArguments
     if ( $install{ 'lvm' } )
     {
         $CONFIG{ 'dir' }       = undef;
+        $CONFIG{ 'domaindir' } = undef;
         $CONFIG{ 'evms' }      = undef;
         $CONFIG{ 'lvm' }       = $install{ 'lvm' };
         $CONFIG{ 'image-dev' } = undef;
@@ -1584,6 +1614,7 @@ sub parseCommandLineArguments
     if ( $install{ 'image-dev' } )
     {
         $CONFIG{ 'dir' }       = undef;
+        $CONFIG{ 'domaindir' } = undef;
         $CONFIG{ 'evms' }      = undef;
         $CONFIG{ 'lvm' }       = undef;
         $CONFIG{ 'image-dev' } = $install{ 'image-dev' };
@@ -1709,7 +1740,7 @@ sub checkArguments
         my $err = <<E_OR;
 
   We are trying to configure an installation of $CONFIG{'dist'} in
- $CONFIG{'dir'} - but there is no hook directory for us to use.
+ $CONFIG{'domaindir'} - but there is no hook directory for us to use.
 
   This means we do not know how to configure this installation.
 
@@ -2107,7 +2138,7 @@ sub checkBinariesPresent
     #
     # Image type specific binaries
     #
-    if ( defined( $CONFIG{ 'dir' } ) )
+    if ( defined( $CONFIG{ 'domaindir' } ) )
     {
 
         # loopback image
@@ -2642,7 +2673,7 @@ sub createLoopbackImages
     #
     #  Make sure we have the relevant output directory.
     #
-    my $output = $CONFIG{ 'dir' } . "/domains/" . $CONFIG{ 'hostname' };
+    my $output = $CONFIG{ 'domaindir' } . '/' . $CONFIG{ 'hostname' };
 
     if ( !-d $output )
     {
@@ -2666,7 +2697,7 @@ sub createLoopbackImages
         foreach my $partition (@PARTITIONS)
         {
             my $disk =
-              $CONFIG{ 'dir' } . '/domains/' . $CONFIG{ 'hostname' } . '/' .
+              $CONFIG{ 'domaindir' } . '/' . $CONFIG{ 'hostname' } . '/' .
               $partition->{ 'name' } . '.img';
 
             if ( -e $disk )
@@ -2685,7 +2716,7 @@ sub createLoopbackImages
     foreach my $partition (@PARTITIONS)
     {
         my $disk =
-          $CONFIG{ 'dir' } . '/domains/' . $CONFIG{ 'hostname' } . '/' .
+          $CONFIG{ 'domaindir' } . '/' . $CONFIG{ 'hostname' } . '/' .
           $partition->{ 'name' } . '.img';
 
         #

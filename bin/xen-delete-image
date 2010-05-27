@@ -15,9 +15,12 @@ xen-delete-image - Delete previously created Xen instances.
    --verbose  Show diagnostic output.
 
   General options:
-   --dir      Specify the output directory where images were previously saved.
-   --lvm      Specify the LVM volume to use.
-   --evms     Specify the EVMS container to use.
+   --dir       Specify the output directory where images were previously
+               saved. (old style)
+   --domaindir Specify the output directory where images were previously
+               saved. (new style)
+   --lvm       Specify the LVM volume to use.
+   --evms      Specify the EVMS container to use.
 
   Specifying hosts:
    --hostname Specify the image name to delete.
@@ -33,7 +36,14 @@ xen-delete-image - Delete previously created Xen instances.
 =over 8
 
 =item B<--dir>
-Specify the output directory where images were previously saved.
+Specify the output directory where images were previously saved. Looks
+for directories named after the hostname in a subdirectory
+"domains". (old style, see xen-create-image(1) for details)
+
+=item B<--domaindir>
+Specify the output directory where images were previously saved. Looks
+for directories named after the hostname directorly in this
+directory. (new style, see xen-create-image(1) for details)
 
 =item B<--evms>
 Specify the EVMS container where images were previously saved.
@@ -345,6 +355,7 @@ sub parseCommandLineArguments
     #  Parse options.
     #
     GetOptions( "dir=s",       \$CONFIG{ 'dir' },
+                "domaindir=s", \$CONFIG{ 'domaindir' },
                 "dry-run",     \$CONFIG{ 'dry-run' },
                 "lvm=s",       \$CONFIG{ 'lvm' },
                 "evms=s",      \$CONFIG{ 'evms' },
@@ -359,7 +370,6 @@ sub parseCommandLineArguments
     pod2usage(1) if $HELP;
     pod2usage( -verbose => 2 ) if $MANUAL;
 
-
     if ($VERSION)
     {
         my $REVISION = '$Revision: 1.41 $';
@@ -372,6 +382,11 @@ sub parseCommandLineArguments
         print "xen-delete-image release $RELEASE - CVS: $REVISION\n";
         exit;
 
+    }
+
+    if ($CONFIG{ 'dir' }) {
+	$CONFIG{ 'domaindir' } = $CONFIG{ 'dir' }.'/domains';
+	$CONFIG{ 'dir' } = undef;
     }
 }
 
@@ -401,7 +416,7 @@ sub checkArguments
     #  Make sure we got one and only one installation method.
     #
     my $count = 0;
-    foreach my $type (qw/dir lvm evms/)
+    foreach my $type (qw/dir domaindir lvm evms/)
     {
         $count += 1 if defined( $CONFIG{ $type } );
     }
@@ -414,6 +429,7 @@ sub checkArguments
     {
         print "Please select one and only one of the installation methods:\n";
         print " --dir\n";
+        print " --domaindir\n";
         print " --evms\n";
         print " --lvm\n";
         exit;
@@ -504,9 +520,9 @@ sub deleteXenImage
     }
 
 
-    if ( defined( $CONFIG{ 'dir' } ) )
+    if ( defined( $CONFIG{ 'domaindir' } ) )
     {
-        my $prefix = $CONFIG{ 'dir' } . "/domains/";
+        my $prefix = $CONFIG{ 'domaindir' } . '/';
 
         #
         #  Now remove the directory.

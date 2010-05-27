@@ -419,7 +419,7 @@ sub createXenConfig
     }
     else
     {
-        $ENV{ 'image_prefix' } = "file:$ENV{'dir'}/domains/$ENV{'hostname'}/";
+        $ENV{ 'image_prefix' } = "file:$ENV{'domaindir'}/$ENV{'hostname'}/";
         $ENV{ 'image_suffix' } = '.img';
         importPartitionsFromEnvironment();
     }

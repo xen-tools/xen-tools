@@ -41,6 +41,8 @@ xen-tools (4.2~rc1-1) UNRELEASED; urgency=low
     - Checks for debootstrap and cdebootstrap, uses debootstrap if both
       are installed (Changed "Depends: debootstrap" to "Depends:
       debootstrap | cdebootstrap" in debian/control)
+    - Introduces the --domaindir option as alternative to --dir which
+      always appends "/domains/" to the path. (Closes: #477238)
   * Removal of /etc/bash_completion.d/xm from the package since
     bash-completion ships a more elaborate version of that file. (Closes:
     #566683, #550590, LP: #538917, #484098)
