@@ -519,8 +519,8 @@ sub findPartitions
 	    return @disks;
 	}
     } else {
-	warn "Couldn't find $file.\n";
-	return ();
+	warn "Couldn't find $file. May start guessing based on further parameters.\n";
+	return qw(GUESSING);
     }
 }
 
@@ -539,6 +539,8 @@ sub deleteXenImage
 {
     my $hostname = shift;
     my @partitions = @_;
+    my $guessing = ($#partitions == 0 and $partitions[0] eq 'GUESSING');
+
 
 
     #
