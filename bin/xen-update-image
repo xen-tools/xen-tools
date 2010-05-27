@@ -242,19 +242,24 @@ sub updateXenImage
     elsif ( $CONFIG{ 'evms' } )
     {
 
-        # The EVMS volume  -- note, unlike LVM, you don't need the $CONFIG{'evms'}
-        # to see it and mount the volume. $CONFIG{'evms'} is only used for manipulating
-        # the underlying object.  Still, I don't want to mess with the parse code and
-        # make it confusing - otherwise --evms takes an argument everywhere but here,
-        # which will confuse users.  The better solution is to make it so that --evms can
-        # take a following container, but doesn't require it.  For the moment, it is
-        # better to leave it as it is, take a container, and then ignore it.
+        # The EVMS volume -- note, unlike LVM, you don't need the
+        # $CONFIG{'evms'} to see it and mount the
+        # volume. $CONFIG{'evms'} is only used for manipulating the
+        # underlying object.  Still, I don't want to mess with the
+        # parse code and make it confusing - otherwise --evms takes an
+        # argument everywhere but here, which will confuse users.  The
+        # better solution is to make it so that --evms can take a
+        # following container, but doesn't require it.  For the
+        # moment, it is better to leave it as it is, take a container,
+        # and then ignore it.
 
-        # The best way to do it is to just read it out of the configuration file,
-        # tell the user what you got and where you got it from, and not bother the user
-        # with picking --dir or --lvm or --evms at all, but infer it from the config
-        # file's disk = parameter.  xen-delete-image might work the same way, but
-        # it could be *slightly* more dangerous in the context of deleting.
+        # The best way to do it is to just read it out of the
+        # configuration file, tell the user what you got and where you
+        # got it from, and not bother the user with picking --dir or
+        # --lvm or --evms at all, but infer it from the config file's
+        # disk = parameter.  xen-delete-image might work the same way,
+        # but it could be *slightly* more dangerous in the context of
+        # deleting.
         $img = "/dev/evms/$name-disk";
 
         # make sure it exists.

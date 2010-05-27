@@ -340,10 +340,12 @@ sub parseCommandLineArguments
     my $HELP    = 0;
     my $MANUAL  = 0;
     my $VERSION = 0;
+    $CONFIG{ 'dry-run' } = 0;
 
     #  Parse options.
     #
     GetOptions( "dir=s",       \$CONFIG{ 'dir' },
+                "dry-run",     \$CONFIG{ 'dry-run' },
                 "lvm=s",       \$CONFIG{ 'lvm' },
                 "evms=s",      \$CONFIG{ 'evms' },
                 "hostname=s@", \$CONFIG{ 'hostname' },
@@ -488,8 +490,12 @@ sub deleteXenImage
     {
         if ( -e $file )
         {
-            print "Deleting: $file\n";
-            unlink($file);
+            if ($CONFIG{ 'dry-run' }) {
+                print "Would delete: $file\n";
+            } else {
+                print "Deleting: $file\n";
+                unlink($file);
+            }
         }
         else
         {
@@ -507,8 +513,12 @@ sub deleteXenImage
         #
         if ( -d $prefix . $hostname )
         {
-            print "Removing: " . $prefix . $hostname . "\n";
-            rmdir( $prefix . $hostname );
+            if ($CONFIG{ 'dry-run' }) {
+                print "Would delete: $prefix$hostname\n";
+            } else {
+                print "Removing: " . $prefix . $hostname . "\n";
+                rmdir( $prefix . $hostname );
+            }
         }
     }
     elsif ( defined( $CONFIG{ 'lvm' } ) )
@@ -523,14 +533,22 @@ sub deleteXenImage
 
         if ( -e "/dev/$CONFIG{'lvm'}/$hostname-swap" )
         {
-            print "Removing swap volume\n";
-            runCommand("lvremove /dev/$CONFIG{'lvm'}/$hostname-swap --force");
+            if ($CONFIG{ 'dry-run' }) {
+                print "Would remove LVM swap volume /dev/$CONFIG{'lvm'}/$hostname-swap\n";
+            } else {
+                print "Removing swap volume\n";
+                runCommand("lvremove /dev/$CONFIG{'lvm'}/$hostname-swap --force");
+            }
         }
 
         if ( -e "/dev/$CONFIG{'lvm'}/$hostname-disk" )
         {
-            print "Removing LVM disk volume\n";
-            runCommand("lvremove /dev/$CONFIG{'lvm'}/$hostname-disk --force");
+            if ($CONFIG{ 'dry-run' }) {
+                print "Would remove LVM disk volume /dev/$CONFIG{'lvm'}/$hostname-disk\n";
+            } else {
+                print "Removing LVM disk volume\n";
+                runCommand("lvremove /dev/$CONFIG{'lvm'}/$hostname-disk --force");
+            }
         }
 
     }
@@ -546,16 +564,26 @@ sub deleteXenImage
 
         if ( -e "/dev/evms/$hostname-swap" )
         {
-            print "Removing EVMS swap volume\n";
-            runCommand("echo Delete : /dev/evms/$hostname-swap | evms");
-            runCommand("echo Delete : $CONFIG{'evms'}/$hostname-swap | evms");
+            if ($CONFIG{ 'dry-run' }) {
+                print "Would remove EVMS swap volume: /dev/evms/$hostname-swap\n";
+                print "Would remove EVMS swap volume: $CONFIG{'evms'}/$hostname-swap\n";
+            } else {
+                print "Removing EVMS swap volume\n";
+                runCommand("echo Delete : /dev/evms/$hostname-swap | evms");
+                runCommand("echo Delete : $CONFIG{'evms'}/$hostname-swap | evms");
+            }
         }
 
         if ( -e "/dev/evms/$hostname-disk" )
         {
-            print "Removing EVMS disk volume\n";
-            runCommand("echo Delete : /dev/evms/$hostname-disk | evms");
-            runCommand("echo Delete : $CONFIG{'evms'}/$hostname-disk | evms");
+            if ($CONFIG{ 'dry-run' }) {
+                print "Would remove EVMS disk volume: /dev/evms/$hostname-swap\n";
+                print "Would remove EVMS disk volume: $CONFIG{'evms'}/$hostname-swap\n";
+            } else {
+                print "Removing EVMS disk volume\n";
+                runCommand("echo Delete : /dev/evms/$hostname-disk | evms");
+                runCommand("echo Delete : $CONFIG{'evms'}/$hostname-disk | evms");
+            }
         }
 
     }

@@ -34,6 +34,7 @@
     $OUT .= "bootloader = '$pygrub_bin'\n";
   }
 }
+vcpus       = '{$vcpus}'
 memory      = '{$memory}'
 
 #
@@ -106,8 +107,22 @@ name        = '{$hostname}'
     {
       $m = "mac=$mac"
     }
-
-    $OUT .= "vif         = [ '$m' ]";
+    my $br = '';
+    if ( $bridge )
+    {
+      if ( $mac )
+      {
+        $br = ",bridge=$bridge"
+      }
+      else
+      {
+        $br = "bridge=$bridge"
+      }
+    }
+    $OUT .= "vif         = [ '";
+    $OUT .= "$m";
+    $OUT .= "$br";
+    $OUT .= "' ]";
   }
   else
   {
@@ -126,9 +141,16 @@ name        = '{$hostname}'
       $vn = ",vifname=$vifname";
     }
 
+    my $br = '';
+    if ( $bridge )
+    {
+      $br = ",bridge=$bridge"
+    }
+
     $OUT .= "vif         = [ 'ip=$ip1";
     $OUT .= "$m";
     $OUT .= "$vn";
+    $OUT .= "$br";
     $OUT .= "' ]";
   }
 }
