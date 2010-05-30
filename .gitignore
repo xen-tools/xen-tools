@@ -9,3 +9,4 @@ debian/files
 debian/xen-tools
 debian/xen-tools.debhelper.log
 debian/xen-tools.substvars
+t/modules.t
