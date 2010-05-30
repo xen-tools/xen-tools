@@ -1,4 +1,4 @@
-xen-tools (4.2~rc1-1) UNRELEASED; urgency=low
+xen-tools (4.2~beta1-1) UNRELEASED; urgency=low
 
   * New maintainer and upstream authors
   * Reintroduction into Debian Unstable (Closes: #566714)
