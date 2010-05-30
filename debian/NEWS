@@ -1,4 +1,4 @@
-xen-tools (4.2~rc1-1) unstable; urgency=low
+xen-tools (4.2~beta1-1) unstable; urgency=low
 
   If the DomU hangs with "Waiting for root file system" despite
   /dev/xvd* is used as disk device, adding "xen-blkfront" to
@@ -14,5 +14,5 @@ xen-tools (4.2~rc1-1) unstable; urgency=low
   /etc/apt/sources.list (if it exists) and taking the first entry with
   path ending in /debian/ there.
 
- -- Axel Beckert <abe@debian.org>  Sat, 15 May 2010 18:04:14 +0200
+ -- Axel Beckert <abe@debian.org>  Sun, 30 May 2010 22:36:16 +0200
 
