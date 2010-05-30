@@ -313,4 +313,4 @@ update-modules:
 # at the top of this file.  Steve-Specific?
 #
 update-version:
-	perl -pi.bak -e "s/RELEASE = '[0-9]\.[0-9][^']*';/RELEASE = '${VERSION}';/g" bin/*-*[^~]
+	perl -pi.bak -e "s/RELEASE = '[0-9]\.[0-9][^']*';/RELEASE = '${VERSION}';/g" bin/*-*[!~]
