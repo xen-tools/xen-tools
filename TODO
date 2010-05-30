@@ -1,8 +1,10 @@
 TODO
 ====
 
-Bugs to fix and Features to add before a 4.2 release
-----------------------------------------------------
+See KNOWN_BUGS for real bugs.
+
+Minor bugs to fix and features to add before a 4.2 release
+----------------------------------------------------------
 
 * xen-create-image man page overhaul:
 
@@ -22,21 +24,11 @@ Bugs to fix and Features to add before a 4.2 release
    in the domU, it's key fingerprint should be echo'd in a way that
    can easily be grep'ed into other scripts.
 
-
 * Test and support more file system types.
 
    Actually this should be pretty simple now that the parameters are
    stored in the configuration hash.  The only issue is that trailing
    whitespace is missing from the "make_fs_foo" option.
-
-* xen-delete-image doesn't remove all logical volumes if --partitions is used.
-
-   See the link below for details how to reproduce. Reproducable at
-   least with --lvm. Thanks to Antoine Benkemoun for reporting.
-
-   http://xen-tools.org/pipermail/xen-tools-discuss/2010-May/000757.html
-
-* xen-delete-image ignores extension setting
 
 * xen-create-image should check all integer options on non-digits.
 

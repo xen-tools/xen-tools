@@ -41,6 +41,7 @@ xen-tools (4.2~rc1-1) UNRELEASED; urgency=low
     - Checks for debootstrap and cdebootstrap, uses debootstrap if both
       are installed (Changed "Depends: debootstrap" to "Depends:
       debootstrap | cdebootstrap" in debian/control)
+    - Added new files TODO and KNOWN_BUGS to debian/docs.
   * Removal of /etc/bash_completion.d/xm from the package since
     bash-completion ships a more elaborate version of that file. (Closes:
     #566683, #550590, LP: #538917, #484098)
