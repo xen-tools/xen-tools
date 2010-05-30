@@ -1,8 +1,8 @@
-xen-tools (4.2~beta1-1) UNRELEASED; urgency=low
+xen-tools (4.2~beta1-1) unstable; urgency=low
 
   * New maintainer and upstream authors
   * Reintroduction into Debian Unstable (Closes: #566714)
-  * New upstream release candidate
+  * New upstream beta version
     - Needs dependency on libfile-slurp-perl
     - Supports for more recent versions of Fedora, Ubuntu and Debian
       (Closes: #499477)
@@ -66,7 +66,7 @@ xen-tools (4.2~beta1-1) UNRELEASED; urgency=low
     the Git repository.
   * Overhauled package description
 
- -- Axel Beckert <abe@debian.org>  Mon, 17 May 2010 13:32:04 +0200
+ -- Axel Beckert <abe@debian.org>  Sun, 30 May 2010 22:32:30 +0200
 
 xen-tools (4.1-1) unstable; urgency=low
 
