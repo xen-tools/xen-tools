@@ -245,17 +245,6 @@ if ( defined( $CONFIG{ 'install-method' } ) &&
             exit 1;
         }
 
-        # Do we need an URL specified as the installation source?
-        if ( ( $installer->{ 'needURL' } ) &&
-             ( !$CONFIG{ 'install-source' } ||
-                ( $CONFIG{ 'install-source' } !~ /^http/i ) ) )
-        {
-            print "Please specify the image server URL with --install-source\n";
-            exit 1;
-        }
-
-
-
         #
         #  Now we can call the appropriate handler.
         #
