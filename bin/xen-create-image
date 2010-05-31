@@ -1089,18 +1089,6 @@ exit 0;
 
 sub checkSystem
 {
-    my @required =
-      qw ( / xt-customize-image xt-install-image xt-create-xen-config / );
-
-    foreach my $bin (@required)
-    {
-        if ( !defined( findBinary($bin) ) )
-        {
-            logprint( "The script '$bin' was not found.\n", "Aborting\n\n" );
-            exit 127;
-        }
-    }
-
     #
     #  Make sure that we have Text::Template installed - this
     # will be used by `xt-create-xen-config` and if that fails then
@@ -1120,6 +1108,22 @@ E_O_ERROR
         exit 127;
     }
 
+
+
+    #
+    #  Check that all the binaries have been installed properly
+    #
+    my @required =
+      qw ( / xt-customize-image xt-install-image xt-create-xen-config / );
+
+    foreach my $bin (@required)
+    {
+        if ( !defined( findBinary($bin) ) )
+        {
+            logprint( "The script '$bin' was not found.\n", "Aborting\n\n" );
+            exit 127;
+        }
+    }
 
     #
     #  Make sure that xen-shell is installed if we've got an --admin
