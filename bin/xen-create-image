@@ -33,7 +33,8 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --cache=str  Cache .deb files on the host when installing the new guest
                 with the debootstrap tool.
 
-   --cachedir=str  Override the default .deb cache directory
+   --cachedir=path
+                Override the default .deb cache directory
 
    --config     Read the specified file in addition to the global
                 configuration file.
