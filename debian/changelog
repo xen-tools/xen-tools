@@ -1,3 +1,12 @@
+xen-tools (4.2~beta2-1) UNRELEASED; urgency=low
+
+  * New upstream beta version
+    - Uses GeoIP for Debian mirrors: Default Debian mirror is now
+      cdn.debian.net, see http://wiki.debian.org/DebianGeoMirror for
+      details.
+
+ -- Axel Beckert <abe@debian.org>  Wed, 02 Jun 2010 18:10:34 +0200
+
 xen-tools (4.2~beta1-1) unstable; urgency=low
 
   * New maintainer and upstream authors
