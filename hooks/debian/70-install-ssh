@@ -56,5 +56,8 @@ fi
 #
 installDebianPackage ${prefix} openssh-server
 
+#
+# Log our finish
+#
 logMessage Script $0 finished
 
