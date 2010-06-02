@@ -391,6 +391,7 @@ sub parseCommandLineArguments
         # Misc
         "arch=s",   \$CONFIG{ 'arch' },
         "cache=s",  \$CONFIG{ 'cache' },
+        "cachedir=s", \$CONFIG{ 'cachedir' },
         "config=s", \$CONFIG{ 'config' },
         "mirror=s", \$CONFIG{ 'mirror' },
 
@@ -702,7 +703,7 @@ sub do_debootstrap
     # to use cdebootstrap.
     #
     my $cmd = $CONFIG{ 'debootstrap-cmd' };
-    my $cachepath = '/var/cache/apt/archives/';
+    my $cachedir = $CONFIG{ 'cachedir' };
     if ( !$cmd )
     {
 	if (-x '/usr/sbin/debootstrap') {
@@ -724,12 +725,16 @@ sub do_debootstrap
     if ( $CONFIG{ 'cache' } eq "yes" )
     {
         print "\nCopying files from host to image.\n";
-        unless( -d $cachepath ) {
-            $cachepath = '/var/cache/xen-tools/archives';
-            system "mkdir -p $cachepath";
+        unless( -d $cachedir ) {
+            my $xtcache = '/var/cache/xen-tools/archives/';
+            print("$cachedir not found, defaulting to $xtcache\n");
+            unless ( -d $xtcache ) {
+                system "mkdir -p $xtcache";
+            }
+            $cachedir = $xtcache;
         }
         runCommand("mkdir -p $CONFIG{'location'}/var/cache/apt/archives");
-        copyDebFiles( "$cachepath",
+        copyDebFiles( "$cachedir",
                       "$CONFIG{'location'}/var/cache/apt/archives" );
         print("Done\n");
     }

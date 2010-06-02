@@ -1269,6 +1269,7 @@ sub setupDefaultOptions
     $CONFIG{ 'size' }   = '2000Mb';
     $CONFIG{ 'swap' }   = '128M';
     $CONFIG{ 'cache' }  = 'yes';
+    $CONFIG{ 'cachedir' }  = '/var/cache/apt/archives/';
     $CONFIG{ 'image' }  = 'sparse';
     $CONFIG{ 'vcpus' } = '1';
 
@@ -1515,6 +1516,7 @@ sub parseCommandLineArguments
             "fs=s",         \$CONFIG{ 'fs' },
             "boot",         \$CONFIG{ 'boot' },
             "cache=s",      \$CONFIG{ 'cache' },
+            "cachedir=s",   \$CONFIG{ 'cachedir' },
             "config=s",     \$CONFIG{ 'config' },
             "ide",          \$CONFIG{ 'ide' },
             "scsi",         \$CONFIG{ 'scsi' },
@@ -3251,6 +3253,10 @@ sub installSystem
     #
     $cmd .= " --cache=$CONFIG{'cache'}" if length( $CONFIG{ 'cache' } );
 
+    #
+    #  Add on the current cachedir setting
+    #
+    $cmd .= " --cachedir=$CONFIG{'cachedir'}" if length( $CONFIG{ 'cachedir' } );
 
     #
     #  Propagate --verbose
