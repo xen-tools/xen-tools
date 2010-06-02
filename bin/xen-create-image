@@ -1100,7 +1100,7 @@ sub checkSystem
     {
         print <<E_O_ERROR;
 
-  Aborting:  The Text::Template perl module isn't installed or available.
+  Aborting:  The Text::Template perl module isn\'t installed or available.
 
   Specify '--force' to skip this check and continue regardless.
 
