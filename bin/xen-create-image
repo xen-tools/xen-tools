@@ -180,8 +180,12 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --mirror=url Setup the mirror to use when installing via
                 debootstrap. (Default value: mirror used in
                 /etc/apt/sources.list or for Debian
-                "http://ftp.debian.org/debian/" and for Ubuntu
+                "http://cdn.debian.net/debian/" and for Ubuntu
                 "http://archive.ubuntu.com/ubuntu/")
+
+                The above mentioned Debian mirror hostname uses GeoIP
+                to choose a more or less close Debian mirror. See
+                http://wiki.debian.org/DebianGeoMirror for details.
 
    --template=tmpl
                 Specify which template file to use when creating the
