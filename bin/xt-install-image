@@ -777,7 +777,7 @@ sub do_debootstrap
     {
         print "\nCopying files from new installation to host.\n";
         copyDebFiles( "$CONFIG{'location'}/var/cache/apt/archives",
-                      "$cachepath" );
+                      "$cachedir" );
         print("Done\n");
     }
 
