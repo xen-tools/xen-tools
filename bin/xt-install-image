@@ -702,6 +702,7 @@ sub do_debootstrap
     # to use cdebootstrap.
     #
     my $cmd = $CONFIG{ 'debootstrap-cmd' };
+    my $cachepath = '/var/cache/apt/archives/';
     if ( !$cmd )
     {
 	if (-x '/usr/sbin/debootstrap') {
@@ -723,8 +724,12 @@ sub do_debootstrap
     if ( $CONFIG{ 'cache' } eq "yes" )
     {
         print "\nCopying files from host to image.\n";
+        unless( -d $cachepath ) {
+            $cachepath = '/var/cache/xen-tools/archives';
+            system "mkdir -p $cachepath";
+        }
         runCommand("mkdir -p $CONFIG{'location'}/var/cache/apt/archives");
-        copyDebFiles( "/var/cache/apt/archives",
+        copyDebFiles( "$cachepath",
                       "$CONFIG{'location'}/var/cache/apt/archives" );
         print("Done\n");
     }
@@ -767,7 +772,7 @@ sub do_debootstrap
     {
         print "\nCopying files from new installation to host.\n";
         copyDebFiles( "$CONFIG{'location'}/var/cache/apt/archives",
-                      "/var/cache/apt/archives" );
+                      "$cachepath" );
         print("Done\n");
     }
 
