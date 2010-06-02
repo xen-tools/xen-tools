@@ -1,17 +1,16 @@
 #!/bin/sh
 #
-#  This script installs OpenSSH upon the new system.
+#  This script installs OpenSSH Server on the newly created guest.
+#  
+#  It does this by generating the keys within the host, since guests
+# do not have the necessary /dev/random and /dev/urandom to generate
+# their own keys before boot.
 #
-#  It must make sure that the server is not running before it exits 
-# otherwise the temporary mounted directory will not be unmountable.
-#
-# Steve
+# Dmitry Nedospasov
 # --
-# http://www.steve.org.uk/
-
+# http://nedos.net/
 
 prefix=$1
-
 
 #
 #  Source our common functions
@@ -22,21 +21,40 @@ else
     . ./hooks/common.sh
 fi
 
-
 #
 # Log our start
 #
 logMessage Script $0 starting
 
+#
+#  Since our guests doesn't have an RNG, generate the keys from the host
+#
+#  First, create an ssh directory
+#
+mkdir -p ${prefix}/etc/ssh
+
+#
+#  Second, Generate the Host RSA Key
+#
+if ssh-keygen -t rsa -N '' -f ${prefix}/etc/ssh/ssh_host_rsa_key -C "root@${hostname}"; then
+    logMessage "successfully generetaged Host RSA"
+else
+    logMessage "failed to generate Host RSA Key"
+fi
+
+#
+#  Third, Generate the Host DSA Key
+#
+if ssh-keygen -t dsa -N '' -f ${prefix}/etc/ssh/ssh_host_dsa_key -C "root@${hostname}"; then
+    logMessage "successfully generetaged Host DSA"
+else
+    logMessage "failed to generate Host DSA Key"
+fi
 
 #
 #  Install ssh
 #
-installDebianPackage ${prefix} ssh
+installDebianPackage ${prefix} openssh-server
 
-
-
-#
-#  Log our finish
-#
 logMessage Script $0 finished
+
