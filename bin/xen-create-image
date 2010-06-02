@@ -3933,12 +3933,22 @@ sub unMountImage
 
 sub END
 {
-
+    my $host_rsa_key = '';
     #
     #  Unmount the image if it is still mounted.
     #
     if ( defined($MOUNT_POINT) )
     {
+        #
+        #  Before we unmount get the host's RSA key
+        #
+        my $key_path .= $MOUNT_POINT;
+        $key_path .= '/etc/ssh/ssh_host_rsa_key.pub';
+        if ( `ssh-keygen -lf $key_path` =~ /^(\S+)\s+(\S+)/ ) {
+            $host_rsa_key = $2;
+        } else {
+            $host_rsa_key = "N/A";
+        }
         unMountImage($MOUNT_POINT);
     }
 
@@ -3961,6 +3971,8 @@ sub END
     #  Did we fail?  If so then we should remove the broken installation,
     # unless "--keep" was specified.
     #
+    #  If we didn't fail, then we assume we succeeded, print a summary
+    #
     if ( ($FAIL == 1) && ( !$CONFIG{ 'keep' } ) )
     {
 
@@ -3971,5 +3983,22 @@ sub END
           logprint("Removing failed install: $CONFIG{'hostname'}\n");
 
         system("xen-delete-image --hostname=$CONFIG{'hostname'}");
+    } else {
+        #
+        #  Assume success
+        #
+        logprint("\nInstallation Summary\n");
+        logprint("---------------------\n");
+        logprint("Hostname        :  $CONFIG{'hostname'}\n");
+        logprint("Distribution    :  $CONFIG{'dist'}\n");
+        logprint("IP-Address      :  ");
+        if ( $CONFIG{ 'dhcp' } ) {
+           logprint("dynamic");
+        } elsif( $CONFIG{ 'ip' } ) {
+           logprint( $CONFIG{ 'ip' } );
+        }
+        logprint("\n");
+        logprint("RSA Fingerprint :  $host_rsa_key");
+        logprint("\n\n");
     }
 }

@@ -15,15 +15,6 @@ Minor bugs to fix and features to add before a 4.2 release
    Shouldn't give up after only one password missmatch. This is just
    a mater of wrapping the passwd call in a loop.
 
-* Fix 70-install-ssh
-
-   Currently 70-install-ssh fails to finish installing the ssh-server
-   because it does not have a random seed to generate the host keys.
-   Mounting /proc and /dev in chroot prior to calling the install
-   function should fix this. If ssh-server is successfully installed
-   in the domU, it's key fingerprint should be echo'd in a way that
-   can easily be grep'ed into other scripts.
-
 * Test and support more file system types.
 
    Actually this should be pretty simple now that the parameters are
