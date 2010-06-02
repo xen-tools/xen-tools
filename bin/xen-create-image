@@ -30,18 +30,24 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --boot       Boot the new instance after creating it.
 
-   --cache=str  Cache .deb files on the host when installing the new guest
-                with the debootstrap tool.
+   --cache=bool Cache .deb files on the host when installing the new
+                guest with the debootstrap tool. Accepted values:
+                "yes" (default) and "no".
 
-   --cachedir=path
-                Override the default .deb cache directory
 
-   --config     Read the specified file in addition to the global
+   --cachedir=/path/to/cache/directory
+                Override the default .deb cache directory. Defaults to
+                /var/cache/apt/archives/ if it exists (i.e. on Debian
+                and Ubuntu) and /var/cache/xen-tools/archives/ else
+                (i.e. on Fedora and CentOS).
+
+   --config=file
+                Read the specified file in addition to the global
                 configuration file.
 
    --copy-cmd   NOP:  Ignored.
 
-   --debootstrap-cmd
+   --debootstrap-cmd=/path/to/command
                 Specify which debootstrap command is used. Defaults to
                 debootstrap if both, debootstrap and cdebootstrap are
                 installed.
@@ -55,14 +61,15 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
                 'xfs'.
 
 
-   --image      Specify whether to create "sparse" or "full" disk images.
+   --image=str  Specify whether to create "sparse" or "full" disk images.
                 Full images are mandatory when using LVM, so this setting
                 is ignored in that case.
 
-   --image-dev=dev
+   --image-dev=/path/to/device
                 Specify a physical/logical volume for the disk image.
 
-   --initrd     Specify the initial ramdisk. If an image is specified it
+   --initrd=/path/to/initrd
+                Specify the initial ramdisk. If an image is specified it
                 must exist.
 
    --keep       Don't delete our images if installation fails.
@@ -107,7 +114,7 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
                 Pass the named string literally to any role script.
                 This is useful for site-specific roles.
 
-   --roledir=dir
+   --roledir=/path/to/directory
                 Specify the directory which contains the role scripts.
                 This defaults to /etc/xen-tools/role.d/
 
@@ -121,7 +128,7 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --swap=size  Set the size of the swap partition.
 
-   --swap-dev=dev
+   --swap-dev=/path/to/device
                 Specify a physical/logical volume for swap usage.
 
    --noswap     Do not create a swap partition. When this option is
@@ -166,11 +173,11 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
                 (Default value for Debian and Ubuntu: debootstrap)
 
-   --install-source=tarball
+   --install-source=/path/to/tarball
                 Specify the source path to use when installing via
                 a copy or tarball installation.
 
-   --mirror     Setup the mirror to use when installing via
+   --mirror=url Setup the mirror to use when installing via
                 debootstrap. (Default value: mirror used in
                 /etc/apt/sources.list or for Debian
                 "http://ftp.debian.org/debian/" and for Ubuntu
@@ -219,7 +226,8 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
   Mandatory options:
 
-   --dir=dir    Specify where the output images should go.
+   --dir=/path/to/directory
+                Specify where the output images should go.
                 Subdirectories will be created for each guest
                 If you do not wish to use loopback images specify --lvm
                 or --evms.  (These three options are mutually exclusive.)
