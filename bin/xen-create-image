@@ -33,6 +33,8 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --cache=str  Cache .deb files on the host when installing the new guest
                 with the debootstrap tool.
 
+   --cachedir=str  Override the default .deb cache directory
+
    --config     Read the specified file in addition to the global
                 configuration file.
 
@@ -572,19 +574,24 @@ Create a Xen configuration file in so that xm can start the new domain.
 
   To minimize this the .deb files which are downloaded into the
  new instance are cached by default upon the host, in the directory
- /var/cache/apt/archives.
+ /var/cache/apt/archives or, if this does not exist, in 
+ /var/cache/xen-tools/archives. This can be overridden with the
+ --cache-dir command-line and configuration option.
+
+  This feature can be disabled with the command line flag --cache=no,
+ or by the matching setting in the configuration file.
 
   When a new image is created these packages are copied into the new
  image - before the debootstrap process runs - this should help avoid
  expensive network reading.
 
-  If you wish to clean the cache upon the host you may do so with
- apt-get, as you'd expect:
+  If you wish to clean the host's apt cache (/var/cache/apt/archivees)
+ you may do so with apt-get, namely:
 
   apt-get clean
 
-  (This feature can be disabled with the command line flag --cache=no,
- or by the matching setting in the configuration file.)
+  If you set your cache directory to anything else, simply rm the
+ contents of the directory.
 
 =cut
 
