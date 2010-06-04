@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 #  This script installs OpenSSH Server on the newly created guest.
-#  
+#
 #  It does this by generating the keys within the host, since guests
 # do not have the necessary /dev/random and /dev/urandom to generate
 # their own keys before boot.
