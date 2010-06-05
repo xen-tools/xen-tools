@@ -776,6 +776,10 @@ my $FAIL = 0;
 #
 my $RELEASE = '4.2beta1';
 
+#
+# Variable for ip addresses for output
+#
+my $IP_ADDRESSES = '';
 
 
 #
@@ -2582,6 +2586,11 @@ EOF
             #
             logprint("IP Address $count   : $i");
 
+            #
+            #  Log the ip addresses for later output
+            #
+            $IP_ADDRESSES .= "$i ";
+
             #  Option MAC address.
             if ( defined($m) )
             {
@@ -3991,11 +4000,11 @@ sub END
         logprint("---------------------\n");
         logprint("Hostname        :  $CONFIG{'hostname'}\n");
         logprint("Distribution    :  $CONFIG{'dist'}\n");
-        logprint("IP-Address      :  ");
+        logprint("IP-Address(es)  :  ");
         if ( $CONFIG{ 'dhcp' } ) {
            logprint("dynamic");
         } elsif( $CONFIG{ 'ip' } ) {
-           logprint( $CONFIG{ 'ip' } );
+           logprint( $IP_ADDRESSES );
         }
         logprint("\n");
         logprint("RSA Fingerprint :  $host_rsa_key");
