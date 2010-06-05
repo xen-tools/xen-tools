@@ -94,6 +94,8 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --no-hosts   Don't touch /etc/hosts on the dom0.
 
+   --copy-hosts Copy entries from the dom0's /etc/hosts file to the guest
+
    --partitions=file
                 Use a specific partition layout configuration file.
                 See /etc/xen-tools/partitions.d/sample-server for an
@@ -1510,8 +1512,9 @@ sub parseCommandLineArguments
             "disk_device=s", \$CONFIG{ 'disk_device' },
           
 
-            # Host options
-            "no-hosts", \$CONFIG{ 'nohosts' },
+            # Hosts options
+            "no-hosts",   \$CONFIG{ 'nohosts' },
+            "copy-hosts", \$CONFIG{ 'copyhosts' },
 
             # Networking options
             "dhcp",        \$CONFIG{ 'dhcp' },
