@@ -32,12 +32,6 @@ Minor bugs to fix and features to add before a 4.2 release
    t/xen-tools.t
    t/xt-create-xen-config.t
 
-* Clean up setup-hostname - copying /etc/hosts isn't reliable
-
-   One could argue that that this gives "extra" information to the domU, since
-   the /etc/hosts file may contain more than just hosts on the same subnet.
-   This should atleast be disabled via a flag.
-
 * Setup locales in the hooks?
 
    Currently no locales are set and this causes several domU errors which appear
