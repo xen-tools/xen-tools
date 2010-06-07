@@ -104,8 +104,10 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
                 fs, size, swap and noswap are ignored when using this
                 option.
 
+   --genpass    Generate a random root password
+
    --passwd     Ask for a root password during setup.
-                NOTE:  This is done interactively.
+                NOTE:  This is done interactively and overrides --genpass
 
    --role=role  Run the specified role script(s) post-install.
                 Role scripts are discussed later in this manpage.
@@ -732,6 +734,7 @@ use Digest::MD5 qw/ md5_hex /;
 use Env;
 use File::Path qw/ mkpath /;
 use File::Temp qw/ tempdir /;
+use File::Copy qw/ cp /;
 use Getopt::Long;
 use Pod::Usage;
 
@@ -783,6 +786,11 @@ my $RELEASE = '4.2beta1';
 #
 my $IP_ADDRESSES = '';
 
+
+#
+# Variable for generated password
+#
+my $PASSWORD = '';
 
 #
 #  Setup default options.
@@ -1018,7 +1026,7 @@ runXenConfigCreation();
 #
 #  Setup the password if the user wanted that.
 #
-setupRootPassword() if ( $CONFIG{ 'passwd' } );
+setupRootPassword() if ( $CONFIG{ 'passwd' } or $CONFIG{ 'genpass' } );
 
 
 #
@@ -1343,6 +1351,13 @@ sub setupDefaultOptions
     $CONFIG{ 'debootstrap-cmd' } = '';
 
     #
+    #  Default values for passwords
+    #
+    $CONFIG{ 'genpass' }     = 1;
+    $CONFIG{ 'genpass_len' } = 8;
+    $CONFIG{ 'password' }    = '';
+
+    #
     #  The program to run to create a filesystem.
     #
     # NOTE: These commands end in a trailing slash.  The last parameter is
@@ -1551,6 +1566,9 @@ sub parseCommandLineArguments
             "hooks=i",      \$CONFIG{ 'hooks' },
             "pygrub",       \$CONFIG{ 'pygrub' },
             "passwd",       \$CONFIG{ 'passwd' },
+            "genpass=i",    \$CONFIG{ 'genpass' },
+            "genpass-len=i", \$CONFIG{ 'genpass_len' },
+            "password=s",   \$CONFIG{ 'password' },
             "partitions=s", \$CONFIG{ 'partitions' },
             "role=s",       \$CONFIG{ 'role' },
             "role-args=s",  \$CONFIG{ 'role-args' },
@@ -3729,16 +3747,81 @@ sub setupRootPassword
 {
     logprint("Setting up root password\n");
 
-    if ( -x $MOUNT_POINT . "/usr/bin/passwd" )
+    if ( $CONFIG{ 'passwd' } )
     {
-        system("chroot $MOUNT_POINT /usr/bin/passwd");
+        if ( -x $MOUNT_POINT . "/usr/bin/passwd" )
+        {
+            system("chroot $MOUNT_POINT /usr/bin/passwd");
+        }
+        else
+        {
+            logprint("'passwd' command not found in the new install.\n");
+        }
     }
     else
     {
-        logprint("'passwd' command not found in the new install.\n");
+        logprint("Generating a password for the new guest.\n");
+        #
+        #  Replace the password in the /etc/shadow file
+        #
+        my $shadow_path = $MOUNT_POINT . '/etc/shadow';
+        if ( -e $shadow_path )
+        {
+            #
+            #  Generate a password, salt and use that to generating a hash
+            #
+            my $salt = generatePassword(8);
+            $PASSWORD = generatePassword( $CONFIG{ 'genpass_len' } );
+            my $hash = `echo -n $PASSWORD | openssl passwd -stdin -1 -salt $salt`;
+            $hash =~ s/\s+$//;
+
+            #
+            #  Copy the file to ensure the original retains the correct
+            #  permissions set by the System
+            #
+            my $tmp_shadow_path = "$shadow_path.tmp";
+            cp("$shadow_path","$tmp_shadow_path");
+            open(TMP, "<", $tmp_shadow_path) or die $!;
+            open(SHADOW, ">", $shadow_path) or die $!;
+            my $line;
+            while(defined($line = <TMP>))
+            {
+                chomp $line;
+                $line =~ s#^root:[^:]*:#root:$hash:#;
+                print SHADOW "$line\n";
+            }
+
+            #
+            #  Close the files and delete the temporary file
+            #
+            close(SHADOW);
+            close(TMP);
+            unlink($tmp_shadow_path);
+        }
+        else
+        {
+            logprint("Failed to find /etc/passwd in the install.\n");
+        }
     }
 }
 
+=begin doc
+
+  create a random "string"
+
+=end doc
+
+=cut
+
+sub generatePassword {
+    my $length = $_[0];
+    my $possible = 'abcdefghijkmnpqrstuvwxyz23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+    my $password = '';
+    while (length($password) < $length) {
+        $password .= substr($possible, (int(rand(length($possible)))), 1);
+    }
+    return $password
+}
 
 
 =begin doc
@@ -4010,7 +4093,8 @@ sub END
            logprint( $IP_ADDRESSES );
         }
         logprint("\n");
-        logprint("RSA Fingerprint :  $host_rsa_key");
-        logprint("\n\n");
+        logprint("RSA Fingerprint :  $host_rsa_key\n");
+        logprint("Root Password   :  $PASSWORD\n");
+        logprint("\n");
     }
 }
