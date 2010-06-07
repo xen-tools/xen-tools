@@ -9,11 +9,10 @@ Minor bugs to fix and features to add before a 4.2 release
 * xen-create-image man page overhaul:
 
 - ambiguous option list with regards to parameters
+- Set Fail in more situations where the script has clearly failed
+  i.e.: lvm exists
 
-* Interactive Password Handling (maybe also the passwd role)
-
-   Shouldn't give up after only one password missmatch. This is just
-   a mater of wrapping the passwd call in a loop.
+* Create "more random" passwords and salts
 
 * Test and support more file system types.
 

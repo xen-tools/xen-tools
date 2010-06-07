@@ -105,9 +105,12 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
                 option.
 
    --genpass    Generate a random root password
+   
+   --password=passphrase
+                Set the root password for the new guest.
 
-   --passwd     Ask for a root password during setup.
-                NOTE:  This is done interactively and overrides --genpass
+   --passwd     Ask for a root password interactively during setup.
+                NOTE:  This overrides --genpass --password
 
    --role=role  Run the specified role script(s) post-install.
                 Role scripts are discussed later in this manpage.
@@ -1026,7 +1029,7 @@ runXenConfigCreation();
 #
 #  Setup the password if the user wanted that.
 #
-setupRootPassword() if ( $CONFIG{ 'passwd' } or $CONFIG{ 'genpass' } );
+setupRootPassword() if ( $CONFIG{ 'passwd' } or $CONFIG{ 'genpass' } or $CONFIG{ 'password' });
 
 
 #
@@ -3770,8 +3773,15 @@ sub setupRootPassword
             #
             #  Generate a password, salt and use that to generating a hash
             #
+            if ( $CONFIG{ ' genpass ' } )
+            {
+                $PASSWORD = generatePassword( $CONFIG{ 'genpass_len' } );
+            }
+            else
+            {
+                $PASSWORD = $CONFIG { 'password' };
+            }
             my $salt = generatePassword(8);
-            $PASSWORD = generatePassword( $CONFIG{ 'genpass_len' } );
             my $hash = `echo -n $PASSWORD | openssl passwd -stdin -1 -salt $salt`;
             $hash =~ s/\s+$//;
 
