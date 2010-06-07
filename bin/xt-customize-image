@@ -226,12 +226,12 @@ sub checkArguments
     {
         print <<E_OR;
 
-  We're trying to configure an installation of $CONFIG{'dist'} in
+  We\'re trying to configure an installation of $CONFIG{'dist'} in
  $CONFIG{'location'} - but there is no hook directory for us to use.
 
-  This means we don't know how to configure this installation.
+  This means we don\'t know how to configure this installation.
 
-  We'd expect the hook directory to be : $dir
+  We\'d expect the hook directory to be : $dir
 
   Aborting.
 E_OR
