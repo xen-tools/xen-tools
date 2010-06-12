@@ -778,11 +778,11 @@ my $MOUNT_POINT = undef;
 my $FAIL = 0;
 
 
-
 #
 # Release number.
 #
 my $RELEASE = '4.2beta1';
+
 
 #
 # Variable for ip addresses for output
