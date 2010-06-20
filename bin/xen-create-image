@@ -2067,7 +2067,7 @@ EOF
         {
             print "Configuration file already exists; $cfg\n";
             print "Aborting\n";
-            $FAIL = 1;
+            $FAIL = 2;
             exit 127;
         }
     }
@@ -2780,7 +2780,7 @@ sub createLoopbackImages
                     "Specify '--force' to overwrite, or remove the following file\n"
                 );
                 logprint( $disk . "\n" );
-                $FAIL = 1;
+                $FAIL = 2;
                 exit 127;
             }
         }
@@ -2982,7 +2982,7 @@ sub createLVMBits
             {
                 logprint("The LVM disk image already exists.  Aborting.\n");
                 logprint("Specify '--force' to delete and recreate\n");
-                $FAIL = 1;
+                $FAIL = 2;
                 exit 127;
             }
         }
@@ -3082,7 +3082,7 @@ sub createEVMSBits
                     "The EVMS volume $evms_volume_disk already exists.  Aborting.\n"
                 );
                 logprint("Specify '--force' to delete and recreate\n");
-                $FAIL = 1;
+                $FAIL = 2;
                 exit 127;
             }
         }
@@ -3112,7 +3112,7 @@ sub createEVMSBits
                     "The EVMS object $evms_object_disk already exists.  Aborting.\n"
                 );
                 logprint("Specify '--force' to delete and recreate\n");
-                $FAIL = 1;
+                $FAIL = 2;
                 exit 127;
             }
         }
@@ -4134,6 +4134,9 @@ sub END
     #
     #  If we didn't fail, then we assume we succeeded, print a summary
     #
+    #  $FAIL = 0  -  Success
+    #  $FAIL = 1  -  Failed to install, delete the image
+    #  $FAIL = 2  -  Files exist, either .cfg or lvm... etc
     if ( ($FAIL == 1) && ( !$CONFIG{ 'keep' } ) )
     {
 
