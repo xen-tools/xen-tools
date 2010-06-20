@@ -3824,7 +3824,7 @@ sub setupRootPassword
             #
             #  Generate a password, salt and use that to generating a hash
             #
-            if ( $CONFIG{ ' genpass ' } )
+            if ( $CONFIG{ 'genpass' } )
             {
                 $PASSWORD = generatePassword( $CONFIG{ 'genpass_len' } );
             }
