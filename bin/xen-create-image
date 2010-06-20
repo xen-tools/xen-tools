@@ -4160,7 +4160,13 @@ sub END
         }
         logprint("\n");
         logprint("RSA Fingerprint :  $host_rsa_key\n");
-        logprint("Root Password   :  $PASSWORD\n");
+        logprint("Root Password   :  ");
+        if ( $PASSWORD ) {
+            logprint("$PASSWORD\n");
+        } else {
+            logprint ("N/A\n");
+        }
         logprint("\n");
     }
 }
+
