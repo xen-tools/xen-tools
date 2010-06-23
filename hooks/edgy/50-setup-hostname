@@ -59,12 +59,11 @@ EOF
         #  If dhcp is diabled, FQDN should resolve to our IP
         #
         cat >> ${prefix}/etc/hosts <<EOF
-127.0.0.1	$GUEST_HOSTNAME
-${ip1}	$GUEST_FQDN
+${ip1}	$GUEST_FQDN $GUEST_HOSTNAME
 EOF
     else
         cat >> ${prefix}/etc/hosts <<EOF
-127.0.1.1	$GUEST_HOSTNAME $GUEST_FQDN
+127.0.1.1	$GUEST_FQDN $GUEST_HOSTNAME
 EOF
     fi
 
@@ -87,13 +86,12 @@ else
     # New entry.
     if [ -z "${dhcp}" ]; then
         cat >> ${prefix}/etc/hosts <<EOF
-127.0.0.1	$GUEST_HOSTNAME
-${ip1}	$GUEST_FQDN
+${ip1}	$GUEST_FQDN $GUEST_HOSTNAME
 
 EOF
     else
     cat >> ${prefix}/etc/hosts <<EOF
-127.0.1.1	$GUEST_HOSTNAME $GUEST_FQDN
+127.0.1.1	$GUEST_FQDN $GUEST_HOSTNAME
 
 EOF
     fi
