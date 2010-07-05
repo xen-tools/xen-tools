@@ -4146,7 +4146,9 @@ sub END
         $CONFIG{ 'verbose' } &&
           logprint("Removing failed install: $CONFIG{'hostname'}\n");
 
-        system("xen-delete-image --hostname=$CONFIG{'hostname'}");
+        $CONFIG{ 'hostname' } &&
+          system("xen-delete-image --hostname=$CONFIG{'hostname'}");
+
     } elsif ( $FAIL == 0 ) {
         #
         #  Assume success
