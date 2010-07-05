@@ -163,7 +163,7 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --vcpus=num
                 Set the number of vcpus that the new instance will have
-		instead of the default value of "1".
+                instead of the default value of "1".
 
 
   Installation options:
@@ -237,7 +237,7 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --bridge=brname
                 Optionally, set a specific bridge for the new instance.
                 This can be especially useful when running multiple
-		bridges on a machine.
+                bridges on a machine.
 
 
   Mandatory options:
@@ -3766,7 +3766,7 @@ sub runXenConfigCreation
     }
 
     #
-    #  Create teh config.
+    #  Create the config.
     #
     my $command = "xt-create-xen-config --output=$dir --extension=$ext";
 
