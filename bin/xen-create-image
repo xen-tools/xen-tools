@@ -234,6 +234,10 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --broadcast=123.456.789.ABC
                 Setup the broadcast address for the new instance.
 
+   --nameserver=123.456.789.ABC
+                Setup the nameserver of the machine, multiple nameservers
+		are allowed.
+
    --bridge=brname
                 Optionally, set a specific bridge for the new instance.
                 This can be especially useful when running multiple
@@ -367,9 +371,10 @@ Create a Xen configuration file in so that xm can start the new domain.
   #
   # Networking options.
   #
-  gateway   = 192.168.1.1
-  broadcast = 192.168.1.255
-  netmask   = 255.255.255.0
+  gateway    = 192.168.1.1
+  broadcast  = 192.168.1.255
+  netmask    = 255.255.255.0
+  nameserver = 192.168.1.1
 
 
   #
@@ -479,6 +484,7 @@ Create a Xen configuration file in so that xm can start the new domain.
           --ip=192.168.1.200 \
           --netmask=255.255.255.0
           --gateway=192.168.1.1 \
+          --nameserver=192.168.1.1 \
           --dir=/home/xen --hostname=vm02.my.flat
 
   The directory specified for the output will be used to store the volumes
@@ -1545,16 +1551,17 @@ sub parseCommandLineArguments
             "copy-hosts", \$CONFIG{ 'copyhosts' },
 
             # Networking options
-            "dhcp",        \$CONFIG{ 'dhcp' },
-            "bridge=s",    \$CONFIG{ 'bridge' },
-            "gateway=s",   \$CONFIG{ 'gateway' },
-            "hostname=s",  \$CONFIG{ 'hostname' },
-            "ip=s@",       \$CONFIG{ 'ip' },
-            "mac=s",       \$CONFIG{ 'mac' },
-            "netmask=s",   \$CONFIG{ 'netmask' },
-            "broadcast=s", \$CONFIG{ 'broadcast' },
-            "vifname=s",   \$CONFIG{ 'vifname' },
-            "p2p=s",       \$CONFIG{ 'p2p' },
+            "dhcp",         \$CONFIG{ 'dhcp' },
+            "bridge=s",     \$CONFIG{ 'bridge' },
+            "gateway=s",    \$CONFIG{ 'gateway' },
+            "hostname=s",   \$CONFIG{ 'hostname' },
+            "ip=s@",        \$CONFIG{ 'ip' },
+            "mac=s",        \$CONFIG{ 'mac' },
+            "netmask=s",    \$CONFIG{ 'netmask' },
+            "broadcast=s",  \$CONFIG{ 'broadcast' },
+            "nameserver=s", \$CONFIG{ 'nameserver' },
+            "vifname=s",    \$CONFIG{ 'vifname' },
+            "p2p=s",        \$CONFIG{ 'p2p' },
 
             # Exclusive
             #
@@ -2691,6 +2698,7 @@ EOF
     $CONFIG{ 'broadcast' } &&
       logprint("Broadcast      : $CONFIG{'broadcast'}\n");
     $CONFIG{ 'gateway' } && logprint("Gateway        : $CONFIG{'gateway'}\n");
+    $CONFIG{ 'nameserver' } && logprint("Nameserver     : $CONFIG{'nameserver'}\n");
     $CONFIG{ 'p2p' }     && logprint("Point to Point : $CONFIG{'p2p'}\n");
     print "\n";
 

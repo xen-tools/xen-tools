@@ -20,6 +20,7 @@ xen-create-nfs - Create a Xen configuration file for an NFS-root guest.
    --gateway    The gateway address to use when configured with a static IP.
    --hostname   The hostname to configure for the guest.
    --netmask    The netmask to use when configured with a static IP.
+   --nameserver The nameserver to use when configured with a static IP.
    --ip         The IP address to use when configured with a static IP.
 
   General options:
@@ -288,14 +289,15 @@ sub parseCommandLineArguments
     GetOptions(
 
         # Networking options
-        "dhcp",        \$CONFIG{ 'dhcp' },
-        "gateway=s",   \$CONFIG{ 'gateway' },
-        "broadcast=s", \$CONFIG{ 'broadcast' },
-        "ip=s",        \$CONFIG{ 'ip' },
-        "netmask=s",   \$CONFIG{ 'netmask' },
-        "hostname=s",  \$CONFIG{ 'hostname' },
-        "memory=s",    \$CONFIG{ 'memory' },
-        "mac=s",       \$CONFIG{ 'mac' },
+        "dhcp",         \$CONFIG{ 'dhcp' },
+        "gateway=s",    \$CONFIG{ 'gateway' },
+        "broadcast=s",  \$CONFIG{ 'broadcast' },
+        "ip=s",         \$CONFIG{ 'ip' },
+        "netmask=s",    \$CONFIG{ 'netmask' },
+        "nameserver=s", \$CONFIG{ 'nameserver' },
+        "hostname=s",   \$CONFIG{ 'hostname' },
+        "memory=s",     \$CONFIG{ 'memory' },
+        "mac=s",        \$CONFIG{ 'mac' },
 
         # NFS options.
         "nfs_server=s", \$CONFIG{ 'nfs_server' },

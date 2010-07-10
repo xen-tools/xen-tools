@@ -121,6 +121,18 @@ E_O_STATIC
         count=`expr $count + 1`
         interface=`expr $interface + 1`
     done
+
+    #
+    # Hooks are run chrooted, hence the resolv.conf is moved
+    # temporarily to /etc/resolv.conf.old. Use that file, it
+    # will be restored after hooks are run.
+    #
+    if [ '*' != "*$nameserver" ]; then
+	rm -f ${prefix}/etc/resolv.conf.old
+	for ns in $nameserver; do 
+	    echo "nameserver $ns" >>${prefix}/etc/resolv.conf.old
+	done
+    fi
 }
 
 
