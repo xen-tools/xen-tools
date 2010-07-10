@@ -2,14 +2,14 @@
 
 =head1 NAME
 
-xen-guess-debian-mirror - Tries to guess the most suitable mirror and
-suite for DomUs on Debian and Ubuntu Dom0s.
+xt-guess-suite-and-mirror - Tries to guess the most suitable suite and
+mirror for DomUs on Debian and Ubuntu Dom0s.
 
 =cut
 
 =head1 SYNOPSIS
 
-  xen-guess-debian-mirror [-s] [-m]
+  xt-guess-suite-and-mirror [-s] [-m]
 
   -s  show suite
   -m  show mirror
@@ -20,7 +20,7 @@ suite for DomUs on Debian and Ubuntu Dom0s.
 
 =head1 DESCRIPTION
 
-xen-guess-debian-mirror tries to find the mirror and suite the Xen
+xt-guess-suite-and-mirror tries to find the mirror and suite the Xen
 Dom0 is currently using and returns them in a way suitable for
 xen-create-image(1) or the backticks feature in xen-tools.conf.
 
