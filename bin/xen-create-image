@@ -243,6 +243,9 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
                 This can be especially useful when running multiple
                 bridges on a machine.
 
+   --vifname=vifname
+                Optionally, set a specific vif name for the new instance.
+
 
   Mandatory options:
 
