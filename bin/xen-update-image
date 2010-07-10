@@ -105,6 +105,7 @@ The LICENSE file contains the full text of the license.
 use strict;
 use English;
 use File::Temp qw/ tempdir /;
+use File::Copy qw/ mv cp /;
 use Getopt::Long;
 use Pod::Usage;
 
@@ -287,6 +288,11 @@ sub updateXenImage
     if ( ( -e $tmp . "/usr/bin/apt-get" ) &&
          ( -x $tmp . "/usr/bin/apt-get" ) )
     {
+	#
+	#  Copy dom0's resolv.conf to domU
+	#
+	mv("$tmp/etc/resolv.conf", "$tmp/etc/resolv.conf.old") if -f "$tmp/etc/resolv.conf";
+	cp("/etc/resolv.conf", "$tmp/etc/resolv.conf");
 
         #
         #  Now run the update command.
@@ -300,6 +306,15 @@ sub updateXenImage
         system(
             "DEBIAN_FRONTEND=noninteractive  chroot $tmp /usr/bin/apt-get upgrade --yes --force-yes"
         );
+
+	#
+	#  Restore domU's resolv.conf if needed
+	#
+        if (-f "$tmp/etc/resolv.conf") {
+            mv("$tmp/etc/resolv.conf.old", "$tmp/etc/resolv.conf");
+        } else {
+            unlink "$tmp/etc/resolv.conf";
+        }
     }
     else
     {
