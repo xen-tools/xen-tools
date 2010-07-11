@@ -71,7 +71,7 @@ sub checkFile
         next if ( $line =~ /grep|sed|echo|awk|find|policy-rc.d|chroot|logMessage/ );
         if ( $line =~ /\$/ )
         {
-            ok( $line !~ /\'/, "Non-masked line '$line'" );
+            ok( $line !~ /\'/, "Non-masked line '$line' in '$file'" );
         }
     }
     close( FILE );
