@@ -56,6 +56,6 @@ sub checkFile
     }
     close( INPUT );
 
-    is( $trailing, 0, "File has no trailing whitespace" );
+    is( $trailing, 0, "File '$file' has no trailing whitespace" );
 }
 
