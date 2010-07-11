@@ -94,7 +94,7 @@ sub testHook
             #  1:2345:respawn:/sbin/getty 38400 console
             #
             ok( $1 eq "1", "We found the first getty line." );
-            ok( $3 eq "tty1", "Which does uses the correct driver: $3" );
+            ok( $3 eq "hvc0", "Which does uses the correct driver: $3" );
         }
 
         if ( $line =~ /^(.).*getty/ )
