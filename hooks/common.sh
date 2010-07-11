@@ -226,18 +226,18 @@ installCentOS4Package ()
 #
 installPackage ()
 {
-	prefix=$1
-	package=$2
+        prefix=$1
+        package=$2
 
-	if [ -x ${prefix}/usr/bin/apt-get ] ; then
-		installDebianPackage "$@"
+        if [ -x ${prefix}/usr/bin/apt-get ] ; then
+                installDebianPackage "$@"
 
-	elif [ -x ${prefix}/usr/bin/yum ] ; then
-		installCentOS4Package "$@"
+        elif [ -x ${prefix}/usr/bin/yum ] ; then
+                installCentOS4Package "$@"
 
-	else
-		logMessage "Unable to install package ${package}; no package manager found"
-	fi
+        else
+                logMessage "Unable to install package ${package}; no package manager found"
+        fi
 }
 
 

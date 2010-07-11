@@ -288,11 +288,11 @@ sub updateXenImage
     if ( ( -e $tmp . "/usr/bin/apt-get" ) &&
          ( -x $tmp . "/usr/bin/apt-get" ) )
     {
-	#
-	#  Copy dom0's resolv.conf to domU
-	#
-	mv("$tmp/etc/resolv.conf", "$tmp/etc/resolv.conf.old") if -f "$tmp/etc/resolv.conf";
-	cp("/etc/resolv.conf", "$tmp/etc/resolv.conf");
+        #
+        #  Copy dom0's resolv.conf to domU
+        #
+        mv("$tmp/etc/resolv.conf", "$tmp/etc/resolv.conf.old") if -f "$tmp/etc/resolv.conf";
+        cp("/etc/resolv.conf", "$tmp/etc/resolv.conf");
 
         #
         #  Now run the update command.
@@ -307,9 +307,9 @@ sub updateXenImage
             "DEBIAN_FRONTEND=noninteractive  chroot $tmp /usr/bin/apt-get upgrade --yes --force-yes"
         );
 
-	#
-	#  Restore domU's resolv.conf if needed
-	#
+        #
+        #  Restore domU's resolv.conf if needed
+        #
         if (-f "$tmp/etc/resolv.conf") {
             mv("$tmp/etc/resolv.conf.old", "$tmp/etc/resolv.conf");
         } else {
@@ -453,11 +453,11 @@ sub parseCommandLineArguments
     #  Parse options.
     #
     GetOptions( "dir=s",  \$CONFIG{ 'dir' },
-		"lvm=s",   \$CONFIG{ 'lvm' },
+                "lvm=s",   \$CONFIG{ 'lvm' },
                 "evms=s", \$CONFIG{ 'evms' },
-		"help",    \$HELP,
+                "help",    \$HELP,
                 "manual", \$MANUAL,
-		"version", \$VERSION );
+                "version", \$VERSION );
 
     pod2usage(1) if $HELP;
     pod2usage( -verbose => 2 ) if $MANUAL;

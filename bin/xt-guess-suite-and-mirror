@@ -9,8 +9,8 @@ mirror for DomUs on Debian and Ubuntu Dom0s.
 
 =head1 SYNOPSIS
 
-  --suite	Show suite
-  --mirror	Show mirror
+  --suite       Show suite
+  --mirror      Show mirror
 
   Shows both if no parameter is given.
 

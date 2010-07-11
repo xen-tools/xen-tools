@@ -1339,17 +1339,17 @@ sub setupDefaultOptions
 
     # Initialize per distribution mirror defaults: Debian
     foreach my $debdist (qw(etch lenny squeeze sid testing stable unstable)) {
-	$CONFIG{ 'mirror_'.$debdist } = $CONFIG{ 'mirror' }
+        $CONFIG{ 'mirror_'.$debdist } = $CONFIG{ 'mirror' }
     }
     foreach my $debdist (qw(sarge)) {
-	$CONFIG{ 'mirror_'.$debdist } = 'http://archive.debian.org/debian';
+        $CONFIG{ 'mirror_'.$debdist } = 'http://archive.debian.org/debian';
     }
     # Initialize per distribution mirror defaults: Ubuntu
     foreach my $ubuntudist (qw(dapper hardy intrepid jaunty karmic lucid maverick)) {
-	$CONFIG{ 'mirror_'.$ubuntudist } = 'http://archive.ubuntu.com/ubuntu';
+        $CONFIG{ 'mirror_'.$ubuntudist } = 'http://archive.ubuntu.com/ubuntu';
     }
     foreach my $ubuntudist (qw(edgy feisty gutsy)) {
-	$CONFIG{ 'mirror_'.$ubuntudist } = 'http://old-releases.ubuntu.com/ubuntu';
+        $CONFIG{ 'mirror_'.$ubuntudist } = 'http://old-releases.ubuntu.com/ubuntu';
     }
     $CONFIG{ 'arch' }          = '';
     $CONFIG{ 'fs' }            = 'ext3';
@@ -1757,7 +1757,7 @@ sub checkArguments
     #  Sarge amd64 needs different default mirror
     #
     if ( $CONFIG{ 'dist' } =~ /sarge/ and
-	 $CONFIG{ 'mirror_sarge' } eq 'http://archive.debian.org/debian' )
+         $CONFIG{ 'mirror_sarge' } eq 'http://archive.debian.org/debian' )
     {
         $CONFIG{ 'mirror_sarge' } = 'http://amd64.debian.net/debian';
     }
@@ -1767,8 +1767,8 @@ sub checkArguments
     #
     my $distMirror = "mirror_" . $CONFIG{ 'dist' };
     if ( !$CONFIG{ 'mirror' } and
-	 $CONFIG{ $distMirror } and
-	 length( $CONFIG{ $distMirror } ) )
+         $CONFIG{ $distMirror } and
+         length( $CONFIG{ $distMirror } ) )
     {
         $CONFIG{ 'mirror' } = $CONFIG{ $distMirror };
     }
@@ -3402,7 +3402,7 @@ sub installSystem
     #  Propagate --debootstrap-cmd if install-method is debootstrap
     #
     if ( $CONFIG{ 'install-method' } eq 'debootstrap' and
-	 $CONFIG{ 'debootstrap-cmd' } )
+         $CONFIG{ 'debootstrap-cmd' } )
     {
         $cmd .= " --debootstrap-cmd=$CONFIG{'debootstrap-cmd'}";
     }
@@ -3554,9 +3554,9 @@ sub runCustomisationHooks
     #  Restore domU's resolv.conf if needed
     #
     if (-f "$MOUNT_POINT/etc/resolv.conf") {
-	mv("$MOUNT_POINT/etc/resolv.conf.old", "$MOUNT_POINT/etc/resolv.conf");
+        mv("$MOUNT_POINT/etc/resolv.conf.old", "$MOUNT_POINT/etc/resolv.conf");
     } else {
-	unlink "$MOUNT_POINT/etc/resolv.conf";
+        unlink "$MOUNT_POINT/etc/resolv.conf";
     }
 
     #
@@ -4028,13 +4028,13 @@ sub runCommand
     if (!defined($rcopen)) {
         logprint("Starting command '$cmd' failed: $!\n");
         logprint("Aborting\n");
-	print "See /var/log/xen-tools/$CONFIG{'hostname'}.log for details\n";
+        print "See /var/log/xen-tools/$CONFIG{'hostname'}.log for details\n";
         $FAIL = 1;
         exit 127;
     }
 
     while (my $line = <CMD>) {
-	logonly $line;
+        logonly $line;
     }
 
     my $rcclose = close(CMD);
@@ -4045,7 +4045,7 @@ sub runCommand
     {
         logprint("Running command '$cmd' failed with exit code $?.\n");
         logprint("Aborting\n");
-	print "See /var/log/xen-tools/$CONFIG{'hostname'}.log for details\n";
+        print "See /var/log/xen-tools/$CONFIG{'hostname'}.log for details\n";
         $FAIL = 1;
         exit 127;
     }

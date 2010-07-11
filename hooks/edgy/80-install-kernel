@@ -43,19 +43,19 @@ if chroot ${prefix} /usr/bin/apt-cache show $KERNEL_XEN_PKG > /dev/null 2>&1; th
     installDebianPackage ${prefix} $KERNEL_XEN_PKG
 
 else
-	logMessage Package $KERNEL_XEN_PKG is not available
-	logMessage Attempting to install the $KERNEL_PKG kernel image
-	logMessage WARNING: This kernel may not have pvops
-	if chroot ${prefix} /usr/bin/apt-cache show $KERNEL_PKG > /dev/null 2>&1; then
-		logMessage Package $KERNEL_PKG is available - installing
-	    installDebianPackage ${prefix} initramfs-tools
-	    installDebianPackage ${prefix} $KERNEL_PKG
-	else
-		logMessage Package $KERNEL_PKG is not available
-		logMessage pygrub set, but kernel could not be installed
-		logMessage Script $0 failed
-		exit 1
-	fi
+    logMessage Package $KERNEL_XEN_PKG is not available
+    logMessage Attempting to install the $KERNEL_PKG kernel image
+    logMessage WARNING: This kernel may not have pvops
+    if chroot ${prefix} /usr/bin/apt-cache show $KERNEL_PKG > /dev/null 2>&1; then
+        logMessage Package $KERNEL_PKG is available - installing
+        installDebianPackage ${prefix} initramfs-tools
+        installDebianPackage ${prefix} $KERNEL_PKG
+    else
+        logMessage Package $KERNEL_PKG is not available
+        logMessage pygrub set, but kernel could not be installed
+        logMessage Script $0 failed
+        exit 1
+    fi
 fi
 
 DOMU_KERNEL=$(basename $(ls -1 ${prefix}/boot/vmlinuz* | tail -n 1))
@@ -68,10 +68,10 @@ DOMU_ISSUE=$(sed -re "s/ *\\\.*//g" -e1q < ${prefix}/etc/issue)
 #
 
 if [ -f ${prefix}/boot/$DOMU_RAMDISK ]; then
-	logMessage initrd exists, skipping generation
+    logMessage initrd exists, skipping generation
 else
-	logMessage initrd missing, generating
-	chroot ${prefix} update-initramfs -c -k $KERNEL_REV
+    logMessage initrd missing, generating
+    chroot ${prefix} update-initramfs -c -k $KERNEL_REV
 fi
 
 #

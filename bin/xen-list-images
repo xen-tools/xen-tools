@@ -240,8 +240,8 @@ sub parseCommandLineArguments
     #
     GetOptions( "test=s", \$CONFIG{ 'prefix' },
                 "help", \$HELP,
-		"manual", \$MANUAL,
-		"version", \$VERSION );
+                "manual", \$MANUAL,
+                "version", \$VERSION );
 
     pod2usage(1) if $HELP;
     pod2usage( -verbose => 2 ) if $MANUAL;

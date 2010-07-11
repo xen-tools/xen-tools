@@ -256,8 +256,8 @@ if ( defined( $CONFIG{ 'install-method' } ) &&
         #  Test that we have some "standard" files present.
         #
 
-	checkForCommonFilesInChroot($CONFIG{ 'location' },
-				    "installed system");
+        checkForCommonFilesInChroot($CONFIG{ 'location' },
+                                    "installed system");
 
         #
         #  All done.
@@ -538,13 +538,13 @@ sub checkForCommonFilesInChroot {
     my ($chroot, $what) = @_;
     foreach my $file (qw( /bin/ls /bin/cp ))
     {
-	if ( !-x $chroot.$file )
-	{
-	    print STDERR <<EOT;
+        if ( !-x $chroot.$file )
+        {
+            print STDERR <<EOT;
 WARNING ($0): The $what at $chroot doesn\'t seem to be a full system.
 WARNING ($0): The $what is missing the common file: $file.
 EOT
-	}
+        }
     }
 }
 
@@ -661,7 +661,7 @@ sub do_copy
     #  Check if the copy source has at least some "standard" files present.
     #
     checkForCommonFilesInChroot($CONFIG{ 'install-source' },
-				"installation source");
+                                "installation source");
 
     #
     #  Find the copy command to run from the configuration file.
@@ -706,15 +706,15 @@ sub do_debootstrap
     my $cachedir = $CONFIG{ 'cachedir' };
     if ( !$cmd )
     {
-	if (-x '/usr/sbin/debootstrap') {
-	    $cmd = '/usr/sbin/debootstrap';
-	} elsif (-x '/usr/sbin/cdebootstrap') {
-	    $cmd = '/usr/sbin/cdebootstrap';
-	} else {
-	    print STDERR "Found neither debootstrap nor cdebootstrap and no --debootstrap-cmd given\n";
-	    exit 1;
-	}
-	print "Using $cmd as debootstrap command\n";
+        if (-x '/usr/sbin/debootstrap') {
+            $cmd = '/usr/sbin/debootstrap';
+        } elsif (-x '/usr/sbin/cdebootstrap') {
+            $cmd = '/usr/sbin/cdebootstrap';
+        } else {
+            print STDERR "Found neither debootstrap nor cdebootstrap and no --debootstrap-cmd given\n";
+            exit 1;
+        }
+        print "Using $cmd as debootstrap command\n";
     }
 
 

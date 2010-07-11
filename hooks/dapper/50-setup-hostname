@@ -49,7 +49,7 @@ if [ -z "${copyhosts}" ]; then
     #  Copy localhost
     #
     cat > ${prefix}/etc/hosts <<EOF
-127.0.0.1	localhost
+127.0.0.1    localhost
 EOF
     #
     #  Make sure our hostname and FQDN is resolvable
@@ -59,11 +59,11 @@ EOF
         #  If dhcp is diabled, FQDN should resolve to our IP
         #
         cat >> ${prefix}/etc/hosts <<EOF
-${ip1}	$GUEST_FQDN $GUEST_HOSTNAME
+${ip1}    $GUEST_FQDN $GUEST_HOSTNAME
 EOF
     else
         cat >> ${prefix}/etc/hosts <<EOF
-127.0.1.1	$GUEST_FQDN $GUEST_HOSTNAME
+127.0.1.1    $GUEST_FQDN $GUEST_HOSTNAME
 EOF
     fi
 
@@ -86,12 +86,12 @@ else
     # New entry.
     if [ -z "${dhcp}" ]; then
         cat >> ${prefix}/etc/hosts <<EOF
-${ip1}	$GUEST_FQDN $GUEST_HOSTNAME
+${ip1}    $GUEST_FQDN $GUEST_HOSTNAME
 
 EOF
     else
     cat >> ${prefix}/etc/hosts <<EOF
-127.0.1.1	$GUEST_FQDN $GUEST_HOSTNAME
+127.0.1.1    $GUEST_FQDN $GUEST_HOSTNAME
 
 EOF
     fi
@@ -114,7 +114,7 @@ if [ -z "${dhcp}" ]; then
         if [ -z "${nohosts}" ]; then
 
             logMessage Adding $GUEST_FQDN and $GUEST_HOSTNAME to /etc/hosts on the host
-            echo "${ip1}	$GUEST_FQDN $GUEST_HOSTNAME" >> /etc/hosts
+            echo "${ip1}    $GUEST_FQDN $GUEST_HOSTNAME" >> /etc/hosts
 
             #
             #  If we've updated the /etc/hosts file on the host machine

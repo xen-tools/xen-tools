@@ -11,8 +11,8 @@ use Test::More tests => 1;
 use Xen::Tools;
 
 SKIP: {
-	skip "Xen::Tools is not used for now", 1;	
+    skip "Xen::Tools is not used for now", 1;    
 
-	my $xt = Xen::Tools->new( hostname => 'xen-tools-test' );
-	ok( $xt->isa('Xen::Tools') );
+    my $xt = Xen::Tools->new( hostname => 'xen-tools-test' );
+    ok( $xt->isa('Xen::Tools') );
 }
