@@ -51,7 +51,7 @@ Specify the LVM volume group where images were previously saved.
 Read the manual for this script.
 
 =item B<--test>
-Don not complain, or exit, if the script is not executed by the root user.
+Do not complain, or exit, if the script is not executed by the root user.
 
 =item B<--version>
 Show the version number and exit.
