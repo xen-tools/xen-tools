@@ -110,7 +110,7 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
                 Override the default password length of 8 and generate a
                 random password of length N. Note: this only works in
                 conjunction with --genpass
-   
+
    --password=passphrase
                 Set the root password for the new guest.
 
