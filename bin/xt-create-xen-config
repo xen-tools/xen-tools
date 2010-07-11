@@ -151,6 +151,7 @@ my @PARTITIONS = undef;
 #  Default options
 #
 $CONFIG{ 'template' } = '/etc/xen-tools/xm.tmpl';
+$CONFIG{ 'extension' } = '.cfg';
 
 
 #
@@ -334,12 +335,11 @@ sub importPartitionsFromEnvironment
 
 sub createXenConfig
 {
-
     #
     #  The output file we're going to process.
     #
     my $file =
-      $CONFIG{ 'output' } . '/' . $ENV{ 'hostname' } . $ENV{ 'extension' };
+      $CONFIG{ 'output' } . '/' . $ENV{ 'hostname' } . $CONFIG{ 'extension' };
 
     #
     #  The template we're going to read from.
