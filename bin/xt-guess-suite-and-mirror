@@ -9,12 +9,16 @@ mirror for DomUs on Debian and Ubuntu Dom0s.
 
 =head1 SYNOPSIS
 
-  xt-guess-suite-and-mirror [-s] [-m]
-
-  -s  show suite
-  -m  show mirror
+  --suite	Show suite
+  --mirror	Show mirror
 
   Shows both if no parameter is given.
+
+  Help Options:
+
+   --help       Show the help information for this script.
+   --manual     Show the manual for this script.
+   --version    Show the version number and exit.
 
 =cut
 
@@ -86,21 +90,20 @@ my $want_mirror  = 0;
 my $want_suite   = 0;
 my $want_version = 0;
 my $want_help    = 0;
-my $want_usage    = 0;
+my $want_manual  = 0;
 
-my $result = GetOptions ('mirror'  => \$want_mirror,
+my $result = GetOptions( 'mirror'  => \$want_mirror,
                          'suite'   => \$want_suite,
                          'version' => \$want_version,
-                         'usage'    => \$want_usage,
-                         'help'    => \$want_help);
+                         'manual'  => \$want_manual,
+                         'help'    => \$want_help );
 
 if ($want_help) {
-    print "Usage: $0 [-m] [-s]\n";
-    exit 0;
+    pod2usage(0);
 }
 
-if ($want_usage) {
-    pod2usage(0);
+if ($want_manual) {
+    pod2usage( -verbose => 2 );
 }
 
 if (-r $sources_list_file) {
