@@ -156,6 +156,7 @@ use strict;
 use English;
 use Getopt::Long;
 use Pod::Usage;
+use File::Path;
 
 
 #
@@ -517,7 +518,7 @@ sub deleteXenImage
                 print "Would delete: $prefix$hostname\n";
             } else {
                 print "Removing: " . $prefix . $hostname . "\n";
-                rmdir( $prefix . $hostname );
+                rmtree( $prefix . $hostname );
             }
         }
     }
