@@ -608,7 +608,7 @@ Create a Xen configuration file in so that xm can start the new domain.
 
   To minimize this the .deb files which are downloaded into the
  new instance are cached by default upon the host, in the directory
- /var/cache/apt/archives or, if this does not exist, in 
+ /var/cache/apt/archives or, if this does not exist, in
  /var/cache/xen-tools/archives. This can be overridden with the
  --cache-dir command-line and configuration option.
 
@@ -1547,7 +1547,6 @@ sub parseCommandLineArguments
             "swap-dev=s",  \$install{ 'swap-dev' },
             "serial_device=s", \$CONFIG{ 'serial_device' },
             "disk_device=s", \$CONFIG{ 'disk_device' },
-          
 
             # Hosts options
             "nohosts",   \$CONFIG{ 'nohosts' },
