@@ -71,7 +71,7 @@ close( IMAGE );
 #  $dir/domains/$hostname
 #  $dir/domains/$hostname/disk.img
 #  $dir/domains/$hostname/swap.img
-# 
+#
 #  So we need to run the deletion script and verify the images
 # are removed correctly.
 #
