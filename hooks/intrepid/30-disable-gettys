@@ -27,9 +27,11 @@ logMessage Script $0 starting
 #
 #  Remove the links for upstart
 #
-rm ${prefix}/etc/event.d/tty[!1]
-sed -i -e s/tty1/hvc0/ ${prefix}/etc/event.d/tty1
-mv ${prefix}/etc/event.d/tty1 ${prefix}/etc/event.d/hvc0
+rm -f ${prefix}/etc/event.d/tty[!1]
+[ -f ${prefix}/etc/event.d/tty1 ] && {
+	sed -i -e s/tty1/hvc0/ ${prefix}/etc/event.d/tty1
+	mv ${prefix}/etc/event.d/tty1 ${prefix}/etc/event.d/hvc0
+}
 [ -f ${prefix}/etc/inittab ] && sed -i -e 's/^\([2-6].*:respawn*\)/#\1/' -e 's/^T/#\t/' -e 's/tty1$/hvc0/' ${prefix}/etc/inittab
 
 #
