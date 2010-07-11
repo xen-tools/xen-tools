@@ -30,7 +30,7 @@ logMessage Script $0 starting
 rm ${prefix}/etc/init/tty[!1].conf
 sed -i -e s/tty1/hvc0/ ${prefix}/etc/init/tty1.conf
 mv ${prefix}/etc/init/tty1.conf  ${prefix}/etc/init/hvc0.conf
-
+[ -f ${prefix}/etc/inittab ] && sed -i -e 's/^\([2-6].*:respawn*\)/#\1/' -e 's/^T/#\t/' -e 's/tty1$/hvc0/' ${prefix}/etc/inittab
 
 #
 #  Are we using an alternative serial device?
