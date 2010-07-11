@@ -11,7 +11,7 @@
 
 use strict;
 use File::Find;
-use Test::More;
+use Test::More qw/ no_plan /;
 
 eval "use Moose";
 plan skip_all => "Moose required for testing Perl syntax"
@@ -23,8 +23,6 @@ plan skip_all => "Moose required for testing Perl syntax"
 # and call 'checkFile' with the name.
 #
 find( { wanted => \&checkFile, no_chdir => 1 }, '.' );
-
-done_testing();
 
 #
 #  Check a file.
