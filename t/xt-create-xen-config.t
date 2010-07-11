@@ -43,9 +43,9 @@ noMentionOf( "dhcp",
 #
 #  SCSI based systems:
 #
-testOutputContains( "sda1",
+testOutputContains( "xvda",
                     memory => 128, ip1 => '192.168.1.1', dir => '/tmp' );
-testOutputContains( "/dev/sda1 ro",
+testOutputContains( "/dev/xvda1 ro",
                     memory => 128, ip1 => '192.168.1.1', dir => '/tmp' );
 noMentionOf( "hda1",
              memory => 128, ip1 => '192.168.1.1', dir => '/tmp' );
@@ -69,20 +69,28 @@ testOutputContains( "128",
 testOutputContains( "211",
                     memory => 211, dhcp => 1, dir => '/tmp' );
 testOutputContains( "912",
-                    memory => 912, dhcp => 1, lvm => 'skx-vg0' );
+                    memory => 912, dhcp => 1, dir => '/tmp' );
 
 
 #
 #  Test LVM stuff.
 #
 testOutputContains( "phy:",
-                    memory => 128, dhcp => 1, lvm => 'skx-vg0' );
+                    memory => 128, dhcp => 1, lvm => 'skx-vg0',
+                    PARTITION1 => 'disk:4Gb:ext3:/:noatime,nodiratime,errors=remount-ro:phy::/dev/skx-vg0/disk',
+                    PARTITION2 => 'swap:128Mb:swap:::phy::/dev/skx-vg0/swap' );
 testOutputContains( "skx-vg0",
-                    memory => 128, dhcp => 1, lvm => 'skx-vg0' );
+                    memory => 128, dhcp => 1, lvm => 'skx-vg0',
+                    PARTITION1 => 'disk:4Gb:ext3:/:noatime,nodiratime,errors=remount-ro:phy::/dev/skx-vg0/disk',
+                    PARTITION2 => 'swap:128Mb:swap:::phy::/dev/skx-vg0/swap' );
 noMentionOf( "/tmp",
-                    memory => 128, dhcp => 1, lvm => 'skx-vg0' );
+                    memory => 128, dhcp => 1, lvm => 'skx-vg0',
+                    PARTITION1 => 'disk:4Gb:ext3:/:noatime,nodiratime,errors=remount-ro:phy::/dev/skx-vg0/disk',
+                    PARTITION2 => 'swap:128Mb:swap:::phy::/dev/skx-vg0/swap' );
 noMentionOf( "domains",
-                    memory => 128, dhcp => 1, lvm => 'skx-vg0' );
+                    memory => 128, dhcp => 1, lvm => 'skx-vg0',
+                    PARTITION1 => 'disk:4Gb:ext3:/:noatime,nodiratime,errors=remount-ro:phy::/dev/skx-vg0/disk',
+                    PARTITION2 => 'swap:128Mb:swap:::phy::/dev/skx-vg0/swap' );
 
 
 #
@@ -123,6 +131,11 @@ sub runCreateCommand
     #
     $params{'hostname'} = 'foo.my.flat';
     $params{'noswap'} = 1;
+    $params{'NUMPARTITIONS'} = 2;
+    $params{'PARTITION1'} = 'disk:4Gb:ext3:/:noatime,nodiratime,errors=remount-ro:file::/tmp/domains/foo.my.flat/disk.img'
+    	unless exists $params{'PARTITION1'};
+    $params{'PARTITION2'} = 'swap:128Mb:swap:::file::/tmp/domains/foo.my.flat/swap.img'
+    	unless exists $params{'PARTITION2'};
 
     #
     #  Create a temporary directory, and make sure it is present.
@@ -191,7 +204,7 @@ sub testOutputContains
         $found += 1;
     }
 
-    ok( $found > 0, "We found the output we wanted: $text" );
+    ok( $found > 0, "We found the output we wanted: $text ($output)" );
 }
 
 
