@@ -106,7 +106,7 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --genpass=1  Generate a random root password
 
-   --genpass-len=N
+   --genpass_len=N
                 Override the default password length of 8 and generate a
                 random password of length N. Note: this only works in
                 conjunction with --genpass
@@ -1590,7 +1590,7 @@ sub parseCommandLineArguments
             "pygrub",       \$CONFIG{ 'pygrub' },
             "passwd",       \$CONFIG{ 'passwd' },
             "genpass=i",    \$CONFIG{ 'genpass' },
-            "genpass-len=i", \$CONFIG{ 'genpass_len' },
+            "genpass_len=i", \$CONFIG{ 'genpass_len' },
             "password=s",   \$CONFIG{ 'password' },
             "partitions=s", \$CONFIG{ 'partitions' },
             "role=s",       \$CONFIG{ 'role' },
