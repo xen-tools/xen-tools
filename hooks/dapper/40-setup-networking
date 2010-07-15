@@ -118,9 +118,9 @@ E_O_STATIC
     # temporarily to /etc/resolv.conf.old. Use that file, it
     # will be restored after hooks are run.
     #
-    if [ '*' != "*$nameserver" ]; then
+    if [ '' != "$nameserver" ]; then
 	rm -f ${prefix}/etc/resolv.conf.old
-	for ns in $nameserver; do 
+	for ns in $nameserver; do
 	    echo "nameserver $ns" >>${prefix}/etc/resolv.conf.old
 	done
     fi
