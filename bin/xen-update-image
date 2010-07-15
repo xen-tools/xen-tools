@@ -452,10 +452,12 @@ sub parseCommandLineArguments
 
     #  Parse options.
     #
-    GetOptions( "dir=s",  \$CONFIG{ 'dir' },  "lvm=s",   \$CONFIG{ 'lvm' },
-                "evms=s", \$CONFIG{ 'evms' }, "help",    \$HELP,
-                "manual", \$MANUAL,           "version", \$VERSION
-              );
+    GetOptions( "dir=s",  \$CONFIG{ 'dir' },
+		"lvm=s",   \$CONFIG{ 'lvm' },
+                "evms=s", \$CONFIG{ 'evms' },
+		"help",    \$HELP,
+                "manual", \$MANUAL,
+		"version", \$VERSION );
 
     pod2usage(1) if $HELP;
     pod2usage( -verbose => 2 ) if $MANUAL;
