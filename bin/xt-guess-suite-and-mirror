@@ -92,11 +92,11 @@ my $want_version = 0;
 my $want_help    = 0;
 my $want_manual  = 0;
 
-my $result = GetOptions( 'mirror'  => \$want_mirror,
-                         'suite'   => \$want_suite,
-                         'version' => \$want_version,
-                         'manual'  => \$want_manual,
-                         'help'    => \$want_help );
+my $result = GetOptions( 'mirror|m' => \$want_mirror,
+                         'suite|s'  => \$want_suite,
+                         'version'  => \$want_version,
+                         'manual'   => \$want_manual,
+                         'help'     => \$want_help );
 
 if ($want_help) {
     pod2usage(0);
