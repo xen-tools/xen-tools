@@ -1552,6 +1552,9 @@ sub parseCommandLineArguments
             # Hosts options
             "nohosts",   \$CONFIG{ 'nohosts' },
             "copyhosts", \$CONFIG{ 'copyhosts' },
+            # Deprecated legacy options for backwards compatibility
+            "no-hosts",   \$CONFIG{ 'nohosts' },
+            "copy-hosts", \$CONFIG{ 'copyhosts' },
 
             # Networking options
             "dhcp",         \$CONFIG{ 'dhcp' },
