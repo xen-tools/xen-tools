@@ -59,7 +59,7 @@ sub testFile
     #
     #  Test we discovered some documented options.
     #
-    ok( $#documented > 1, "We found some options documented." );
+    ok( $#documented > 1, "We found some options documented in $file." );
 
 
 
@@ -105,11 +105,11 @@ sub testFile
 #print " - strip comments : $o ";
 
             #
-            #  Remove "" from around it.
+            #  Remove "" or '' around it.
             #
-            if ( $o =~ /"([^"]+)"/ )
+            if ( $o =~ /(["'])([^"']+)\1/ )
             {
-                $o = $1;
+                $o = $2;
             }
 #print " - remove quotes : $o ";
             #
