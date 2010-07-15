@@ -43,6 +43,10 @@ Contributions
   Kirk Ismay <captain [at] com.netidea>
    - Added hook for automatic CFEngine installation.
 
+  Stéphane Jourdois <sjourdois [at] com.gmail>
+   - Fixed a lot of typos and other small bugs
+   - Fixed the test suite
+
   Sascha Kettler <kettler [at] net.gmx>
    - Implemented support for arbitary partitioning schemes.
 
