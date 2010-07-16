@@ -305,7 +305,7 @@ sub importPartitionsFromEnvironment
 {
     @PARTITIONS = ();
 
-    return unless exists $ENV{'NUMPARTITIONS'};
+    return unless exists $ENV{ 'NUMPARTITIONS' };
     for ( my $i = 1 ; $i <= $ENV{ 'NUMPARTITIONS' } ; $i++ )
     {
         my @parts = split( /:/, $ENV{ 'PARTITION' . $i }, 7 );
