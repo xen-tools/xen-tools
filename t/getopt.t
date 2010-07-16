@@ -125,13 +125,18 @@ sub testFile
             #
             next if ( $o =~ /^[ \t]*$/ );
 
+            #
+            #  Now split at pipe
+            #
+            foreach my $osplit (split(/\|/, $o)) {
 
-            #
-            #  Phew.  Now we're done.
-            #
-            #  This option '$o' is something we call GetOptions with.
-            #
-            $accepted{$o} = 1;
+                #
+                #  Phew.  Now we're done.
+                #
+                #  This option '$osplit' is something we call GetOptions with.
+                #
+                $accepted{$osplit} = 1;
+            }
         }
     }
 
