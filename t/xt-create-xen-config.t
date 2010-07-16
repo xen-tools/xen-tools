@@ -133,9 +133,9 @@ sub runCreateCommand
     $params{'noswap'} = 1;
     $params{'NUMPARTITIONS'} = 2;
     $params{'PARTITION1'} = 'disk:4Gb:ext3:/:noatime,nodiratime,errors=remount-ro:file::/tmp/domains/foo.my.flat/disk.img'
-    	unless exists $params{'PARTITION1'};
+        unless exists $params{'PARTITION1'};
     $params{'PARTITION2'} = 'swap:128Mb:swap:::file::/tmp/domains/foo.my.flat/swap.img'
-    	unless exists $params{'PARTITION2'};
+        unless exists $params{'PARTITION2'};
 
     #
     #  Create a temporary directory, and make sure it is present.
