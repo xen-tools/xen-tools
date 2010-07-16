@@ -149,7 +149,7 @@ sub _init_fh {
   my $logFile =
     File::Spec->catfile( $self->logpath(), $self->hostname() . '.log' );
 
-  system( 'mkdir -p', $self->logpath() ) unless -d $self->logpath();
+  system( qw(mkdir -p), $self->logpath() ) unless -d $self->logpath();
 
   carp "Couldn't create log directory: $!" unless $? == 0;
   
