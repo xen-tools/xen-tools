@@ -301,6 +301,9 @@ sub readConfigurationFile
 {
     my ($file) = (@_);
 
+    # Don't read the file if it doesn't exist.
+    return if ( !-e $file );
+
     open( FILE, "<", $file ) or die "Cannot read file '$file' - $!";
 
     my $line = "";
