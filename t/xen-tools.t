@@ -8,7 +8,14 @@ use strict;
 use warnings;
 use Test::More tests => 1, skip_all => 'Xen::Tools is not used for now';
 
-use Xen::Tools;
+SKIP: {
+    skip "Test only works as root", 1 if $< > 0;
 
-my $xt = Xen::Tools->new( hostname => 'xen-tools-test' );
-ok( $xt->isa('Xen::Tools') );
+    eval {
+	use Xen::Tools;
+
+	my $xt = Xen::Tools->new( hostname => 'xen-tools-test' );
+
+	ok( $xt->isa('Xen::Tools') );
+    }
+}
