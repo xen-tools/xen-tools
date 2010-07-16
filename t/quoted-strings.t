@@ -1,6 +1,7 @@
 #!/usr/bin/perl -w
 #
-#  Test that every bash script using variables uses " not '.
+#  Test that every bash script using variables uses " not ' around the
+#  variable.
 #
 # Steve
 # --
@@ -71,7 +72,7 @@ sub checkFile
         next if ( $line =~ /grep|sed|echo|awk|find|policy-rc.d|chroot|logMessage/ );
         if ( $line =~ /\$/ )
         {
-            ok( $line !~ /\'/, "Non-masked line '$line' in '$file'" );
+            ok( $line !~ /\'.*\$\.*\'/, "Non-masked line '$line' in '$file'" );
         }
     }
     close( FILE );
