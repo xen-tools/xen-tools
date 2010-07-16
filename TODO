@@ -129,6 +129,11 @@ Maybe for a 4.3 or 5.0 release
    "type" of configuration you want, and a set of options specific to
    that flag could be parsed from xen-tools.conf
 
+* Refactor the code for less code duplication
+
+   Like e.g. readConfigurationFile in xen-create-image and
+   xen-resize-image which are not completely identical.
+
 Stuff from Steve's TODO list / Generic TODOs
 --------------------------------------------
 
