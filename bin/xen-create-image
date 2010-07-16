@@ -236,7 +236,7 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --nameserver="123.456.789.ABC 123.456.789.DEF"
                 Setup the nameserver of the machine, multiple space
-		separated nameservers are allowed.
+                separated nameservers are allowed.
 
    --bridge=brname
                 Optionally, set a specific bridge for the new instance.

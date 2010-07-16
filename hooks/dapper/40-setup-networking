@@ -119,10 +119,10 @@ E_O_STATIC
     # will be restored after hooks are run.
     #
     if [ '' != "$nameserver" ]; then
-	rm -f ${prefix}/etc/resolv.conf.old
-	for ns in $nameserver; do
-	    echo "nameserver $ns" >>${prefix}/etc/resolv.conf.old
-	done
+        rm -f ${prefix}/etc/resolv.conf.old
+        for ns in $nameserver; do
+            echo "nameserver $ns" >>${prefix}/etc/resolv.conf.old
+        done
     fi
 }
 
