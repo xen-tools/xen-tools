@@ -26,10 +26,8 @@ Minor bugs to fix and features to add before a 4.2 release
 
    Currently failing:
 
-   t/getopt.t
-   t/xen-delete-image.t
-   t/xen-tools.t
-   t/xt-create-xen-config.t
+   t/pod-coverage.t (fails on Xen::Tools and Xen::Tools::Log despite
+   they do have POD. Strange.)
 
 * Setup locales in the hooks?
 
