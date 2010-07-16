@@ -12,10 +12,10 @@ SKIP: {
     skip "Test only works as root", 1 if $< > 0;
 
     eval {
-	use Xen::Tools;
+        use Xen::Tools;
 
-	my $xt = Xen::Tools->new( hostname => 'xen-tools-test' );
+        my $xt = Xen::Tools->new( hostname => 'xen-tools-test' );
 
-	ok( $xt->isa('Xen::Tools') );
+        ok( $xt->isa('Xen::Tools') );
     }
 }
