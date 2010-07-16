@@ -42,6 +42,7 @@ sub checkFile
 
     # We're only testing things beneath hooks
     return if ( $file !~ /hooks/ );
+    return if ( $file =~ /\.git/ );
 
     # See if it is a shell script.
     my $isShell = 0;
