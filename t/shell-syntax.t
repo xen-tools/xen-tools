@@ -34,26 +34,28 @@ sub checkFile
     # We don't care about directories
     return if ( ! -f $file );
 
-    # Finally mercurial files are fine.
-    return if ( $file =~ /\.(hg|git)\// );
+    # We don't care about empty files
+    return unless -s $file;
+
+    # Finally mercurial/git files are fine.
+    return if ( $file =~ /^\.\/\.(hg|git)\// );
 
     # See if it is a shell script.
     my $isShell = 0;
 
-    # Read the file.
+    # Read the shebang
     open( INPUT, "<", $file );
-    foreach my $line ( <INPUT> )
-    {
-        if ( ( $line =~ /\/bin\/sh/ ) ||
-             ( $line =~ /\/bin\/bash/ ) )
-        {
-            $isShell = 1;
-        }
-    }
+    my $line = <INPUT>;
     close( INPUT );
 
+    # Check if it is really a shell file
+    if ( $line =~ /^#! ?\/bin\/(ba)?sh/ )
+    {
+        $isShell = 1;
+    }
+
     #
-    #  Return if it wasn't a perl file.
+    #  Return if it wasn't a shell file.
     #
     return if ( ! $isShell );
 
