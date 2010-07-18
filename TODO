@@ -12,8 +12,6 @@ Minor bugs to fix and features to add before a 4.2 release
 - Set Fail in more situations where the script has clearly failed
   i.e.: lvm exists
 
-* Create "more random" passwords and salts
-
 * Test and support more file system types.
 
    Actually this should be pretty simple now that the parameters are
@@ -73,13 +71,11 @@ Maybe for a 4.3 or 5.0 release
    Can't remove open logical volume "acromantula-domu1-disk" this should be a
    matter of unmounting the mounted volume from /tmp.
 
-* Non-Interactive Password Handling
+* Create "more random" passwords and salts
 
-   Option to generate passwords (check pwgen, apg, makepasswd, and
-   gpw which of them are best suited for generating complete
-   /etc/passwd and /etc/shadow lines). The password should be echo'ed
-   after installation in a way that can be easily grep'ed into other
-   scripts.
+   Currently passwords are using the passwd function of OpenSSL which
+   at the moment can only generate md5 hashes. The passwords can
+   still be made quite strong though.
 
 * Generic grub support
 
