@@ -1,12 +1,28 @@
-.hg
-.hgtags
-ChangeLog
+# Note! Please use 'git ls-files -i --exclude-standard'
+# command after changing this file, to see if there are
+# any tracked files which get ignored after the change.
+
+# all dotfiles
+.*
+# but we _wan't_ those dot-files
+!.gitignore
+!.hgignore
+
+# ChangeLog is generated during make
+/ChangeLog
+
+# those are generated during debian package build
+/build-stamp
+/configure-stamp
+/man
+/debian/files
+/debian/xen-tools
+/debian/xen-tools.debhelper.log
+/debian/xen-tools.substvars
+
+# git-generated patches
+/*.patch
+
+# some backups
 *~
-build-stamp
-configure-stamp
-man
-debian/files
-debian/xen-tools
-debian/xen-tools.debhelper.log
-debian/xen-tools.substvars
-t/modules.t
+*.orig
