@@ -85,6 +85,11 @@ Maybe for a 4.3 or 5.0 release
    new kernel is installed and will also use the domU distro's menu.lst
    conform.
 
+* pv-grub support
+
+   This is a ways away and will probably start with a xen-pv-grub
+   package.
+
 * Move the hooks directory to /etc/xen-tools/ to officially allow
    added and modified hooks.
 
@@ -111,7 +116,7 @@ Maybe for a 4.3 or 5.0 release
    To specify a directory of public keys, parsing the hostnames
    parsing the usernames from the ssh comment line
 
-* More generic hooks
+* More generic roles
 
    Deploy a web server or setup ssmtp directly via flag when setting up
    the machine. Open to suggestions, should just be some general use-cases
@@ -128,6 +133,12 @@ Maybe for a 4.3 or 5.0 release
 
    Like e.g. readConfigurationFile in xen-create-image and
    xen-resize-image which are not completely identical.
+
+* Parse numerical parameters transparently for the user
+
+   The user shouldn't have to know weather he should specify size
+   as <size>G or <size>Gb or <size>. This should be parsed without
+   user interaction and rely on a common format.
 
 Stuff from Steve's TODO list / Generic TODOs
 --------------------------------------------
