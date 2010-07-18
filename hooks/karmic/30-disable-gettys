@@ -28,7 +28,7 @@ logMessage Script $0 starting
 #  Remove the links for upstart
 #
 rm -f ${prefix}/etc/init/tty[!1].conf
-[ -f ${prefix}/etc/event.d/tty1 ] && {
+[ -f ${prefix}/etc/init/tty1.conf ] && {
     sed -i -e s/tty1/hvc0/ ${prefix}/etc/init/tty1.conf
     mv ${prefix}/etc/init/tty1.conf  ${prefix}/etc/init/hvc0.conf
 }
