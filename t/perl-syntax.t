@@ -41,6 +41,12 @@ sub checkFile
     # Nor about Makefiles
     return if ( $file =~ /\/Makefile$/ );
 
+    # Nor about git files
+    return if ( $file =~ /^\.\/\.git\// );
+
+    # Nor about temporary files
+    return if ( $file =~ m{/\.[^/]+$} );
+
     # `modules.sh` is a false positive.
     return if ( $file =~ /modules.sh$/ );
 
