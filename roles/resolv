@@ -1,0 +1,44 @@
+#!/bin/sh
+#
+#  This role helps to customize guest's /etc/resolv.conf
+#
+
+prefix=$1
+
+#
+#  Source our common functions - this will let us install a Debian package.
+#
+if [ -e /usr/lib/xen-tools/common.sh ]; then
+    . /usr/lib/xen-tools/common.sh
+else
+    echo "Installation problem"
+fi
+
+
+#
+# Log our start
+#
+logMessage Script $0 starting
+
+
+#
+# WARNING :
+#
+# resolv.conf is backed up as resolv.conf.old during roles execution to
+# permit the chrooted guest to be able to resolve during installation.
+# Use resolv.conf.old name during hooks, it will be correctly renamed
+# after hooks execution
+#
+
+#
+# Create Guest's resolv.conf as resolv.conf.old (see WARNING before) :
+#
+cat <<RESOLV_CONF_EOF >${prefix}/etc/resolv.conf.old
+nameserver 192.168.1.1
+#search domain.tld
+RESOLV_CONF_EOF
+
+#
+#  Log our finish
+#
+logMessage Script $0 finished

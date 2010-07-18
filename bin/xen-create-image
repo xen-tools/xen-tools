@@ -237,6 +237,8 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --nameserver="123.456.789.ABC 123.456.789.DEF"
                 Setup the nameserver of the machine, multiple space
                 separated nameservers are allowed.
+                If not provided, Dom0's /etc/resolv.conf will be copied
+                to guest.
 
    --bridge=brname
                 Optionally, set a specific bridge for the new instance.
@@ -377,7 +379,6 @@ Create a Xen configuration file in so that xm can start the new domain.
   gateway    = 192.168.1.1
   broadcast  = 192.168.1.255
   netmask    = 255.255.255.0
-  nameserver = 192.168.1.1
 
 
   #
@@ -1406,6 +1407,11 @@ sub setupDefaultOptions
     $CONFIG{ 'mount_fs_ext4' }     = '-t ext4';
     $CONFIG{ 'mount_fs_xfs' }      = '-t xfs';
     $CONFIG{ 'mount_fs_reiserfs' } = '-t reiserfs';
+
+    #
+    #  Network options.
+    #
+    $CONFIG{ 'nameserver' } = '';
 
 }
 

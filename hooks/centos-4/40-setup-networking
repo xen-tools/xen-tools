@@ -83,6 +83,8 @@ E_O_STATIC
         for ns in $nameserver; do
             echo "nameserver $ns" >>${prefix}/etc/resolv.conf.old
         done
+    else
+        cp /etc/resolv.conf ${prefix}/etc/resolv.conf.old
     fi
 else
     cat <<E_O_DHCP >${prefix}/etc/sysconfig/network-scripts/ifcfg-eth0
