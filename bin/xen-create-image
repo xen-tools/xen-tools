@@ -1318,6 +1318,8 @@ sub setupDefaultOptions
     $CONFIG{ 'kernel' }  = '';
     $CONFIG{ 'modules' } = '';
     $CONFIG{ 'initrd' }  = '';
+    $CONFIG{ 'serial_device' } = 'hvc0';
+    $CONFIG{ 'disk_device' }   = 'xvda';
 
     #
     # Sizing options.
@@ -1500,6 +1502,134 @@ sub readConfigurationFile
 
 =begin doc
 
+  Validate options and do what is necessary with them.
+
+=end doc
+
+=cut
+
+sub checkOption
+{
+    my ($option, $value) = @_;
+
+    # Define argument types
+    my %types = (
+        integerWithSuffix => {
+            check   => qr/^[0-9.]+[GgMmKk]b?$/,
+            message => "takes a suffixed integer.\n",
+        },
+        distribution => {
+            check   => sub { -d "/usr/lib/xen-tools/$_[0].d" },
+            message => "takes a distribution name " .
+                       "(see /usr/lib/xen-tools for valid values).\n",
+        },
+        imageType => {
+            check   => qr/^sparse|full$/,
+            message => "must be 'sparse' or 'full'.\n",
+        },
+        existingFile => {
+            check   => sub { -e $_[0] },
+            message => "must be an existing file.\n",
+        },
+        existingDir => {
+            check   => sub { -d $_[0] },
+            message => "must be an existing directory.\n",
+        },
+        serialDev => {
+            check   => qr/^(?:\/dev\/)?(?:tty|hvc)[0-9]+$/,
+            message => "must be a serial device (tty*, hvc*).\n",
+        },
+        diskDev => {
+            check   => qr/^(?:\/dev\/)?(?:tty|hvc)[0-9]+$/,
+            message => "must be a disk device (tty*, hvc*).\n",
+        },
+        ipv4 => {
+            check   => qr/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
+            message => "must be valid IPv4.\n",
+        },
+        hostname => {
+            check   => qr/^[a-z0-9][a-z0-9.-]{254}$/i,
+            message => "must be a valid hostname.\n",
+        },
+        supportedFs => {
+            check   => qr/^(ext[234]|xfs|reiserfs)$/,
+            message => "must be a supported filesystem (ext2, ext3, ext4, xfs or reiserfs).\n",
+        },
+        yesNo => {
+            check   => qr/^yes|no$/i,
+            message => "must be 'yes' or 'no'.\n",
+        },
+        zeroOne => {
+            check   => qr/^0|1$/i,
+            message => "must be '0' or '1'.\n",
+        },
+        configFile => {
+            check   => sub { -e $_[0] or -e "/etc/xen-tools/" . $_[0] },
+            message => "must be an existing file.\n",
+        },
+        filename => {
+            check   => qr/^[a-z0-9_.-]*$/,
+            message => "must be a valid filename.\n",
+        },
+    );
+
+    # Define what argument each option accepts.
+    # Arguments for options not listed here will always be accepted.
+    my %optionsTypes = (
+        size          => 'integerWithSuffix',
+        dist          => 'distribution',
+        swap          => 'integerWithSuffix',
+        image         => 'imageType',
+        memory        => 'integerWithSuffix',
+        kernel        => 'existingFile',
+        initrd        => 'existingFile',
+        modules       => 'existingDir',
+        serial_device => 'serialDev',
+        disk_device   => 'diskDev',
+        gateway       => 'ipv4',
+        netmask       => 'ipv4', # This is dubious.
+        broadcast     => 'ipv4',
+        hostname      => 'hostname',
+        nameserver    => 'ipv4',
+        pointopoint   => 'ipv4',
+        fs            => 'supportedFs',
+        cache         => 'yesNo',
+        cachedir      => 'existingDir',
+        config        => 'configFile',
+        install       => 'zeroOne',
+        hooks         => 'zeroOne',
+        roledir       => 'existingDir',
+        template      => 'configFile',
+        output        => 'existingDir',
+        extension     => 'filename',
+    );
+
+    # If given option does not exists in optionsTypes,
+    # we just copy it to %CONFIG.
+    unless ( exists $optionsTypes{ $option } ) {
+        $CONFIG{ $option } = $value;
+    } else { # we validate it before copying
+        my $type = $optionsTypes{ $option };
+
+        # First, check if type exists
+        die unless exists $types{ $type };
+        my $check = $types{ $type }{ 'check' };
+
+        if (
+            (ref $check eq 'Regexp' and $value =~ $check) or
+            (ref $check eq 'CODE' and &$check( $value ) )
+        ) {
+            # Option did validate, copy it
+            $CONFIG{ $option } = $value;
+        } else {
+            # Option did _not_ validate
+            die "ERROR: '$option' argument " . $types{ $type }{ 'message' };
+        }
+    }
+}
+
+=begin doc
+
   Parse the command line arguments this script was given.
 
 =end doc
@@ -1531,28 +1661,28 @@ sub parseCommandLineArguments
         !GetOptions(
 
             # Mandatory
-            "dist=s", \$CONFIG{ 'dist' },
+            "dist=s", \&checkOption,
 
             # Size options.
-            "size=s",   \$CONFIG{ 'size' },
-            "swap=s",   \$CONFIG{ 'swap' },
-            "noswap",   \$CONFIG{ 'noswap' },
-            "image=s",  \$CONFIG{ 'image' },
-            "memory=s", \$CONFIG{ 'memory' },
-            "vcpus=s",  \$CONFIG{ 'vcpus' },
+            "size=s",   \&checkOption,
+            "swap=s",   \&checkOption,
+            "noswap",   \&checkOption,
+            "image=s",  \&checkOption,
+            "memory=s", \&checkOption,
+            "vcpus=i",  \&checkOption,
 
             # Locations
             "dir=s",       \$install{ 'dir' },
             "evms=s",      \$install{ 'evms' },
-            "kernel=s",    \$CONFIG{ 'kernel' },
-            "initrd=s",    \$CONFIG{ 'initrd' },
-            "mirror=s",    \$CONFIG{ 'mirror' },
-            "modules=s",   \$CONFIG{ 'modules' },
+            "kernel=s",    \&checkOption,
+            "initrd=s",    \&checkOption,
+            "mirror=s",    \&checkOption,
+            "modules=s",   \&checkOption,
             "lvm=s",       \$install{ 'lvm' },
             "image-dev=s", \$install{ 'image-dev' },
             "swap-dev=s",  \$install{ 'swap-dev' },
-            "serial_device=s", \$CONFIG{ 'serial_device' },
-            "disk_device=s", \$CONFIG{ 'disk_device' },
+            "serial_device=s", \&checkOption,
+            "disk_device=s", \&checkOption,
 
             # Hosts options
             "nohosts",   \$CONFIG{ 'nohosts' },
@@ -1563,16 +1693,16 @@ sub parseCommandLineArguments
 
             # Networking options
             "dhcp",         \$CONFIG{ 'dhcp' },
-            "bridge=s",     \$CONFIG{ 'bridge' },
-            "gateway=s",    \$CONFIG{ 'gateway' },
-            "hostname=s",   \$CONFIG{ 'hostname' },
+            "bridge=s",     \&checkOption,
+            "gateway=s",    \&checkOption,
+            "hostname=s",   \&checkOption,
             "ip=s@",        \$CONFIG{ 'ip' },
             "mac=s",        \$CONFIG{ 'mac' },
-            "netmask=s",    \$CONFIG{ 'netmask' },
-            "broadcast=s",  \$CONFIG{ 'broadcast' },
-            "nameserver=s", \$CONFIG{ 'nameserver' },
-            "vifname=s",    \$CONFIG{ 'vifname' },
-            "p2p=s",        \$CONFIG{ 'p2p' },
+            "netmask=s",    \&checkOption,
+            "broadcast=s",  \&checkOption,
+            "nameserver=s", \&checkOption,
+            "vifname=s",    \&checkOption,
+            "p2p=s",        \&checkOption,
 
             # Exclusive
             #
@@ -1584,32 +1714,32 @@ sub parseCommandLineArguments
 
             # Misc. options
             "accounts",     \$CONFIG{ 'accounts' },
-            "admins=s",     \$CONFIG{ 'admins' },
-            "arch=s",       \$CONFIG{ 'arch' },
-            "fs=s",         \$CONFIG{ 'fs' },
+            "admins=s",     \&checkOption,
+            "arch=s",       \&checkOption,
+            "fs=s",         \&checkOption,
             "boot",         \$CONFIG{ 'boot' },
-            "cache=s",      \$CONFIG{ 'cache' },
-            "cachedir=s",   \$CONFIG{ 'cachedir' },
-            "config=s",     \$CONFIG{ 'config' },
+            "cache=s",      \&checkOption,
+            "cachedir=s",   \&checkOption,
+            "config=s",     \&checkOption,
             "ide",          \$CONFIG{ 'ide' },
             "scsi",         \$CONFIG{ 'scsi' },
-            "install=i",    \$CONFIG{ 'install' },
-            "hooks=i",      \$CONFIG{ 'hooks' },
+            "install=i",    \&checkOption,
+            "hooks=i",      \&checkOption,
             "pygrub",       \$CONFIG{ 'pygrub' },
             "passwd",       \$CONFIG{ 'passwd' },
-            "genpass=i",    \$CONFIG{ 'genpass' },
-            "genpass-len=i", \$CONFIG{ 'genpass_len' },
-            "genpass_len=i", \$CONFIG{ 'genpass_len' },
-            "password=s",   \$CONFIG{ 'password' },
-            "partitions=s", \$CONFIG{ 'partitions' },
-            "role=s",       \$CONFIG{ 'role' },
-            "role-args=s",  \$CONFIG{ 'role-args' },
-            "roledir=s",    \$CONFIG{ 'roledir' },
+            "genpass=i",    \&checkOption,
+            "genpass-len=i", \&checkOption,
+            "genpass_len=i", \&checkOption,
+            "password=s",   \&checkOption,
+            "partitions=s", \&checkOption,
+            "role=s",       \&checkOption,
+            "role-args=s",  \&checkOption,
+            "roledir=s",    \&checkOption,
             "force",        \$CONFIG{ 'force' },
             "keep",         \$CONFIG{ 'keep' },
-            "template=s",   \$CONFIG{ 'template' },
-            "output=s",     \$CONFIG{ 'output' },
-            "extension=s",  \$CONFIG{ 'extension' },
+            "template=s",   \&checkOption,
+            "output=s",     \&checkOption,
+            "extension=s",  \&checkOption,
 
             # Help options
             "debug",   \$CONFIG{ 'debug' },
@@ -1619,6 +1749,7 @@ sub parseCommandLineArguments
             "version", \$VERSION
         ) )
     {
+        $FAIL = 2;
         exit;
     }
 
@@ -1784,49 +1915,6 @@ sub checkArguments
     if ( $CONFIG{ 'dist' } eq 'fedora-core4' )
     {
         $CONFIG{ 'dist' } = 'stentz';
-    }
-
-    #
-    #
-    #  Test that the distribution name we've been given
-    # to configure has a collection of hook scripts.
-    #
-    #  If there are no scripts then we clearly cannot
-    # customise it!
-    #
-    my $dir = "/usr/lib/xen-tools/" . $CONFIG{ 'dist' } . ".d";
-
-    if ( !-d $dir )
-    {
-        my $err = <<E_OR;
-
-  We are trying to configure an installation of $CONFIG{'dist'} in
- $CONFIG{'dir'} - but there is no hook directory for us to use.
-
-  This means we do not know how to configure this installation.
-
-  We would expect the hook directory to be $dir.
-
-  Aborting.
-E_OR
-        logprint($err);
-        $FAIL = 1;
-        exit 127;
-    }
-
-
-    #
-    #  Image must be 'sparse' or 'full'.
-    #
-    if ( defined( $CONFIG{ 'image' } ) )
-    {
-        if ( ( $CONFIG{ 'image' } ne "sparse" ) &&
-             ( $CONFIG{ 'image' } ne "full" ) )
-        {
-            logprint("Image type must be 'sparse' or 'full'\n");
-            $FAIL = 1;
-            exit 127;
-        }
     }
 
     #

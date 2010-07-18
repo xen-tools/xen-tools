@@ -18,8 +18,6 @@ Minor bugs to fix and features to add before a 4.2 release
    stored in the configuration hash.  The only issue is that trailing
    whitespace is missing from the "make_fs_foo" option.
 
-* xen-create-image should check all integer options on non-digits.
-
 * Test suite should pass
 
    Currently failing:
