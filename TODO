@@ -18,13 +18,6 @@ Minor bugs to fix and features to add before a 4.2 release
    stored in the configuration hash.  The only issue is that trailing
    whitespace is missing from the "make_fs_foo" option.
 
-* Test suite should pass
-
-   Currently failing:
-
-   t/pod-coverage.t (fails on Xen::Tools and Xen::Tools::Log despite
-   they do have POD. Strange.)
-
 * Setup locales in the hooks?
 
    Currently no locales are set and this causes several domU errors
