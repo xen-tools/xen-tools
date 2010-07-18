@@ -319,10 +319,6 @@ L<http://search.cpan.org/dist/Xen-Tools>
 
 =back
 
-
-=head1 ACKNOWLEDGEMENTS
-
-
 =head1 COPYRIGHT & LICENSE
 
 Copyright 2007 C.J. Adams-Collier, all rights reserved.
