@@ -12,12 +12,13 @@ use Test::More qw( no_plan );
 #
 #  Files that we want to use.
 #
-my @required = qw( /usr/sbin/debootstrap /bin/ls /bin/dd /bin/mount /bin/cp /bin/tar );
+my @required = qw( /bin/ls /bin/dd /bin/mount /bin/cp /bin/tar );
 
 #
 #  Files that we might wish to use.
 #
-my @optional = qw( /usr/bin/rpmstrap /usr/sbin/xm /sbin/mkfs.ext3 /sbin/mkfs.xfs/sbin/mkfs.reiserfs  );
+my @optional = qw( /usr/sbin/debootstrap /usr/bin/rpmstrap /usr/sbin/xm
+                   /sbin/mkfs.ext3 /sbin/mkfs.xfs/sbin/mkfs.reiserfs );
 
 
 
