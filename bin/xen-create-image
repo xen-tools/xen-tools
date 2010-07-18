@@ -1571,6 +1571,10 @@ sub checkOption
             check   => qr/^[a-z0-9_.-]*$/,
             message => "must be a valid filename.\n",
         },
+        mac => {
+            check   => qr/^(?:[0-9a-f]{2}:){5}[0-9a-f]{2}$/i,
+            message => "must be a valid ethernet mac address.\n",
+        },
     );
 
     # Define what argument each option accepts.
@@ -1602,6 +1606,8 @@ sub checkOption
         template      => 'configFile',
         output        => 'existingDir',
         extension     => 'filename',
+        mac           => 'mac',
+        ip            => 'ipv4',
     );
 
     # If given option does not exists in optionsTypes,
@@ -1696,8 +1702,8 @@ sub parseCommandLineArguments
             "bridge=s",     \&checkOption,
             "gateway=s",    \&checkOption,
             "hostname=s",   \&checkOption,
-            "ip=s@",        \$CONFIG{ 'ip' },
-            "mac=s",        \$CONFIG{ 'mac' },
+            "ip=s@",        \&checkOption,
+            "mac=s",        \&checkOption,
             "netmask=s",    \&checkOption,
             "broadcast=s",  \&checkOption,
             "nameserver=s", \&checkOption,
