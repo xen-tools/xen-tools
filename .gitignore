@@ -6,6 +6,7 @@
 # but we _wan't_ those dot-files
 !.gitignore
 !.hgignore
+!.mailmap
 
 # ChangeLog is generated during make
 /ChangeLog
