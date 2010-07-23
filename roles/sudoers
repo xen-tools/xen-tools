@@ -1,0 +1,46 @@
+#!/bin/sh
+#
+#  This role installs sudo with host sudoers file.
+#
+
+prefix=$1
+
+#
+#  Source our common functions - this will let us install a Debian package.
+#
+if [ -e /usr/lib/xen-tools/common.sh ]; then
+    . /usr/lib/xen-tools/common.sh
+else
+    echo "Installation problem"
+fi
+
+
+#
+# Log our start
+#
+logMessage Script $0 starting
+
+
+#
+# Install sudo package
+#
+installDebianPackage ${prefix} sudo
+
+#
+# WARNING :
+#
+# Copying this file means that root users in guest will KNOW who is
+# root on host.
+#
+
+#
+# Copy dom0's file to domU.
+#
+cp /etc/sudoers ${prefix}/etc/
+chown root:root ${prefix}/etc/sudoers
+chmod 440 ${prefix}/etc/sudoers
+
+#
+#  Log our finish
+#
+logMessage Script $0 finished

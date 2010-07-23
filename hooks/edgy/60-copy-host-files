@@ -30,28 +30,6 @@ logMessage Script $0 starting
 cp /etc/timezone    ${prefix}/etc
 cp /etc/localtime   ${prefix}/etc
 
-#
-# If the host has sudo then copy the configuration file, and install
-# the package
-#
-if [ -e /etc/sudoers ]; then
-
-  logMessage Installing SUDO too.
-
-  #
-  #  Copy file and fixup permissions.
-  #
-  cp /etc/sudoers ${prefix}/etc
-  chown root:root ${prefix}/etc/sudoers
-  chmod 440       ${prefix}/etc/sudoers
-
-  #
-  #  Install sudo
-  #
-  installDebianPackage ${prefix} sudo
-
-fi
-
 
 #
 #  Log our finish
