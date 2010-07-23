@@ -49,7 +49,7 @@ sub checkFile
     close( INPUT );
 
     # Check if it is really a shell file
-    if ( $line =~ /^#! ?\/bin\/(ba)?sh/ )
+    if ( $line =~ /^#! ?\/bin\/sh/ )
     {
         $isShell = 1;
     }

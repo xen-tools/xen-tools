@@ -85,7 +85,7 @@ installDebianPackage ()
     #
     #  Use policy-rc to stop any daemons from starting.
     #
-    printf '#!/bin/bash\nexit 101\n' > ${prefix}/usr/sbin/policy-rc.d
+    printf '#!/bin/sh\nexit 101\n' > ${prefix}/usr/sbin/policy-rc.d
     chmod +x ${prefix}/usr/sbin/policy-rc.d
 
     #
