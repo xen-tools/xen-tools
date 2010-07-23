@@ -38,7 +38,7 @@ sub checkFile
     # Nor about Makefiles
     return if ( $file =~ /\/Makefile$/ );
 
-    # Nor about temporary files
+    # Nor about dot files
     return if ( $file =~ m{/\.[^/]+$} );
 
     # Nor about files which start with ./debian/

@@ -44,7 +44,7 @@ sub checkFile
     # Nor about git files
     return if ( $file =~ /^\.\/\.git\// );
 
-    # Nor about temporary files
+    # Nor about dot files
     return if ( $file =~ m{/\.[^/]+$} );
 
     # `modules.sh` is a false positive.
