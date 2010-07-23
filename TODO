@@ -15,8 +15,7 @@ Minor bugs to fix and features to add before a 4.2 release
 * Test and support more file system types.
 
    Actually this should be pretty simple now that the parameters are
-   stored in the configuration hash.  The only issue is that trailing
-   whitespace is missing from the "make_fs_foo" option.
+   stored in the configuration hash.
 
 * Setup locales in the hooks?
 

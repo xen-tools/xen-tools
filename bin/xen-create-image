@@ -1397,11 +1397,11 @@ sub setupDefaultOptions
     #         filesystem, even if it exists.  This script must detect
     #         prior existance itself.
     #
-    $CONFIG{ 'make_fs_ext2' }     = 'mkfs.ext2 -F ';
-    $CONFIG{ 'make_fs_ext3' }     = 'mkfs.ext3 -F ';
-    $CONFIG{ 'make_fs_ext4' }     = 'mkfs.ext4 -F ';
-    $CONFIG{ 'make_fs_xfs' }      = 'mkfs.xfs -f -d name=';
-    $CONFIG{ 'make_fs_reiserfs' } = 'mkfs.reiserfs -f -q ';
+    $CONFIG{ 'make_fs_ext2' }     = 'mkfs.ext2 -F';
+    $CONFIG{ 'make_fs_ext3' }     = 'mkfs.ext3 -F';
+    $CONFIG{ 'make_fs_ext4' }     = 'mkfs.ext4 -F';
+    $CONFIG{ 'make_fs_xfs' }      = 'mkfs.xfs -f';
+    $CONFIG{ 'make_fs_reiserfs' } = 'mkfs.reiserfs -f -q';
 
     #
     #  Flags to pass to "mount" to mount our image.
@@ -3358,7 +3358,7 @@ sub createFilesystem
     #
     logprint("\nCreating $fs filesystem on $image\n");
 
-    $command .= $image;
+    $command .= " " . $image;
 
     runCommand($command);
     logprint("Done\n");
