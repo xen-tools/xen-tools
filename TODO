@@ -62,12 +62,6 @@ Maybe for a 4.3 or 5.0 release
    install Can't remove open logical volume "acromantula-domu1-disk"
    this should be a matter of unmounting the mounted volume from /tmp.
 
-* Create "more random" passwords and salts
-
-   Currently passwords are using the passwd function of OpenSSL which
-   at the moment can only generate md5 hashes. The passwords can
-   still be made quite strong though.
-
 * Generic grub support
 
    This will generate a much nicer menu.lst as a side effect, as its

@@ -114,6 +114,10 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --password=passphrase
                 Set the root password for the new guest.
 
+   --hash_method=algorithm
+                Override the default hashing method of sha256 and use the
+                provided algorithm. Can be : md5, sha256 or sha512
+
    --passwd     Ask for a root password interactively during setup.
                 NOTE:  This overrides --genpass --password
 
@@ -1381,6 +1385,7 @@ sub setupDefaultOptions
     $CONFIG{ 'genpass' }     = 1;
     $CONFIG{ 'genpass_len' } = 8;
     $CONFIG{ 'password' }    = '';
+    $CONFIG{ 'hash_method' } = 'sha256';
 
     #
     #  The program to run to create a filesystem.
@@ -1575,6 +1580,10 @@ sub checkOption
             check   => qr/^(?:[0-9a-f]{2}:){5}[0-9a-f]{2}$/i,
             message => "must be a valid ethernet mac address.\n",
         },
+        hashMethod => {
+            check   => qr/^md5|sha256|sha512$/i,
+            message => "must be md5, sha256 or sha512.\n",
+        },
     );
 
     # Define what argument each option accepts.
@@ -1608,6 +1617,7 @@ sub checkOption
         extension     => 'filename',
         mac           => 'mac',
         ip            => 'ipv4',
+        hash_method   => 'hashMethod',
     );
 
     # If given option does not exists in optionsTypes,
@@ -1737,6 +1747,7 @@ sub parseCommandLineArguments
             "genpass-len=i", \&checkOption,
             "genpass_len=i", \&checkOption,
             "password=s",   \&checkOption,
+            "hash_method=s",\&checkOption,
             "partitions=s", \&checkOption,
             "role=s",       \&checkOption,
             "role-args=s",  \&checkOption,
@@ -3964,9 +3975,28 @@ sub setupRootPassword
             {
                 $PASSWORD = $CONFIG { 'password' };
             }
+
             my $salt = generatePassword(8);
-            my $hash = `echo -n $PASSWORD | openssl passwd -stdin -1 -salt $salt`;
-            $hash =~ s/\s+$//;
+
+            my $hash_method;
+            if ($CONFIG{ 'hash_method' } eq 'md5')
+            {
+                $hash_method = '$1$';
+            }
+            elsif ($CONFIG{ 'hash_method' } eq 'sha256')
+            {
+                $hash_method = '$5$';
+            }
+            elsif ($CONFIG{ 'hash_method' } eq 'sha512')
+            {
+                $hash_method = '$6$';
+            }
+            else
+            {
+                die "oops... unknown hashing method, should not happen!";
+            }
+
+            my $hash = crypt($PASSWORD, $hash_method . $salt);
 
             #
             #  Copy the file to ensure the original retains the correct
@@ -3979,9 +4009,8 @@ sub setupRootPassword
             my $line;
             while(defined($line = <TMP>))
             {
-                chomp $line;
                 $line =~ s#^root:[^:]*:#root:$hash:#;
-                print SHADOW "$line\n";
+                print SHADOW $line;
             }
 
             #
