@@ -86,7 +86,15 @@ _xen_create_image()
             COMPREPLY=( $( compgen -W 'yes no'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
             return 0
             ;;
+        --cachedir)
+            _filedir -d
+            return 0
+            ;;
         --config)
+            _filedir .conf
+            return 0
+            ;;
+        --debootstrap-cmd)
             _filedir
             return 0
             ;;
@@ -106,6 +114,14 @@ _xen_create_image()
             COMPREPLY=( $( compgen -W 'xfs ext3 reiserfs'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
             return 0
             ;;
+        --genpass)
+            COMPREPLY=( $( compgen -W '0 1'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+            return 0
+            ;;
+        --hash_method)
+            COMPREPLY=( $( compgen -W 'md5 sha256 sha512'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+            return 0
+            ;;
         --hooks)
             COMPREPLY=( $( compgen -W '0 1'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
             return 0
@@ -118,8 +134,24 @@ _xen_create_image()
             COMPREPLY=( $( compgen -W 'sparse full'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
             return 0
             ;;
+        --image-dev)
+            _filedir
+            return 0
+            ;;
+        --initrd)
+            _filedir
+            return 0
+            ;;
+        --initrd)
+            COMPREPLY=( $( compgen -W '0 1'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+            return 0
+            ;;
         --install-method)
             COMPREPLY=( $( compgen -W 'copy debootstrap rinse rpmstrap tar'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+            return 0
+            ;;
+        --install-source)
+            _filedir
             return 0
             ;;
         --ip)
@@ -127,8 +159,25 @@ _xen_create_image()
             COMPREPLY=( $(compgen -W "${ip}" -- ${cur}) )
             return 0
             ;;
+        --kernel)
+            _filedir
+            return 0
+            ;;
         --lvm)
             COMPREPLY=( $( compgen -W '${vgs}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+            return 0
+            ;;
+        --modules)
+            _filedir -d
+            return 0
+            ;;
+        --output)
+            _filedir -d
+            return 0
+            ;;
+        --partitions)
+            partitions=$(for x in `/bin/ls -1 /etc/xen-tools/partitions.d/ 2>/dev/null | grep -v \/ 2>/dev/null`; do echo ${x} ; done )
+            COMPREPLY=( $( compgen -W '${partitions}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
             return 0
             ;;
         --role)
@@ -136,9 +185,16 @@ _xen_create_image()
             COMPREPLY=( $( compgen -W '${roles}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
             return 0
             ;;
-        --partitions)
-            partitions=$(for x in `/bin/ls -1 /etc/xen-tools/partitions.d/ 2>/dev/null | grep -v \/ 2>/dev/null`; do echo ${x} ; done )
-            COMPREPLY=( $( compgen -W '${partitions}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+        --roledir)
+            _filedir -d
+            return 0
+            ;;
+        --swap-dev)
+            _filedir
+            return 0
+            ;;
+        --template)
+            _filedir
             return 0
             ;;
     esac
