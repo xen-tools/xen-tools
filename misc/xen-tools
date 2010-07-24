@@ -1,8 +1,8 @@
-# -*- shell-script -*-
+#!/bin/bash
 #
 #  /etc/bash_completion.d/xen-tools
 #
-# Completion functions for Bash.  
+# Completion functions for Bash.
 #
 # This file offers basic support for all the command line options, along with
 # some specialist support to complete filesystem types, distribution targets,
@@ -55,8 +55,8 @@ _xen_create_image()
 
     # Determine arguments dynamically.  Avoids out-of-dateness.
     opts=$(xen-create-image --help|grep -- --|awk '{print $1}' |grep -- -- | sort -u)
-    
-    
+
+
     #
     # Complete the initial part of the IP in the configuration file.
     ip=`grep ^gateway /etc/xen-tools/xen-tools.conf 2>/dev/null | awk -F'= '  '{print $2}'`
@@ -78,71 +78,71 @@ _xen_create_image()
 
     #
     # EVMS container completion
-    #    
+    #
     evmscontainers=`evms_query containers 2>/dev/null`
 
     case "$prev" in
-	--cache)
-	    COMPREPLY=( $( compgen -W 'yes no'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
-	    return 0
-	    ;;
-	--config)
-	    _filedir 
-	    return 0
-	    ;;
-	--dir)
-	    _filedir -d
-	    return 0
-	    ;;
-	--dist)
-	    COMPREPLY=( $( compgen -W '${dists}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
-	    return 0
-	    ;;
-	--evms)
-	    COMPREPLY=( $( compgen -W '${evmscontainers}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
-	    return 0
-	    ;;
-	--fs)
-	    COMPREPLY=( $( compgen -W 'xfs ext3 reiserfs'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
-	    return 0
-	    ;;
-	--hooks)
-	    COMPREPLY=( $( compgen -W '0 1'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
-	    return 0
-	    ;;
-	--install)
-	    COMPREPLY=( $( compgen -W '0 1'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
-	    return 0
-	    ;;
-	--image)
-	    COMPREPLY=( $( compgen -W 'sparse full'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
-	    return 0
-	    ;;
-	--install-method)
-	    COMPREPLY=( $( compgen -W 'copy debootstrap rinse rpmstrap tar'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
-	    return 0
-	    ;;
-	--ip)
-	    ip=`echo ${ip} | sed -e 's/[.][^.]*$/./'`
-	    COMPREPLY=( $(compgen -W "${ip}" -- ${cur}) )
-	    return 0
-	    ;;
-	--lvm)
-	    COMPREPLY=( $( compgen -W '${vgs}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
-	    return 0
-	    ;;
-	--role)
+        --cache)
+            COMPREPLY=( $( compgen -W 'yes no'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+            return 0
+            ;;
+        --config)
+            _filedir
+            return 0
+            ;;
+        --dir)
+            _filedir -d
+            return 0
+            ;;
+        --dist)
+            COMPREPLY=( $( compgen -W '${dists}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+            return 0
+            ;;
+        --evms)
+            COMPREPLY=( $( compgen -W '${evmscontainers}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+            return 0
+            ;;
+        --fs)
+            COMPREPLY=( $( compgen -W 'xfs ext3 reiserfs'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+            return 0
+            ;;
+        --hooks)
+            COMPREPLY=( $( compgen -W '0 1'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+            return 0
+            ;;
+        --install)
+            COMPREPLY=( $( compgen -W '0 1'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+            return 0
+            ;;
+        --image)
+            COMPREPLY=( $( compgen -W 'sparse full'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+            return 0
+            ;;
+        --install-method)
+            COMPREPLY=( $( compgen -W 'copy debootstrap rinse rpmstrap tar'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+            return 0
+            ;;
+        --ip)
+            ip=`echo ${ip} | sed -e 's/[.][^.]*$/./'`
+            COMPREPLY=( $(compgen -W "${ip}" -- ${cur}) )
+            return 0
+            ;;
+        --lvm)
+            COMPREPLY=( $( compgen -W '${vgs}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+            return 0
+            ;;
+        --role)
             roles=$(ls -1 /etc/xen-tools/role.d/ | xargs echo )
-	    COMPREPLY=( $( compgen -W '${roles}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
-	    return 0
-	    ;;
-	--partitions)
-	    partitions=$(for x in `/bin/ls -1 /etc/xen-tools/partitions.d/ 2>/dev/null | grep -v \/ 2>/dev/null`; do echo ${x} ; done )
-	    COMPREPLY=( $( compgen -W '${partitions}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
-	    return 0
-	    ;;
+            COMPREPLY=( $( compgen -W '${roles}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+            return 0
+            ;;
+        --partitions)
+            partitions=$(for x in `/bin/ls -1 /etc/xen-tools/partitions.d/ 2>/dev/null | grep -v \/ 2>/dev/null`; do echo ${x} ; done )
+            COMPREPLY=( $( compgen -W '${partitions}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+            return 0
+            ;;
     esac
-    
+
     if [[ ${cur} == -* ]] || [[ ${prev} == xen-create-image ]]; then
         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
         return 0
@@ -167,14 +167,14 @@ _xen_create_nfs()
     # Determine arguments dynamically.  Avoids out-of-dateness.
     opts=$(xen-create-nfs --help|grep -- --|awk '{print $1}' |grep -- -- | sort -u)
 
-    
+
     case "$prev" in
-	--template)
-	    _filedir 
-	    return 0
-	    ;;
+        --template)
+            _filedir
+            return 0
+            ;;
     esac
-    
+
     if [[ ${cur} == -* ]]; then
         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
         return 0
@@ -187,7 +187,7 @@ complete -F _xen_create_nfs xen-create-nfs
 #
 #  Completion for xen-delete-image
 #
-_xen_delete_image() 
+_xen_delete_image()
 {
     local cur prev opts vgs names
     COMPREPLY=()
@@ -201,7 +201,7 @@ _xen_delete_image()
 
     #
     # EVMS container completion
-    #    
+    #
     evmscontainers=`evms_query containers 2>/dev/null`
 
     #
@@ -213,22 +213,22 @@ _xen_delete_image()
 
     case "${prev}" in
         --dir)
-	    _filedir -d
-	    return 0
+            _filedir -d
+            return 0
             ;;
-	--evms)
-	    COMPREPLY=( $( compgen -W '${evmscontainers}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
-	    return 0
-	    ;;
+        --evms)
+            COMPREPLY=( $( compgen -W '${evmscontainers}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+            return 0
+            ;;
         --hostname)
             names=`_find_xen_images`
             COMPREPLY=( $(compgen -W "${names}" -- ${cur}) )
-	    return 0
+            return 0
             ;;
-	--lvm)
-	    COMPREPLY=( $( compgen -W '${vgs}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
-	    return 0
-	    ;;
+        --lvm)
+            COMPREPLY=( $( compgen -W '${vgs}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+            return 0
+            ;;
     esac
 
     if [[ ${cur} == -* ]]; then
@@ -249,7 +249,7 @@ complete -F _xen_delete_image xen-delete-image
 #
 #  Completion for xen-update-image
 #
-_xen_update_image() 
+_xen_update_image()
 {
     local cur prev opts base names vgs
     COMPREPLY=()
@@ -271,17 +271,17 @@ _xen_update_image()
 
     case "${prev}" in
         --dir)
-	    _filedir -d
-	    return 0
+            _filedir -d
+            return 0
             ;;
-	--evms)
-	    COMPREPLY=( $( compgen -W '${evmscontainers}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
-	    return 0
-	    ;;
-	--lvm)
-	    COMPREPLY=( $( compgen -W '${vgs}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
-	    return 0
-	    ;;
+        --evms)
+            COMPREPLY=( $( compgen -W '${evmscontainers}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+            return 0
+            ;;
+        --lvm)
+            COMPREPLY=( $( compgen -W '${vgs}'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+            return 0
+            ;;
     esac
 
     if [[ ${cur} == -* ]]; then
@@ -301,7 +301,7 @@ complete -F _xen_update_image xen-update-image
 #
 #  Completion for xen-list-images
 #
-_xen_list_images() 
+_xen_list_images()
 {
     local cur prev opts vgs
     COMPREPLY=()
@@ -333,19 +333,19 @@ _xt-create-xen-config()
 
     # Determine arguments dynamically.  Avoids out-of-dateness.
     opts=$(xt-create-xen-config  --help|grep -- --|awk '{print $1}'|grep -- -- | sort -u)
-    
-    
+
+
     case "$prev" in
-	--output)
-	    _filedir -d
-	    return 0
-	    ;;
-	--template)
-	    COMPREPLY=( $( compgen -f -- ${cur#*:} ) )
-	    return 0
-	    ;;
+        --output)
+            _filedir -d
+            return 0
+            ;;
+        --template)
+            COMPREPLY=( $( compgen -f -- ${cur#*:} ) )
+            return 0
+            ;;
     esac
-    
+
     if [[ ${cur} == -* ]]; then
         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
         return 0
@@ -368,25 +368,25 @@ _xt-customize-image()
 
     # Determine arguments dynamically.  Avoids out-of-dateness.
     opts=$(xt-customize-image  --help|grep -- --|awk '{print $1}'|grep -- -- | sort -u)
-    
+
     #
     # Available distributions, from rpmstrap
     #
     if [ -d /usr/lib/rpmstrap/scripts ]; then
        dists=`/bin/ls -1 /usr/lib/rpmstrap/scripts`
     fi
-    
+
     case "$prev" in
-	--dist)
-	    COMPREPLY=( $( compgen -W '${dists} sid sarge etch lenny'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
-	    return 0
-	    ;;
-	--location)
-	    _filedir -d
-	    return 0
-	    ;;
+        --dist)
+            COMPREPLY=( $( compgen -W '${dists} sid sarge etch lenny'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+            return 0
+            ;;
+        --location)
+            _filedir -d
+            return 0
+            ;;
     esac
-    
+
     if [[ ${cur} == -* ]]; then
         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
         return 0
@@ -410,7 +410,7 @@ _xt-install-image()
     # Determine arguments dynamically.  Avoids out-of-dateness.
     opts=$(xt-install-image  --help|grep -- --|awk '{print $1}'|grep -- -- | sort -u)
 
-   
+
     #
     # Available distributions, from rpmstrap
     #
@@ -420,28 +420,28 @@ _xt-install-image()
 
 
     case "$prev" in
-	--cache)
-	    COMPREPLY=( $( compgen -W 'yes no'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
-	    return 0
-	    ;;
-	--config)
-	    _filedir 
-	    return 0
-	    ;;
-	--dist)
-	    COMPREPLY=( $( compgen -W '${dists} sid sarge etch lenny'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
-	    return 0
-	    ;;
-	--install-method)
-	    COMPREPLY=( $( compgen -W 'copy debootstrap rinse rpmstrap tar'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
-	    return 0
-	    ;;
-	--location)
-	    _filedir -d
-	    return 0
-	    ;;
+        --cache)
+            COMPREPLY=( $( compgen -W 'yes no'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+            return 0
+            ;;
+        --config)
+            _filedir
+            return 0
+            ;;
+        --dist)
+            COMPREPLY=( $( compgen -W '${dists} sid sarge etch lenny'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+            return 0
+            ;;
+        --install-method)
+            COMPREPLY=( $( compgen -W 'copy debootstrap rinse rpmstrap tar'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+            return 0
+            ;;
+        --location)
+            _filedir -d
+            return 0
+            ;;
     esac
-    
+
     if [[ ${cur} == -* ]]; then
         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
         return 0
