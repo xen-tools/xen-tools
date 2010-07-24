@@ -44,6 +44,9 @@ sub checkFile
     # Nor about files which start with ./debian/
     return if ( $file =~ /^\.\/debian\// );
 
+    # Nor about Changlog
+    return if ( $file =~ /^\.\/ChangeLog$/ );
+
     # Finally mercurial and git files are fine.
     return if ( $file =~ /\.(hg|git)\// );
     # See if it is a shell/perl file.
