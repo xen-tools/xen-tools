@@ -37,7 +37,7 @@ fi
 #
 installDebianPackage ${prefix} locales
 installDebianPackage ${prefix} util-linux-locales
-
+chroot ${prefix} /usr/sbin/update-locale LANG=C
 
 
 #
