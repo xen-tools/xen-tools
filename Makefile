@@ -53,14 +53,17 @@ changelog:
 #  Delete all temporary files, recursively.
 #
 clean:
-	@find . -name '.*~' -exec rm \{\} \;
-	@find . -name '.#*' -exec rm \{\} \;
-	@find . -name '*~' -exec rm \{\} \;
-	@find . -name '*.bak' -exec rm \{\} \;
-	@find . -name '*.tmp' -exec rm \{\} \;
-	@find . -name 'tags' -exec rm \{\} \;
-	@find . -name '*.8.gz' -exec rm \{\} \;
-	@find . -name '*.tdy' -exec rm \{\} \;
+	@find . \
+		-path ./.git -prune -o \
+		\( \
+			-name '*~' -o \
+			-name '.#*' -o \
+			-name '*.bak' -o \
+			-name '*.tmp' -o \
+			-name 'tags' -o \
+			-name '*.8.gz' -o \
+			-name '*.tdy' \
+		\) -exec rm "{}" +
 	@if [ -d man ]; then rm -rf man ; fi
 	@if [ -e build-stamp ]; then rm -f build-stamp ; fi
 	@if [ -e configure-stamp ]; then rm -f configure-stamp ; fi
@@ -243,7 +246,7 @@ orig-tar-gz: release
 #
 #  Run the test suite.
 #
-test:
+test: update-modules
 	prove --shuffle t/
 
 
@@ -305,7 +308,7 @@ update:
 # cases to ensure that all required modules are available.
 #
 update-modules:
-	cd t && make modules
+	@cd t && make modules
 
 
 #
