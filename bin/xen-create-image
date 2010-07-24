@@ -2275,16 +2275,36 @@ sub setupLogFile
     mkdir( "/var/log/xen-tools", 0750 ) if ( !-d "/var/log/xen-tools" );
 
     #
-    #  Trash any existing for this run logfile.
+    #  Move any existing for this run logfile.
+    #  (Hint: read from the end to understand how this works).
     #
-    open( TRASH, ">", "/var/log/xen-tools/$CONFIG{'hostname'}.log" );
-    print TRASH "";
-    close(TRASH);
+    my $logname = "/var/log/xen-tools/$CONFIG{'hostname'}.log";
+    map {
+        (my $new = $_) =~ s/(?<=\.)\d+(?=\.log$)/$& + 1/e;
+        mv $_, $new; # increment file number
+    } sort {
+        $a =~ /\.(\d+)\.log$/;
+        my $aa = $1;
+        $b =~ /\.(\d+)\.log$/;
+        my $bb = $1;
+        $bb <=> $aa; # sort in reverse order
+    } grep /\.\d+\.log$/, # we only care in numeric filenames
+    glob( "/var/log/xen-tools/$CONFIG{'hostname'}.*.log" );
+
+    # Move the non-numeric filename also
+    mv $logname, "/var/log/xen-tools/$CONFIG{'hostname'}.0.log"
+        if -f $logname;
+
+    #
+    #  Now create an empty file.
+    #
+    open STUB, '>', $logname;
+    close STUB;
 
     #
     #  Make sure the logfile is 0640 - avoid leaking root passwords.
     #
-    chmod( oct("0640"), "/var/log/xen-tools/$CONFIG{'hostname'}.log" );
+    chmod( oct("0640"), $logname );
 }
 
 
