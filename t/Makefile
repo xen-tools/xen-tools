@@ -6,11 +6,8 @@ verbose:
 	@cd ..; prove --shuffle --verbose t/
 
 
-modules: .PHONY
+modules: modules.sh
 	./modules.sh > modules.t
-
-.PHONY:
-	true
 
 clean:
 	-rm *~
