@@ -64,6 +64,7 @@ logMessage "Root device is /dev/$device"
 #
 has_xfs=0
 has_reiserfs=0
+has_btrfs=0
 cat <<E_O_FSTAB > ${prefix}/etc/fstab
 # /etc/fstab: static file system information.
 #
@@ -89,6 +90,9 @@ for part in `seq 1 ${NUMPARTITIONS}`; do
         reiserfs)
             has_reiserfs=1
             ;;
+        btrfs)
+            has_btrfs=1
+            ;;
     esac
     
     if [ "${partdata2}" = "swap" ]; then
@@ -108,6 +112,9 @@ done
 #fi
 #if [ $has_reiserfs -eq 1 ]; then
 #    installDebianPackage ${prefix} reiserfsprogs
+#fi
+#if [ $has_btrfs -eq 1 ]; then
+#    installDebianPackage ${prefix} btrfs-tools
 #fi
 
 

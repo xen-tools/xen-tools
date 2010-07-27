@@ -111,7 +111,7 @@ _xen_create_image()
             return 0
             ;;
         --fs)
-            COMPREPLY=( $( compgen -W 'xfs ext3 reiserfs'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+            COMPREPLY=( $( compgen -W 'ext2 ext3 ext4 xfs reiserfs btrfs'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
             return 0
             ;;
         --genpass)

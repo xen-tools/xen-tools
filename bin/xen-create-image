@@ -57,8 +57,8 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
                 are liable to be used by the new invocation.
 
    --fs=fs      Specify the filesystem type to use for the new guest.
-                Valid choices are 'ext2', 'ext3', 'ext4', 'reiserfs', or
-                'xfs'.
+                Valid choices are 'ext2', 'ext3', 'ext4', 'reiserfs',
+                'xfs' or 'btrfs'.
 
 
    --image=str  Specify whether to create "sparse" or "full" disk images.
@@ -1403,6 +1403,7 @@ sub setupDefaultOptions
     $CONFIG{ 'make_fs_ext4' }     = 'mkfs.ext4 -F';
     $CONFIG{ 'make_fs_xfs' }      = 'mkfs.xfs -f';
     $CONFIG{ 'make_fs_reiserfs' } = 'mkfs.reiserfs -f -q';
+    $CONFIG{ 'make_fs_btrfs' }    = 'mkfs.btrfs';
 
     #
     #  Flags to pass to "mount" to mount our image.
@@ -1415,6 +1416,7 @@ sub setupDefaultOptions
     $CONFIG{ 'mount_fs_ext4' }     = '-t ext4';
     $CONFIG{ 'mount_fs_xfs' }      = '-t xfs';
     $CONFIG{ 'mount_fs_reiserfs' } = '-t reiserfs';
+    $CONFIG{ 'mount_fs_btrfs' }    = '-t btrfs';
 
     #
     #  Network options.
@@ -1558,8 +1560,8 @@ sub checkOption
             message => "must be a valid hostname.\n",
         },
         supportedFs => {
-            check   => qr/^(ext[234]|xfs|reiserfs)$/,
-            message => "must be a supported filesystem (ext2, ext3, ext4, xfs or reiserfs).\n",
+            check   => qr/^(ext[234]|xfs|reiserfs|btrfs)$/,
+            message => "must be a supported filesystem (ext2, ext3, ext4, xfs, reiserfs or btrfs).\n",
         },
         yesNo => {
             check   => qr/^yes|no$/i,
