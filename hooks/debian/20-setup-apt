@@ -29,26 +29,12 @@ logMessage Script $0 starting
 
 #
 # Attempt to auto-magically detect the use of a Proxy for apt-get, and
-# replicate that setup in our new guest.
+# replicate that setup in our new guest via apt-config dump and save
+# the setting to the proxy guess file.
 #
-#
-#  Process any of the present apt-conf setup lines.
-#
-for i in /etc/apt/apt.conf /etc/apt/apt.conf.d/* ; do 
-
-    #
-    # If the file exists.  (Need this in case the literal glob fails.)
-    #
-    if [ -e $i ] ; then
-
-        #
-        # Save the matching line(s) to the proxy guess file.
-        #
-        logMessage The use of a proxy detected.
-        grep -i HTTP::Proxy $i >> ${prefix}/etc/apt/apt.conf.d/proxy-guess
-    fi
-done
-
+logMessage The use of a proxy detected.
+apt-config dump | grep -i Acquire::HTTP::Proxy \
+    > ${prefix}/etc/apt/apt.conf.d/proxy-guess
 
 
 #
