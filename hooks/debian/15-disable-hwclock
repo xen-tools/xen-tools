@@ -29,23 +29,10 @@ logMessage Script $0 starting
 #
 #  Disable the startup scripts from all runlevels.
 #
-if [ -x ${prefix}/etc/init.d/hwclock.sh ]; then
-
-    chmod -x ${prefix}/etc/init.d/hwclock.sh
-else
-
-    logMessage "/etc/init.d/hwclock.sh not found.  skipping."
-fi
-if [ -x ${prefix}/etc/init.d/hwclockfirst.sh ]; then
-
-    chmod -x ${prefix}/etc/init.d/hwclockfirst.sh
-else
-
-    logMessage "/etc/init.d/hwclockfirst.sh not found.  skipping."
-fi
-
+chroot ${prefix} /usr/sbin/update-rc.d -f hwclock.sh remove
 
 #
 # Log our finish
 #
 logMessage Script $0 finished.
+
