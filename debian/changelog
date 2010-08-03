@@ -6,6 +6,7 @@ xen-tools (4.2~rc1-1) UNRELEASED; urgency=low
       details.
     - Uses the same 15-disable-hwclock hook for Debian as for Ubuntu DomUs
       (Closes: #588880)
+  * Bump Standards-Version to 3.9.1 (no changes)
 
  -- Axel Beckert <abe@debian.org>  Wed, 02 Jun 2010 18:10:34 +0200
 
