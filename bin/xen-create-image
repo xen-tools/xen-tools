@@ -2877,7 +2877,7 @@ sub testLoopbackModule
                  "Loopback module not loaded and you're using loopback images\n"
             );
             logprint("Run the following to load the module:\n\n");
-            logprint("modprobe loop loop_max=255\n\n");
+            logprint("modprobe loop max_loop=255\n\n");
         }
     }
 }
