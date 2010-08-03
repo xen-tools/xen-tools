@@ -26,3 +26,6 @@
 # some backups
 *~
 *.orig
+
+# backups created by "make update-version"
+*.bak
