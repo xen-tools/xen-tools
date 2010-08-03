@@ -1,4 +1,4 @@
-#!/bin/bash
+# -*- shell-script -*-
 #
 #  /etc/bash_completion.d/xen-tools
 #
