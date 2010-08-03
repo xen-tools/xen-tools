@@ -102,7 +102,7 @@ $CONFIG{ 'prefix' } = "/etc/xen";
 #
 # Release number.
 #
-my $RELEASE = '4.2beta1';
+my $RELEASE = '4.2rc1';
 
 
 

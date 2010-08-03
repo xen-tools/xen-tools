@@ -14,7 +14,7 @@
 #
 TMP        ?= /tmp
 DIST_PREFIX = ${TMP}
-VERSION     = 4.2beta1
+VERSION     = 4.2rc1
 DEBVERSION  = $(shell echo $(VERSION)|sed 's/\(rc\|pre\|beta\|alpha\)/~\1/')
 BASE        = xen-tools
 VCS         = $(shell if git ls-files > /dev/null; then echo git; \
