@@ -4345,9 +4345,24 @@ sub END
         $CONFIG{ 'verbose' } &&
           logprint("Removing failed install: $CONFIG{'hostname'}\n");
 
-        $CONFIG{ 'hostname' } &&
-          system("xen-delete-image --hostname=$CONFIG{'hostname'}");
+        if ($CONFIG{ 'hostname' }) {
+            my $options = '';
+            if ($CONFIG{ 'lvm' }) {
+                $options = "--lvm=$CONFIG{'lvm'}"
+            } elsif ($CONFIG{ 'evms' }) {
+                $options = "--evms=$CONFIG{'evms'}"
+            } elsif ($CONFIG{ 'dir' }) {
+                $options = "--dir=$CONFIG{'dir'}"
+            }
 
+	    if ($options) {
+		system('xen-delete-image', $options,
+		       "--hostname=$CONFIG{'hostname'}");
+	    } else {
+		die "Assertion that either --dir, --lvm, or --dir are given".
+		    " failed.\nThis is probably a bug, please report it.";
+	    }
+	}
     } elsif ( $FAIL == 0 ) {
         #
         #  Assume success
@@ -4373,4 +4388,3 @@ sub END
         logprint("\n");
     }
 }
-

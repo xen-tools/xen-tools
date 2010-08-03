@@ -413,7 +413,7 @@ sub checkArguments
     #
     if ( $count != 1 )
     {
-        print "Please select one and only one of the installation methods:\n";
+        print "Please select one and only one of the installation methods to delete the DomU:\n";
         print " --dir\n";
         print " --evms\n";
         print " --lvm\n";
