@@ -1,3 +1,12 @@
+xen-tools (4.2~rc1-1) unstable; urgency=low
+
+  By default, xen-create-image now generates a random root password and
+  displays it as plain text at the end of the DomU generation process.
+  Use --genpass=0 and --passwd=1 to interactively set a root password
+  without the password being displayed.
+
+ -- Axel Beckert <abe@debian.org>  Tue, 03 Aug 2010 16:14:42 +0200
+
 xen-tools (4.2~beta1-1) unstable; urgency=low
 
   If the DomU hangs with "Waiting for root file system" despite

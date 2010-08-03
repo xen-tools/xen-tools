@@ -104,7 +104,7 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
                 fs, size, swap and noswap are ignored when using this
                 option.
 
-   --genpass=1  Generate a random root password
+   --genpass=1  Generate a random root password (default, set to 0 to turn off)
 
    --genpass_len=N
                 Override the default password length of 8 and generate a
