@@ -50,7 +50,7 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --debootstrap-cmd=/path/to/command
                 Specify which debootstrap command is used. Defaults to
                 debootstrap if both, debootstrap and cdebootstrap are
-                installed.
+                installed. Specifying the path is optional.
 
    --force      Force overwriting existing images. This will remove
                 existing images or LVM volumes which match those which
