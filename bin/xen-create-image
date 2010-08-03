@@ -3619,7 +3619,7 @@ sub exportEnvironment
   Run the xt-customise-system script to customize our fresh installation.
 
   Before we do this we must pass all the relevant options into our
- environment and mount /proc.
+ environment and mount /proc and /dev/pts.
 
 =end doc
 
@@ -3636,6 +3636,17 @@ sub runCustomisationHooks
 
     #  2.  Mount
     runCommand("mount -o bind /proc $MOUNT_POINT/proc");
+
+    #
+    #  Before running any scripts we'll mount /dev/pts in the guest, too.
+    #
+    #  1.  Make sure there is a directory.
+    mkdir( $MOUNT_POINT . "/dev", 0755 ) if ( !-d $MOUNT_POINT . "/dev" );
+    mkdir( $MOUNT_POINT . "/dev/pts", 0755 )
+        if ( !-d $MOUNT_POINT . "/dev/pts" );
+
+    #  2.  Mount
+    runCommand("mount -t devpts devpts $MOUNT_POINT/dev/pts");
 
     #
     # Now update the environment for each defined IP address.
@@ -3701,9 +3712,10 @@ sub runCustomisationHooks
     }
 
     #
-    #  Unmount /proc in the guest install.
+    #  Unmount /proc and /dev/pts in the guest install.
     #
     runCommand("umount $MOUNT_POINT/proc");
+    runCommand("umount $MOUNT_POINT/dev/pts");
 }
 
 
