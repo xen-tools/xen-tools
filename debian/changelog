@@ -11,6 +11,9 @@ xen-tools (4.2~rc1-1) UNRELEASED; urgency=low
     - Uses apt-config to parse Dom0's apt.conf. (Closes: #560011)
     - Fixes wrong loop module parameter syntax in warning. Thanks to
       Daniel Baumann for spotting this. (Closes: #516902)
+    - With --verbose, the output of commands called by xen-tools
+      (e.g. debootstrap) is not only logged, but also printed to
+      STDOUT. (Closes: #513126)
   * Bump Standards-Version to 3.9.1 (no changes)
 
  -- Axel Beckert <abe@debian.org>  Wed, 02 Jun 2010 18:10:34 +0200
