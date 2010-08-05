@@ -4355,14 +4355,14 @@ sub END
                 $options = "--dir=$CONFIG{'dir'}"
             }
 
-	    if ($options) {
-		system('xen-delete-image', $options,
-		       "--hostname=$CONFIG{'hostname'}");
-	    } else {
-		die "Assertion that either --dir, --lvm, or --dir are given".
-		    " failed.\nThis is probably a bug, please report it.";
-	    }
-	}
+            if ($options) {
+                system('xen-delete-image', $options,
+                       "--hostname=$CONFIG{'hostname'}");
+            } else {
+                die "Assertion that either --dir, --lvm, or --dir are given".
+                    " failed.\nThis is probably a bug, please report it.";
+            }
+        }
     } elsif ( $FAIL == 0 ) {
         #
         #  Assume success
