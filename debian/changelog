@@ -1,5 +1,6 @@
 xen-tools (4.2~rc1-1) UNRELEASED; urgency=low
 
+  [Axel Beckert]
   * New upstream release candidate
     - Uses GeoIP for Debian mirrors: Default Debian mirror is now
       cdn.debian.net, see http://wiki.debian.org/DebianGeoMirror for
@@ -14,9 +15,13 @@ xen-tools (4.2~rc1-1) UNRELEASED; urgency=low
     - With --verbose, the output of commands called by xen-tools
       (e.g. debootstrap) is not only logged, but also printed to
       STDOUT. (Closes: #513126)
+    - Adds btrfs support.
   * Bump Standards-Version to 3.9.1 (no changes)
 
- -- Axel Beckert <abe@debian.org>  Wed, 02 Jun 2010 18:10:34 +0200
+  [Stéphane Jourdois]
+  * [debian/control] Suggest btrfs-tools
+
+ -- Axel Beckert <abe@debian.org>  Fri, 06 Aug 2010 15:50:07 +0200
 
 xen-tools (4.2~beta1-1) unstable; urgency=low
 
