@@ -118,6 +118,12 @@ Maybe for a 4.3 or 5.0 release
    Like e.g. readConfigurationFile in xen-create-image and
    xen-resize-image which are not completely identical.
 
+* Refactor the code for less variants of calling cp, rm, mv, etc.
+
+   E.g. always use either cp() from File::Copy or /bin/cp, but not
+   both. To allow verbose copying, I (Axel) would prefer /bin/cp over
+   cp();
+
 * Parse numerical parameters transparently for the user
 
    The user shouldn't have to know weather he should specify size
