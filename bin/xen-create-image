@@ -2106,11 +2106,21 @@ EOF
         exit 127;
     }
 
-    if ( $CONFIG{ 'image-dev' } && $CONFIG{ 'partitions' } )
+    if ( $CONFIG{ 'image-dev' } )
     {
-        logprint("Please choose either image-dev or partitions, not both!\n");
-        $FAIL = 1;
-        exit 127;
+        if ( $CONFIG{ 'partitions' } )
+        {
+            logprint("Please choose either image-dev or partitions, not both!\n");
+            $FAIL = 1;
+            exit 127;
+        }
+
+        if ( !$CONFIG{ 'swap-dev' } && !$CONFIG{ 'noswap' } )
+        {
+            logprint("Please choose swap-dev or noswap with image-dev!\n");
+            $FAIL = 1;
+            exit 127;
+        }
     }
 
 
