@@ -1,3 +1,11 @@
+xen-tools (4.2~rc2-1) UNRELEASED; urgency=low
+
+  * New upstream release candidate
+    - Fixes several cases of broken or incomplete config files with
+      unexpected or seldom parameter combinations. (Closes: #484652)
+
+ -- Axel Beckert <abe@debian.org>  Tue, 31 Aug 2010 00:30:04 +0200
+
 xen-tools (4.2~rc1-1) unstable; urgency=low
 
   [Axel Beckert]
