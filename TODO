@@ -22,6 +22,12 @@ Minor bugs to fix and features to add before a 4.2 release
    Currently no locales are set and this causes several domU errors
    which appear in the domU's logs.
 
+* Documentation overhaul
+
+   Better explain what roles /should be/ used for, and that roles
+   are examples, and shouldn't cover every single scenario. They
+   are also easy to write.
+
 Maybe for a 4.3 or 5.0 release
 ------------------------------
 
