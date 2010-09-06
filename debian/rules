@@ -28,7 +28,6 @@ install: build
 	dh_prep
 
 	make manpages
-	make changelog
 	make install prefix=`pwd`/debian/xen-tools
 
 	dh_installdirs
