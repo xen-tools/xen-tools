@@ -145,6 +145,7 @@ install-bin:
 #
 install-hooks:
 	for i in roles/* ; do if [ -f $$i ]; then cp $$i ${prefix}/etc/xen-tools/role.d; fi ; done
+	for i in ${prefix}/usr/lib/xen-tools/*.d; do if [ -L "$$i" ]; then rm -vf "$$i"; fi; done
 	mkdir -p ${prefix}/usr/lib/xen-tools/centos-4.d/
 	mkdir -p ${prefix}/usr/lib/xen-tools/centos-5.d/
 	mkdir -p ${prefix}/usr/lib/xen-tools/fedora-core-6.d/
