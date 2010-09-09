@@ -3,6 +3,8 @@ xen-tools (4.2~rc2-1) UNRELEASED; urgency=low
   * New upstream release candidate
     - Fixes several cases of broken or incomplete config files with
       unexpected or seldom parameter combinations. (Closes: #484652)
+    - Updates examples in /etc/xen-tools.conf to better reflect current
+      state
   * Does no more try extract the upstream changelog during package
     build. (Closes: #595883)
 
