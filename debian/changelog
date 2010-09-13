@@ -1,4 +1,4 @@
-xen-tools (4.2~rc2-1) UNRELEASED; urgency=low
+xen-tools (4.2-1) UNRELEASED; urgency=low
 
   * New upstream release candidate
     - Fixes several cases of broken or incomplete config files with
