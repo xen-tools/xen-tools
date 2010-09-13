@@ -9,6 +9,7 @@ $ cd xen-tools
 
 If you just want to build the binary package, run
 
+$ make changelog
 $ dpkg-buildpackage -uc -us -b
 
 If you want to build source and binary packages, e.g. for an upload to
@@ -18,4 +19,4 @@ $ make orig-tar-gz
 $ dpkg-buildpackage
 
 
- -- Axel Beckert <abe@debian.org>, Mon, 17 May 2010 13:31:31 +0200
+ -- Axel Beckert <abe@debian.org>, Mon, 13 Sep 2010 14:30:05 +0200
