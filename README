@@ -1,3 +1,5 @@
+xen-tools
+---------
 
 Homepage:
     http://www.xen-tools.org/software/xen-tools
@@ -6,13 +8,9 @@ Git Repository:
     http://gitorious.org/xen-tools
 
 Mailing Lists:
-    http://xen-tools.org/software/xen-tools/lists.html
+    http://www.xen-tools.org/software/xen-tools/lists.html
 
-
-
-xen-tools
----------
-
+About:
   The xen-tools package contains a collection of Perl scripts for
  working with Xen guest images under Debian GNU/Linux.
 
@@ -60,6 +58,7 @@ xen-tools
  a mirror that still hosts them. Currently the oldest Ubuntu Distribution
  on Canonical's archive.ubuntu.com is Hardy Heron.
 
+
 Requirements
 ------------
 
@@ -100,7 +99,6 @@ The Scripts
   There now follows a brief description of each included script,
  for more thorough documentation please consult the appropriate
  manpage.
-
 
 
 xen-create-image
@@ -168,6 +166,5 @@ xen-update-image
     a Debian-derived distribution.
 
 
-Steve
---
-
+-- 
+The Xen-Tools Developer Team
