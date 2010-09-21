@@ -1544,8 +1544,8 @@ sub checkOption
             message => "must be an existing directory.\n",
         },
         serialDev => {
-            check   => qr/^(?:\/dev\/)?(?:tty|hvc)[0-9]+$/,
-            message => "must be a serial device (tty*, hvc*).\n",
+            check   => qr/^(?:\/dev\/)?(?:tty|[xh]vc)[0-9]+$/,
+            message => "must be a serial device (tty*, hvc* or xvc*).\n",
         },
         diskDev => {
             check   => qr/^(?:\/dev\/)?(?:tty|hvc)[0-9]+$/,
