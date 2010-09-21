@@ -5,6 +5,8 @@ xen-tools (4.2-1) UNRELEASED; urgency=low
       unexpected or seldom parameter combinations. (Closes: #484652)
     - Updates examples in /etc/xen-tools.conf to better reflect current
       state
+    - Allows usage of xvc* as serial console as used as default by older
+      Xen versions.
   * Does no more try extract the upstream changelog during package
     build. The commit which introduced this problem has been
     reverted. Document more clearly in debian/README.source how to build
