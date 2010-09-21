@@ -42,7 +42,7 @@ About:
 	  * Interpid Ibex 8.10
 	  * Jaunty Jackaplope 9.04
 	  * Karmic Koala 9.10
-	  * Lucid Lynx 10.04 (see [2])
+	  * Lucid Lynx 10.04
 	  * Maverick Meerkat 10.10 (works at least at the moment of writing :-)
 	  * Natty Narwhal 11.04 (preliminary support as it's not yet available)
 
@@ -50,11 +50,6 @@ About:
       This can be fixed by chrooting into the newly installed system
       and removing the startup scripts. See:
       http://www.linux-vserver.org/Installing_Ubuntu_8.04_Hardy_as_guest
-
-  [2] As of writing this 24.04.10, there is an issue with tar on
-      Lucid with kernels < 2.6.22 this should however be patched right
-      after release. See:
-      https://bugs.launchpad.net/ubuntu/+source/tar/+bug/539814
 
 
 Requirements
