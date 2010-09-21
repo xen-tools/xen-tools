@@ -7,6 +7,8 @@ xen-tools (4.2-1) UNRELEASED; urgency=low
       state
     - Allows usage of xvc* as serial console as used as default by older
       Xen versions.
+    - Preliminary support for Ubuntu 11.04 (Natty) and Debian 7.0 (Wheezy)
+      (Closes: #597521)
   * Does no more try extract the upstream changelog during package
     build. The commit which introduced this problem has been
     reverted. Document more clearly in debian/README.source how to build
