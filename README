@@ -30,6 +30,7 @@ About:
 	  * Etch 4.0
 	  * Lenny 5.0
 	  * Squeeze 6.0
+	  * Wheezy 7.0 (preliminary support as it's not yet available)
 	  * Sid (works at least at the moment of writing :-)
 
 	Ubuntu:
@@ -43,6 +44,7 @@ About:
 	  * Karmic Koala 9.10
 	  * Lucid Lynx 10.04 (see [2])
 	  * Maverick Meerkat 10.10 (works at least at the moment of writing :-)
+	  * Natty Narwhal 11.04 (preliminary support as it's not yet available)
 
   [1] There is an issue with debootstrap on hardy not installing ksyslogd
       This can be fixed by chrooting into the newly installed system
