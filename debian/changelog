@@ -9,6 +9,8 @@ xen-tools (4.2-1) UNRELEASED; urgency=low
       Xen versions.
     - Preliminary support for Ubuntu 11.04 (Natty) and Debian 7.0 (Wheezy)
       (Closes: #597521)
+    - Switches default mirror for EoL'ed Ubuntu 8.10 (Intrepid) and Debian
+      4.0 (Etch) to the distributions' archives for old releases.
   * Does no more try extract the upstream changelog during package
     build. The commit which introduced this problem has been
     reverted. Document more clearly in debian/README.source how to build

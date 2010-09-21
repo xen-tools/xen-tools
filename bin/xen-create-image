@@ -1346,17 +1346,17 @@ sub setupDefaultOptions
     $CONFIG{ 'mirror' }        = '';
 
     # Initialize per distribution mirror defaults: Debian
-    foreach my $debdist (qw(etch lenny squeeze wheezy sid testing stable unstable)) {
+    foreach my $debdist (qw(lenny squeeze wheezy sid testing stable unstable)) {
         $CONFIG{ 'mirror_'.$debdist } = $CONFIG{ 'mirror' }
     }
-    foreach my $debdist (qw(sarge)) {
+    foreach my $debdist (qw(sarge etch)) {
         $CONFIG{ 'mirror_'.$debdist } = 'http://archive.debian.org/debian';
     }
     # Initialize per distribution mirror defaults: Ubuntu
-    foreach my $ubuntudist (qw(dapper hardy intrepid jaunty karmic lucid maverick natty)) {
+    foreach my $ubuntudist (qw(dapper hardy jaunty karmic lucid maverick natty)) {
         $CONFIG{ 'mirror_'.$ubuntudist } = 'http://archive.ubuntu.com/ubuntu';
     }
-    foreach my $ubuntudist (qw(edgy feisty gutsy)) {
+    foreach my $ubuntudist (qw(edgy feisty gutsy intrepid)) {
         $CONFIG{ 'mirror_'.$ubuntudist } = 'http://old-releases.ubuntu.com/ubuntu';
     }
     $CONFIG{ 'arch' }          = '';
