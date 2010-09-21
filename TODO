@@ -3,8 +3,8 @@ TODO
 
 See KNOWN_BUGS for real bugs.
 
-Minor bugs to fix and features to add before a 4.2 release
-----------------------------------------------------------
+Bugs to fix and features to add for 5.0
+---------------------------------------
 
 * xen-create-image man page overhaul:
 
@@ -27,9 +27,6 @@ Minor bugs to fix and features to add before a 4.2 release
    Better explain what roles /should be/ used for, and that roles
    are examples, and shouldn't cover every single scenario. They
    are also easy to write.
-
-Maybe for a 4.3 or 5.0 release
-------------------------------
 
 * xen-create-image --dist=... / sources.list generation should be more fine-grained
 
