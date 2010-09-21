@@ -133,6 +133,8 @@ Bugs to fix and features to add for 5.0
    as <size>G or <size>Gb or <size>. This should be parsed without
    user interaction and rely on a common format.
 
+* Use Perl::Critic
+
 Stuff from Steve's TODO list / Generic TODOs
 --------------------------------------------
 
