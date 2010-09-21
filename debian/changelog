@@ -1,6 +1,6 @@
 xen-tools (4.2-1) UNRELEASED; urgency=low
 
-  * New upstream release candidate
+  * New upstream release
     - Fixes several cases of broken or incomplete config files with
       unexpected or seldom parameter combinations. (Closes: #484652)
     - Updates examples in /etc/xen-tools.conf to better reflect current
@@ -11,14 +11,14 @@ xen-tools (4.2-1) UNRELEASED; urgency=low
       (Closes: #597521)
     - Switches default mirror for EoL'ed Ubuntu 8.10 (Intrepid) and Debian
       4.0 (Etch) to the distributions' archives for old releases.
-  * Does no more try extract the upstream changelog during package
-    build. The commit which introduced this problem has been
-    reverted. Document more clearly in debian/README.source how to build
-    the package from a checked out copy of the git repository, especially
-    that the upstream changelog has to be generated first out of the VCS
-    log. (Closes: #595883)
+  * Does no more try extract the upstream changelog during debian package
+    build. The commit which introduced this problem has been reverted.
+    Document more clearly in debian/README.source how to build the package
+    from a checked out copy of the git repository, especially that the
+    upstream changelog has to be generated first out of the VCS log.
+    (Closes: #595883)
 
- -- Axel Beckert <abe@debian.org>  Mon, 13 Sep 2010 14:30:19 +0200
+ -- Axel Beckert <abe@debian.org>  Tue, 21 Sep 2010 14:27:44 +0200
 
 xen-tools (4.2~rc1-1) unstable; urgency=low
 
