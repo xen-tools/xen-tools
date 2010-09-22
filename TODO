@@ -133,6 +133,14 @@ Bugs to fix and features to add for 5.0
    as <size>G or <size>Gb or <size>. This should be parsed without
    user interaction and rely on a common format.
 
+* xen-update-image should mount /dev/pts before running apt-get
+
+* xen-update-image should have options for using ...
+
+   ... aptitude instead of apt-get
+
+   ... dist-upgrade instead of upgrade
+
 * Use Perl::Critic
 
 Stuff from Steve's TODO list / Generic TODOs
