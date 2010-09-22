@@ -60,18 +60,19 @@ xt-customize-image - Customize a freshly installed copy of GNU/Linux
 =cut
 
 
-=head1 AUTHOR
+=head1 AUTHORS
 
- Steve
- --
- http://www.steve.org.uk/
+ Steve Kemp, http://www.steve.org.uk/
+ Axel Beckert, http://noone.org/abe/
+ Stéphane Jourdois
 
 =cut
 
 
 =head1 LICENSE
 
-Copyright (c) 2005-2009 by Steve Kemp.  All rights reserved.
+Copyright (c) 2005-2009 by Steve Kemp, (c) 2010 by The Xen-Tools
+Development Team. All rights reserved.
 
 This module is free software;
 you can redistribute it and/or modify it under

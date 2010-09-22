@@ -30,15 +30,17 @@ xen-create-image(1) or the backticks feature in xen-tools.conf.
 
 =cut
 
-=head1 AUTHOR
+=head1 AUTHORS
 
- Axel Beckert <abe@deuxchevaux.org>, http://noone.org/abe/
+ Axel Beckert, http://noone.org/abe/
+ Stéphane Jourdois
 
 =cut
 
 =head1 LICENSE
 
-Copyright (C) 2010 by Steve Kemp.  All rights reserved.
+Copyright (C) 2010 by The Xen-Tools Development Team. All rights
+reserved.
 
 This module is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself. The LICENSE file contains the

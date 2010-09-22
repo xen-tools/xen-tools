@@ -17,6 +17,7 @@ xen-tools (4.2-1) UNRELEASED; urgency=low
     from a checked out copy of the git repository, especially that the
     upstream changelog has to be generated first out of the VCS log.
     (Closes: #595883)
+  * Update debian/copyright: Add Stéphane Jourdois to list of authors.
 
  -- Axel Beckert <abe@debian.org>  Tue, 21 Sep 2010 14:27:44 +0200
 
