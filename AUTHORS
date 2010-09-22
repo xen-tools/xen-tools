@@ -49,6 +49,9 @@ Contributions
    - Improved binary detection and good suggestions.
    - Better portability for non-bash shells.
 
+  Jorge Armando Medina <jmedina [at] com.e-compugraf>
+   - Fix for backward compatibility with xvc0 serial consoles
+
   Gordon Messmer <gmessmer [at] edu.washington.u>
    - Supplied .spec file for building .rpm packages.
 
