@@ -66,12 +66,12 @@ Requirements
         * Make, if you are not installing through a package manager
 
   You can try to install RPM-based distributions such as CentOS, or
- Fedora Core you will need a correctly installed and configured
+ Fedora Core but you will need a correctly installed and configured
  "rinse" package. This is currently not supported.
 
   If you wish to create new Xen instances which may be controlled by
- users via a login shell you should also install the xen-shell package
- which is available from:
+ users via a login shell you can have a look at the (currently
+ unmaintained) xen-shell package which is available from:
 
           http://xen-tools.org/software/xen-shell/
 
@@ -117,6 +117,11 @@ xen-create-image
     * xt-create-xen-config
       Create a configuration file in /etc/xen such that Xen can
       boot the newly created machine.
+
+    * xt-guess-suite-and-mirror
+      In case of a Debian or Ubuntu Dom0, this script tries to guess
+      the most suitable suite and mirror for DomUs based on the Dom0's
+      /etc/apt/sources.list.
 
 
 xen-create-nfs
