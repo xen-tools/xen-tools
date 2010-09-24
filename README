@@ -11,19 +11,20 @@ Mailing Lists:
     http://www.xen-tools.org/software/xen-tools/lists.html
 
 About:
-  The xen-tools package contains a collection of Perl scripts for
- working with Xen guest images under Debian GNU/Linux.
+  Xen-tools contains a collection of Perl scripts for working with Xen
+ guest images under Linux. Packages are currently only being provided
+ for Debian Squeeze, though installing from source works flawlessly on
+ most Linux systems that meet installation requirements.
 
   Using this software, you can easily create new Xen guests configured
- to be accessible over your local network and complete with an installed
- copy of OpenSSH.
+ to be accessible over the network via OpenSSH.
 
   xen-tools currently has scripts to install most releases of Debian
  (starting with 3.1 "Sarge") and Ubuntu (starting with 6.06 LTS
  "Dapper") and some RPM-based distributions.
 
-  However currently only Debian and Ubuntu releases are tested and
-  known to work, i.e.:
+  However, currently only Debian and Ubuntu releases are tested and
+ known to work, i.e.:
 
 	Debian:
 	  * Sarge 3.1 (i386 only)
@@ -66,7 +67,7 @@ Requirements
         * Make, if you are not installing through a package manager
 
   You can try to install RPM-based distributions such as CentOS, or
- Fedora Core but you will need a correctly installed and configured
+ Fedora Core, but you will need a correctly installed and configured
  "rinse" package. This is currently not supported.
 
   If you wish to create new Xen instances which may be controlled by
@@ -89,9 +90,8 @@ ball).
 The Scripts
 -----------
 
-  There now follows a brief description of each included script,
- for more thorough documentation please consult the appropriate
- manpage.
+  Here is a brief description of each included script, for more
+ thorough documentation please consult the appropriate manpage.
 
 
 xen-create-image
@@ -99,10 +99,6 @@ xen-create-image
 
   This script is designed to create new images which may be used
  with the Xen hypervisor.
-
-  The virtual images will have their networking settings created and,
- you may optionally cause the new instance to boot once it has
- been created.
 
   This script performs the initial setup, then delegates the real
  work to a collection of helper scripts:
