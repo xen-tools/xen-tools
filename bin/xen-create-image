@@ -215,7 +215,7 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --bridge=brname
                 Optionally, set a specific bridge for the new instance.
                 This can be especially useful when running multiple
-                bridges on a machine.
+                bridges on a dom0.
 
    --broadcast=123.456.789.ABC
                 Setup the broadcast address for the new instance.
@@ -321,6 +321,9 @@ Create a Xen configuration file in so that xm can start the new domain.
   If you wish you can configure arbitrary partitioning schemes, rather
  than being restricted to just the two standard volumes.  For more
  details on this please see the later section in this manual "PARTITIONING".
+
+  If you wish to install additional packages or do any additional
+ configuration of your new guests, please read the section on "ROLES".
 
 =cut
 
@@ -639,7 +642,7 @@ Create a Xen configuration file in so that xm can start the new domain.
 =head1 ROLES
 
   Currently there are some roles scripts included which work for
- the Debian and Ubuntu distrubtions only.   They are included
+ the Debian and Ubuntu distrubtions only. They are included
  primarily as examples of the kind of things you could accomplish.
 
   The supplied scripts are:
