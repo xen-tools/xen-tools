@@ -16,8 +16,8 @@ xen-delete-image - Delete previously created Xen instances.
 
   General options:
    --dir      Specify the output directory where images were previously saved.
-   --lvm      Specify the LVM volume to use.
    --evms     Specify the EVMS container to use.
+   --lvm      Specify the LVM volume to use.
 
   Specifying hosts:
    --hostname Specify the image name to delete.

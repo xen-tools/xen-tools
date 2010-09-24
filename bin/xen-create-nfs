@@ -19,9 +19,9 @@ xen-create-nfs - Create a Xen configuration file for an NFS-root guest.
    --dhcp       Configure the guest to use DHCP for IP allocation.
    --gateway    The gateway address to use when configured with a static IP.
    --hostname   The hostname to configure for the guest.
+   --ip         The IP address to use when configured with a static IP.
    --netmask    The netmask to use when configured with a static IP.
    --nameserver The nameserver to use when configured with a static IP.
-   --ip         The IP address to use when configured with a static IP.
 
   General options:
    --admins     Specify which users should be setup as xen-shell admins.
