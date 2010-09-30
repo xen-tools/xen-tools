@@ -12,9 +12,7 @@ Mailing Lists:
 
 About:
   Xen-tools contains a collection of Perl scripts for working with Xen
- guest images under Linux. Packages are currently only being provided
- for Debian Squeeze, though installing from source works flawlessly on
- most Linux systems that meet installation requirements.
+ guest images under Linux.
 
   Using this software, you can easily create new Xen guests configured
  to be accessible over the network via OpenSSH.
@@ -52,6 +50,9 @@ About:
       and removing the startup scripts. See:
       http://www.linux-vserver.org/Installing_Ubuntu_8.04_Hardy_as_guest
 
+  Xen-Tools are available prepackaged in Debian and as source tar-ball
+ for local installation. Installing from source should work flawlessly
+ on most Linux systems that meet the installation requirements.
 
 Requirements
 ------------
@@ -91,7 +92,7 @@ The Scripts
 -----------
 
   Here is a brief description of each included script, for more
- thorough documentation please consult the appropriate manpage.
+ thorough documentation please consult the appropriate man page.
 
 
 xen-create-image
