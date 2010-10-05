@@ -1,4 +1,4 @@
-xen-tools (4.2-1) UNRELEASED; urgency=low
+xen-tools (4.2-1) unstable; urgency=low
 
   * New upstream release
     - Fixes several cases of broken or incomplete config files with
@@ -19,7 +19,7 @@ xen-tools (4.2-1) UNRELEASED; urgency=low
     (Closes: #595883)
   * Update debian/copyright: Add Stéphane Jourdois to list of authors.
 
- -- Axel Beckert <abe@debian.org>  Tue, 21 Sep 2010 14:27:44 +0200
+ -- Axel Beckert <abe@debian.org>  Tue, 05 Oct 2010 19:01:49 +0200
 
 xen-tools (4.2~rc1-1) unstable; urgency=low
 
