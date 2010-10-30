@@ -28,6 +28,19 @@ Bugs to fix and features to add for 5.0
    are examples, and shouldn't cover every single scenario. They
    are also easy to write.
 
+* Think again about disk_device checks :
+
+   Newer Xen provides "xvda", older provided "sda". The current check for
+   valid values of disk_device (used for root device in domU /etc/fstab)
+   does only allow those values.
+   This forbids any deployment of LVM/RAID _inside_ domU, which cannot
+   be created by xen-tools anyway. So the current check is fine with the
+   current possibilities of xen-tools, but could become a limitation.
+   - Is it possible/wanted to "query" xend for default device names ?
+   - Is it possible to create /dev/mapper devices with xend conf ?
+   - Can we just avoid to ask for this value and not specify the device
+   in /etc/fstab (and use /dev/root, /dev/by-uuid, or anything ?)
+
 * xen-create-image --dist=... / sources.list generation should be more fine-grained
 
    xen-tools should offer the possibility to enable/disable
