@@ -1,3 +1,9 @@
+xen-tools (4.2+dev-1) UNRELEASED; urgency=low
+
+  * New upstream snapshot
+
+ -- Axel Beckert <abe@debian.org>  Sat, 30 Oct 2010 17:31:40 +0200
+
 xen-tools (4.2-1) unstable; urgency=low
 
   * New upstream release
