@@ -3451,7 +3451,7 @@ sub mountImage
     #
     $MOUNT_POINT = tempdir( CLEANUP => 1 );
 
-    foreach my $partition (@PARTITIONS)
+    foreach my $partition (sort { length($a->{'mountpoint'}) <=> length($b->{'mountpoint'}) } @PARTITIONS)
     {
         if ( $partition->{ 'type' } ne 'swap' )
         {
