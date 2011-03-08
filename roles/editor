@@ -61,8 +61,7 @@ for i in `find ${source} -name '*.sed' -print`; do
    #
    #  Get the name of the file, minus the source prefix
    #
-   sourcelen=${#source}
-   file=/${i:$sourcelen}
+   file=${i#$source}
 
    #
    #  Strip the .sed suffix
