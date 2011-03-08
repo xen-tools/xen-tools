@@ -6,6 +6,7 @@ xen-tools (4.2+dev-1) UNRELEASED; urgency=low
     - Fixes missing architecture check in Sarge amd64 special case. Thanks
       to Guillaume Pernot! (Closes: #611397) Also changes default Sarge
       amd64 mirror to http://archive.debian.org/debian-amd64/.
+    - Allows --ip=auto again (Closes: #611407)
 
  -- Axel Beckert <abe@debian.org>  Tue, 08 Mar 2011 23:24:06 +0100
 

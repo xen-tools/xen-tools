@@ -1560,6 +1560,10 @@ sub checkOption
             check   => qr/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
             message => "must be valid IPv4.\n",
         },
+        ipv4_or_auto => {
+            check   => qr/^(?:auto|(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))$/,
+            message => "must be valid IPv4 or the keyword 'auto'.\n",
+        },
         hostname => {
             check   => qr/^[a-z0-9][a-z0-9.-]{0,254}$/i,
             message => "must be a valid hostname.\n",
@@ -1624,7 +1628,7 @@ sub checkOption
         output        => 'existingDir',
         extension     => 'filename',
         mac           => 'mac',
-        ip            => 'ipv4',
+        ip            => 'ipv4_or_auto',
         hash_method   => 'hashMethod',
     );
 
