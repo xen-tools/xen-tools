@@ -3732,12 +3732,6 @@ sub runCustomisationHooks
     } else {
         unlink "$MOUNT_POINT/etc/resolv.conf";
     }
-
-    #
-    #  Unmount /proc and /dev/pts in the guest install.
-    #
-    runCommand("umount $MOUNT_POINT/proc");
-    runCommand("umount $MOUNT_POINT/dev/pts");
 }
 
 
@@ -4265,6 +4259,12 @@ sub runCommand
 sub unMountImage
 {
     my ($point) = (@_);
+
+    #
+    #  First we unmount /proc and /dev/pts in the guest install.
+    #
+    runCommand("umount $MOUNT_POINT/proc");
+    #runCommand("umount $MOUNT_POINT/dev/pts");
 
     #
     #  Open /proc/mount and get a list of currently mounted paths
