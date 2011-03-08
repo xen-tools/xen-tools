@@ -1,8 +1,10 @@
 xen-tools (4.2+dev-1) UNRELEASED; urgency=low
 
   * New upstream snapshot
+    - Fixes bashism in "editor" roles script. Thanks Raphaël Halimi for
+      the patch! (Closes: #605203)
 
- -- Axel Beckert <abe@debian.org>  Sat, 30 Oct 2010 17:31:40 +0200
+ -- Axel Beckert <abe@debian.org>  Tue, 08 Mar 2011 23:24:06 +0100
 
 xen-tools (4.2-1) unstable; urgency=low
 
