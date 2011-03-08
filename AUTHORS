@@ -65,6 +65,9 @@ Contributions
   Nathan O'Sullivan <nathan [at] au.com.mammoth>
    - New features wrt. options and helper functions
 
+  Guillaume Pernot <gpernot [at] org.praksys>
+    - Fixed Sarge amd64 special case
+
   Walter Reiner <walter [at] at.wreiner>
    - Provided --image-dev + --swap-dev patch.
 
