@@ -1918,7 +1918,7 @@ sub checkArguments
     #  Sarge amd64 needs different default mirror
     #
     if ( $CONFIG{ 'dist' } =~ /sarge/ and
-	 $CONFIG{ 'arch' } =~ /amd64/ and
+         $CONFIG{ 'arch' } =~ /amd64/ and
          $CONFIG{ 'mirror_sarge' } eq 'http://archive.debian.org/debian' )
     {
         $CONFIG{ 'mirror_sarge' } = 'http://archive.debian.org/debian-amd64';
