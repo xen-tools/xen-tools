@@ -33,6 +33,9 @@ Contributions
   Stefan Fritsch  <sf [at] de.sfritsch>
    - Contributed the policy-rc.d fixups for common.sh
 
+  Raphaël Halimi <raphael.halimi [at] com.gmail>
+    - Contribute bashism fix
+
   Sven Hertge <sven [at] de.svenhartge>
    - Bugfix for Debian/Gentoo package installation.
 
