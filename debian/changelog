@@ -1,3 +1,10 @@
+xen-tools (4.2-1~bpo50+1) lenny-backports; urgency=low
+
+  * Backport to Lenny.
+  * Supports installing Squeeze DomUs on a Lenny Dom0 (Closes: #609852)
+
+ -- Axel Beckert <abe@debian.org>  Wed, 09 Mar 2011 18:28:36 +0100
+
 xen-tools (4.2-1) unstable; urgency=low
 
   * New upstream release
