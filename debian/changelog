@@ -1,6 +1,6 @@
-xen-tools (4.2+dev-1) UNRELEASED; urgency=low
+xen-tools (4.2.1-1) unstable; urgency=low
 
-  * New upstream snapshot
+  * New upstream release
     - Fixes bashism in "editor" roles script. Thanks Raphaël Halimi for
       the patch! (Closes: #605203)
     - Fixes missing architecture check in Sarge amd64 special case. Thanks
@@ -10,7 +10,7 @@ xen-tools (4.2+dev-1) UNRELEASED; urgency=low
     - Unmounts /proc and /dev/pts of the freshly installed DomU just
       before unmounting the disk image. (Closes: #588783)
 
- -- Axel Beckert <abe@debian.org>  Tue, 08 Mar 2011 23:24:06 +0100
+ -- Axel Beckert <abe@debian.org>  Thu, 17 Mar 2011 01:00:47 +0100
 
 xen-tools (4.2-1) unstable; urgency=low
 
