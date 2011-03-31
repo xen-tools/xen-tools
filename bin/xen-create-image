@@ -204,6 +204,10 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
                 to choose a more or less close Debian mirror. See
                 http://wiki.debian.org/DebianGeoMirror for details.
 
+   --apt_proxy=url
+                Specify a proxy to be used by debootstrap, and within
+                the guest.
+
    --template=tmpl
                 Specify which template file to use when creating the
                 Xen configuration file.
@@ -1364,6 +1368,7 @@ sub setupDefaultOptions
     foreach my $ubuntudist (qw(edgy feisty gutsy intrepid)) {
         $CONFIG{ 'mirror_'.$ubuntudist } = 'http://old-releases.ubuntu.com/ubuntu';
     }
+    $CONFIG{ 'apt_proxy' }     = '';
     $CONFIG{ 'arch' }          = '';
     $CONFIG{ 'fs' }            = 'ext3';
     $CONFIG{ 'force' }         = 0;
@@ -1705,6 +1710,7 @@ sub parseCommandLineArguments
             "kernel=s",    \&checkOption,
             "initrd=s",    \&checkOption,
             "mirror=s",    \&checkOption,
+            "apt_proxy=s", \&checkOption,
             "modules=s",   \&checkOption,
             "lvm=s",       \$install{ 'lvm' },
             "image-dev=s", \$install{ 'image-dev' },
@@ -3568,6 +3574,15 @@ sub installSystem
          $CONFIG{ 'debootstrap-cmd' } )
     {
         $cmd .= " --debootstrap-cmd=$CONFIG{'debootstrap-cmd'}";
+    }
+
+
+    #
+    #  Propagate --apt_proxy
+    #
+    if ( $CONFIG{ 'apt_proxy' } )
+    {
+        $cmd .= " --apt_proxy=$CONFIG{'apt_proxy'}";
     }
 
 
