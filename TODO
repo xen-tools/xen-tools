@@ -154,6 +154,9 @@ Bugs to fix and features to add for 5.0
 
    ... dist-upgrade instead of upgrade
 
+* Support cpu_weight and other features from
+  http://wiki.xensource.com/xenwiki/CreditScheduler
+
 * Use Perl::Critic
 
 Stuff from Steve's TODO list / Generic TODOs
