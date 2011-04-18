@@ -1553,7 +1553,7 @@ sub checkOption
             message => "must be a serial device (tty*, hvc* or xvc*).\n",
         },
         diskDev => {
-            check   => qr/^(?:\/dev\/)?(?:xvd|sd)[a-z][0-9]+$/,
+            check   => qr/^(?:\/dev\/)?(?:xvd|sd)[a-z]+$/,
             message => "must be a disk device (xvd*, sd*).\n",
         },
         ipv4 => {
