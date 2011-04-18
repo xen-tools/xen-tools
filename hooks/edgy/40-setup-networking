@@ -68,6 +68,16 @@ E_O_DHCP
 setupStaticNetworking ()
 {
     #
+    #  if $p2p is set then add a "pointopoint" setting.
+    #
+    point='';
+    if [ ! -z "${p2p}" ]; then
+        point="pointopoint ${p2p}"
+    else
+        point=''
+    fi
+
+    #
     # broadcast address?
     #
     bcast='';
@@ -93,6 +103,7 @@ iface eth0 inet static
  gateway ${gateway}
  netmask ${netmask}
  ${bcast}
+ ${point}
  # post-up  ethtool -K eth0 tx off
 
 #
