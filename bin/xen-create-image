@@ -1550,11 +1550,11 @@ sub checkOption
         },
         serialDev => {
             check   => qr/^(?:\/dev\/)?(?:tty|[xh]vc)[0-9]+$/,
-            message => "must be a serial device (tty*, hvc* or xvc*).\n",
+            message => "must be a serial device (tty[0-9]+, hvc[0-9]+ or xvc[0-9]+).\n",
         },
         diskDev => {
             check   => qr/^(?:\/dev\/)?(?:xvd|sd)[a-z]+$/,
-            message => "must be a disk device (xvd*, sd*).\n",
+            message => "must be a disk device (xvd[a-z]+, sd[a-z]+).\n",
         },
         ipv4 => {
             check   => qr/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
