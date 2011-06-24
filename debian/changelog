@@ -3,8 +3,10 @@ xen-tools (4.2.1+dev-1) UNRELEASED; urgency=low
   * New upstream snapshot
     - Correctly checks and documents valid values for
       disk_device. (Closes: #621499)
+  * No more suggest evms-cli -- it's no more available on any supported
+    Dom0 distribution. Thanks to Markus Waldeck for the hint.
 
- -- Axel Beckert <abe@debian.org>  Tue, 19 Apr 2011 23:19:35 +0200
+ -- Axel Beckert <abe@debian.org>  Fri, 24 Jun 2011 03:17:13 +0200
 
 xen-tools (4.2.1-1) unstable; urgency=low
 
