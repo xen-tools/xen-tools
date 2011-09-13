@@ -19,20 +19,21 @@ About:
 
   xen-tools currently has scripts to install most releases of Debian
  (starting with 3.1 "Sarge") and Ubuntu (starting with 6.06 LTS
- "Dapper") and some RPM-based distributions.
+ "Dapper") and some RPM-based distributions. On the Dom0 side all
+ current Xen supporting distributions should work.
 
   However, currently only Debian and Ubuntu releases are tested and
  known to work, i.e.:
 
 	Debian:
-	  * Sarge 3.1 (i386 only)
-	  * Etch 4.0
+	  * Sarge 3.1 (i386 and DomU only)
+	  * Etch 4.0 (Dom0 no more tested)
 	  * Lenny 5.0
 	  * Squeeze 6.0
 	  * Wheezy 7.0 (preliminary support as it's not yet available)
 	  * Sid (works at least at the moment of writing :-)
 
-	Ubuntu:
+	Ubuntu (only DomUs tested):
 	  * Dapper Drake 6.06
 	  * Edgy Eft 6.10
 	  * Feisty Fawn 7.04
