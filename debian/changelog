@@ -3,8 +3,10 @@ xen-tools (4.2.1+dev-1) UNRELEASED; urgency=low
   * New upstream snapshot
     - Correctly checks and documents valid values for
       disk_device. (Closes: #621499)
+  * Support creating Ubuntu 11.10 Oneiric DomUs (LP: #848654)
+  * Fix Lintian warning copyright-refers-to-symlink-license.
 
- -- Axel Beckert <abe@debian.org>  Tue, 19 Apr 2011 23:19:35 +0200
+ -- Axel Beckert <abe@debian.org>  Tue, 13 Sep 2011 15:50:59 +0200
 
 xen-tools (4.2.1-1) unstable; urgency=low
 

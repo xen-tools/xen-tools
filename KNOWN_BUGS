@@ -26,3 +26,5 @@ Bugs to fix before a 4.3 release
   Current (unreleased) fix is to sort by mountpoint length.
 
   Fix would be to reproduce what mount does with mount -a.
+
+* xen-create-image doesn't unmount the tempdir properly if /proc wasn't mounted inside
