@@ -188,6 +188,7 @@ install-hooks:
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s karmic.d lucid.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s karmic.d maverick.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s karmic.d natty.d
+	-cd ${prefix}/usr/lib/xen-tools/ && ln -s karmic.d oneiric.d
 	cp hooks/common.sh ${prefix}/usr/lib/xen-tools
 
 
