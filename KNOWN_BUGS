@@ -11,3 +11,5 @@ Bugs to fix before a 4.3 release
    http://xen-tools.org/pipermail/xen-tools-discuss/2010-May/000757.html
 
 * xen-delete-image ignores extension setting
+
+* xen-create-image doesn't unmount the tempdir properly if /proc wasn't mounted inside
