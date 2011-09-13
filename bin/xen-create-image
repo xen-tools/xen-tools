@@ -1358,7 +1358,7 @@ sub setupDefaultOptions
         $CONFIG{ 'mirror_'.$debdist } = 'http://archive.debian.org/debian';
     }
     # Initialize per distribution mirror defaults: Ubuntu
-    foreach my $ubuntudist (qw(dapper hardy jaunty karmic lucid maverick natty)) {
+    foreach my $ubuntudist (qw(dapper hardy jaunty karmic lucid maverick natty oneiric)) {
         $CONFIG{ 'mirror_'.$ubuntudist } = 'http://archive.ubuntu.com/ubuntu';
     }
     foreach my $ubuntudist (qw(edgy feisty gutsy intrepid)) {
@@ -1913,7 +1913,7 @@ sub checkArguments
     #
     #  Lucid and probably all later Ubuntus, too, don't work without pygrub
     #
-    if ( $CONFIG{ 'dist' } =~ /lucid|maverick|natty/ )
+    if ( $CONFIG{ 'dist' } =~ /lucid|maverick|natty|oneiric/ )
     {
         $CONFIG{ 'pygrub' } = 1;
     }
