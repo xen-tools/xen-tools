@@ -165,3 +165,11 @@ Stuff from Steve's TODO list / Generic TODOs
 * Write more test cases.
 
 * xen-delete-image should unallocate any used IP addresses.
+
+Axel's Break-Backwards-Compatibility Wishlist
+---------------------------------------------
+
+* Make empty extension the default
+
+   This would ease tab completion and CLI parameter reusage with "xm
+   create" and friends.
