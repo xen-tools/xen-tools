@@ -80,7 +80,7 @@ sub checkFile
     #        use strict "vars";
     #        use strict "subs";
     #
-    my $retval = system( "perl -Mstrict=subs -Mstrict=vars -c $file 2>/dev/null >/dev/null" );
+    my $retval = system( "perl -Mstrict=subs -Mstrict=vars -Ilib -c $file 2>/dev/null >/dev/null" );
 
     is( $retval, 0, "Perl file passes our syntax check: $file" );
 }
