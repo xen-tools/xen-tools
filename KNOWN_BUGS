@@ -28,3 +28,7 @@ Bugs to fix before a 4.3 release
   Fix would be to reproduce what mount does with mount -a.
 
 * xen-create-image doesn't unmount the tempdir properly if /proc wasn't mounted inside
+
+* xen-list-images does not honour --extension
+
+* --extension='' (i.e. empty string) no more works

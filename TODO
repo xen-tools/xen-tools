@@ -157,6 +157,11 @@ Bugs to fix and features to add for 5.0
 * Support cpu_weight and other features from
   http://wiki.xensource.com/xenwiki/CreditScheduler
 
+* Code Deduplication
+
+   bin/x* currently contain the same or similar code like e.g. in the
+   function readConfigurationFile. This needs to be cleaned up
+
 * Use Perl::Critic
 
 Stuff from Steve's TODO list / Generic TODOs
@@ -165,3 +170,11 @@ Stuff from Steve's TODO list / Generic TODOs
 * Write more test cases.
 
 * xen-delete-image should unallocate any used IP addresses.
+
+Axel's Break-Backwards-Compatibility Wishlist
+---------------------------------------------
+
+* Make empty extension the default
+
+   This would ease tab completion and CLI parameter reusage with "xm
+   create" and friends.
