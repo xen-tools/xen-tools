@@ -380,6 +380,30 @@ sub testArguments
     die "Missing NFS root."   unless ( $CONFIG{ 'nfs_root' } );
 
 
+    # Shorthack to fix http://bugs.debian.org/648814 -- xen-create-nfs
+    # should better use xt-create-xen-config instead. Guess from where
+    # this code is borrowed for now...
+
+    if ( exists($CONFIG{ 'memory' }) and
+	 defined($CONFIG{ 'memory' }) ) {
+
+	#
+	#  The memory size:  Convert Gb -> Mb.
+	#
+	if ( $CONFIG{ 'memory' } =~ /^(\d+)Gb.*$/i )
+	{
+	    $CONFIG{ 'memory' } = $1 * 1024;
+	}
+
+	#
+	#  Remove any trailing Mb.
+	#
+	if ( $CONFIG{ 'memory' } =~ /^(\d+)Mb.*$/i )
+	{
+	    $CONFIG{ 'memory' } = $1;
+	}
+
+    }
     # All OK.
 }
 
