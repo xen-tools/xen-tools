@@ -83,6 +83,7 @@ use English;
 use File::Temp qw/ tempdir /;
 use Getopt::Long;
 use Pod::Usage;
+use Xen::Tools::Common;
 
 
 #
@@ -108,7 +109,7 @@ my $RELEASE = '4.2.1+dev';
 #
 #  Read the global configuration file if it exists.
 #
-readConfigurationFile("/etc/xen-tools/xen-tools.conf");
+readConfigurationFile("/etc/xen-tools/xen-tools.conf", \%CONFIG);
 
 
 #
@@ -141,83 +142,6 @@ foreach my $instance (@instances)
 #  All done.
 #
 exit;
-
-
-
-=begin doc
-
-  Read the configuration file specified.
-
-=end doc
-
-=cut
-
-sub readConfigurationFile
-{
-    my ($file) = (@_);
-
-    # Don't read the file if it doesn't exist.
-    return if ( !-e $file );
-
-    open( FILE, "<", $file ) or die "Cannot read file '$file' - $!";
-
-
-    while ( defined( my $line = <FILE> ) )
-    {
-        chomp $line;
-        if ( $line =~ s/\\$// )
-        {
-            $line .= <FILE>;
-            redo unless eof(FILE);
-        }
-
-        # Skip lines beginning with comments
-        next if ( $line =~ /^([ \t]*)\#/ );
-
-        # Skip blank lines
-        next if ( length($line) < 1 );
-
-        # Strip trailing comments.
-        if ( $line =~ /(.*)\#(.*)/ )
-        {
-            $line = $1;
-        }
-
-        # Find variable settings
-        if ( $line =~ /([^=]+)=([^\n]+)/ )
-        {
-            my $key = $1;
-            my $val = $2;
-
-            # Strip leading and trailing whitespace.
-            $key =~ s/^\s+//;
-            $key =~ s/\s+$//;
-            $val =~ s/^\s+//;
-            $val =~ s/\s+$//;
-
-            # command expansion?
-            if ( $val =~ /(.*)`([^`]+)`(.*)/ )
-            {
-
-                # store
-                my $pre  = $1;
-                my $cmd  = $2;
-                my $post = $3;
-
-                # get output
-                my $output = `$cmd`;
-                chomp($output);
-
-                # build up replacement.
-                $val = $pre . $output . $post;
-            }
-
-            # Store value.
-            $CONFIG{ $key } = $val;
-        }
-    }
-    close(FILE);
-}
 
 
 
