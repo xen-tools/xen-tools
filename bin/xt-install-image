@@ -473,53 +473,6 @@ EOT
 
 =begin doc
 
-  A utility method to run a system command.  We will capture the return
- value and exit if the command fails.
-
-  When running verbosely we will also display any command output.
-
-=end doc
-
-=cut
-
-sub runCommand
-{
-    my ($cmd) = (@_);
-
-    #
-    #  Command start.
-    #
-    $CONFIG{ 'verbose' } && print "Executing : $cmd\n";
-
-    #
-    #  Copy stderr to stdout, so we can see it, and make sure we log it.
-    #
-    $cmd .= " 2>&1 | tee --append /var/log/xen-tools/$CONFIG{'hostname'}.log";
-
-    #
-    #  Run it.
-    #
-    my $output = `$cmd`;
-
-    if ( $? != 0 )
-    {
-        print "Running command '$cmd' failed.\n";
-        print "Aborting\n";
-        exit 127;
-    }
-
-    #
-    #  Command finished.
-    #
-    $CONFIG{ 'verbose' } && print "Finished : $cmd\n";
-
-    return ($output);
-}
-
-
-
-=begin doc
-
   This function will copy all the .deb files from one directory
  to another as a caching operation which will speed up installations via
  debootstrap.
@@ -603,7 +556,7 @@ sub do_copy
     #
     #  Run the copy command.
     #
-    runCommand($cmd);
+    runCommand($cmd, \%CONFIG);
 }
 
 
@@ -654,7 +607,7 @@ sub do_debootstrap
             }
             $cachedir = $xtcache;
         }
-        runCommand("mkdir -p $CONFIG{'location'}/var/cache/apt/archives");
+        runCommand("mkdir -p $CONFIG{'location'}/var/cache/apt/archives", \%CONFIG);
         copyDebFiles( "$cachedir",
                       "$CONFIG{'location'}/var/cache/apt/archives" );
         print("Done\n");
@@ -687,7 +640,7 @@ sub do_debootstrap
     #
     #  Run the command.
     #
-    runCommand($command);
+    runCommand($command, \%CONFIG);
 
 
     #
@@ -741,7 +694,7 @@ sub do_rinse
         $command .= " --verbose";
     }
 
-    runCommand($command);
+    runCommand($command, \%CONFIG);
 }
 
 
@@ -784,7 +737,7 @@ sub do_rpmstrap
     #  The command we're going to run.
     #
     my $command = "rpmstrap $EXTRA $CONFIG{'dist'} $CONFIG{'location'} $mirror";
-    runCommand($command);
+    runCommand($command, \%CONFIG);
 }
 
 
@@ -818,5 +771,5 @@ sub do_tar
     #
     #  Run a command to copy an installed system into the new root.
     #
-    runCommand("cd $CONFIG{'location'} && $cmd");
+    runCommand("cd $CONFIG{'location'} && $cmd", \%CONFIG);
 }

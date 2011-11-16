@@ -438,7 +438,7 @@ sub deleteXenImage
                 print "Would remove LVM swap volume /dev/$CONFIG{'lvm'}/$hostname-swap\n";
             } else {
                 print "Removing swap volume\n";
-                runCommand("lvremove /dev/$CONFIG{'lvm'}/$hostname-swap --force");
+                runCommand("lvremove /dev/$CONFIG{'lvm'}/$hostname-swap --force", \%CONFIG);
             }
         }
 
@@ -448,7 +448,7 @@ sub deleteXenImage
                 print "Would remove LVM disk volume /dev/$CONFIG{'lvm'}/$hostname-disk\n";
             } else {
                 print "Removing LVM disk volume\n";
-                runCommand("lvremove /dev/$CONFIG{'lvm'}/$hostname-disk --force");
+                runCommand("lvremove /dev/$CONFIG{'lvm'}/$hostname-disk --force", \%CONFIG);
             }
         }
 
@@ -470,8 +470,8 @@ sub deleteXenImage
                 print "Would remove EVMS swap volume: $CONFIG{'evms'}/$hostname-swap\n";
             } else {
                 print "Removing EVMS swap volume\n";
-                runCommand("echo Delete : /dev/evms/$hostname-swap | evms");
-                runCommand("echo Delete : $CONFIG{'evms'}/$hostname-swap | evms");
+                runCommand("echo Delete : /dev/evms/$hostname-swap | evms", \%CONFIG);
+                runCommand("echo Delete : $CONFIG{'evms'}/$hostname-swap | evms", \%CONFIG);
             }
         }
 
@@ -482,8 +482,8 @@ sub deleteXenImage
                 print "Would remove EVMS disk volume: $CONFIG{'evms'}/$hostname-swap\n";
             } else {
                 print "Removing EVMS disk volume\n";
-                runCommand("echo Delete : /dev/evms/$hostname-disk | evms");
-                runCommand("echo Delete : $CONFIG{'evms'}/$hostname-disk | evms");
+                runCommand("echo Delete : /dev/evms/$hostname-disk | evms", \%CONFIG);
+                runCommand("echo Delete : $CONFIG{'evms'}/$hostname-disk | evms", \%CONFIG);
             }
         }
 
@@ -495,67 +495,4 @@ sub deleteXenImage
         print "Hostname : $hostname\n";
         exit 127;
     }
-}
-
-
-
-=begin doc
-
-  A utility method to run a system command.  We will capture the return
- value and exit if the command files.
-
-  When running verbosely we will also display any command output.
-
-=end doc
-
-=cut
-
-sub runCommand
-{
-    my ($cmd) = (@_);
-
-    #
-    #  Header.
-    #
-    $CONFIG{ 'verbose' } && print "Executing : $cmd\n";
-
-    #
-    #  Hide output unless running with --debug.
-    #
-    if ( $CONFIG{ 'verbose' } )
-    {
-
-        #
-        #  Copy stderr to stdout, so we can see it.
-        #
-        $cmd .= " 2>&1";
-    }
-    else
-    {
-        $cmd .= " >/dev/null 2>/dev/null";
-    }
-
-
-    #
-    #  Run it.
-    #
-    my $output = `$cmd`;
-
-    if ( $? != 0 )
-    {
-        print "Running command '$cmd' failed.\n";
-        print "Aborting\n";
-        exit;
-    }
-
-
-    #
-    # All done.
-    #
-    $CONFIG{ 'verbose' } && print "Output\n";
-    $CONFIG{ 'verbose' } && print "======\n";
-    $CONFIG{ 'verbose' } && print $output . "\n";
-    $CONFIG{ 'verbose' } && print "Finished : $cmd\n";
-
-    return ($output);
 }

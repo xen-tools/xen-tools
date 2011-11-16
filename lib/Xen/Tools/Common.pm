@@ -18,7 +18,7 @@ use strict;
 use Exporter 'import';
 use vars qw(@EXPORT_OK @EXPORT);
 
-@EXPORT = qw(readConfigurationFile xenRunning);
+@EXPORT = qw(readConfigurationFile xenRunning runCommand);
 
 =head1 FUNCTIONS
 
@@ -129,6 +129,74 @@ sub xenRunning ($)
     close(CMD);
 
     return ($running);
+}
+
+=head2 runCommand
+
+=begin doc
+
+  A utility method to run a system command.  We will capture the return
+ value and exit if the command files.
+
+  When running verbosely we will also display any command output once
+ it has finished.
+
+=end doc
+
+=cut
+
+sub runCommand ($$)
+{
+    my ($cmd, $CONFIG) = (@_);
+
+    #
+    #  Set a local if we don't have one.
+    #
+    $ENV{ 'LC_ALL' } = "C" unless ( $ENV{ 'LC_ALL' } );
+
+    #
+    #  Header.
+    #
+    $CONFIG->{ 'verbose' } && print "Executing : $cmd\n";
+
+    #
+    #  Copy stderr to stdout, so we can see it, and make sure we log it.
+    #
+    $cmd .= " 2>&1";
+
+    #
+    #  Run it.
+    #
+    my $rcopen = open(CMD, '-|', $cmd);
+    if (!defined($rcopen)) {
+        logprint("Starting command '$cmd' failed: $!\n");
+        logprint("Aborting\n");
+        print "See /var/log/xen-tools/".$CONFIG->{'hostname'}.".log for details\n";
+        $CONFIG->{'FAIL'} = 1;
+        exit 127;
+    }
+
+    while (my $line = <CMD>) {
+        if ($CONFIG->{ 'verbose' }) {
+            logprint $line;
+        } else {
+            logonly $line;
+        }
+    }
+
+    my $rcclose = close(CMD);
+
+    $CONFIG->{ 'verbose' } && print "Finished : $cmd\n";
+
+    if (!$rcclose)
+    {
+        logprint("Running command '$cmd' failed with exit code $?.\n");
+        logprint("Aborting\n");
+        print "See /var/log/xen-tools/".$CONFIG->{'hostname'}.".log for details\n";
+        $CONFIG->{'FAIL'} = 1;
+        exit 127;
+    }
+
 }
 
 =head1 AUTHORS

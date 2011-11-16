@@ -1101,7 +1101,7 @@ if ( $CONFIG{ 'boot' } )
             logprint("Creating auto-start symlink to: $cfg\n");
 
             my $link = "ln -s $cfg /etc/xen/auto/";
-            runCommand($link);
+            runCommand($link, \%CONFIG);
         }
     }
 
@@ -2936,7 +2936,7 @@ sub createLoopbackImages
         umask(0077);
 
         # run the image creation command
-        runCommand($image_cmd);
+        runCommand($image_cmd, \%CONFIG);
         logprint("Done\n");
 
         # Reset the umask to the previous value
@@ -3074,7 +3074,7 @@ sub createLVMBits
             {
                 logprint(
                       "Removing $lvm_disk - since we're forcing the install\n");
-                runCommand("lvremove --force $lvm_disk");
+                runCommand("lvremove --force $lvm_disk", \%CONFIG);
             }
             else
             {
@@ -3106,7 +3106,7 @@ sub createLVMBits
         #
         # Create the volume
         #
-        runCommand($disk_cmd);
+        runCommand($disk_cmd, \%CONFIG);
 
         #
         # Make sure that worked.
@@ -3172,7 +3172,7 @@ sub createEVMSBits
                 logprint(
                     "Removing $evms_volume_disk - since we're forcing the install\n"
                 );
-                runCommand("echo Delete : $evms_volume_disk | evms");
+                runCommand("echo Delete : $evms_volume_disk | evms", \%CONFIG);
             }
             else
             {
@@ -3202,7 +3202,7 @@ sub createEVMSBits
                 logprint(
                     "Removing $evms_object_disk - since we're forcing the install\n"
                 );
-                runCommand("echo Delete : $evms_object_disk | evms");
+                runCommand("echo Delete : $evms_object_disk | evms", \%CONFIG);
             }
             else
             {
@@ -3262,8 +3262,8 @@ sub createEVMSBits
         #
         # Create the volumes
         #
-        runCommand($disk_cmd_object);
-        runCommand($disk_cmd_volume);
+        runCommand($disk_cmd_object, \%CONFIG);
+        runCommand($disk_cmd_volume, \%CONFIG);
 
         #
         #  Initialise the partition with the relevant filesystem.
@@ -3333,7 +3333,7 @@ sub createFilesystem
 
     $command .= " " . $image;
 
-    runCommand($command);
+    runCommand($command, \%CONFIG);
     logprint("Done\n");
 }
 
@@ -3353,7 +3353,7 @@ sub createSwap
 
     logprint("\nCreating swap on $path\n");
 
-    runCommand("mkswap $path");
+    runCommand("mkswap $path", \%CONFIG);
     logprint("Done\n");
 }
 
@@ -3410,7 +3410,7 @@ sub mountImage
             {
                 $mount_cmd = "mount $mount_type -o loop $image $mountpoint";
             }
-            runCommand($mount_cmd);
+            runCommand($mount_cmd, \%CONFIG);
         }
     }
 
@@ -3509,7 +3509,7 @@ sub installSystem
     #
     #  Run the command.
     #
-    runCommand($cmd);
+    runCommand($cmd, \%CONFIG);
     logprint("Done\n");
 }
 
@@ -3577,7 +3577,7 @@ sub runCustomisationHooks
     mkdir( $MOUNT_POINT . "/proc", 0755 ) if ( !-d $MOUNT_POINT . "/proc" );
 
     #  2.  Mount
-    runCommand("mount -o bind /proc $MOUNT_POINT/proc");
+    runCommand("mount -o bind /proc $MOUNT_POINT/proc", \%CONFIG);
 
     #
     #  Before running any scripts we'll mount /dev/pts in the guest, too.
@@ -3588,7 +3588,7 @@ sub runCustomisationHooks
         if ( !-d $MOUNT_POINT . "/dev/pts" );
 
     #  2.  Mount
-    runCommand("mount -t devpts devpts $MOUNT_POINT/dev/pts");
+    runCommand("mount -t devpts devpts $MOUNT_POINT/dev/pts", \%CONFIG);
 
     #
     # Now update the environment for each defined IP address.
@@ -3641,7 +3641,7 @@ sub runCustomisationHooks
         $customize .= " --verbose";
     }
     logprint("\nRunning hooks\n");
-    runCommand($customize);
+    runCommand($customize, \%CONFIG);
     logprint("Done\n");
 
     #
@@ -3837,7 +3837,7 @@ sub runRoleScript
     #
     # NOTE:  Space added to $args as prefix ..
     #
-    runCommand( $file . " " . $MOUNT_POINT . $args );
+    runCommand( $file . " " . $MOUNT_POINT . $args, \%CONFIG );
 
     logprint("Role script completed.\n");
 }
@@ -3905,7 +3905,7 @@ sub runXenConfigCreation
     }
 
     logprint("\nCreating Xen configuration file\n");
-    runCommand($command);
+    runCommand($command, \%CONFIG);
     logprint("Done\n");
 }
 
@@ -4099,74 +4099,6 @@ sub findBinary
 
 =begin doc
 
-  A utility method to run a system command.  We will capture the return
- value and exit if the command files.
-
-  When running verbosely we will also display any command output once
- it has finished.
-
-=end doc
-
-=cut
-
-sub runCommand
-{
-    my ($cmd) = (@_);
-
-    #
-    #  Set a local if we don't have one.
-    #
-    $ENV{ 'LC_ALL' } = "C" unless ( $ENV{ 'LC_ALL' } );
-
-    #
-    #  Header.
-    #
-    $CONFIG{ 'verbose' } && print "Executing : $cmd\n";
-
-    #
-    #  Copy stderr to stdout, so we can see it, and make sure we log it.
-    #
-    $cmd .= " 2>&1";
-
-    #
-    #  Run it.
-    #
-    my $rcopen = open(CMD, '-|', $cmd);
-    if (!defined($rcopen)) {
-        logprint("Starting command '$cmd' failed: $!\n");
-        logprint("Aborting\n");
-        print "See /var/log/xen-tools/$CONFIG{'hostname'}.log for details\n";
-        $FAIL = 1;
-        exit 127;
-    }
-
-    while (my $line = <CMD>) {
-        if ($CONFIG{ 'verbose' }) {
-            logprint $line;
-        } else {
-            logonly $line;
-        }
-    }
-
-    my $rcclose = close(CMD);
-
-    $CONFIG{ 'verbose' } && print "Finished : $cmd\n";
-
-    if (!$rcclose)
-    {
-        logprint("Running command '$cmd' failed with exit code $?.\n");
-        logprint("Aborting\n");
-        print "See /var/log/xen-tools/$CONFIG{'hostname'}.log for details\n";
-        $FAIL = 1;
-        exit 127;
-    }
-
-}
-
-
-
-=begin doc
-
   Unmount any mount-points which are below the given path.
 
   The mountpoints are chosen by looking at /proc/mounts which
@@ -4183,8 +4115,8 @@ sub unMountImage
     #
     #  First we unmount /proc and /dev/pts in the guest install.
     #
-    runCommand("umount $MOUNT_POINT/proc");
-    #runCommand("umount $MOUNT_POINT/dev/pts");
+    runCommand("umount $MOUNT_POINT/proc", \%CONFIG);
+    #runCommand("umount $MOUNT_POINT/dev/pts", \%CONFIG);
 
     #
     #  Open /proc/mount and get a list of currently mounted paths
@@ -4221,7 +4153,7 @@ sub unMountImage
     foreach my $path (@points)
     {
         $CONFIG{ 'verbose' } && print "Unmounting : $path\n";
-        runCommand("umount $path");
+        runCommand("umount $path", \%CONFIG);
     }
 
     $MOUNT_POINT = undef;
@@ -4282,7 +4214,7 @@ sub END
     #  $FAIL = 0  -  Success
     #  $FAIL = 1  -  Failed to install, delete the image
     #  $FAIL = 2  -  Files exist, either .cfg or lvm... etc
-    if ( ($FAIL == 1) && ( !$CONFIG{ 'keep' } ) )
+    if ( ($FAIL == 1 or $CONFIG{'FAIL'} == 1) && ( !$CONFIG{ 'keep' } ) )
     {
 
         #
