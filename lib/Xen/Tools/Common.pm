@@ -18,7 +18,9 @@ use strict;
 use Exporter 'import';
 use vars qw(@EXPORT_OK @EXPORT);
 
-@EXPORT = qw(readConfigurationFile xenRunning runCommand);
+use English;
+
+@EXPORT = qw(readConfigurationFile xenRunning runCommand setupAdminUsers);
 
 =head1 FUNCTIONS
 
@@ -197,6 +199,84 @@ sub runCommand ($$)
         exit 127;
     }
 
+}
+
+=head2 setupAdminUsers (xen-shell helper)
+
+=begin doc
+
+  This routine is designed to ensure that any users specified with
+ the --admins flag are setup as administrators of the new instance.
+
+=end doc
+
+=cut
+
+sub setupAdminUsers ($)
+{
+    my $CONFIG = (@_);
+
+    #
+    #  If we're not root we can't modify users.
+    #
+    return if ( $EFFECTIVE_USER_ID != 0 );
+
+    #
+    #  If we don't have a sudoers file then we'll also ignore this.
+    #
+    return if ( !-e "/etc/sudoers" );
+
+    #
+    #  Find the path to the xen-login-shell
+    #
+    my $shell = undef;
+    $shell = "/usr/bin/xen-login-shell" if ( -x "/usr/bin/xen-login-shell" );
+    $shell = "/usr/local/bin/xen-login-shell"
+      if ( -x "/usr/bin/local/xen-login-shell" );
+
+    return if ( !defined($shell) );
+
+
+    #
+    #  For each user make sure they exist, and setup the
+    # login shell for them.
+    #
+    foreach my $user ( split( /,/, $ENV{ 'admins' } ) )
+    {
+
+        # Strip leading and trailing whitespace.
+        $user =~ s/^\s+//;
+        $user =~ s/\s+$//;
+
+        # Ignore root
+        next if ( $user =~ /^root$/i );
+
+        # Does the user exist?
+        if ( getpwnam($user) )
+        {
+
+            # Change shell.
+            $CONFIG->{ 'verbose' } && print "Changing shell for $user: $shell\n";
+            system( "chsh", "-s", $shell, $user );
+        }
+        else
+        {
+
+            # Add a new user.
+            $CONFIG->{ 'verbose' } && print "Adding new user: $user\n";
+            system( "useradd", "-s", $shell, $user );
+        }
+
+        #
+        #  Add the entry to /etc/sudoers.
+        #
+        open( SUDOERS, ">>", "/etc/sudoers" ) or
+          warn "Failed to add user to sudoers file : $user - $!";
+        print SUDOERS
+          "$user ALL = NOPASSWD: /usr/sbin/xm, /usr/bin/xen-create-image\n";
+        close(SUDOERS);
+
+    }
 }
 
 =head1 AUTHORS
