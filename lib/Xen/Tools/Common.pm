@@ -33,7 +33,7 @@ use vars qw(@EXPORT_OK @EXPORT);
 
 =cut
 
-sub readConfigurationFile
+sub readConfigurationFile ($$)
 {
     my ($file, $CONFIG) = (@_);
 
