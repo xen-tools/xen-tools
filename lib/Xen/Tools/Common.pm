@@ -18,7 +18,7 @@ use strict;
 use Exporter 'import';
 use vars qw(@EXPORT_OK @EXPORT);
 
-@EXPORT = qw(readConfigurationFile);
+@EXPORT = qw(readConfigurationFile xenRunning);
 
 =head1 FUNCTIONS
 
@@ -101,6 +101,34 @@ sub readConfigurationFile ($$)
     }
 
     close(FILE);
+}
+
+=head2 xenRunning
+
+=begin doc
+
+  Test to see if the given instance is running.
+
+=end doc
+
+=cut
+
+sub xenRunning ($)
+{
+    my ($hostname) = (@_);
+
+    my $running = 0;
+
+    open( CMD, "xm list $hostname 2>/dev/null |" ) or
+      die "Failed to run 'xm list $hostname'";
+    while (<CMD>)
+    {
+        my $line = $_;
+        $running = 1 if ( $line =~ /\Q$hostname\E/ );
+    }
+    close(CMD);
+
+    return ($running);
 }
 
 =head1 AUTHORS
