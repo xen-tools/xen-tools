@@ -11,6 +11,7 @@ xen-tools (4.2.1+dev-1) UNRELEASED; urgency=low
   * Workaround for missing unit parsing in xen-create-nfs (Closes:
     #648814)
   * Fix wildcard vs regexp in memory configuration parsing.
+  * Bump Standards-Version to 3.9.3 (no changes)
   * Fix Lintian warning copyright-refers-to-symlink-license.
 
  -- Axel Beckert <abe@debian.org>  Tue, 15 Nov 2011 22:32:56 +0100
