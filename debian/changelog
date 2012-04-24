@@ -3,15 +3,18 @@ xen-tools (4.2.1+dev-1) UNRELEASED; urgency=low
   * New upstream snapshot
     - Correctly checks and documents valid values for
       disk_device. (Closes: #621499)
-  * Support creating Ubuntu 11.10 Oneiric DomUs (LP: #848654)
-  * Support creating Ubuntu 12.04 Precise and 12.10 Quantal DomUs
-  * Update mirror list for discontinued releases of Debian and Ubuntu
+    - Supports creating Ubuntu 11.10 Oneiric DomUs (LP: #848654)
+    - Supports creating Ubuntu 12.04 Precise and 12.10 Quantal DomUs
+    - Updated mirror list for discontinued releases of Debian and Ubuntu
+    - Workaround for missing unit parsing in xen-create-nfs (Closes:
+      #648814)
+    - Fix wildcard vs regexp in memory configuration parsing.
   * No more suggest evms-cli -- it's no more available on any supported
     Dom0 distribution. Thanks to Markus Waldeck for the hint.
-  * Workaround for missing unit parsing in xen-create-nfs (Closes:
-    #648814)
-  * Fix wildcard vs regexp in memory configuration parsing.
-  * Fix Lintian warning copyright-refers-to-symlink-license.
+  * Bump Standards-Version to 3.9.3 (no changes)
+  * Fix the following Lintian warnings:
+    - copyright-refers-to-symlink-license
+    - debian-rules-missing-recommended-target
 
  -- Axel Beckert <abe@debian.org>  Tue, 15 Nov 2011 22:32:56 +0100
 
