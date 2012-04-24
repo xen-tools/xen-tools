@@ -4,7 +4,7 @@ xen-tools (4.2.1+dev-1) UNRELEASED; urgency=low
     - Correctly checks and documents valid values for
       disk_device. (Closes: #621499)
   * Support creating Ubuntu 11.10 Oneiric DomUs (LP: #848654)
-  * Support creating Ubuntu 12.04 Precise DomUs
+  * Support creating Ubuntu 12.04 Precise and 12.10 Quantal DomUs
   * Update mirror list for discontinued releases of Debian and Ubuntu
   * No more suggest evms-cli -- it's no more available on any supported
     Dom0 distribution. Thanks to Markus Waldeck for the hint.
