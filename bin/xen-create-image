@@ -1251,7 +1251,7 @@ sub testXenConfig
     # Read the configuration file.
     #
     open( CONFIG, "<", "/etc/xen/xend-config.sxp" ) or
-      die "Failed to read /etc/xen/xend-config.sxp: $!";
+      fail("Failed to read /etc/xen/xend-config.sxp: $!");
     while (<CONFIG>)
     {
         next if ( !$_ || !length($_) );
@@ -1451,7 +1451,7 @@ sub readConfigurationFile
 
     my $line = "";
 
-    open( FILE, "<", $file ) or die "Cannot read file '$file' - $!";
+    open( FILE, "<", $file ) or fail("Cannot read file '$file' - $!");
 
     while ( defined( $line = <FILE> ) )
     {
@@ -1640,7 +1640,7 @@ sub checkOption
         my $type = $optionsTypes{ $option };
 
         # First, check if type exists
-        die unless exists $types{ $type };
+        fail("Type $type does not exist") unless exists $types{ $type };
         my $check = $types{ $type }{ 'check' };
 
         if (
@@ -1656,7 +1656,7 @@ sub checkOption
             }
         } else {
             # Option did _not_ validate
-            die "ERROR: '$option' argument " . $types{ $type }{ 'message' };
+            fail("ERROR: '$option' argument " . $types{ $type }{ 'message' });
         }
     }
 }
@@ -2940,7 +2940,7 @@ sub createLoopbackImages
         eval {mkpath( $output, 0, 0755 );};
         if ($@)
         {
-            die "Cannot create directory tree $output - $@";
+            fail("Cannot create directory tree $output - $@");
         }
     }
 
@@ -3759,7 +3759,7 @@ sub findIP
     # Open and read the file.
     #
     open( RANGE, "<", $CONFIG{ 'ipfile' } ) or
-      die "Failed to read $CONFIG{'ipfile'} - $!";
+      fail("Failed to read $CONFIG{'ipfile'} - $!");
     my @lines = <RANGE>;
     my @updated;
     close(RANGE);
@@ -3790,7 +3790,7 @@ sub findIP
     #  Now write out the new entries.
     #
     open( RANGE, ">", $CONFIG{ 'ipfile' } ) or
-      die "Failed to write to $CONFIG{'ipfile'} - $!";
+      fail("Failed to write to $CONFIG{'ipfile'} - $!");
     print RANGE join( "\n", @updated );
     close(RANGE);
 
@@ -4063,7 +4063,7 @@ sub setupRootPassword
             }
             else
             {
-                die "oops... unknown hashing method, should not happen!";
+                fail("oops... unknown hashing method, should not happen!");
             }
 
             my $hash = crypt($PASSWORD, $hash_method . $salt);
@@ -4074,8 +4074,8 @@ sub setupRootPassword
             #
             my $tmp_shadow_path = "$shadow_path.tmp";
             cp("$shadow_path","$tmp_shadow_path");
-            open(TMP, "<", $tmp_shadow_path) or die $!;
-            open(SHADOW, ">", $shadow_path) or die $!;
+            open(TMP, "<", $tmp_shadow_path) or fail($!);
+            open(SHADOW, ">", $shadow_path) or fail($!);
             my $line;
             while(defined($line = <TMP>))
             {
@@ -4114,6 +4114,23 @@ sub generatePassword {
     }
     return $password
 }
+
+
+=begin doc
+
+  Properly set $FAIL on die
+
+=end doc
+
+=cut
+
+sub fail
+{
+    logprint(@_);
+    $FAIL = 1;
+    exit 127;
+}
+
 
 
 =begin doc
