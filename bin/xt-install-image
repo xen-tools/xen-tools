@@ -27,6 +27,7 @@ xt-install-image - Install a fresh copy of GNU/Linux into a directory
    --config         Read the specified config file in addition to the global
                     configuration file.
    --mirror         The mirror to use when installing with 'debootstrap'.
+   --apt_proxy      The proxy to use when installing with 'debootstrap'.
 
   Installation Options:
    --install-method  Specify the installation method to use.
@@ -395,6 +396,7 @@ sub parseCommandLineArguments
         "cachedir=s", \$CONFIG{ 'cachedir' },
         "config=s", \$CONFIG{ 'config' },
         "mirror=s", \$CONFIG{ 'mirror' },
+        "apt_proxy=s", \$CONFIG{ 'apt_proxy' },
 
         # Help.
         "verbose", \$CONFIG{ 'verbose' },
@@ -757,12 +759,21 @@ sub do_debootstrap
         $EXTRA .= " --arch $CONFIG{'arch'}";
     }
 
+    #
+    #  Setup http_proxy so that debootstrap pulls files through the apt-proxy
+    #
+    my $PROXY = '';
+    if ( $CONFIG{ 'apt_proxy' } )
+    {
+        print("Using apt_proxy: $CONFIG{'apt_proxy'}\n");
+        $PROXY = "http_proxy=\"$CONFIG{'apt_proxy'}\"";
+    }
 
     #
     #  This is the command we'll run
     #
     my $command =
-      "$cmd $EXTRA $CONFIG{'dist'} $CONFIG{'location'} $CONFIG{'mirror'}";
+      "$PROXY $cmd $EXTRA $CONFIG{'dist'} $CONFIG{'location'} $CONFIG{'mirror'}";
 
     #
     #  Run the command.

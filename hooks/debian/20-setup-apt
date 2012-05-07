@@ -32,9 +32,12 @@ logMessage Script $0 starting
 # replicate that setup in our new guest via apt-config dump and save
 # the setting to the proxy guess file.
 #
-logMessage The use of a proxy detected.
-apt-config dump | grep -i Acquire::HTTP::Proxy \
-    > ${prefix}/etc/apt/apt.conf.d/proxy-guess
+if [ ${apt_proxy} ]; then
+  echo "Acquire::http::Proxy \"${apt_proxy}\";" > ${prefix}/etc/apt/apt.conf.d/01proxy
+else
+  logMessage The use of a proxy detected.
+  apt-config dump | grep -i Acquire::HTTP::Proxy > ${prefix}/etc/apt/apt.conf.d/01proxy
+fi
 
 
 #
