@@ -28,6 +28,7 @@ install: build
 	dh_testroot
 	dh_prep
 
+	dh_auto_test
 	make manpages
 	make install prefix=`pwd`/debian/xen-tools
 
