@@ -148,10 +148,11 @@ all_sources_list_files: foreach my $sources_list_file (@sources_list_files) {
 		last all_sources_list_files;
 	    }
 	}
-
-	warn "Couldn't parse $sources_list_file of the Dom0.\n" unless $found;
     }
 }
+die "Couldn't find a useful entry in the sources.list files of the Dom0. Tried:\n  ".
+    join("\n  ", @sources_list_files)."\n" unless $found;
+
 my $lsb_release = `which lsb_release`;
 chomp($lsb_release);
 
