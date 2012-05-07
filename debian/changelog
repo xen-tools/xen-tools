@@ -9,6 +9,15 @@ xen-tools (4.2.1+dev-1) UNRELEASED; urgency=low
     - Workaround for missing unit parsing in xen-create-nfs (Closes:
       #648814)
     - Fix wildcard vs regexp in memory configuration parsing.
+    - Fix misbehaviour if --ip option is passed multiple times (Closes:
+      #652110; Thanks Brian Bennett!)
+    - Supports /etc/apt/sources.list.d/ (Closes: #650300)
+    - xt-guess-suite-and-mirror exits with non-zero if no proper mirror
+      could be extracted from /etc/apt/sources.list or
+      /etc/apt/sources.list.d/*.list (Thanks Phil Frost!)
+    - Only attempts to generate the ssh host keys if not already present
+      (Closes: #607236; Thanks Vagrant Cascadian!)
+  * Add dependency on openssh-client for ssh-keygen (Closes: #649108)
   * No more suggest evms-cli -- it's no more available on any supported
     Dom0 distribution. Thanks to Markus Waldeck for the hint.
   * Bump Standards-Version to 3.9.3 (no changes)
@@ -16,7 +25,7 @@ xen-tools (4.2.1+dev-1) UNRELEASED; urgency=low
     - copyright-refers-to-symlink-license
     - debian-rules-missing-recommended-target
 
- -- Axel Beckert <abe@debian.org>  Tue, 15 Nov 2011 22:32:56 +0100
+ -- Axel Beckert <abe@debian.org>  Mon, 07 May 2012 21:21:33 +0200
 
 xen-tools (4.2.1-1) unstable; urgency=low
 

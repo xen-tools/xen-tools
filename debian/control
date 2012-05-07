@@ -10,7 +10,7 @@ Vcs-Git: git://gitorious.org/xen-tools/xen-tools.git
 
 Package: xen-tools
 Architecture: all
-Depends: debootstrap | cdebootstrap, perl-modules, libtext-template-perl, libconfig-inifiles-perl, libfile-slurp-perl, ${misc:Depends}
+Depends: debootstrap | cdebootstrap, perl-modules, libtext-template-perl, libconfig-inifiles-perl, libfile-slurp-perl, ${misc:Depends}, openssh-client
 Recommends: xen-hypervisor-amd64 | xen-hypervisor-i386 | xen-hypervisor-i386-pae, rinse, xen-shell, libexpect-perl
 Suggests: reiserfsprogs, xfsprogs, xen-utils, cfengine2, btrfs-tools
 Description: Tools to manage Xen virtual servers
@@ -25,6 +25,7 @@ Description: Tools to manage Xen virtual servers
    * Debian 4.0 Etch
    * Debian 5.0 Lenny
    * Debian 6.0 Squeeze
+   * Debian 7.0 Wheezy
    * Debian Sid (Unstable)
    * Ubuntu 6.06 Dapper Drake (LTS)
    * Ubuntu 6.10 Edgy Eft
@@ -36,3 +37,6 @@ Description: Tools to manage Xen virtual servers
    * Ubuntu 9.10 Karmic Koala
    * Ubuntu 10.04 Lucid Lynx (LTS)
    * Ubuntu 10.10 Maverick Meerkat
+   * Ubuntu 11.04 Natty Narwhal
+   * Ubuntu 11.10 Oneiric Ocelot
+   * Ubuntu 12.04 Precise Pangolin (LTS)
