@@ -1,4 +1,4 @@
-xen-tools (4.2.1+dev-1) UNRELEASED; urgency=low
+xen-tools (4.3~dev-1) UNRELEASED; urgency=low
 
   * New upstream snapshot
     - Correctly checks and documents valid values for
@@ -25,7 +25,7 @@ xen-tools (4.2.1+dev-1) UNRELEASED; urgency=low
     - copyright-refers-to-symlink-license
     - debian-rules-missing-recommended-target
 
- -- Axel Beckert <abe@debian.org>  Mon, 07 May 2012 21:21:33 +0200
+ -- Axel Beckert <abe@debian.org>  Tue, 08 May 2012 00:22:17 +0200
 
 xen-tools (4.2.1-1) unstable; urgency=low
 
