@@ -762,18 +762,17 @@ sub do_debootstrap
     #
     #  Setup http_proxy so that debootstrap pulls files through the apt-proxy
     #
-    my $PROXY = '';
     if ( $CONFIG{ 'apt_proxy' } )
     {
         print("Using apt_proxy: $CONFIG{'apt_proxy'}\n");
-        $PROXY = "http_proxy=\"$CONFIG{'apt_proxy'}\"";
+        $ENV{'http_proxy'} = $CONFIG{'apt_proxy'};
     }
 
     #
     #  This is the command we'll run
     #
     my $command =
-      "$PROXY $cmd $EXTRA $CONFIG{'dist'} $CONFIG{'location'} $CONFIG{'mirror'}";
+      "$cmd $EXTRA $CONFIG{'dist'} $CONFIG{'location'} $CONFIG{'mirror'}";
 
     #
     #  Run the command.
