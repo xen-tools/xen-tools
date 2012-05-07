@@ -69,7 +69,7 @@ my %fallback_suite = ( Debian => 'stable',
 
 # Where to look for the sources.list to parse
 my @sources_list_files = ( '/etc/apt/sources.list',
-			   glob('/etc/apt/sources.list.d/*.list'));
+                           glob('/etc/apt/sources.list.d/*.list'));
 
 use File::Slurp;
 use Getopt::Long;
@@ -111,43 +111,43 @@ if ($want_manual) {
 
 all_sources_list_files: foreach my $sources_list_file (@sources_list_files) {
     if (-r $sources_list_file) {
-	# sources.list file exists, so it's something debianoid.
+        # sources.list file exists, so it's something debianoid.
 
-	# read sources.list and split it into lines
-	my @sources_list = read_file($sources_list_file);
+        # read sources.list and split it into lines
+        my @sources_list = read_file($sources_list_file);
 
-	# Find the first line which is a Debian or Ubuntu mirror but not
-	# an updates, backports, volatile or security mirror.
-	foreach my $sources_list_entry (@sources_list) {
-	    # Normalize line
-	    chomp($sources_list_entry);
-	    $sources_list_entry =~ s/^\s*(.*?)\s*$/$1/;
+        # Find the first line which is a Debian or Ubuntu mirror but not
+        # an updates, backports, volatile or security mirror.
+        foreach my $sources_list_entry (@sources_list) {
+            # Normalize line
+            chomp($sources_list_entry);
+            $sources_list_entry =~ s/^\s*(.*?)\s*$/$1/;
 
-	    # Skip definite non-entries
-	    next if $sources_list_entry =~ /^\s*($|#)/;
+            # Skip definite non-entries
+            next if $sources_list_entry =~ /^\s*($|#)/;
 
-	    # Split up into fields
-	    my @source_components = split(/\s+/, $sources_list_entry);
+            # Split up into fields
+            my @source_components = split(/\s+/, $sources_list_entry);
 
-	    # Minimum number of components is 4
-	    next if $#source_components < 3;
+            # Minimum number of components is 4
+            next if $#source_components < 3;
 
-	    # Don't use deb-src entries.
-	    next if $source_components[0] eq 'deb-src';
+            # Don't use deb-src entries.
+            next if $source_components[0] eq 'deb-src';
 
-	    # Skip updates, backports, volatile or security mirror.
-	    next if $source_components[2] !~ /^[a-z]+$/;
+            # Skip updates, backports, volatile or security mirror.
+            next if $source_components[2] !~ /^[a-z]+$/;
 
-	    if ($source_components[1] =~ m(/debian/?$|/ubuntu/?$)) {
-		# Seems a typical mirror. Let's use that one
+            if ($source_components[1] =~ m(/debian/?$|/ubuntu/?$)) {
+                # Seems a typical mirror. Let's use that one
 
-		$mirror = $source_components[1];
-		$suite = $source_components[2];
+                $mirror = $source_components[1];
+                $suite = $source_components[2];
 
-		$found = 1;
-		last all_sources_list_files;
-	    }
-	}
+                $found = 1;
+                last all_sources_list_files;
+            }
+        }
     }
 }
 die "Couldn't find a useful entry in the sources.list files of the Dom0. Tried:\n  ".
