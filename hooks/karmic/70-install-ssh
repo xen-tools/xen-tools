@@ -36,19 +36,23 @@ mkdir -p ${prefix}/etc/ssh
 #
 #  Second, Generate the Host RSA Key
 #
+if [ ! -f ${prefix}/etc/ssh/ssh_host_rsa_key ]; then
 if ssh-keygen -t rsa -N "" -f ${prefix}/etc/ssh/ssh_host_rsa_key -C "root@${hostname}"; then
     logMessage "successfully generetaged Host RSA"
 else
     logMessage "failed to generate Host RSA Key"
 fi
+fi
 
 #
 #  Third, Generate the Host DSA Key
 #
+if [ ! -f ${prefix}/etc/ssh/ssh_host_dsa_key ]; then
 if ssh-keygen -t dsa -N "" -f ${prefix}/etc/ssh/ssh_host_dsa_key -C "root@${hostname}"; then
     logMessage "successfully generetaged Host DSA"
 else
     logMessage "failed to generate Host DSA Key"
+fi
 fi
 
 #
