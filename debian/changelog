@@ -10,7 +10,7 @@ xen-tools (4.2.1+dev-1) UNRELEASED; urgency=low
       #648814)
     - Fix wildcard vs regexp in memory configuration parsing.
     - Fix misbehaviour if --ip option is passed multiple times (Closes:
-      #652110; Thanks Brian Bennett!)
+      #652110; Thanks Brian Bennett and Alexander Mette!)
     - Supports /etc/apt/sources.list.d/ (Closes: #650300)
     - xt-guess-suite-and-mirror exits with non-zero if no proper mirror
       could be extracted from /etc/apt/sources.list or
