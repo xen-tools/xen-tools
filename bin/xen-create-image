@@ -3992,7 +3992,7 @@ sub runXenConfigCreation
     #
     #  Make sure the template gets a list of all IPs
     #
-    $ENV{ 'IP_ADDRESSES' } = $IP_ADDRESSES;
+    $ENV{ 'ips' } = $IP_ADDRESSES;
 
 
     logprint("\nCreating Xen configuration file\n");
