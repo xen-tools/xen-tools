@@ -10,7 +10,7 @@ Vcs-Git: git://gitorious.org/xen-tools/xen-tools.git
 
 Package: xen-tools
 Architecture: all
-Depends: debootstrap | cdebootstrap, perl-modules, libtext-template-perl, libconfig-inifiles-perl, libfile-slurp-perl, ${misc:Depends}
+Depends: debootstrap | cdebootstrap, perl-modules, libtext-template-perl, libconfig-inifiles-perl, libfile-slurp-perl, ${misc:Depends}, openssh-client
 Recommends: xen-hypervisor-amd64 | xen-hypervisor-i386 | xen-hypervisor-i386-pae, rinse, xen-shell, libexpect-perl
 Suggests: reiserfsprogs, xfsprogs, xen-utils, cfengine2, btrfs-tools
 Description: Tools to manage Xen virtual servers
