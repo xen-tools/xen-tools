@@ -17,6 +17,7 @@ xen-tools (4.3~dev-1) UNRELEASED; urgency=low
       /etc/apt/sources.list.d/*.list (Thanks Phil Frost!)
     - Only attempts to generate the ssh host keys if not already present
       (Closes: #607236; Thanks Vagrant Cascadian!)
+    - New option --apt_proxy (Thanks Alex Tomlins!)
   * Add dependency on openssh-client for ssh-keygen (Closes: #649108)
   * No more suggest evms-cli -- it's no more available on any supported
     Dom0 distribution. Thanks to Markus Waldeck for the hint.
