@@ -17,7 +17,7 @@ xen-tools (4.3~dev-1) UNRELEASED; urgency=low
       /etc/apt/sources.list.d/*.list (Thanks Phil Frost!)
     - Only attempts to generate the ssh host keys if not already present
       (Closes: #607236; Thanks Vagrant Cascadian!)
-    - New option --apt_proxy (Thanks Alex Tomlins!)
+    - New option --apt_proxy (Closes: #610457; Thanks Alex Tomlins!)
   * Add dependency on openssh-client for ssh-keygen (Closes: #649108)
   * Use dh_auto_test for build time tests and add according
     build-dependencies on devscripts and libfile-slurp-perl.
