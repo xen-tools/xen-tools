@@ -1648,7 +1648,12 @@ sub checkOption
             (ref $check eq 'CODE' and &$check( $value ) )
         ) {
             # Option did validate, copy it
-            $CONFIG{ $option } = $value;
+            if ( $option eq "ip" )
+            {
+              push @{ $CONFIG{ $option } }, $value;
+            } else {
+              $CONFIG{ $option } = $value;
+            }
         } else {
             # Option did _not_ validate
             die "ERROR: '$option' argument " . $types{ $type }{ 'message' };
@@ -3983,6 +3988,12 @@ sub runXenConfigCreation
     {
         $command .= " --admins=$CONFIG{'admins'}";
     }
+
+    #
+    #  Make sure the template gets a list of all IPs
+    #
+    $ENV{ 'IP_ADDRESSES' } = $IP_ADDRESSES;
+
 
     logprint("\nCreating Xen configuration file\n");
     runCommand($command);
