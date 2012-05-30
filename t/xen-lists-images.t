@@ -98,7 +98,7 @@ EOS
     #  Now run the xen-list-images script to make sure we can read
     # the relevant details back from it.
     #
-    my $cmd = "./bin/xen-list-images --test=$dir";
+    my $cmd = "perl -I./lib -I../lib ./bin/xen-list-images --test=$dir";
     my $output = `$cmd`;
 
     ok( defined( $output ) && length( $output ), "Runing the list command produced some output" );
