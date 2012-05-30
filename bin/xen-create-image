@@ -146,6 +146,10 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
                 Pass the named string literally to any role script.
                 This is useful for site-specific roles.
 
+   --finalrole=role
+		Similar to role scripts. Run the specified role script(s)
+		after cfg file creation.
+
    --roledir=/path/to/directory
                 Specify the directory which contains the role scripts.
                 This defaults to /etc/xen-tools/role.d/
@@ -712,6 +716,9 @@ Install an X11 server, using VNC and XDM
  installed system as their first argument, and anything passed
  as a role-arg will be passed allong as additional arguments.
 
+  NOTE: Role scripts are invoked before the config file generation.
+        If you need access to the config file from within your role,
+	use --finalrole.
   NOTE: Multiple role scripts may be invoked if you separate their
  names with commas.
 
@@ -1055,6 +1062,12 @@ runRoleScripts( $CONFIG{ 'role' } );
 #  Create the Xen configuration file.
 #
 runXenConfigCreation();
+
+
+#
+#  Run any specified role scripts.
+#
+runRoleScripts( $CONFIG{ 'finalrole' } );
 
 
 #
@@ -1774,6 +1787,7 @@ sub parseCommandLineArguments
             "partitions=s", \&checkOption,
             "role=s",       \&checkOption,
             "role-args=s",  \&checkOption,
+            "finalrole=s",       \&checkOption,
             "roledir=s",    \&checkOption,
             "force",        \$CONFIG{ 'force' },
             "keep",         \$CONFIG{ 'keep' },
