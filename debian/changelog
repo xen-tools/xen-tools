@@ -22,6 +22,7 @@ xen-tools (4.3~dev-1) UNRELEASED; urgency=low
       pygrub fails (Closes: #609673)
     - No more expect at least one option to mkfs.* calls. Fixes btrfs
       creation.  (Closes: #609982)
+    - Fixes call to non-existent function logPrint (Closes: #673335)
   * Add dependency on openssh-client for ssh-keygen (Closes: #649108)
   * Use dh_auto_test for build time tests and add according
     build-dependencies on devscripts and libfile-slurp-perl.
