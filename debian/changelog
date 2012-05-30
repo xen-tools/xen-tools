@@ -30,6 +30,7 @@ xen-tools (4.3~dev-1) UNRELEASED; urgency=low
     build-dependencies on devscripts and libfile-slurp-perl.
   * No more suggest evms-cli -- it's no more available on any supported
     Dom0 distribution. Thanks to Markus Waldeck for the hint.
+  * Add NEWS to debian/docs.
   * Bump Standards-Version to 3.9.3 (no changes)
   * Fix the following Lintian warnings:
     - copyright-refers-to-symlink-license
