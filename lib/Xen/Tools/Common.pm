@@ -20,7 +20,8 @@ use vars qw(@EXPORT_OK @EXPORT);
 
 use English;
 
-@EXPORT = qw(readConfigurationFile xenRunning runCommand setupAdminUsers);
+@EXPORT = qw(readConfigurationFile xenRunning runCommand setupAdminUsers
+             logprint logonly fail);
 
 =head1 FUNCTIONS
 
@@ -45,7 +46,7 @@ sub readConfigurationFile ($$)
 
     my $line = "";
 
-    open( FILE, "<", $file ) or die "Cannot read file '$file' - $!";
+    open( FILE, "<", $file ) or fail("Cannot read file '$file' - $!");
 
     while ( defined( $line = <FILE> ) )
     {
@@ -278,6 +279,63 @@ sub setupAdminUsers ($)
 
     }
 }
+
+
+=begin doc
+
+  Properly set $FAIL on die
+
+=end doc
+
+=cut
+
+sub fail
+{
+    logprint(@_);
+    $FAIL = 1;
+    exit 127;
+}
+
+
+
+=begin doc
+
+  Print the given string to the logfile.
+
+=end doc
+
+=cut
+
+sub logonly
+{
+    my ($text) = (@_);
+
+    if ( $CONFIG{ 'hostname' } )
+    {
+        open( LOGFILE, ">>", "/var/log/xen-tools/$CONFIG{'hostname'}.log" ) or
+          return;
+        print LOGFILE $text;
+        close(LOGFILE);
+    }
+}
+
+
+=begin doc
+
+  Print the given string both to our screen, and to the logfile.
+
+=end doc
+
+=cut
+
+sub logprint
+{
+    my ($text) = (@_);
+
+    print $text;
+    logonly($text);
+}
+
 
 =head1 AUTHORS
 

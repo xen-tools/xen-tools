@@ -4064,63 +4064,6 @@ sub generatePassword {
 
 =begin doc
 
-  Properly set $FAIL on die
-
-=end doc
-
-=cut
-
-sub fail
-{
-    logprint(@_);
-    $FAIL = 1;
-    exit 127;
-}
-
-
-
-=begin doc
-
-  Print the given string to the logfile.
-
-=end doc
-
-=cut
-
-sub logonly
-{
-    my ($text) = (@_);
-
-    if ( $CONFIG{ 'hostname' } )
-    {
-        open( LOGFILE, ">>", "/var/log/xen-tools/$CONFIG{'hostname'}.log" ) or
-          return;
-        print LOGFILE $text;
-        close(LOGFILE);
-    }
-}
-
-
-=begin doc
-
-  Print the given string both to our screen, and to the logfile.
-
-=end doc
-
-=cut
-
-sub logprint
-{
-    my ($text) = (@_);
-
-    print $text;
-    logonly($text);
-}
-
-
-
-=begin doc
-
   Find the location of the specified binary on the curent user's PATH.
 
   Return undef if the named binary isn't found.
