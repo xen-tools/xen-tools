@@ -18,6 +18,8 @@ xen-tools (4.3~dev-1) UNRELEASED; urgency=low
     - Only attempts to generate the ssh host keys if not already present
       (Closes: #607236; Thanks Vagrant Cascadian!)
     - New option --apt_proxy (Closes: #610457; Thanks Alex Tomlins!)
+    - Always write down root partition as first physical device, otherwise
+      pygrub fails (Closes: #609673)
   * Add dependency on openssh-client for ssh-keygen (Closes: #649108)
   * Use dh_auto_test for build time tests and add according
     build-dependencies on devscripts and libfile-slurp-perl.
