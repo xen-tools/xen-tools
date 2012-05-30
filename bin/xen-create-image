@@ -146,6 +146,10 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
                 Pass the named string literally to any role script.
                 This is useful for site-specific roles.
 
+   --finalrole=role
+                Similar to role scripts. Run the specified role script(s)
+                after cfg file creation.
+
    --roledir=/path/to/directory
                 Specify the directory which contains the role scripts.
                 This defaults to /etc/xen-tools/role.d/
@@ -164,6 +168,11 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
                 Specify a physical/logical volume for swap usage.
 
    --tar-cmd    NOP: Ignored.
+
+   --dontformat Do not format the devices specified for installation.
+                Useful if you want tighter control over the filesystem
+                creation. Requires the filesystems to be created
+                beforehand.
 
    --vcpus=num
                 Set the number of vcpus that the new instance will have
@@ -203,6 +212,10 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
                 The above mentioned Debian mirror hostname uses GeoIP
                 to choose a more or less close Debian mirror. See
                 http://wiki.debian.org/DebianGeoMirror for details.
+
+   --apt_proxy=url
+                Specify a proxy to be used by debootstrap, and within
+                the guest.
 
    --template=tmpl
                 Specify which template file to use when creating the
@@ -708,6 +721,9 @@ Install an X11 server, using VNC and XDM
  installed system as their first argument, and anything passed
  as a role-arg will be passed allong as additional arguments.
 
+  NOTE: Role scripts are invoked before the config file generation.
+        If you need access to the config file from within your role,
+        use --finalrole.
   NOTE: Multiple role scripts may be invoked if you separate their
  names with commas.
 
@@ -745,7 +761,7 @@ Install an X11 server, using VNC and XDM
 
 =head1 LICENSE
 
-Copyright (c) 2005-2009 by Steve Kemp, (c) 2010 by The Xen-Tools
+Copyright (c) 2005-2009 by Steve Kemp, (c) 2010-2012 by The Xen-Tools
 Development Team. All rights reserved.
 
 This module is free software;
@@ -1055,6 +1071,12 @@ runXenConfigCreation();
 
 
 #
+#  Run any specified role scripts.
+#
+runRoleScripts( $CONFIG{ 'finalrole' } );
+
+
+#
 #  Setup the password if the user wanted that.
 #
 setupRootPassword() if ( $CONFIG{ 'passwd' } or $CONFIG{ 'genpass' } or $CONFIG{ 'password' });
@@ -1252,7 +1274,7 @@ sub testXenConfig
     # Read the configuration file.
     #
     open( CONFIG, "<", "/etc/xen/xend-config.sxp" ) or
-      die "Failed to read /etc/xen/xend-config.sxp: $!";
+      fail("Failed to read /etc/xen/xend-config.sxp: $!");
     while (<CONFIG>)
     {
         next if ( !$_ || !length($_) );
@@ -1352,19 +1374,20 @@ sub setupDefaultOptions
     $CONFIG{ 'mirror' }        = '';
 
     # Initialize per distribution mirror defaults: Debian
-    foreach my $debdist (qw(lenny squeeze wheezy sid testing stable unstable)) {
+    foreach my $debdist (qw(squeeze wheezy sid testing oldstable stable unstable)) {
         $CONFIG{ 'mirror_'.$debdist } = $CONFIG{ 'mirror' }
     }
-    foreach my $debdist (qw(sarge etch)) {
+    foreach my $debdist (qw(sarge etch lenny)) {
         $CONFIG{ 'mirror_'.$debdist } = 'http://archive.debian.org/debian';
     }
     # Initialize per distribution mirror defaults: Ubuntu
-    foreach my $ubuntudist (qw(dapper hardy jaunty karmic lucid maverick natty oneiric)) {
+    foreach my $ubuntudist (qw(dapper hardy lucid natty oneiric precise quantal)) {
         $CONFIG{ 'mirror_'.$ubuntudist } = 'http://archive.ubuntu.com/ubuntu';
     }
-    foreach my $ubuntudist (qw(edgy feisty gutsy intrepid)) {
+    foreach my $ubuntudist (qw(edgy feisty gutsy intrepid jaunty karmic maverick)) {
         $CONFIG{ 'mirror_'.$ubuntudist } = 'http://old-releases.ubuntu.com/ubuntu';
     }
+    $CONFIG{ 'apt_proxy' }     = '';
     $CONFIG{ 'arch' }          = '';
     $CONFIG{ 'fs' }            = 'ext3';
     $CONFIG{ 'force' }         = 0;
@@ -1560,7 +1583,7 @@ sub checkOption
         my $type = $optionsTypes{ $option };
 
         # First, check if type exists
-        die unless exists $types{ $type };
+        fail("Type $type does not exist") unless exists $types{ $type };
         my $check = $types{ $type }{ 'check' };
 
         if (
@@ -1568,10 +1591,15 @@ sub checkOption
             (ref $check eq 'CODE' and &$check( $value ) )
         ) {
             # Option did validate, copy it
-            $CONFIG{ $option } = $value;
+            if ( $option eq "ip" )
+            {
+              push @{ $CONFIG{ $option } }, $value;
+            } else {
+              $CONFIG{ $option } = $value;
+            }
         } else {
             # Option did _not_ validate
-            die "ERROR: '$option' argument " . $types{ $type }{ 'message' };
+            fail("ERROR: '$option' argument " . $types{ $type }{ 'message' });
         }
     }
 }
@@ -1625,6 +1653,7 @@ sub parseCommandLineArguments
             "kernel=s",    \&checkOption,
             "initrd=s",    \&checkOption,
             "mirror=s",    \&checkOption,
+            "apt_proxy=s", \&checkOption,
             "modules=s",   \&checkOption,
             "lvm=s",       \$install{ 'lvm' },
             "image-dev=s", \$install{ 'image-dev' },
@@ -1683,12 +1712,14 @@ sub parseCommandLineArguments
             "partitions=s", \&checkOption,
             "role=s",       \&checkOption,
             "role-args=s",  \&checkOption,
+            "finalrole=s",       \&checkOption,
             "roledir=s",    \&checkOption,
             "force",        \$CONFIG{ 'force' },
             "keep",         \$CONFIG{ 'keep' },
             "template=s",   \&checkOption,
             "output=s",     \&checkOption,
             "extension=s",  \&checkOption,
+            "dontformat",   \&checkOption,
 
             # Help options
             "debug",   \$CONFIG{ 'debug' },
@@ -1833,7 +1864,7 @@ sub checkArguments
     #
     #  Lucid and probably all later Ubuntus, too, don't work without pygrub
     #
-    if ( $CONFIG{ 'dist' } =~ /lucid|maverick|natty|oneiric/ )
+    if ( $CONFIG{ 'dist' } =~ /lucid|maverick|natty|oneiric|precise|quantal/ )
     {
         $CONFIG{ 'pygrub' } = 1;
     }
@@ -2329,7 +2360,7 @@ sub checkBinariesPresent
             }
         }
     }
-    else
+    elsif (defined( $CONFIG{ 'lvm' } ) )
     {
 
         # LVM-specific binaries.
@@ -2855,7 +2886,7 @@ sub createLoopbackImages
         eval {mkpath( $output, 0, 0755 );};
         if ($@)
         {
-            die "Cannot create directory tree $output - $@";
+            fail("Cannot create directory tree $output - $@");
         }
     }
 
@@ -3304,37 +3335,28 @@ sub createFilesystem
     #  Split the command into "binary" + "args".  Make sure that
     # the binary exists and is executable.
     #
-    if ( $command =~ /([^ ]+) (.*)$/ )
-    {
-        my $binary = $1;
-        my $args   = $2;
+    my ($binary, $args) = split(/ /, $command, 2);
 
-        if ( !defined( findBinary($binary) ) )
-        {
-            logprint(
-                "The binary '$binary' required to create the filesystem $fs is missing\n"
-            );
-            $FAIL = 1;
-            exit 127;
-        }
-    }
-    else
+    if ( !defined( findBinary($binary) ) )
     {
         logprint(
-                "The filesystem creation hash is bogus for filesystem : $fs\n");
+            "The binary '$binary' required to create the filesystem $fs is missing\n"
+        );
         $FAIL = 1;
         exit 127;
     }
 
-    #
-    #  OK we have the command and the filesystem.  Create it.
-    #
-    logprint("\nCreating $fs filesystem on $image\n");
+    unless ( $CONFIG{ 'dontformat' } ) {
+        #
+        #  OK we have the command and the filesystem.  Create it.
+        #
+        logprint("\nCreating $fs filesystem on $image\n");
 
-    $command .= " " . $image;
+        $command .= " " . $image;
 
-    runCommand($command, \%CONFIG);
-    logprint("Done\n");
+        runCommand($command, \%CONFIG);
+        logprint("Done\n");
+    }
 }
 
 
@@ -3488,6 +3510,15 @@ sub installSystem
          $CONFIG{ 'debootstrap-cmd' } )
     {
         $cmd .= " --debootstrap-cmd=$CONFIG{'debootstrap-cmd'}";
+    }
+
+
+    #
+    #  Propagate --apt_proxy
+    #
+    if ( $CONFIG{ 'apt_proxy' } )
+    {
+        $cmd .= " --apt_proxy=$CONFIG{'apt_proxy'}";
     }
 
 
@@ -3674,7 +3705,7 @@ sub findIP
     # Open and read the file.
     #
     open( RANGE, "<", $CONFIG{ 'ipfile' } ) or
-      die "Failed to read $CONFIG{'ipfile'} - $!";
+      fail("Failed to read $CONFIG{'ipfile'} - $!");
     my @lines = <RANGE>;
     my @updated;
     close(RANGE);
@@ -3705,7 +3736,7 @@ sub findIP
     #  Now write out the new entries.
     #
     open( RANGE, ">", $CONFIG{ 'ipfile' } ) or
-      die "Failed to write to $CONFIG{'ipfile'} - $!";
+      fail("Failed to write to $CONFIG{'ipfile'} - $!");
     print RANGE join( "\n", @updated );
     close(RANGE);
 
@@ -3904,6 +3935,12 @@ sub runXenConfigCreation
         $command .= " --admins=$CONFIG{'admins'}";
     }
 
+    #
+    #  Make sure the template gets a list of all IPs
+    #
+    $ENV{ 'ips' } = $IP_ADDRESSES;
+
+
     logprint("\nCreating Xen configuration file\n");
     runCommand($command, \%CONFIG);
     logprint("Done\n");
@@ -3972,7 +4009,7 @@ sub setupRootPassword
             }
             else
             {
-                die "oops... unknown hashing method, should not happen!";
+                fail("oops... unknown hashing method, should not happen!");
             }
 
             my $hash = crypt($PASSWORD, $hash_method . $salt);
@@ -3983,8 +4020,8 @@ sub setupRootPassword
             #
             my $tmp_shadow_path = "$shadow_path.tmp";
             cp("$shadow_path","$tmp_shadow_path");
-            open(TMP, "<", $tmp_shadow_path) or die $!;
-            open(SHADOW, ">", $shadow_path) or die $!;
+            open(TMP, "<", $tmp_shadow_path) or fail($!);
+            open(SHADOW, ">", $shadow_path) or fail($!);
             my $line;
             while(defined($line = <TMP>))
             {
@@ -4023,6 +4060,23 @@ sub generatePassword {
     }
     return $password
 }
+
+
+=begin doc
+
+  Properly set $FAIL on die
+
+=end doc
+
+=cut
+
+sub fail
+{
+    logprint(@_);
+    $FAIL = 1;
+    exit 127;
+}
+
 
 
 =begin doc

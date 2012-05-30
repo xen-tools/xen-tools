@@ -121,14 +121,16 @@ disableStartStopDaemon ()
 {
    local prefix="$1"
    assert "$LINENO" "${prefix}"
-   local daemonfile="${prefix}/sbin/start-stop-daemon"
+   for starter in start-stop-daemon initctl; do
+      local daemonfile="${prefix}/sbin/${starter}"
 
-   mv "${daemonfile}" "${daemonfile}.REAL"
-   echo '#!/bin/sh' > "${daemonfile}"
-   echo "echo \"Warning: Fake start-stop-daemon called, doing nothing\"" >> "${daemonfile}"
+      mv "${daemonfile}" "${daemonfile}.REAL"
+      echo '#!/bin/sh' > "${daemonfile}"
+      echo "echo \"Warning: Fake ${starter} called, doing nothing\"" >> "${daemonfile}"
 
-   chmod 755 "${daemonfile}"
-   logMessage "start-stop-daemon disabled / made a stub."
+      chmod 755 "${daemonfile}"
+      logMessage "${starter} disabled / made a stub."
+   done
 }
 
 
@@ -140,16 +142,17 @@ enableStartStopDaemon ()
 {
    local prefix=$1
    assert "$LINENO" "${prefix}"
-   local daemonfile="${prefix}/sbin/start-stop-daemon"
+   for starter in start-stop-daemon initctl; do
+      local daemonfile="${prefix}/sbin/${starter}"
 
-   #
-   #  If the disabled file is present then enable it.
-   #
-   if [ -e "${daemonfile}.REAL" ]; then
-       mv "${daemonfile}.REAL" "${daemonfile}"
-       logMessage "start-stop-daemon restored to working order."
-   fi
-
+      #
+      #  If the disabled file is present then enable it.
+      #
+      if [ -e "${daemonfile}.REAL" ]; then
+          mv "${daemonfile}.REAL" "${daemonfile}"
+          logMessage "${starter} restored to working order."
+      fi
+   done
 }
 
 

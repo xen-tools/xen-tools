@@ -36,28 +36,28 @@ noMentionOf( "ip=",
 # is no mention of DHCP.
 #
 testOutputContains( "ip=192.168.1.1",
-                    memory => 128, ip1 => '192.168.1.1', dir => '/tmp' );
+                    memory => 128, ips => '192.168.1.1', dir => '/tmp' );
 noMentionOf( "dhcp",
-                    memory => 128, ip1 => '192.168.1.1', dir => '/tmp' );
+                    memory => 128, ips => '192.168.1.1', dir => '/tmp' );
 
 #
 #  SCSI based systems:
 #
 testOutputContains( "xvda",
-                    memory => 128, ip1 => '192.168.1.1', dir => '/tmp' );
+                    memory => 128, ips => '192.168.1.1', dir => '/tmp' );
 testOutputContains( "/dev/xvda1 ro",
-                    memory => 128, ip1 => '192.168.1.1', dir => '/tmp' );
+                    memory => 128, ips => '192.168.1.1', dir => '/tmp' );
 noMentionOf( "hda1",
-             memory => 128, ip1 => '192.168.1.1', dir => '/tmp' );
+             memory => 128, ips => '192.168.1.1', dir => '/tmp' );
 
 
 #
 #  IDE based systems
 #
 testOutputContains( "hda1",
-                    memory => 128, ip1 => '192.168.1.1', dir => '/tmp', ide => 1 );
+                    memory => 128, ips => '192.168.1.1', dir => '/tmp', ide => 1 );
 testOutputContains( "/dev/hda1 ro",
-                    memory => 128, ip1 => '192.168.1.1', dir => '/tmp', ide => 1 );
+                    memory => 128, ips => '192.168.1.1', dir => '/tmp', ide => 1 );
 
 
 

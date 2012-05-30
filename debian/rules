@@ -9,8 +9,9 @@ configure-stamp:
 	touch configure-stamp
 
 
-build: build-stamp
-
+build: build-arch build-indep
+build-arch: build-stamp
+build-indep: build-stamp
 build-stamp: configure-stamp 
 	dh_testdir
 	touch build-stamp
@@ -27,6 +28,7 @@ install: build
 	dh_testroot
 	dh_prep
 
+	dh_auto_test
 	make manpages
 	make install prefix=`pwd`/debian/xen-tools
 

@@ -1,17 +1,43 @@
-xen-tools (4.2.1+dev-1) UNRELEASED; urgency=low
+xen-tools (4.3~dev-1) UNRELEASED; urgency=low
 
   * New upstream snapshot
     - Correctly checks and documents valid values for
       disk_device. (Closes: #621499)
-  * Support creating Ubuntu 11.10 Oneiric DomUs (LP: #848654)
+    - Supports creating Ubuntu 11.10 Oneiric DomUs (LP: #848654)
+    - Supports creating Ubuntu 12.04 Precise and 12.10 Quantal DomUs
+    - Updated mirror list for discontinued releases of Debian and Ubuntu
+    - Workaround for missing unit parsing in xen-create-nfs (Closes:
+      #648814)
+    - Fix wildcard vs regexp in memory configuration parsing.
+    - Fix misbehaviour if --ip option is passed multiple times (Closes:
+      #652110; Thanks Brian Bennett and Alexander Mette!)
+    - Supports /etc/apt/sources.list.d/ (Closes: #650300)
+    - xt-guess-suite-and-mirror exits with non-zero if no proper mirror
+      could be extracted from /etc/apt/sources.list or
+      /etc/apt/sources.list.d/*.list (Thanks Phil Frost!)
+    - Only attempts to generate the ssh host keys if not already present
+      (Closes: #607236; Thanks Vagrant Cascadian!)
+    - New option --apt_proxy (Closes: #610457; Thanks Alex Tomlins!)
+    - Always write down root partition as first physical device, otherwise
+      pygrub fails (Closes: #609673)
+    - No more expect at least one option to mkfs.* calls. Fixes btrfs
+      creation.  (Closes: #609982)
+    - Fixes call to non-existent function logPrint (Closes: #673335)
+    - Also disable initctl in the chroot, not only start-stop-daemon
+      (LP: #997063; Thanks xstasi!)
+  * Add dependency on openssh-client for ssh-keygen (Closes: #649108)
+  * Use dh_auto_test for build time tests and add according
+    build-dependencies on devscripts and libfile-slurp-perl.
   * No more suggest evms-cli -- it's no more available on any supported
     Dom0 distribution. Thanks to Markus Waldeck for the hint.
-  * Workaround for missing unit parsing in xen-create-nfs (Closes:
-    #648814)
-  * Fix wildcard vs regexp in memory configuration parsing.
-  * Fix Lintian warning copyright-refers-to-symlink-license.
+  * Add NEWS to debian/docs.
+  * Bump Standards-Version to 3.9.3 (no changes)
+  * Fix the following Lintian warnings:
+    - copyright-refers-to-symlink-license
+    - debian-rules-missing-recommended-target
+  * debian/copyright: Update copyright years
 
- -- Axel Beckert <abe@debian.org>  Tue, 15 Nov 2011 22:32:56 +0100
+ -- Axel Beckert <abe@debian.org>  Wed, 30 May 2012 23:57:31 +0200
 
 xen-tools (4.2.1-1) unstable; urgency=low
 

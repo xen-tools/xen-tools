@@ -303,23 +303,23 @@ sub testArguments
     # this code is borrowed for now...
 
     if ( exists($CONFIG{ 'memory' }) and
-	 defined($CONFIG{ 'memory' }) ) {
+         defined($CONFIG{ 'memory' }) ) {
 
-	#
-	#  The memory size:  Convert Gb -> Mb.
-	#
-	if ( $CONFIG{ 'memory' } =~ /^(\d+)Gb.*$/i )
-	{
-	    $CONFIG{ 'memory' } = $1 * 1024;
-	}
+        #
+        #  The memory size:  Convert Gb -> Mb.
+        #
+        if ( $CONFIG{ 'memory' } =~ /^(\d+)Gb.*$/i )
+        {
+            $CONFIG{ 'memory' } = $1 * 1024;
+        }
 
-	#
-	#  Remove any trailing Mb.
-	#
-	if ( $CONFIG{ 'memory' } =~ /^(\d+)Mb.*$/i )
-	{
-	    $CONFIG{ 'memory' } = $1;
-	}
+        #
+        #  Remove any trailing Mb.
+        #
+        if ( $CONFIG{ 'memory' } =~ /^(\d+)Mb.*$/i )
+        {
+            $CONFIG{ 'memory' } = $1;
+        }
 
     }
     # All OK.

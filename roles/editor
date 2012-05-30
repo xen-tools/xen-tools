@@ -76,7 +76,7 @@ for i in `find ${source} -name '*.sed' -print`; do
        #
        #  Log it.
        #
-       logPrint "Running script $i - against ${prefix}/${file}"
+       logMessage "Running script $i - against ${prefix}/${file}"
 
        #
        #  Invoke it.
