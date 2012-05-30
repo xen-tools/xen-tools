@@ -2420,7 +2420,7 @@ sub checkBinariesPresent
             }
         }
     }
-    else
+    elsif (defined( $CONFIG{ 'lvm' } ) )
     {
 
         # LVM-specific binaries.
