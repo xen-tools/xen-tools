@@ -24,6 +24,12 @@ Contributions
   Justin Azoff <JAzoff [at] edu.albany.uamail>
    - Added LVM support to xen-create-image.
 
+  Brian Bennett <bahamat [at] net.digitalelf>
+   - Made multiple times given --ip options work
+
+  Vagrant Cascadian <vagrant [at] org.debian>
+   - Less redundant SSH key generation
+
   Edd Dumbill <edd [at] com.usefulinc>
    - Contributed APT sources.list file for Ubuntu's Dapper release.
 
@@ -41,6 +47,9 @@ Contributions
 
   Joey Hess <joeyh [at] org.debian>
    - Provided sample code for module copying and several useful bug reports
+
+  John Hughes <john [at] com.fallenbit>
+   - Physical devices reordering for pygrub
 
   Kirk Ismay <captain [at] com.netidea>
    - Added hook for automatic CFEngine installation.
@@ -93,6 +102,11 @@ Contributions
   Gergely Tamas <dice [at] hu.kfki.mfa>
    - Added patch to make initrd setup optional.
 
+  Alex Tomlins <alex.tomlins [at] com.unboxedconsulting>
+   - apt_proxy support
+
   Ward Vandewege <ward [at] be.pong>
    - Made several updates for Ubuntu support.
 
+  xstasi on Launchpad
+   - Proper upstart handling in the chroot
