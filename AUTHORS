@@ -24,6 +24,10 @@ Contributions
   Justin Azoff <JAzoff [at] edu.albany.uamail>
    - Added LVM support to xen-create-image.
 
+  Pieter Barrezeele <macbar [at] be.fab4>
+   - Several small but useful enhancements
+   - Bugfixes
+
   Brian Bennett <bahamat [at] net.digitalelf>
    - Made multiple times given --ip options work
 
