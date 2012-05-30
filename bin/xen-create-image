@@ -169,6 +169,11 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --tar-cmd    NOP: Ignored.
 
+   --dontformat Do not format the devices specified for installation.
+                Useful if you want tighter control over the filesystem
+                creation. Requires the filesystems to be created
+                beforehand.
+
    --vcpus=num
                 Set the number of vcpus that the new instance will have
                 instead of the default value of "1".
@@ -1794,6 +1799,7 @@ sub parseCommandLineArguments
             "template=s",   \&checkOption,
             "output=s",     \&checkOption,
             "extension=s",  \&checkOption,
+            "dontformat",   \&checkOption,
 
             # Help options
             "debug",   \$CONFIG{ 'debug' },
@@ -3423,12 +3429,12 @@ sub createFilesystem
     #
     #  OK we have the command and the filesystem.  Create it.
     #
-    logprint("\nCreating $fs filesystem on $image\n");
+    logprint("\nCreating $fs filesystem on $image\n") unless ( $CONFIG{ 'dontformat' } );
 
     $command .= " " . $image;
 
-    runCommand($command);
-    logprint("Done\n");
+    runCommand($command) unless ( $CONFIG{ 'dontformat' } );
+    logprint("Done\n") unless ( $CONFIG{ 'dontformat' } );
 }
 
 
