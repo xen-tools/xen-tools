@@ -20,6 +20,8 @@ xen-tools (4.3~dev-1) UNRELEASED; urgency=low
     - New option --apt_proxy (Closes: #610457; Thanks Alex Tomlins!)
     - Always write down root partition as first physical device, otherwise
       pygrub fails (Closes: #609673)
+    - No more expect at least one option to mkfs.* calls. Fixes btrfs
+      creation.  (Closes: #609982)
   * Add dependency on openssh-client for ssh-keygen (Closes: #649108)
   * Use dh_auto_test for build time tests and add according
     build-dependencies on devscripts and libfile-slurp-perl.

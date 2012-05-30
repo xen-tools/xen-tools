@@ -3395,24 +3395,13 @@ sub createFilesystem
     #  Split the command into "binary" + "args".  Make sure that
     # the binary exists and is executable.
     #
-    if ( $command =~ /([^ ]+) (.*)$/ )
-    {
-        my $binary = $1;
-        my $args   = $2;
+    my ($binary, $args) = split(/ /, $command, 2);
 
-        if ( !defined( findBinary($binary) ) )
-        {
-            logprint(
-                "The binary '$binary' required to create the filesystem $fs is missing\n"
-            );
-            $FAIL = 1;
-            exit 127;
-        }
-    }
-    else
+    if ( !defined( findBinary($binary) ) )
     {
         logprint(
-                "The filesystem creation hash is bogus for filesystem : $fs\n");
+            "The binary '$binary' required to create the filesystem $fs is missing\n"
+        );
         $FAIL = 1;
         exit 127;
     }
