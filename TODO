@@ -162,6 +162,12 @@ Bugs to fix and features to add for 5.0
    bin/x* currently contain the same or similar code like e.g. in the
    function readConfigurationFile. This needs to be cleaned up
 
+   hooks/ currently contain the same or similar code. First identical
+   stuff needs to be merged into one file plus symlinks to retain
+   backwards compatibility while keeping the code maintainable. Next
+   step would be to have just one file for similar stuff with a few
+   if-then-elses in there.
+
 * Use Perl::Critic
 
 Stuff from Steve's TODO list / Generic TODOs
