@@ -3426,15 +3426,17 @@ sub createFilesystem
         exit 127;
     }
 
-    #
-    #  OK we have the command and the filesystem.  Create it.
-    #
-    logprint("\nCreating $fs filesystem on $image\n") unless ( $CONFIG{ 'dontformat' } );
+    unless ( $CONFIG{ 'dontformat' } ) {
+        #
+        #  OK we have the command and the filesystem.  Create it.
+        #
+        logprint("\nCreating $fs filesystem on $image\n");
 
-    $command .= " " . $image;
+        $command .= " " . $image;
 
-    runCommand($command) unless ( $CONFIG{ 'dontformat' } );
-    logprint("Done\n") unless ( $CONFIG{ 'dontformat' } );
+        runCommand($command);
+        logprint("Done\n");
+    }
 }
 
 
