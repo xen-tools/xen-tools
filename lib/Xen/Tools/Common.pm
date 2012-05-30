@@ -347,3 +347,5 @@ sub logprint
  Merged from several scripts by Axel Beckert.
 
 =cut
+
+return 1;
