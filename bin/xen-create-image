@@ -147,8 +147,8 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
                 This is useful for site-specific roles.
 
    --finalrole=role
-		Similar to role scripts. Run the specified role script(s)
-		after cfg file creation.
+                Similar to role scripts. Run the specified role script(s)
+                after cfg file creation.
 
    --roledir=/path/to/directory
                 Specify the directory which contains the role scripts.
@@ -723,7 +723,7 @@ Install an X11 server, using VNC and XDM
 
   NOTE: Role scripts are invoked before the config file generation.
         If you need access to the config file from within your role,
-	use --finalrole.
+        use --finalrole.
   NOTE: Multiple role scripts may be invoked if you separate their
  names with commas.
 
