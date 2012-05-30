@@ -2,7 +2,12 @@
 xen-tools
 ---------
 
-Copyright (c) 2005-2007 by Steve Kemp.  All rights reserved.
+Copyright (c) 2005-2009: Steve Kemp.  All rights reserved.
+Copyright (c) 2010-2012: The Xen-Tools Development Team, currently consisting of:
+                         Axel Beckert <abe@deuxchevaux.org>,
+                         Dmitry Nedospasov <dmitry@nedos.net>, and
+                         Stéphane Jourdois <sjourdois@gmail.com>
+
 
 This project is free software.  You may redistribute it under the
 terms of *either* the Perl Artistic License, or the GNU General

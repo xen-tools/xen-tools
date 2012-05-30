@@ -39,7 +39,7 @@ xen-create-image(1) or the backticks feature in xen-tools.conf.
 
 =head1 LICENSE
 
-Copyright (C) 2010 by The Xen-Tools Development Team. All rights
+Copyright (C) 2010-2012 by The Xen-Tools Development Team. All rights
 reserved.
 
 This module is free software; you can redistribute it and/or modify it

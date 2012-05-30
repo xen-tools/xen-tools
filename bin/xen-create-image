@@ -761,7 +761,7 @@ Install an X11 server, using VNC and XDM
 
 =head1 LICENSE
 
-Copyright (c) 2005-2009 by Steve Kemp, (c) 2010 by The Xen-Tools
+Copyright (c) 2005-2009 by Steve Kemp, (c) 2010-2012 by The Xen-Tools
 Development Team. All rights reserved.
 
 This module is free software;
