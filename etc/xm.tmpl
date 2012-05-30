@@ -53,7 +53,17 @@ memory      = '{$memory}'
     $OUT .= "disk        = [\n";
     for ( my $i = $#PARTITIONS; $i >= 0 ; $i-- )
     {
-      $OUT .= "                  '$PARTITIONS[$i]{'imagetype'}$PARTITIONS[$i]{'image'},$device" . ( $i + 1 ) .",w',\n";
+       if ( $PARTITIONS[$i]{'mountpoint'} eq '/' )
+       {
+           $OUT .= "                  '$PARTITIONS[$i]{'imagetype'}$PARTITIONS[$i]{'image'},$device" . ( $i + 1 ) .",w',\n";
+       }
+    }
+    for ( my $i = $#PARTITIONS; $i >= 0 ; $i-- )
+    {
+       if ( $PARTITIONS[$i]{'mountpoint'} ne '/' )
+       {
+           $OUT .= "                  '$PARTITIONS[$i]{'imagetype'}$PARTITIONS[$i]{'image'},$device" . ( $i + 1 ) .",w',\n";
+       }
     }
     $OUT .= "              ]\n";
   }
