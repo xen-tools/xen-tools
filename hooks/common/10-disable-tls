@@ -31,16 +31,16 @@ logMessage Script $0 starting
 # Don't touch TLS on 64 bit platforms.
 #
 if [ "`uname -m`" = "x86_64" ]; then
+
     logMessage "Ignoring TLS since we're a 64 bit host."
-    exit
+
+else
+
+    logMessage "Disabling TLS"
+    mv ${prefix}/lib/tls ${prefix}/lib/tls.disabled
+    mkdir ${prefix}/lib/tls
 fi
 
-
-#
-# Disable TLS and create an empty directory in its place
-# 
-mv ${prefix}/lib/tls ${prefix}/lib/tls.disabled
-mkdir ${prefix}/lib/tls
 
 
 #
