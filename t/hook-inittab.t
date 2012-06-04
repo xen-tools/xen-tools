@@ -27,6 +27,7 @@ ok( -e "/etc/inittab", "/etc/inittab exists." );
 foreach my $dir ( glob( "hooks/*" ) )
 {
     next if ( $dir =~ /CVS/i );
+    next if ( $dir =~ /common/i );
     next if ( ! -d $dir );
 
     if ( $dir =~ /hooks\/(.*)/ )

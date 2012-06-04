@@ -1,0 +1,53 @@
+#!/bin/sh
+#
+#  This script ensures that the new guest images have a nicely
+# populated /dev directory.
+#
+# Steve
+# --
+# http://www.steve.org.uk/
+
+
+prefix=$1
+
+
+
+#
+#  Source our common functions
+#
+if [ -e /usr/lib/xen-tools/common.sh ]; then
+    . /usr/lib/xen-tools/common.sh
+else
+    . ./hooks/common.sh
+fi
+
+
+#
+# Log our start
+#
+logMessage Script $0 starting
+
+
+
+#
+# Early termination if we have a couple of common devices present
+# should speed up installs which use --copy/--tar
+#
+if ( test `ls -1 ${prefix}/dev | wc -l` -gt 10 ); then
+    logMessage "Terminating because there appear to be files in /dev already"
+    exit
+fi
+
+
+#
+#  Make the device nodes.
+#
+chroot ${prefix} /bin/sh -c 'cd /dev && ./MAKEDEV console'
+chroot ${prefix} /bin/sh -c 'cd /dev && ./MAKEDEV null'
+chroot ${prefix} /bin/sh -c 'cd /dev && ./MAKEDEV zero'
+
+
+#
+#  Log our finish
+#
+logMessage Script $0 finished

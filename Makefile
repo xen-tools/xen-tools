@@ -192,6 +192,7 @@ install-hooks:
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s karmic.d precise.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s karmic.d quantal.d
 	cp hooks/common.sh ${prefix}/usr/lib/xen-tools
+	cp -r hooks/common ${prefix}/usr/lib/xen-tools
 
 
 #

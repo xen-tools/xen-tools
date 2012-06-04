@@ -1,6 +1,11 @@
 xen-tools 4.3 (released [TODO])
 ================================
 
+New Features and Major Changes
+------------------------------
+
+* Massive code deduplication in hooks directory
+
 New Options
 -----------
 

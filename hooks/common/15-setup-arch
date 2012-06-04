@@ -1,0 +1,44 @@
+#!/bin/sh
+
+prefix=$1
+
+
+#
+#  Source our common functions
+#
+if [ -e /usr/lib/xen-tools/common.sh ]; then
+    . /usr/lib/xen-tools/common.sh
+else
+    . ./hooks/common.sh
+fi
+
+#
+# Log our start
+#
+logMessage Script $0 starting
+
+
+#
+#  Record arch, if present.
+#
+if [ -d $prefix/etc/rpm ]; then
+
+    logMessage Found /etc/rpm
+
+    #
+    #  If i386 then record this
+    #
+    if [ "$arch" = "i386" ]; then
+        echo "i386-fedora-linux-gnu" >> $prefix/etc/rpm/platform
+    fi
+else
+
+    logMessage Failed to find /etc/rpm
+
+fi
+
+#
+#  Log our finish
+#
+logMessage Script $0 finished
+
