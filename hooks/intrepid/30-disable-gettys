@@ -39,7 +39,7 @@ rm -f ${prefix}/etc/event.d/tty[!1]
 #
 if [ ! -z "${serial_device}" ]; then
 
-    serial_device=`basename ${serial_device}`
+    serial_device=`basename $serial_device`
 
     # Let the user know.
     logMessage "Replacing default serial device (hvc0) with ${serial_device}"

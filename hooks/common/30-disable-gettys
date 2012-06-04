@@ -4,9 +4,6 @@
 # first console - that must remain so that 'xm console ...' works
 # correctly.
 #
-# Steve
-# --
-# http://www.steve.org.uk/
 
 
 prefix=$1
