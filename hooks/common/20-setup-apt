@@ -75,12 +75,12 @@ chroot ${prefix} /usr/bin/apt-get update
 if [ "$dist" != 'dapper' ]; then
     if [ "`uname -m`" = "x86_64" ]; then
 
-	logMessage "Ignoring TLS since we're a 64 bit host."
+        logMessage "Ignoring TLS since we're a 64 bit host."
 
     else
 
-	logMessage "Installing libc6-xen"
-	installDebianPackage ${prefix} libc6-xen
+        logMessage "Installing libc6-xen"
+        installDebianPackage ${prefix} libc6-xen
     fi
 fi
 
