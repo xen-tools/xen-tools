@@ -1,0 +1,58 @@
+#!/bin/sh
+#
+#  This script comments out all virtual terminals which aren't on the
+# first console - that must remain so that 'xm console ...' works
+# correctly.
+#
+# Steve
+# --
+# http://www.steve.org.uk/
+
+
+prefix=$1
+
+
+#
+#  Source our common functions
+#
+if [ -e /usr/lib/xen-tools/common.sh ]; then
+    . /usr/lib/xen-tools/common.sh
+else
+    . ./hooks/common.sh
+fi
+
+
+#
+# Log our start
+#
+logMessage Script $0 starting
+
+
+#
+# Do the transformation.
+#
+sed -i -e 's/^\([2-6].*:respawn*\)/#\1/' -e 's/^T/#\t/' -e 's/tty1$/hvc0/' ${prefix}/etc/inittab
+
+
+#
+#  Are we using an alternative serial device?
+#
+if [ ! -z "${serial_device}" ]; then
+
+    serial_device=`basename $serial_device`
+
+    # Let the user know.
+    logMessage "Replacing default serial device (tty1) with ${serial_device}"
+
+    # replace existing device.
+    sed -i -e s/tty1/${serial_device}/ ${prefix}/etc/inittab
+
+    # make sure that it is allowed to login.
+    echo $serial_device >> ${prefix}/etc/securetty
+fi
+
+
+#
+#  Log our finish
+#
+logMessage Script $0 finished
