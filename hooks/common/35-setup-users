@@ -21,6 +21,17 @@ my $prefix = shift;
 die "Prefix must be given"       unless defined( $prefix );
 die "Prefix must be a directory" unless ( -d $prefix );
 
+#
+# Setup /etc/shadow and /etc/gshadow on Fedora and friends
+# Closes: #499476)
+#
+
+if (-x "$prefix/usr/sbin/pwconv") {
+    system( "chroot $prefix /usr/sbin/pwconv" );
+}
+if (-x "$prefix/usr/sbin/grpconv") {
+    system( "chroot $prefix /usr/sbin/grpconv" );
+}
 
 #
 #  Exit unless the 'accounts' variable is set.
