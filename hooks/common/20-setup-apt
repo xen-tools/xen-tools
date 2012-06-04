@@ -1,12 +1,11 @@
 #!/bin/sh
 #
-#  This script sets up the /etc/apt/sources.list for APT.
+#  This script sets up the /etc/apt/sources.list for APT, and it disables
+# TLS where appropriate.
 #
 # Steve
 # --
 #
-
-
 
 
 prefix=$1

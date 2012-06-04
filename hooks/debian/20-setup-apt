@@ -5,7 +5,7 @@
 #
 # Steve
 # --
-# http://www.steve.org.uk/
+#
 
 
 prefix=$1
@@ -89,7 +89,6 @@ fi
 #  Now that the sources have been setup make sure the system is up to date.
 #
 chroot ${prefix} /usr/bin/apt-get update
-
 
 
 #
