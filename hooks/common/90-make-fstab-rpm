@@ -1,0 +1,123 @@
+#!/bin/sh
+#
+#  This script is responsible for setting up /etc/fstab upon the
+# new instance.
+#
+#  This should be a simple job, but it is complicated by some of the
+# differences between filesystems - some root filesystems will require
+# the installation of new packages, and we have to handle that here.
+#
+# Steve
+# --
+# http://www.steve.org.uk/
+
+
+prefix=$1
+
+#
+#  Source our common functions
+#
+if [ -e /usr/lib/xen-tools/common.sh ]; then
+    . /usr/lib/xen-tools/common.sh
+else
+    . ./hooks/common.sh
+fi
+
+
+#
+# Log our start
+#
+logMessage Script $0 starting
+
+
+logMessage Filesystem options are ${options}
+
+
+#
+# Find the root device.
+#
+#  1.  default to xvda.
+#
+#  2.  If --ide is specified use hda.
+#
+#  3.  If --scsi is specified use sda.
+#
+#  4.  Otherwise use a named $disk_device
+#
+device=xvda
+if [ "${ide}" ]; then
+    device=hda
+elif [ "${scsi}" ]; then
+    device=sda
+else
+    if [ ! -z "${disk_device}" ]; then
+        device=`basename $disk_device`
+    fi
+fi
+
+logMessage "Root device is /dev/$device"
+
+
+#
+#  Now we have the options we can create the fstab.
+#
+has_xfs=0
+has_reiserfs=0
+has_btrfs=0
+cat <<E_O_FSTAB > ${prefix}/etc/fstab
+# /etc/fstab: static file system information.
+#
+# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+proc            /proc           proc    defaults        0       0
+devpts          /dev/pts        devpts  rw,noexec,nosuid,gid=5,mode=620 0  0
+E_O_FSTAB
+for part in `seq 1 ${NUMPARTITIONS}`; do
+    eval "PARTITION=\"\${PARTITION${part}}\""
+    OLDIFS="${IFS}"
+    IFS=:
+    x=0
+    for partdata in ${PARTITION}; do
+        eval "partdata${x}=\"${partdata}\""
+        x=$(( $x+1 ))
+    done
+    IFS="${OLDIFS}"
+
+    case "${partdata2}" in
+        xfs)
+            has_xfs=1
+            ;;
+        reiserfs)
+            has_reiserfs=1
+            ;;
+        btrfs)
+            has_btrfs=1
+            ;;
+    esac
+
+    if [ "${partdata2}" = "swap" ]; then
+        echo "/dev/${device}${part} none swap sw 0 0" >> ${prefix}/etc/fstab
+    else
+        echo "/dev/${device}${part} ${partdata3} ${partdata2} ${partdata4} 0 1" >> ${prefix}/etc/fstab
+    fi
+done
+
+
+#
+#  Finally we can install any required packages for the given root
+# filesystem
+#
+#if [ $has_xfs -eq 1 ]; then
+#    installDebianPackage ${prefix} xfsprogs
+#fi
+#if [ $has_reiserfs -eq 1 ]; then
+#    installDebianPackage ${prefix} reiserfsprogs
+#fi
+#if [ $has_btrfs -eq 1 ]; then
+#    installDebianPackage ${prefix} btrfs-tools
+#fi
+
+
+#
+#  Log our finish
+#
+logMessage Script $0 finished
