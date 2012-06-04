@@ -3,6 +3,12 @@ TODO
 
 See KNOWN_BUGS for real bugs.
 
+Bugs to fix and features to add for 4.3
+---------------------------------------
+
+Refactor TLS disabling. Seems to be happen twice, once in 20-setup-apt
+and once in 10-disable-tls.
+
 Bugs to fix and features to add for 5.0
 ---------------------------------------
 
