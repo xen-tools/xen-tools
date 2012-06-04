@@ -26,6 +26,8 @@ xen-tools (4.3~dev-1) UNRELEASED; urgency=low
     - Also disable initctl in the chroot, not only start-stop-daemon
       (LP: #997063; Thanks xstasi!)
     - Massive code deduplication in hooks directory
+    - Use release blacklist for libc6-xen instead of whitelist in
+      hooks/debian.d/20-setup-apt
   * Add dependency on openssh-client for ssh-keygen (Closes: #649108)
   * Use dh_auto_test for build time tests and add according
     build-dependencies on devscripts and libfile-slurp-perl.
