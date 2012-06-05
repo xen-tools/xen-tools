@@ -44,7 +44,6 @@ mount -o bind /proc ${prefix}/proc
 chroot ${prefix} /usr/bin/yum clean all
 umount ${prefix}/proc
 
-
 #
 #  Log our finish
 #

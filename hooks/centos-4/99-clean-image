@@ -36,6 +36,7 @@ find ${prefix}/ -name '*.rpmnew' -exec rm -f \{\} \;
 #  Clean yum
 #
 logMessage Cleaning Yum Repository
+
 if [ ! -d ${prefix}/proc ]; then
     mkdir -p ${prefix}/proc
 fi
