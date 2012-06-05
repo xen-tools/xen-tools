@@ -169,6 +169,12 @@ Bugs to fix and features to add for 5.0
    step would be to have just one file for similar stuff with a few
    if-then-elses in there.
 
+   Common oneliners for code deduplication in the hooks/ directory:
+
+   $ find -L . -not -xtype l -not -type d -not -path '*/common/*' | sort -t / -k3
+   $ fdupes -r1 . | sort -t / -k3
+   $ find . -type f | sim_text -ipTt 50 | tac | column -t
+
 * Use Perl::Critic
 
 Stuff from Steve's TODO list / Generic TODOs
