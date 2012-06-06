@@ -11,7 +11,6 @@
 prefix=$1
 
 
-
 #
 #  Source our common functions
 #
@@ -27,13 +26,34 @@ fi
 #
 logMessage Script $0 starting
 
+#
+# Test where MAKEDEV is located, assuming /sbin/ as default
+#
+MAKEDEV=''
+MAKEDEV_PATHS="/sbin/MAKEDEV /dev/MAKEDEV"
+for MAKEDEV_PATH in ${MAKEDEV_PATHS}; do
+    if [ -x "${prefix}${MAKEDEV_PATH}" ]; then
+    MAKEDEV="${prefix}${MAKEDEV_PATH}"
+    break
+    fi
+done
 
+if [ -n "${MAKEDEV}" ]; then
 
 #
 # Early termination if we have a couple of common devices present
 # should speed up installs which use --copy/--tar
 #
 if ( test `ls -1 ${prefix}/dev | wc -l` -gt 10 ); then
+    #
+    # We still need to make sure the basic devices are present
+    #
+    cd ${prefix}/dev
+    ${MAKEDEV} std
+    ${MAKEDEV} hda
+    ${MAKEDEV} sda
+    ${MAKEDEV} tty1
+
     logMessage "Terminating because there appear to be files in /dev already"
     exit
 fi
@@ -42,10 +62,11 @@ fi
 #
 #  Make the device nodes.
 #
-chroot ${prefix} /bin/sh -c 'cd /dev && ./MAKEDEV console'
-chroot ${prefix} /bin/sh -c 'cd /dev && ./MAKEDEV null'
-chroot ${prefix} /bin/sh -c 'cd /dev && ./MAKEDEV zero'
+cd ${prefix}/dev
+${MAKEDEV} generic
+${MAKEDEV} std
 
+fi # -n ${MAKEDEV}
 
 #
 #  Log our finish

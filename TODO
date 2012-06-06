@@ -191,3 +191,24 @@ Axel's Break-Backwards-Compatibility Wishlist
 
    This would ease tab completion and CLI parameter reusage with "xm
    create" and friends.
+
+* Check if we can reduce MAKEDEV invocations in hooks/common/55-create-dev
+
+   MAKEDEV std is called in any case. First comment says "Early
+   termination if we have a couple of common devices present should
+   speed up installs which use --copy/--tar" and then "We still need
+   to make sure the basic devices are present" and calls MAKEDEV more
+   often than otherwise.
+
+   Additionally the 55-create-dev for CentOS/Fedora just created
+   console, zero and null. zero and null are part of "MAKEDEV std",
+   perhaps can we reduce it to that. console is part of "MAKEDEV
+   generic".
+
+   Additionally the devices hda, sda and tty1 may not necessary in any
+   case, but instead hvc0 should be created for sure in many
+   cases. Nothing cares about $serial_device there either.
+
+   Current MAKEDEV implementation support more than one device as
+   parameter. That could reduce the MAKEDEV calls from currently six
+   to two.
