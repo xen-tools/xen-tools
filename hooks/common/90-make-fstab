@@ -29,9 +29,7 @@ fi
 #
 logMessage Script $0 starting
 
-
 logMessage Filesystem options are ${options}
-
 
 #
 # Find the root device.
@@ -100,21 +98,6 @@ for part in `seq 1 ${NUMPARTITIONS}`; do
         echo "/dev/${device}${part} ${partdata3} ${partdata2} ${partdata4} 0 1" >> ${prefix}/etc/fstab
     fi
 done
-
-
-#
-#  Finally we can install any required packages for the given root
-# filesystem
-#
-#if [ $has_xfs -eq 1 ]; then
-#    installDebianPackage ${prefix} xfsprogs
-#fi
-#if [ $has_reiserfs -eq 1 ]; then
-#    installDebianPackage ${prefix} reiserfsprogs
-#fi
-#if [ $has_btrfs -eq 1 ]; then
-#    installDebianPackage ${prefix} btrfs-tools
-#fi
 
 
 #
