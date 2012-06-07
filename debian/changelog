@@ -7,6 +7,7 @@ xen-tools (4.3~dev-1) UNRELEASED; urgency=low
     - Supports creating Ubuntu 12.04 Precise and 12.10 Quantal DomUs
     - Supports creating CentOS 6 DomUs (Thanks Johan Schurer)
       + Recommend rinse >= 1.9.1-1
+    - Supports rinse 2.0
     - Updated mirror list for discontinued releases of Debian and Ubuntu
     - Workaround for missing unit parsing in xen-create-nfs (Closes:
       #648814)
