@@ -41,6 +41,8 @@ xen-tools (4.3~dev-1) UNRELEASED; urgency=low
     - copyright-refers-to-symlink-license
     - debian-rules-missing-recommended-target
   * debian/copyright: Update copyright years
+  * Remove xen-shell from Recommends, nobody picked it up. (Closes:
+    #603708)
 
  -- Axel Beckert <abe@debian.org>  Thu, 07 Jun 2012 13:09:28 +0200
 
