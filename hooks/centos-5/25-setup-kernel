@@ -1,4 +1,4 @@
-#/bin/sh
+#!/bin/sh
 #
 #  This script sets up the kernel and fstab for CentOS 5.
 #
