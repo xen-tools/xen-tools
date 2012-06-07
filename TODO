@@ -110,6 +110,10 @@ Bugs to fix and features to add for 5.0
    90-make-fstab does again. It works, but that cries for debugging
    hell.
 
+   centos-5/25-setup-kernel centos-6/25-setup-kernel still differ and
+   I'm not sure if that's necessary respectively what's the common
+   denominator.
+
    80-install-kernel is not yet merged into one hook script.
 
    Common oneliners for code deduplication in the hooks/ directory:

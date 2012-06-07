@@ -29,6 +29,7 @@ chroot ${prefix} ln -s /sbin/MAKEDEV /dev/MAKEDEV
 chroot ${prefix} /sbin/MAKEDEV sda sdb sdc sdd
 
 # Create fstab
+logMessage Create /etc/fstab
 cat > ${prefix}/etc/fstab << EOF
 # /etc/fstab: static file system information.
 #
@@ -52,8 +53,10 @@ chroot ${prefix} yum clean expire-cache
 chroot ${prefix} yum -y install kernel-xen grub.x86_64 perl.x86_64
 
 KERNELVERSION=`ls ${prefix}/boot/vmlinuz-* | sed "s#$prefix/boot/vmlinuz-##"`
+logMessage "Kernel $KERNELVERSION found"
 
 # Create grub's menu.list
+logMessage "Creating /boot/grub/menu.lst"
 mkdir -p ${prefix}/boot/grub
 cat > ${prefix}/boot/grub/menu.lst << EOF
 # WARNING : Don't forget to update this when you upgrade kernel !
