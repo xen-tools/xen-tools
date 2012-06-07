@@ -18,7 +18,8 @@ Newly Supported Distribution Releases
 
 * Ubuntu 11.10 Oneiric
 * Ubuntu 12.04 Precise
-* Ubuntu 12.10 Quantal DomUs
+* Ubuntu 12.10 Quantal
+* CentOS 6
 
 
 xen-tools 4.2.1 (released 17 Mar 2011)
