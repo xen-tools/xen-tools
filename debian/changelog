@@ -5,6 +5,8 @@ xen-tools (4.3~dev-1) UNRELEASED; urgency=low
       disk_device. (Closes: #621499)
     - Supports creating Ubuntu 11.10 Oneiric DomUs (LP: #848654)
     - Supports creating Ubuntu 12.04 Precise and 12.10 Quantal DomUs
+    - Supports creating CentOS 6 DomUs (Thanks Johan Schurer)
+      + Recommend rinse >= 1.9.1-1
     - Updated mirror list for discontinued releases of Debian and Ubuntu
     - Workaround for missing unit parsing in xen-create-nfs (Closes:
       #648814)
@@ -40,7 +42,7 @@ xen-tools (4.3~dev-1) UNRELEASED; urgency=low
     - debian-rules-missing-recommended-target
   * debian/copyright: Update copyright years
 
- -- Axel Beckert <abe@debian.org>  Wed, 30 May 2012 23:57:31 +0200
+ -- Axel Beckert <abe@debian.org>  Thu, 07 Jun 2012 13:09:28 +0200
 
 xen-tools (4.2.1-1) unstable; urgency=low
 
