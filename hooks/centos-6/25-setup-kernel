@@ -1,0 +1,80 @@
+#/bin/sh
+#
+#  This script sets up the kernel and fstab for CentOS 5.
+#
+
+prefix=$1
+
+#
+#  Source our common functions
+#
+if [ -e /usr/lib/xen-tools/common.sh ]; then
+    . /usr/lib/xen-tools/common.sh
+else
+    . ./hooks/common.sh
+fi
+
+#
+# Log our start
+#
+
+logMessage Script $0 starting
+
+# Make the console work
+sed -i "/Cancelled/ {G;s/$/co:2345:respawn:\/sbin\/mingetty console/;}" ${prefix}/etc/inittab
+sed -i "s/^1:2345/#1:2345/" ${prefix}/etc/inittab
+
+# MAKEDEV is needed at this point
+chroot ${prefix} ln -s /sbin/MAKEDEV /dev/MAKEDEV
+chroot ${prefix} /sbin/MAKEDEV sda sdb sdc sdd
+
+# Create fstab
+cat > ${prefix}/etc/fstab << EOF
+# /etc/fstab: static file system information.
+#
+# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+proc            /proc           proc    defaults        0       0
+none            /dev/pts        devpts  mode=0620       0       0
+EOF
+
+for i in `seq 1 $NUMPARTITIONS`; do
+  echo -n "/dev/sda$i " >> ${prefix}/etc/fstab
+  eval part=\$PARTITION$i
+  if [ ! -z "`echo $part | grep swap`" ]; then
+     echo "none swap ws 0 0" >> ${prefix}/etc/fstab
+  else
+     echo $part | awk -F: '{print $4,$3,$5,0,1}' >> ${prefix}/etc/fstab
+  fi
+done
+
+# Install the kernel, grub and perl
+chroot ${prefix} yum clean expire-cache
+chroot ${prefix} yum -y install kernel-xen grub.x86_64 perl.x86_64
+
+KERNELVERSION=`chroot ${prefix} yum list installed version kernel-xen | grep installed | awk '{print $2}'`xen
+
+# Create grub's menu.list
+mkdir -p ${prefix}/boot/grub
+cat > ${prefix}/boot/grub/menu.lst << EOF
+# WARNING : Don't forget to update this when you upgrade kernel !
+# You can also exclude kernel-xen from updates by putting
+# exclude=kernel-xen in in [main] in yum.conf
+
+default=0
+timeout=5
+title CentOS ($KERNELVERSION)
+kernel        /boot/vmlinuz-$KERNELVERSION
+initrd        /boot/initrd-$KERNELVERSION.img
+EOF
+
+# Some use lvm but mkinitrd will generate a wrong initrd when these are present.
+rm -f ${prefix}/etc/lvm/backup/* ${prefix}/etc/lvm/archive/*
+
+# Generate a correct initrd.
+chroot ${prefix} mkinitrd --with=xenblk --with=xennet --preload=xenblk --preload=xennet\
+ -f /boot/initrd-$KERNELVERSION.img $KERNELVERSION
+
+#
+#  Log our finish
+#
+logMessage Script $0 finished

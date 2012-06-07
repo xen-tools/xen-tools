@@ -148,9 +148,11 @@ install-hooks:
 	for i in ${prefix}/usr/lib/xen-tools/*.d; do if [ -L "$$i" ]; then rm -vf "$$i"; fi; done
 	mkdir -p ${prefix}/usr/lib/xen-tools/centos-4.d/
 	mkdir -p ${prefix}/usr/lib/xen-tools/centos-5.d/
+	mkdir -p ${prefix}/usr/lib/xen-tools/centos-6.d/
 	mkdir -p ${prefix}/usr/lib/xen-tools/fedora-core-6.d/
 	cp -R hooks/centos-4/*-* ${prefix}/usr/lib/xen-tools/centos-4.d
 	cp -R hooks/centos-5/*-* ${prefix}/usr/lib/xen-tools/centos-5.d
+	cp -R hooks/centos-6/*-* ${prefix}/usr/lib/xen-tools/centos-6.d
 	cp -R hooks/fedora-core-6/*-* ${prefix}/usr/lib/xen-tools/fedora-core-6.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-4.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-5.d
