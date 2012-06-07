@@ -5,7 +5,8 @@ xen-tools (4.3~dev-1) UNRELEASED; urgency=low
       disk_device. (Closes: #621499)
     - Supports creating Ubuntu 11.10 Oneiric DomUs (LP: #848654)
     - Supports creating Ubuntu 12.04 Precise and 12.10 Quantal DomUs
-    - Supports creating CentOS 6 DomUs (Thanks Johan Schurer)
+    - Supports creating CentOS 6 DomUs (Closes: #578399; Thanks Johan
+      Schurer)
       + Recommend rinse >= 1.9.1-1
     - Supports rinse 2.0
     - Updated mirror list for discontinued releases of Debian and Ubuntu

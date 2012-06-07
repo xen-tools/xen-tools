@@ -40,3 +40,5 @@ Description: Tools to manage Xen virtual servers
    * Ubuntu 11.04 Natty Narwhal
    * Ubuntu 11.10 Oneiric Ocelot
    * Ubuntu 12.04 Precise Pangolin (LTS)
+   * CentOS 5
+   * CentOS 6

@@ -49,6 +49,10 @@ About:
 	  * Precise Pangolin 12.04
 	  * Quantal Quetzal 12.10 (preliminary support as it's not yet available)
 
+	CentOS (only DomUs tested, pygrub support incomplete):
+	  * CentOS 5
+	  * CentOS 6
+
   [1] There is an issue with debootstrap on hardy not installing ksyslogd
       This can be fixed by chrooting into the newly installed system
       and removing the startup scripts. See:
