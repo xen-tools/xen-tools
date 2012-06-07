@@ -51,7 +51,7 @@ done
 chroot ${prefix} yum clean expire-cache
 chroot ${prefix} yum -y install kernel-xen grub.x86_64 perl.x86_64
 
-KERNELVERSION=`chroot ${prefix} yum list installed version kernel-xen | grep installed | awk '{print $2}'`xen
+KERNELVERSION=`ls ${prefix}/boot/vmlinuz-* | sed "s#$prefix/boot/vmlinuz-##"`
 
 # Create grub's menu.list
 mkdir -p ${prefix}/boot/grub
