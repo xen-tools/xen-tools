@@ -44,6 +44,8 @@ xen-tools (4.3~dev-1) UNRELEASED; urgency=low
     - copyright-refers-to-symlink-license
     - debian-rules-missing-recommended-target
   * debian/copyright: Update copyright years
+  * Move xen-utils (for pygrub) from Suggests to Recommends as pygrub
+    becomes the necessary way to boot more and more often.
   * Remove xen-shell from Recommends, nobody picked it up. (Closes:
     #603708)
 
