@@ -101,20 +101,23 @@ Bugs to fix and features to add for 5.0
 
 * Clean up the hooks directory
 
-   Currently we have one directory for Ubuntu and Fedora named after
-   the first supported release which is then duplicated for each
-   subsequent release.
+   We still have a link farm for hooks and a meta link farm for distro
+   releases created on "make install". It probably would be better if
+   we would just have one directory per distro (like with debian) but
+   without the need to created symlinks on "make install"
 
-   I'm sure this won't scale forever. So to minimise code duplication
-   I'd like to have one common directory per distribution (e.g. called
-   ubuntu-common, fedora-common, debian-common, maybe even deb-common,
-   rpm-common or yum-common for dpkg/apt-, rpm/yum-based
-   distributions, etc.) with generic hooks valid for all or most of
-   the releases of one distribution and then one hook directory per
-   release (e.g. called ubuntu-10.04 or ubuntu-lucid or so) which has
-   symbolic links to everything which can be used unchanged from the
-   common directory and new files for everything which has to be
-   different or only there.
+   Currently CentOS's 25-setup-kernel creates an fstab and
+   90-make-fstab does again. It works, but that cries for debugging
+   hell.
+
+   80-install-kernel is not yet merged into one hook script.
+
+   Common oneliners for code deduplication in the hooks/ directory:
+
+   $ find -L . -not -xtype l -not -type d -not -path '*/common/*' | sort -t / -k3
+   $ fdupes -r1 . | sort -t / -k3
+   $ find . -type f | sim_text -ipTt 50 | tac | column -t
+
 
 * Create users, add ssh pubkeys to .ssh/authorized_keys
 
@@ -161,19 +164,7 @@ Bugs to fix and features to add for 5.0
 * Code Deduplication / Refactor the code for less code duplication
 
    bin/x* currently contain the same or similar code like e.g. in the
-   function readConfigurationFile. This needs to be cleaned up
-
-   hooks/ currently contain the same or similar code. First identical
-   stuff needs to be merged into one file plus symlinks to retain
-   backwards compatibility while keeping the code maintainable. Next
-   step would be to have just one file for similar stuff with a few
-   if-then-elses in there.
-
-   Common oneliners for code deduplication in the hooks/ directory:
-
-   $ find -L . -not -xtype l -not -type d -not -path '*/common/*' | sort -t / -k3
-   $ fdupes -r1 . | sort -t / -k3
-   $ find . -type f | sim_text -ipTt 50 | tac | column -t
+   function readConfigurationFile. This needs to be cleaned up.
 
 * Use Perl::Critic
 
