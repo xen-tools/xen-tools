@@ -64,7 +64,7 @@ default=0
 timeout=5
 title CentOS ($KERNELVERSION)
 kernel        /boot/vmlinuz-$KERNELVERSION
-initrd        /boot/initrd-$KERNELVERSION.img
+initrd        /boot/initramfs-$KERNELVERSION.img
 EOF
 
 # Some use lvm but mkinitrd will generate a wrong initrd when these are present.
@@ -72,7 +72,7 @@ rm -f ${prefix}/etc/lvm/backup/* ${prefix}/etc/lvm/archive/*
 
 # Generate a correct initrd.
 chroot ${prefix} mkinitrd --with=xenblk --with=xennet --preload=xenblk --preload=xennet\
- -f /boot/initrd-$KERNELVERSION.img $KERNELVERSION
+ -f /boot/initramfs-$KERNELVERSION.img $KERNELVERSION
 
 #
 #  Log our finish

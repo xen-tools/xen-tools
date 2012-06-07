@@ -62,7 +62,7 @@ default=0
 timeout=5
 title CentOS ($KERNELVERSION)
 kernel        /boot/vmlinuz-$KERNELVERSION xen_pv_hvm=enable
-initrd        /boot/initramfs-$KERNELVERSION.img
+initrd        /boot/initrd-$KERNELVERSION.img
 EOF
 
 #
