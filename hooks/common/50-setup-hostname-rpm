@@ -29,6 +29,12 @@ logMessage Script $0 starting
 
 
 #
+#  Make sure the umask is correct
+#
+umask 022
+
+
+#
 #  Setup the mailname + hostname files.
 #
 echo ${hostname} | sed 's/^\([^\.]*\)\..*/\1/' > ${prefix}/etc/hostname

@@ -30,6 +30,7 @@ xen-tools (4.3~dev-1) UNRELEASED; urgency=low
     - Massive code deduplication in hooks directory
     - Use release blacklist for libc6-xen instead of whitelist in
       hooks/debian.d/20-setup-apt
+    - Enforces umask 022 in 50-setup-hostname* (Hopefully closes: #619630)
   * Add dependency on openssh-client for ssh-keygen (Closes: #649108)
   * Use dh_auto_test for build time tests and add according
     build-dependencies on devscripts and libfile-slurp-perl.

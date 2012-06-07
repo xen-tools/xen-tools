@@ -33,6 +33,13 @@ logMessage Script $0 starting
 GUEST_FQDN=${hostname}
 GUEST_HOSTNAME=`echo $GUEST_FQDN | awk -F'.' '{print $1}'`
 
+
+#
+#  Make sure the umask is correct
+#
+umask 022
+
+
 #
 #  Setup the mailname + hostname files.
 #
