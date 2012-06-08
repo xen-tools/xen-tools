@@ -7,39 +7,38 @@
 #
 
 use strict;
-use Test::More qw( no_plan );
+use Test::More 'no_plan', skip_all => '/etc/inittab not present';
 use File::Temp;
 use File::Copy;
 
 
 #
-#  Sanity check.
+#  Check if build system has /etc/inittab.
 #
-ok( -e "/etc/inittab", "/etc/inittab exists." );
-
-
+SKIP: {
+    skip '/etc/inittab not present' unless -e "/etc/inittab";
 
 #
 #  Rather than having a hardwired list of distributions to test
 # against we look for subdirectories beneath hooks/ and test each
 # one.
 #
-foreach my $dir ( glob( "hooks/*" ) )
-{
-    next if ( $dir =~ /CVS/i );
-    next if ( $dir =~ /common/i );
-    next if ( ! -d $dir );
-
-    if ( $dir =~ /hooks\/(.*)/ )
+    foreach my $dir ( glob( "hooks/*" ) )
     {
-        my $dist = $1;
+        next if ( $dir =~ /CVS/i );
+        next if ( $dir =~ /common/i );
+        next if ( ! -d $dir );
 
-        next if ( $dist =~ /(edgy|dapper|ubuntu)/i );
+        if ( $dir =~ /hooks\/(.*)/ )
+        {
+            my $dist = $1;
 
-        testHook( $dist );
+            next if ( $dist =~ /(edgy|dapper|ubuntu)/i );
+
+            testHook( $dist );
+        }
     }
-}
-
+} # SKIP
 
 
 
