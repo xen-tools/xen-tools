@@ -1,3 +1,12 @@
+xen-tools 4.3rc2 (released TODO)
+=======================================
+
+Bug Fixes
+---------
+
+* Fix several testuite failures depending on the build host's
+  installation.
+
 xen-tools 4.3rc1 (released 08 Jun 2012)
 =======================================
 
