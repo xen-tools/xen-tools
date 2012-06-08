@@ -1,6 +1,6 @@
-xen-tools (4.3~dev-1) UNRELEASED; urgency=low
+xen-tools (4.3~rc1-1) unstable; urgency=low
 
-  * New upstream snapshot
+  * New upstream release candidate
     - Correctly checks and documents valid values for
       disk_device. (Closes: #621499)
     - Supports creating Ubuntu 11.10 Oneiric DomUs (LP: #848654)
@@ -49,7 +49,7 @@ xen-tools (4.3~dev-1) UNRELEASED; urgency=low
   * Remove xen-shell from Recommends, nobody picked it up. (Closes:
     #603708)
 
- -- Axel Beckert <abe@debian.org>  Thu, 07 Jun 2012 13:09:28 +0200
+ -- Axel Beckert <abe@debian.org>  Fri, 08 Jun 2012 14:18:38 +0200
 
 xen-tools (4.2.1-1) unstable; urgency=low
 

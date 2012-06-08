@@ -156,7 +156,7 @@ $CONFIG{ 'extension' } = '.cfg';
 #
 # Release number.
 #
-my $RELEASE = '4.2.1+dev';
+my $RELEASE = '4.3rc1';
 
 
 
