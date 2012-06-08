@@ -17,9 +17,7 @@ DIST_PREFIX = ${TMP}
 VERSION     = 4.3rc1
 DEBVERSION  = $(shell echo $(VERSION)|sed 's/\(rc\|pre\|beta\|alpha\)/~\1/')
 BASE        = xen-tools
-VCS         = $(shell if git ls-files > /dev/null; then echo git; \
-                    elif hg st  > /dev/null; then echo hg; \
-                    else                          echo cannot-determine-used-vcs; fi)
+VCS         = git
 
 #
 #  Installation prefix, useful for the Debian package.
@@ -240,7 +238,6 @@ release: tidy fixup-perms update-version update-modules clean changelog
 	rm -f $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz
 	cp -R . $(DIST_PREFIX)/$(BASE)-$(VERSION)
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)/debian
-	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)/.hg*
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)/.git*
 	cd $(DIST_PREFIX) && tar -cvf $(DIST_PREFIX)/$(BASE)-$(VERSION).tar $(BASE)-$(VERSION)/
 	gzip $(DIST_PREFIX)/$(BASE)-$(VERSION).tar
