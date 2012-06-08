@@ -2,7 +2,7 @@ Source: xen-tools
 Section: utils
 Priority: extra
 Maintainer: Axel Beckert <abe@debian.org>
-Build-Depends: debhelper (>= 7.0.0), libtest-pod-perl, libtext-template-perl, libfile-slurp-perl, devscripts
+Build-Depends: debhelper (>= 7.0.0), libtest-pod-perl, libtext-template-perl, libfile-slurp-perl, devscripts, libmoose-perl
 Standards-Version: 3.9.3
 Homepage: http://xen-tools.org/software/xen-tools
 Vcs-Browser: http://gitorious.org/xen-tools/xen-tools
