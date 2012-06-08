@@ -3,6 +3,7 @@ xen-tools (4.3~rc2~dev-1) UNRELEASED; urgency=low
   * Disable tests of not yet used Xen::Tools. Fixes FTBFS in test suite
     due to not satisifed Moose dependency in Xen::Tools::Log.
   * Add build-dependency on Moose for t/perl-syntax.t.
+  * Add build-dependency on Test::Pod::Coverage for t/pod-coverage.t.
   * Skip t/hook-inittab.t if /etc/inittab is not present on the build
     host. Fixes FTBFS on Ubuntu.
 
