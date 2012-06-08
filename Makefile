@@ -244,16 +244,16 @@ release: tidy fixup-perms update-version update-modules clean changelog
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)/.git*
 	cd $(DIST_PREFIX) && tar -cvf $(DIST_PREFIX)/$(BASE)-$(VERSION).tar $(BASE)-$(VERSION)/
 	gzip $(DIST_PREFIX)/$(BASE)-$(VERSION).tar
-	mv $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz .
+	mv $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz ..
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)
-	gpg --armour --detach-sign $(BASE)-$(VERSION).tar.gz
+	gpg --armour --detach-sign ../$(BASE)-$(VERSION).tar.gz
 
 #
 #  Make a new orig.tar.gz for the Debian package
 #
 orig-tar-gz: release
-	mv $(BASE)-$(VERSION).tar.gz ../$(BASE)_$(DEBVERSION).orig.tar.gz
-	mv $(BASE)-$(VERSION).tar.gz.asc ../$(BASE)_$(DEBVERSION).orig.tar.gz.asc
+	cp -p ../$(BASE)-$(VERSION).tar.gz ../$(BASE)_$(DEBVERSION).orig.tar.gz
+	cp -p ../$(BASE)-$(VERSION).tar.gz.asc ../$(BASE)_$(DEBVERSION).orig.tar.gz.asc
 
 
 #
