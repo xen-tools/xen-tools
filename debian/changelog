@@ -1,7 +1,7 @@
 xen-tools (4.3~rc2~dev-1) UNRELEASED; urgency=low
 
   * New upstream release candidate
-  * Fixes FTBFS due to testsuite failures:
+  * Fixes FTBFS due to testsuite failures (Closes: #676681)
     - Disable tests of not yet used Xen::Tools. Fixes FTBFS in test suite
       due to not satisifed Moose dependency in Xen::Tools::Log.
     - Added build-dependencies on libmoose-perl, git, and
