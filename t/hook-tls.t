@@ -34,7 +34,7 @@ foreach my $dir ( glob( "hooks/*" ) )
     {
         my $dist = $1;
 
-        testTLSDisabling( $dist ) unless ( $dist =~ /(dapper|edgy|ubuntu|debian)/i );
+        testTLSDisabling( $dist ) if -e "hooks/$dist/10-disable-tls";
     }
 }
 
