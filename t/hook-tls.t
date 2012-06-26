@@ -69,8 +69,8 @@ sub testTLSDisabling
     #
     ok( -d "hooks/$dist", "There is a hook directory for the distro $dist" );
 
-    ok( -e "hooks/$dist/10-disable-tls", "TLS Disabling hook exists" );
-    ok( -x "hooks/$dist/10-disable-tls", "TLS Disabling hook is executable" );
+    ok( -e "hooks/$dist/10-disable-tls", "TLS Disabling hook exists ($dist)" );
+    ok( -x "hooks/$dist/10-disable-tls", "TLS Disabling hook is executable ($dist)" );
 
     #
     #  Call the hook
@@ -80,7 +80,7 @@ sub testTLSDisabling
     #
     # Make sure the the TLS directory is empty
     #
-    ok( ! -e "$dir/lib/tls/foo", "The fake library from /lib/tls is gone" );
-    ok( -e "$dir/lib/tls.disabled/foo", "The fake library ended up in /lib/tls.disabled" );
-    ok( -d "$dir/lib/tls", "There is a new /lib/tls directory" );
+    ok( ! -e "$dir/lib/tls/foo", "The fake library from /lib/tls is gone ($dist)" );
+    ok( -e "$dir/lib/tls.disabled/foo", "The fake library ended up in /lib/tls.disabled ($dist)" );
+    ok( -d "$dir/lib/tls", "There is a new /lib/tls directory ($dist)" );
 }
