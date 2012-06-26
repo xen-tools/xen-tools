@@ -68,6 +68,7 @@ clean:
 	@if [ -d debian/xen-tools ]; then rm -rf ./debian/xen-tools; fi
 	@if [ -e $(BASE)-$(VERSION).tar.gz ]; then rm $(BASE)-$(VERSION).tar.gz ; fi
 	@if [ -e $(BASE)-$(VERSION).tar.gz.asc ]; then rm $(BASE)-$(VERSION).tar.gz.asc ; fi
+	cd t; $(MAKE) clean
 
 
 #

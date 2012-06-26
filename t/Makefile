@@ -10,4 +10,4 @@ modules: modules.sh
 	./modules.sh > modules.t
 
 clean:
-	-rm *~
+	-rm *~ modules.t
