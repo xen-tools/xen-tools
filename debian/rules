@@ -20,7 +20,6 @@ clean:
 	dh_testdir
 	dh_testroot
 	make clean
-	rm -f build-stamp configure-stamp
 	dh_clean 
 
 install: build

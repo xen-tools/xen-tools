@@ -11,6 +11,7 @@ xen-tools (4.3~rc2~dev-1) UNRELEASED; urgency=low
     - Skip t/hook-inittab.t if /etc/inittab is not present on the build
       host. Fixes FTBFS on Ubuntu.
   * Switch to source format to "3.0 (quilt)"
+  * Don't remove stamp files manually, dh_clean does that already
 
  -- Axel Beckert <abe@debian.org>  Fri, 08 Jun 2012 20:34:22 +0200
 
