@@ -1,11 +1,11 @@
-xen-tools (4.3.1~rc1-1) unstable; urgency=low
+xen-tools (4.3.1-1) unstable; urgency=low
 
   * Remove t/modules.t in upstream's t/Makefile instead of debian/rules'
     clean target.
   * Run t/hook-tls.t only if distribution actually has
     10-disable-tls. Fixes test suite failure on 32 bit architectures.
 
- -- Axel Beckert <abe@debian.org>  Sat, 30 Jun 2012 16:05:55 +0200
+ -- Axel Beckert <abe@debian.org>  Sat, 30 Jun 2012 16:44:50 +0200
 
 xen-tools (4.3-1) unstable; urgency=low
 
