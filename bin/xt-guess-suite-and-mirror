@@ -81,7 +81,7 @@ use strict;
 #
 # Release number.
 #
-my $RELEASE = '4.3+dev';
+my $RELEASE = '4.3.1rc1';
 
 # Init
 my $mirror = '';
