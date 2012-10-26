@@ -127,7 +127,11 @@ Bugs to fix and features to add for 5.0
 
    Still have to think of a good way of doing this. It would be nice
    To specify a directory of public keys, parsing the hostnames
-   parsing the usernames from the ssh comment line
+   parsing the usernames from the ssh comment line.
+
+   Potential ideas are to add options to add a given file as
+   authorized_keys (e.g. a users public key) or to just add the Dom0's
+   /root/.ssh/authorized_keys as the DomU's one.
 
 * More generic roles
 
