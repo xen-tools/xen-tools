@@ -1692,12 +1692,12 @@ sub checkOption
 
 =cut
 
+my $HELP    = 0;
+my $MANUAL  = 0;
+my $VERSION = 0;
+
 sub parseCommandLineArguments
 {
-    my $HELP    = 0;
-    my $MANUAL  = 0;
-    my $VERSION = 0;
-
     #
     #  We record the installation method here because we want
     # to ensure that we allow the method supplied upon the command line
@@ -4373,6 +4373,8 @@ sub unMountImage
 
 sub END
 {
+    exit 0 if $VERSION || $HELP || $MANUAL;
+
     my $host_rsa_key = '';
     #
     #  Unmount the image if it is still mounted.
