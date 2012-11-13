@@ -8,10 +8,10 @@
 #
 { if ( ( $kernel ) && ( !defined($pygrub)) )
   {
-    $OUT.= "kernel      = '$kernel'";
+    $OUT .= "kernel      = '$kernel'\n";
+    $OUT .= "extra       = 'elevator=noop'";
   }
 }
-extra       = 'elevator=noop'
 { if ( ( $initrd ) && ( !defined($pygrub)) )
   {
     $OUT.= "ramdisk     = '$initrd'";

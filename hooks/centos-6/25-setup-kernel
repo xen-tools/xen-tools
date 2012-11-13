@@ -66,7 +66,7 @@ cat > ${prefix}/boot/grub/menu.lst << EOF
 default=0
 timeout=5
 title CentOS ($KERNELVERSION)
-kernel        /boot/vmlinuz-$KERNELVERSION
+kernel        /boot/vmlinuz-$KERNELVERSION elevator=noop
 initrd        /boot/initramfs-$KERNELVERSION.img
 EOF
 

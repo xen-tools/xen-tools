@@ -61,12 +61,12 @@ timeout         2
 
 title           $DOMU_ISSUE
 root            (hd0,0)
-kernel          /boot/$DOMU_KERNEL root=/dev/xvda2 ro 
+kernel          /boot/$DOMU_KERNEL root=/dev/xvda2 ro elevator=noop
 initrd          /boot/$DOMU_RAMDISK
 
 title           $DOMU_ISSUE (Single-User)
 root            (hd0,0)
-kernel          /boot/$DOMU_KERNEL root=/dev/xvda2 ro single
+kernel          /boot/$DOMU_KERNEL root=/dev/xvda2 ro single elevator=noop
 initrd          /boot/$DOMU_RAMDISK
 
 E_O_MENU
