@@ -375,7 +375,7 @@ sub createXenConfig
     #
     #  The memory size:  Convert Gb -> Mb.
     #
-    if ( $ENV{ 'memory' } =~ /^(\d+)Gb.*$/i )
+    if ( $ENV{ 'memory' } =~ /^(\d+)Gb?.*$/i )
     {
         $ENV{ 'memory' } = $1 * 1024;
     }
@@ -383,7 +383,7 @@ sub createXenConfig
     #
     #  Remove any trailing Mb.
     #
-    if ( $ENV{ 'memory' } =~ /^(\d+)Mb.*$/i )
+    if ( $ENV{ 'memory' } =~ /^(\d+)Mb?.*$/i )
     {
         $ENV{ 'memory' } = $1;
     }

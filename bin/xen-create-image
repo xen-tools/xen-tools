@@ -106,6 +106,9 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --memory=size
                 Setup the amount of memory allocated to the new instance.
+                As suffix recognized size units are "M", "MB", "G" and
+                "GB" (case does not matter). If there's no unit given,
+                megabytes are assumed.
 
    --modules=/path/to/modules
                 Set the path to the kernel modules to use for domU.
