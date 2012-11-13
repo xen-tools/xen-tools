@@ -1,6 +1,7 @@
 xen-tools (4.3.1+dev-1) UNRELEASED; urgency=low
 
   * New upstream release
+    - Fix symbolic link hooks/centos-6/15-setup-arch (Closes: #690299)
 
  -- Axel Beckert <abe@debian.org>  Tue, 13 Nov 2012 18:05:05 +0100
 
