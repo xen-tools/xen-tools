@@ -27,16 +27,19 @@ Xen Queries
   The members of that list are very good at diagnosing issues with
  networking, block devices, and other Xen oddities.
 
+  There's also the IRC channel ##xen (the double hashmark is no typo)
+ on irc.freenode.net.
 
 
 Contact The Author
 ------------------
 
-  As a last resort feel free to contact the author at <steve@steve.org.uk>.
+  As a last resort you can to contact the current maintainer, Axel
+ Beckert, at <abe@deuxchevaux.org>.
 
-  I say last resort not because I'm unwilling to help, but because
- it will take longer for me to respond to you personally and I hate
- answering the same question multiple times.
+  As the previous xen-tools maintainer and original author, Steve
+ Kemp, said, I say last resort not because I'm unwilling to help, but
+ because it may take longer for me to respond to you personally.
 
-Steve
+Axel
 -- 
