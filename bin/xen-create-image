@@ -1761,13 +1761,7 @@ sub parseCommandLineArguments
 
     if ($VERSION)
     {
-        my $REVISION = '$Revision: 1.192 $';
-        if ( $REVISION =~ /1.([0-9.]+) / )
-        {
-            $REVISION = $1;
-        }
-
-        logprint("xen-create-image release $RELEASE - CVS: $REVISION\n");
+        logprint("xen-create-image release $RELEASE\n");
         exit 0;
     }
 

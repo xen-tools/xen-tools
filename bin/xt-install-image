@@ -411,13 +411,7 @@ sub parseCommandLineArguments
 
     if ($VERSION)
     {
-        my $REVISION = '$Revision: 1.65 $';
-        if ( $REVISION =~ /1.([0-9.]+) / )
-        {
-            $REVISION = $1;
-        }
-
-        print "xt-install-image release $RELEASE - CVS: $REVISION\n";
+        print "xt-install-image release $RELEASE\n";
         exit;
     }
 }

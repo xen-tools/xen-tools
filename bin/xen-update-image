@@ -463,13 +463,7 @@ sub parseCommandLineArguments
 
     if ($VERSION)
     {
-        my $REVISION = '$Revision: 1.29 $';
-
-        if ( $REVISION =~ /1.([0-9.]+) / )
-        {
-            $REVISION = $1;
-        }
-        print "xen-update-image release $RELEASE - CVS: $REVISION\n";
+        print "xen-update-image release $RELEASE\n";
         exit;
 
     }

@@ -9,6 +9,7 @@ xen-tools (4.3.1+dev-1) UNRELEASED; urgency=low
     - Also recognize "M" and "G" instead of "MB" and "GB" as size unit for
       --memory. (Closes: #691320) Document the recognized units.
     - Default DomUs to use the noop scheduler (Closes: #693131)
+    - Remove CVS revisions from --version output
   * Add debian/gbp.conf to be able to to build xen-tools with
     git-buildpackage.
   * Install (manually generated) upstream ChangeLog only if it

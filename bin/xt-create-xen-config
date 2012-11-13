@@ -229,13 +229,7 @@ sub parseCommandLineArguments
 
     if ($VERSION)
     {
-        my $REVISION = '$Revision: 1.47 $';
-        if ( $REVISION =~ /1.([0-9.]+) / )
-        {
-            $REVISION = $1;
-        }
-
-        print "xt-create-xen-config release $RELEASE - CVS: $REVISION\n";
+        print "xt-create-xen-config release $RELEASE\n";
         exit;
     }
 }

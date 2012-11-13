@@ -324,13 +324,7 @@ sub parseCommandLineArguments
 
     if ($VERSION)
     {
-        my $REVISION = '$Revision: 1.13 $';
-        if ( $REVISION =~ /1.([0-9.]+) / )
-        {
-            $REVISION = $1;
-        }
-
-        logprint("xen-create-nfs release $RELEASE - CVS: $REVISION\n");
+        logprint("xen-create-nfs release $RELEASE\n");
         exit;
     }
 }
