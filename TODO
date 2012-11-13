@@ -6,6 +6,8 @@ See KNOWN_BUGS for real bugs.
 Bugs to fix and features to add for 4.3
 ---------------------------------------
 
+Fix --version output: It still parses CVS keywords.
+
 Refactor TLS disabling. Seems to be happen twice, once in 20-setup-apt
 and once in 10-disable-tls.
 
@@ -211,3 +213,7 @@ Axel's Break-Backwards-Compatibility Wishlist
    Current MAKEDEV implementation support more than one device as
    parameter. That could reduce the MAKEDEV calls from currently six
    to two.
+
+* Uncouple generating auto start symlinks from --boot.
+
+   Maybe add some --autostart or such.
