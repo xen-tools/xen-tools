@@ -4317,8 +4317,8 @@ sub unMountImage
     #
     #  First we unmount /proc and /dev/pts in the guest install.
     #
-    runCommand("umount $MOUNT_POINT/proc");
-    #runCommand("umount $MOUNT_POINT/dev/pts");
+    runCommand("umount $point/proc");
+    #runCommand("umount $point/dev/pts");
 
     #
     #  Open /proc/mount and get a list of currently mounted paths
