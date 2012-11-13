@@ -1088,73 +1088,6 @@ logprint("All done\n");
 
 
 #
-#  If we're supposed to start the new instance do so - note here we
-# have to unmount the image first.
-#
-if ( $CONFIG{ 'boot' } )
-{
-
-    #
-    #  Unmount the image and any subsequent mounts.
-    #
-    unMountImage($MOUNT_POINT);
-
-    #
-    #  Mark us as unmounted.
-    #
-    $MOUNT_POINT = undef;
-
-    #
-    #  If there is an /etc/xen/auto directory then link
-    # in the domain so that it will automatically restart, if it isn't
-    # already present.
-    #
-    #  (Will be present if this is overwriting a previous image, for example.)
-    #
-    if ( -d "/etc/xen/auto" )
-    {
-        my $cfg =
-          $CONFIG{ 'output' } . "/" . $CONFIG{ 'hostname' } .
-          $CONFIG{ 'extension' };
-
-        if ( !-e $cfg )
-        {
-            logprint("Creating auto-start symlink to: $cfg\n");
-
-            my $link = "ln -s $cfg /etc/xen/auto/";
-            runCommand($link);
-        }
-    }
-
-
-    #
-    #
-    #  Start the image
-    #
-    $CONFIG{ 'pid' } = fork();
-    if ( $CONFIG{ 'pid' } )
-    {
-
-        # Parent.
-        exit;
-    }
-    else
-    {
-
-        # Config file.
-        my $cfg =
-          $CONFIG{ 'output' } . "/" . $CONFIG{ 'hostname' } .
-          $CONFIG{ 'extension' };
-
-        # Child.
-        system("$CONFIG{'xm'} create $cfg >/dev/null 2>/dev/null");
-
-        logprint("Started new Xen guest: $CONFIG{'hostname'} [$cfg]\n");
-    }
-}
-
-
-#
 #  Finished.
 #
 exit 0;
@@ -4392,6 +4325,59 @@ sub END
             $host_rsa_key = "N/A";
         }
         unMountImage($MOUNT_POINT);
+    }
+
+    #
+    #  If we're supposed to start the new instance do so - note here we
+    # have to unmount the image first.
+    #
+    if ( $CONFIG{ 'boot' } and !$FAIL )
+    {
+
+        #
+        #  Unmount the image and any subsequent mounts.
+        #
+        if ( defined($MOUNT_POINT) ) {
+            unMountImage($MOUNT_POINT);
+        }
+
+        #
+        #  If there is an /etc/xen/auto directory then link in the
+        # domain so that it will automatically restart, if it isn't
+        # already present.
+        #
+        #  (Will be present if this is overwriting a previous image,
+        # for example.)
+        #
+        if ( -d "/etc/xen/auto" )
+        {
+            my $cfg =
+                $CONFIG{ 'output' } . "/" . $CONFIG{ 'hostname' } .
+                $CONFIG{ 'extension' };
+
+            if ( !-e $cfg )
+            {
+                logprint("Creating auto-start symlink to: $cfg\n");
+
+                my $link = "ln -s $cfg /etc/xen/auto/";
+                runCommand($link);
+            }
+        }
+
+        #
+        #
+        #  Start the image
+        #
+
+        # Config file.
+        my $cfg =
+            $CONFIG{ 'output' } . "/" . $CONFIG{ 'hostname' } .
+            $CONFIG{ 'extension' };
+
+        # Child.
+        system("$CONFIG{'xm'} create $cfg >/dev/null 2>/dev/null");
+
+        logprint("Started new Xen guest: $CONFIG{'hostname'} [$cfg]\n");
     }
 
     #
