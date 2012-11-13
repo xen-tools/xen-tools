@@ -8,6 +8,7 @@ xen-tools (4.3.1+dev-1) UNRELEASED; urgency=low
     - Use local parameter instead of global variable in unMountImage.
     - Also recognize "M" and "G" instead of "MB" and "GB" as size unit for
       --memory. (Closes: #691320) Document the recognized units.
+    - Default DomUs to use the noop scheduler (Closes: #693131)
 
  -- Axel Beckert <abe@debian.org>  Tue, 13 Nov 2012 18:05:05 +0100
 

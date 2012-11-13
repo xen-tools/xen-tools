@@ -11,6 +11,7 @@
     $OUT.= "kernel      = '$kernel'";
   }
 }
+extra       = 'elevator=noop'
 { if ( ( $initrd ) && ( !defined($pygrub)) )
   {
     $OUT.= "ramdisk     = '$initrd'";
