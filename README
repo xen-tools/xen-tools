@@ -31,6 +31,7 @@ About:
 	  * Lenny 5.0
 	  * Squeeze 6.0
 	  * Wheezy 7.0
+	  * Jessie 8.0 (preliminary support as it's not yet available)
 	  * Sid (works at least at the moment of writing :-)
 
 	Ubuntu (only DomUs tested):
@@ -47,7 +48,8 @@ About:
 	  * Natty Narwhal 11.04
 	  * Oneiric Ocelot 11.10
 	  * Precise Pangolin 12.04
-	  * Quantal Quetzal 12.10 (preliminary support as it's not yet available)
+	  * Quantal Quetzal 12.10
+	  * Raring Ringtail 13.04 (preliminary support as it's not yet available)
 
 	CentOS (only DomUs tested, pygrub support incomplete):
 	  * CentOS 5

@@ -173,6 +173,7 @@ install-hooks:
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d lenny.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d squeeze.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d wheezy.d
+	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d jessie.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d sid.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d testing.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d stable.d
@@ -196,6 +197,7 @@ install-hooks:
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s karmic.d oneiric.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s karmic.d precise.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s karmic.d quantal.d
+	-cd ${prefix}/usr/lib/xen-tools/ && ln -s karmic.d raring.d
 	cp hooks/common.sh ${prefix}/usr/lib/xen-tools
 	cp -r hooks/common ${prefix}/usr/lib/xen-tools
 
