@@ -50,32 +50,32 @@ Bugs to fix and features to add for 5.0
 
 * `xen-create-image --dist=…` / sources.list generation should be more fine-grained
 
-   xen-tools should offer the possibility to enable/disable
-   security/volatile/backports as well as
-   contrib/non-free/universe/restricted/multiverse for each of them
-   not only based on defaults plus the Dom0's sources.list
+  xen-tools should offer the possibility to enable/disable
+  security/volatile/backports as well as
+  contrib/non-free/universe/restricted/multiverse for each of them not
+  only based on defaults plus the Dom0's sources.list
 
-   One idea is to allow parameters like
+  One idea is to allow parameters like
 
      --dist="lenny:main,contrib,non-free;security;volatile:main"
 
-   and maybe (if the default will be to include security) to also
-   allow
+  and maybe (if the default will be to include security) to also
+  allow
 
      --dist="lenny;no-security"
 
-   The second idea (by Mathieu Parent) is to have an
-   `/etc/xen-tools/sources.list.d/` which then contains files like
-   `lenny.list`, `lenny-server.list`, `karmic.list`, etc. which
-   defaults to `$dist.list`, but can be also select with
-   `--sources-list=lenny-server` (which looks for
-   `./lenny-server.list`, `./lenny-server`,
-   `/etc/xen-tools/sources.list.d/lenny-server.list` and
-   `/etc/xen-tools/sources.list.d/lenny-server` in that order).
+  The second idea (by Mathieu Parent) is to have an
+  `/etc/xen-tools/sources.list.d/` which then contains files like
+  `lenny.list`, `lenny-server.list`, `karmic.list`, etc. which
+  defaults to `$dist.list`, but can be also select with
+  `--sources-list=lenny-server` (which looks for
+  `./lenny-server.list`, `./lenny-server`,
+  `/etc/xen-tools/sources.list.d/lenny-server.list` and
+  `/etc/xen-tools/sources.list.d/lenny-server` in that order).
 
-   Third variant is to use `/etc/xen-tools/sources.lists/` instead of
-   `/etc/xen-tools/sources.list.d/` because that directory is no
-   runparts-like directory.
+  Third variant is to use `/etc/xen-tools/sources.lists/` instead of
+  `/etc/xen-tools/sources.list.d/` because that directory is no
+  runparts-like directory.
 
 * LVM snapshot support as an install source.
 
@@ -171,8 +171,8 @@ Bugs to fix and features to add for 5.0
 
 * Code Deduplication / Refactor the code for less code duplication
 
-   bin/x* currently contain the same or similar code like e.g. in the
-   function readConfigurationFile. This needs to be cleaned up.
+  `bin/x*` currently contain the same or similar code like e.g. in the
+  function readConfigurationFile. This needs to be cleaned up.
 
 * Use `Perl::Critic`
 
