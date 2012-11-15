@@ -57,12 +57,12 @@ Bugs to fix and features to add for 5.0
 
   One idea is to allow parameters like
 
-     --dist="lenny:main,contrib,non-free;security;volatile:main"
+    --dist="lenny:main,contrib,non-free;security;volatile:main"
 
   and maybe (if the default will be to include security) to also
   allow
 
-     --dist="lenny;no-security"
+    --dist="lenny;no-security"
 
   The second idea (by Mathieu Parent) is to have an
   `/etc/xen-tools/sources.list.d/` which then contains files like
@@ -81,9 +81,9 @@ Bugs to fix and features to add for 5.0
 
 * Clean up mounts on `Ctrl-C`, causes error while installing otherwise:
 
-     Removing /dev/vg0/acromantula-domu1-disk - since we're forcing the
-     install Can't remove open logical volume "acromantula-domu1-disk"
-     this should be a matter of unmounting the mounted volume from /tmp.
+    Removing /dev/vg0/acromantula-domu1-disk - since we're forcing the
+    install Can't remove open logical volume "acromantula-domu1-disk"
+    this should be a matter of unmounting the mounted volume from /tmp.
 
 * Generic grub support
 
