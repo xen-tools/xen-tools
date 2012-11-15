@@ -9,8 +9,8 @@ If these are not sufficient resources please consider posting any
 queries you might have to the [mailing
 list](http://xen-tools.org/software/xen-tools/lists.html)
 
-Included with the release you should find the file `BUGS.mdwn` which
-contains some notes on reporting bugs.
+Included with the release you should find the file `BUGS.markdown`
+which contains some notes on reporting bugs.
 
 
 Xen Queries

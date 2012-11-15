@@ -1,7 +1,7 @@
 TODO
 ====
 
-See KNOWN_BUGS.mdwn for real bugs.
+See KNOWN_BUGS.markdown for real bugs.
 
 Bugs to fix and features to add for 4.3
 ---------------------------------------
