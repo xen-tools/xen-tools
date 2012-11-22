@@ -63,7 +63,7 @@ removing the startup scripts."
 
 ### CentOS
 
-(only DomUs tested, pygrub support incomplete):
+(only DomUs tested, pygrub support incomplete)
 
 * CentOS 5
 * CentOS 6
