@@ -4411,17 +4411,17 @@ sub END
           logprint("Removing failed install: $CONFIG{'hostname'}\n");
 
         if ($CONFIG{ 'hostname' }) {
-            my $options = '';
+            my $option = '';
             if ($CONFIG{ 'lvm' }) {
-                $options = "--lvm=$CONFIG{'lvm'}"
+                $option = "--lvm=$CONFIG{'lvm'}"
             } elsif ($CONFIG{ 'evms' }) {
-                $options = "--evms=$CONFIG{'evms'}"
+                $option = "--evms=$CONFIG{'evms'}"
             } elsif ($CONFIG{ 'dir' }) {
-                $options = "--dir=$CONFIG{'dir'}"
+                $option = "--dir=$CONFIG{'dir'}"
             }
 
-            if ($options) {
-                runCommand("xen-delete-image $options --hostname=$CONFIG{'hostname'}");
+            if ($option) {
+                runCommand("xen-delete-image $option --hostname=$CONFIG{'hostname'}");
             } else {
                 die "Assertion that either --dir, --lvm, or --dir are given".
                     " failed.\nThis is probably a bug, please report it.";
