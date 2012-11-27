@@ -72,7 +72,7 @@ sub parseConfigFile
 
     open( FILE, "<", $file ) or die "Cannot read file '$file' - $!";
 
-    my $line       = ""; 
+    my $line       = "";
 
     while (defined($line = <FILE>) )
     {
@@ -106,7 +106,7 @@ sub parseConfigFile
             $key =~ s/\s+$//;
             $val =~ s/^\s+//;
             $val =~ s/\s+$//;
-            
+
             next if ( $key =~ /--/ );
 
             # Store value.
@@ -118,8 +118,6 @@ sub parseConfigFile
 
     return( %CONFIG );
 }
-
-
 
 
 =head2 readFile
