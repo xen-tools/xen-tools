@@ -325,10 +325,12 @@ sub setupAdminUsers ($)
 
 =cut
 
-sub fail
+sub fail ($$)
 {
-    logprint(@_);
-    $FAIL = 1;
+    my ($text, $CONFIG) = (@_);
+
+    logprint($text, $CONFIG);
+    $CONFIG->{'FAIL'} = 1;
     exit 127;
 }
 
@@ -342,13 +344,13 @@ sub fail
 
 =cut
 
-sub logonly
+sub logonly ($$)
 {
-    my ($text) = (@_);
+    my ($text, $CONFIG) = (@_);
 
-    if ( $CONFIG{ 'hostname' } )
+    if ( $CONFIG->{ 'hostname' } )
     {
-        open( LOGFILE, ">>", "/var/log/xen-tools/$CONFIG{'hostname'}.log" ) or
+        open( LOGFILE, '>>', '/var/log/xen-tools/'.$CONFIG->{'hostname'}.'.log' ) or
           return;
         print LOGFILE $text;
         close(LOGFILE);
@@ -364,12 +366,12 @@ sub logonly
 
 =cut
 
-sub logprint
+sub logprint ($$)
 {
-    my ($text) = (@_);
+    my ($text, $CONFIG) = (@_);
 
     print $text;
-    logonly($text);
+    logonly($text, $CONFIG);
 }
 
 
