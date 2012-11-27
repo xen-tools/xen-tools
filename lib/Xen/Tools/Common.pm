@@ -318,6 +318,8 @@ sub setupAdminUsers ($)
 }
 
 
+=head2 fail_with_config
+
 =begin doc
 
   Properly set $CONFIG{FAIL} on die
@@ -336,6 +338,8 @@ sub fail_with_config ($$)
 }
 
 
+
+=head2 logonly_with_config
 
 =begin doc
 
@@ -358,6 +362,8 @@ sub logonly_with_config ($$)
     }
 }
 
+
+=head2 logprint_with_config
 
 =begin doc
 
