@@ -171,9 +171,6 @@ Bugs to fix and features to add for 5.0
 
 * Make used Xen toolstack configurable, i.e. via --xen-toolstack=xl
 
-* Support Xen xl toolstack elsewhere than xen-create-image. Needs code
-  deduplication as mentioned below.
-
 * Code Deduplication / Refactor the code for less code duplication
 
   `bin/x*` currently contain the same or similar code like e.g. in the

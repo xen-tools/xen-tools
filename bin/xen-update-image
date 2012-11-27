@@ -169,7 +169,7 @@ E_O_ROOT
 #
 while ( my $name = shift )
 {
-    if ( !xenRunning($name) )
+    if ( !xenRunning($name, \%CONFIG) )
     {
         updateXenImage($name);
     }

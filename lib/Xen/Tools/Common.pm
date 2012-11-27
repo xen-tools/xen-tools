@@ -116,14 +116,16 @@ sub readConfigurationFile ($$)
 
 =cut
 
-sub xenRunning ($)
+sub xenRunning ($$)
 {
-    my ($hostname) = (@_);
+    my ($hostname, $CONFIG) = (@_);
 
     my $running = 0;
 
-    open( CMD, "xm list $hostname 2>/dev/null |" ) or
-      die "Failed to run 'xm list $hostname'";
+    die "Couldn't determine Xen toolstack" unless $CONFIG->{'xm'};
+
+    open( CMD, $CONFIG->{'xm'}." list $hostname 2>/dev/null |" ) or
+      die "Failed to run '".$CONFIG->{'xm'}." list $hostname'";
     while (<CMD>)
     {
         my $line = $_;

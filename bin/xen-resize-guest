@@ -405,7 +405,7 @@ EOF
     #
     #  Make sure the guest isn't running
     #
-    if ( xenRunning( $CONFIG{ 'hostname' } ) )
+    if ( xenRunning( $CONFIG{ 'hostname' }, \%CONFIG ) )
     {
         print "The guest $CONFIG{'hostname'} appears to be running!\n";
         exit 1;

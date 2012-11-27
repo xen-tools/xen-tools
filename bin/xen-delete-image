@@ -221,7 +221,7 @@ E_O_ROOT
 #
 while ( my $name = shift )
 {
-    if ( !xenRunning($name) )
+    if ( !xenRunning($name, \%CONFIG) )
     {
         deleteXenImage($name);
     }
@@ -237,7 +237,7 @@ while ( my $name = shift )
 my $hosts = $CONFIG{ 'hostname' };
 foreach my $name (@$hosts)
 {
-    if ( !xenRunning($name) )
+    if ( !xenRunning($name, \%CONFIG) )
     {
         deleteXenImage($name);
     }
