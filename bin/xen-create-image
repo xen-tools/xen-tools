@@ -818,14 +818,6 @@ my $MOUNT_POINT = undef;
 
 
 #
-#  This flag is set upon failure, after images have been created.
-#
-#  It is used so that we can automatically "rollback" upon failure.
-#
-my $FAIL = 0;
-
-
-#
 # Release number.
 #
 my $RELEASE = '4.3.1+dev';
@@ -882,7 +874,7 @@ if ( $CONFIG{ 'config' } )
     {
         logprint( "The specified configuration file does not exist: '$path'\n",
                   "Aborting\n\n" );
-        $FAIL = 1;
+        $CONFIG{'FAIL'} = 1;
         exit 127;
     }
 }
@@ -899,7 +891,7 @@ if ( $CONFIG{ 'debug' } )
         print " : " . $CONFIG{ $key } if ( $CONFIG{ $key } );
         print "\n";
     }
-    $FAIL = 1;
+    $CONFIG{'FAIL'} = 1;
     exit 127;
 }
 
@@ -1008,7 +1000,7 @@ else
     # Can't happen we didn't get an installation type.
     logprint( "Error:  No recognised installation type.\n",
               "Please specify a directory, lvm, or evms volume to use.\n" );
-    $FAIL = 1;
+    $CONFIG{'FAIL'} = 1;
     exit 127;
 }
 
@@ -1048,7 +1040,7 @@ if ( $CONFIG{ 'install' } )
     if ( !-x $MOUNT_POINT . "/bin/ls" )
     {
         logprint("System installation failed.  Aborting\n");
-        $FAIL = 1;
+        $CONFIG{'FAIL'} = 1;
         exit 127;
     }
 
@@ -1130,7 +1122,7 @@ sub checkSystem
   Specify '--force' to skip this check and continue regardless.
 
 E_O_ERROR
-        $FAIL = 1;
+        $CONFIG{'FAIL'} = 1;
         exit 127;
     }
 
@@ -1147,7 +1139,7 @@ E_O_ERROR
         if ( !defined( findBinary($bin) ) )
         {
             logprint( "The script '$bin' was not found.\n", "Aborting\n\n" );
-            $FAIL = 1;
+            $CONFIG{'FAIL'} = 1;
             exit 127;
         }
     }
@@ -1173,7 +1165,7 @@ E_O_ERROR
 
   Aborting.
 EOF
-            $FAIL = 1;
+            $CONFIG{'FAIL'} = 1;
             exit 127;
         }
     }
@@ -1280,6 +1272,12 @@ EOF
 
 sub setupDefaultOptions
 {
+    #
+    #  This flag is set upon failure, after images have been created.
+    #
+    #  It is used so that we can automatically "rollback" upon failure.
+    #
+    $CONFIG{'FAIL'} = 0;
 
     #
     # Paths and files.
@@ -1669,17 +1667,17 @@ sub parseCommandLineArguments
             "version",    \$VERSION
         ) )
     {
-        $FAIL = 2;
+        $CONFIG{'FAIL'} = 2;
         exit;
     }
 
     if ( $HELP ) {
-        $FAIL=-1;
+        $CONFIG{'FAIL'}=-1;
         pod2usage(1);
     }
 
     if ( $MANUAL ) {
-        $FAIL=-1;
+        $CONFIG{'FAIL'}=-1;
         pod2usage( -verbose => 2 );
     }
 
@@ -1758,7 +1756,7 @@ sub testRootUser
 E_O_ROOT
 
         logprint($err);
-        $FAIL = 1;
+        $CONFIG{'FAIL'} = 1;
         exit 127;
     }
 }
@@ -1787,7 +1785,7 @@ sub checkArguments
     if ( !defined( $CONFIG{ 'dist' } ) )
     {
         logprint("The '--dist' argument is mandatory\n");
-        $FAIL = 1;
+        $CONFIG{'FAIL'} = 1;
         exit 127;
     }
 
@@ -1797,7 +1795,7 @@ sub checkArguments
     if ( !defined( $CONFIG{ 'hostname' } ) )
     {
         logprint("The '--hostname' argument is mandatory.\n");
-        $FAIL = 1;
+        $CONFIG{'FAIL'} = 1;
         exit 127;
     }
 
@@ -1902,7 +1900,7 @@ sub checkArguments
      --install-method=tar         --install-source=/some/file.tar
 
 EOF
-        $FAIL = 1;
+        $CONFIG{'FAIL'} = 1;
         exit 127;
     }
 
@@ -1930,7 +1928,7 @@ EOF
             logprint(
                 "The specified template file, $CONFIG{'template'}, does not exist.\n"
             );
-            $FAIL = 1;
+            $CONFIG{'FAIL'} = 1;
             exit 127;
         }
     }
@@ -1946,7 +1944,7 @@ EOF
             logprint(
                 "The specified role directory '$CONFIG{'roledir'}' does not exist\n"
             );
-            $FAIL = 1;
+            $CONFIG{'FAIL'} = 1;
             exit 127;
         }
     }
@@ -1963,7 +1961,7 @@ EOF
             logprint(
                 "The specified partitions directory '$CONFIG{'partitionsdir'}' does not exist\n"
             );
-            $FAIL = 1;
+            $CONFIG{'FAIL'} = 1;
             exit 127;
         }
     }
@@ -1986,7 +1984,7 @@ EOF
             logprint(
                 "The specified partitions file, $CONFIG{'partitions'}, does not exist.\n"
             );
-            $FAIL = 1;
+            $CONFIG{'FAIL'} = 1;
             exit 127;
         }
 
@@ -1996,14 +1994,14 @@ EOF
     if ( $CONFIG{ 'swap-dev' } && $CONFIG{ 'noswap' } )
     {
         logprint("Please choose either swap-dev or noswap, not both!\n");
-        $FAIL = 1;
+        $CONFIG{'FAIL'} = 1;
         exit 127;
     }
 
     if ( $CONFIG{ 'swap-dev' } && $CONFIG{ 'partitions' } )
     {
         logprint("Please choose either swap-dev or partitions, not both!\n");
-        $FAIL = 1;
+        $CONFIG{'FAIL'} = 1;
         exit 127;
     }
 
@@ -2012,14 +2010,14 @@ EOF
         if ( $CONFIG{ 'partitions' } )
         {
             logprint("Please choose either image-dev or partitions, not both!\n");
-            $FAIL = 1;
+            $CONFIG{'FAIL'} = 1;
             exit 127;
         }
 
         if ( !$CONFIG{ 'swap-dev' } && !$CONFIG{ 'noswap' } )
         {
             logprint("Please choose swap-dev or noswap with image-dev!\n");
-            $FAIL = 1;
+            $CONFIG{'FAIL'} = 1;
             exit 127;
         }
     }
@@ -2042,7 +2040,7 @@ EOF
         else
         {
             logprint("Please choose either DHCP or static usage, not both!\n");
-            $FAIL = 1;
+            $CONFIG{'FAIL'} = 1;
             exit 127;
         }
     }
@@ -2055,7 +2053,7 @@ EOF
         logprint("Please choose one of:\n");
         logprint(" --dhcp\n");
         logprint(" --ip xx.xx.xx.xx\n");
-        $FAIL = 1;
+        $CONFIG{'FAIL'} = 1;
         exit 127;
     }
 
@@ -2094,7 +2092,7 @@ EOF
   Aborting.
 
 EOF
-        $FAIL = 1;
+        $CONFIG{'FAIL'} = 1;
         exit 127;
     }
 
@@ -2115,7 +2113,7 @@ EOF
         {
             print "Configuration file already exists; $cfg\n";
             print "Aborting\n";
-            $FAIL = 2;
+            $CONFIG{'FAIL'} = 2;
             exit 127;
         }
     }
@@ -2255,7 +2253,7 @@ sub checkBinariesPresent
         {
             logprint("The following binary is required to run this tool\n");
             logprint("\t$file\n");
-            $FAIL = 1;
+            $CONFIG{'FAIL'} = 1;
             exit 127;
         }
     }
@@ -2274,7 +2272,7 @@ sub checkBinariesPresent
             logprint(
                 "(This only required for loopback images, which you've selected)\n"
             );
-            $FAIL = 1;
+            $CONFIG{'FAIL'} = 1;
             exit 127;
         }
     }
@@ -2295,7 +2293,7 @@ sub checkBinariesPresent
                 logprint(
                     "(This is only required for EVMS volumes, which you've selected)\n"
                 );
-                $FAIL = 1;
+                $CONFIG{'FAIL'} = 1;
                 exit 127;
             }
         }
@@ -2315,7 +2313,7 @@ sub checkBinariesPresent
                 logprint(
                     "(This is only required for LVM volumes, which you've selected)\n"
                 );
-                $FAIL = 1;
+                $CONFIG{'FAIL'} = 1;
                 exit 127;
             }
         }
@@ -2364,7 +2362,7 @@ sub loadAndCheckPartitionsFile
 
  Otherwise fetch it from CPAN.
 EOF
-        $FAIL = 1;
+        $CONFIG{'FAIL'} = 1;
         exit 127;
     }
 
@@ -2382,7 +2380,7 @@ EOF
             logprint("The partition name $name contains invalid characters.\n");
             logprint(
                    "Only alphanumeric characters and the hyphen are allowed\n");
-            $FAIL = 1;
+            $CONFIG{'FAIL'} = 1;
             exit 127;
         }
 
@@ -2391,7 +2389,7 @@ EOF
             logprint(
                 "The size $details->{'size'} of partition $name contains is not recognized.\n"
             );
-            $FAIL = 1;
+            $CONFIG{'FAIL'} = 1;
             exit 127;
         }
 
@@ -2412,7 +2410,7 @@ EOF
                 logprint(
                     "The type $details->{'type'} of partition $name is not recognized.\n"
                 );
-                $FAIL = 1;
+                $CONFIG{'FAIL'} = 1;
                 exit 127;
             }
 
@@ -2421,7 +2419,7 @@ EOF
                 logprint(
                     "The mount point $details->{'mountpoint'} of partition $name is invalid.\n"
                 );
-                $FAIL = 1;
+                $CONFIG{'FAIL'} = 1;
                 exit 127;
             }
 
@@ -2430,7 +2428,7 @@ EOF
                 logprint(
                     "The mount options $details->{'options'} of partition $name are invalid.\n"
                 );
-                $FAIL = 1;
+                $CONFIG{'FAIL'} = 1;
                 exit 127;
             }
 
@@ -2456,7 +2454,7 @@ EOF
     if ( !$foundroot )
     {
         logprint("The root partition was not specified.\n");
-        $FAIL = 1;
+        $CONFIG{'FAIL'} = 1;
         exit 127;
     }
 
@@ -2713,7 +2711,7 @@ ERROR:  You specified the automatic choosing of an IP address and
         none are left in $CONFIG{'ipfile'}.
 
 EOF
-                    $FAIL = 1;
+                    $CONFIG{'FAIL'} = 1;
                     exit 127;
                 }
             }
@@ -2849,7 +2847,7 @@ sub createLoopbackImages
                     "Specify '--force' to overwrite, or remove the following file\n"
                 );
                 logprint( $disk . "\n" );
-                $FAIL = 2;
+                $CONFIG{'FAIL'} = 2;
                 exit 127;
             }
         }
@@ -2917,7 +2915,7 @@ sub createLoopbackImages
         {
             logprint("The partition image creation failed to create $disk.\n");
             logprint("aborting\n");
-            $FAIL = 1;
+            $CONFIG{'FAIL'} = 1;
             exit 127;
         }
 
@@ -2968,7 +2966,7 @@ sub usePhysicalDevice
             logprint(
                 "NOTE: Please provide full path to your physical device or logical volume.\n"
             );
-            $FAIL = 1;
+            $CONFIG{'FAIL'} = 1;
             exit 127;
         }
 
@@ -3006,7 +3004,7 @@ sub usePhysicalDevice
     else
     {
         logprint("No image-dev parameter given.  Aborting.\n");
-        $FAIL = 1;
+        $CONFIG{'FAIL'} = 1;
         exit 127;
     }
 
@@ -3051,7 +3049,7 @@ sub createLVMBits
             {
                 logprint("The LVM disk image already exists.  Aborting.\n");
                 logprint("Specify '--force' to delete and recreate\n");
-                $FAIL = 2;
+                $CONFIG{'FAIL'} = 2;
                 exit 127;
             }
         }
@@ -3088,7 +3086,7 @@ sub createLVMBits
                 "The LVM partition image creation failed to create $lvm_disk.\n"
             );
             logprint("aborting\n");
-            $FAIL = 1;
+            $CONFIG{'FAIL'} = 1;
             exit 127;
         }
 
@@ -3151,7 +3149,7 @@ sub createEVMSBits
                     "The EVMS volume $evms_volume_disk already exists.  Aborting.\n"
                 );
                 logprint("Specify '--force' to delete and recreate\n");
-                $FAIL = 2;
+                $CONFIG{'FAIL'} = 2;
                 exit 127;
             }
         }
@@ -3181,7 +3179,7 @@ sub createEVMSBits
                     "The EVMS object $evms_object_disk already exists.  Aborting.\n"
                 );
                 logprint("Specify '--force' to delete and recreate\n");
-                $FAIL = 2;
+                $CONFIG{'FAIL'} = 2;
                 exit 127;
             }
         }
@@ -3282,7 +3280,7 @@ sub createFilesystem
         logprint(
             "The binary '$binary' required to create the filesystem $fs is missing\n"
         );
-        $FAIL = 1;
+        $CONFIG{'FAIL'} = 1;
         exit 127;
     }
 
@@ -3704,7 +3702,7 @@ ERROR
   Aborting.  Please update the file or specify an IP address manually.
 
 EOF
-            $FAIL = 1;
+            $CONFIG{'FAIL'} = 1;
             exit 127;
         }
     }
@@ -3848,7 +3846,7 @@ sub runXenConfigCreation
             logprint("Specify --force to force overwriting it.\n");
             logprint("Aborting\n");
             # FAIL = 2 will keep existing config file
-            $FAIL = 2;
+            $CONFIG{'FAIL'} = 2;
             exit 127;
         }
     }
@@ -4144,7 +4142,7 @@ sub END
     #  If we're supposed to start the new instance do so - note here we
     # have to unmount the image first.
     #
-    if ( $CONFIG{ 'boot' } and !$FAIL )
+    if ( $CONFIG{ 'boot' } and !$CONFIG{'FAIL'} )
     {
 
         #
@@ -4214,10 +4212,10 @@ sub END
     #
     #  If we didn't fail, then we assume we succeeded, print a summary
     #
-    #  $FAIL = 0  -  Success
-    #  $FAIL = 1  -  Failed to install, delete the image
-    #  $FAIL = 2  -  Files exist, either .cfg or lvm... etc
-    if ( ($FAIL == 1 or $CONFIG{'FAIL'} == 1) && ( !$CONFIG{ 'keep' } ) )
+    #  $CONFIG{'FAIL'} = 0  -  Success
+    #  $CONFIG{'FAIL'} = 1  -  Failed to install, delete the image
+    #  $CONFIG{'FAIL'} = 2  -  Files exist, either .cfg or lvm... etc
+    if ( ($CONFIG{'FAIL'} == 1 or $CONFIG{'FAIL'} == 1) && ( !$CONFIG{ 'keep' } ) )
     {
 
         #
@@ -4243,7 +4241,7 @@ sub END
                     " failed.\nThis is probably a bug, please report it.";
             }
         }
-    } elsif ( $FAIL == 0 ) {
+    } elsif ( $CONFIG{'FAIL'} == 0 ) {
         #
         #  Assume success
         #
