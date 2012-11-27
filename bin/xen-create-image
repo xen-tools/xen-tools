@@ -4186,7 +4186,7 @@ sub END
             $CONFIG{ 'extension' };
 
         # Start the DomU
-        runCommand("$CONFIG{'xm'} create $cfg");
+        runCommand("$CONFIG{'xm'} create $cfg", \%CONFIG);
 
         logprint("Started new Xen guest: $CONFIG{'hostname'} [$cfg]\n");
     }
@@ -4235,7 +4235,7 @@ sub END
             }
 
             if ($option) {
-                runCommand("xen-delete-image $option --hostname=$CONFIG{'hostname'}");
+                runCommand("xen-delete-image $option --hostname=$CONFIG{'hostname'}", \%CONFIG);
             } else {
                 die "Assertion that either --dir, --lvm, or --dir are given".
                     " failed.\nThis is probably a bug, please report it.";
