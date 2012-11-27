@@ -75,7 +75,7 @@ close( IMAGE );
 #  So we need to run the deletion script and verify the images
 # are removed correctly.
 #
-`perl -I./lib -I../lib ./bin/xen-delete-image --test --dir=$dir $hostname`;
+`perl -I./lib -I../lib ./bin/xen-delete-image --test --no-xen-ok --dir=$dir $hostname`;
 
 
 #

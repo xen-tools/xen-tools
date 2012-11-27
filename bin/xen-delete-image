@@ -23,7 +23,8 @@ xen-delete-image - Delete previously created Xen instances.
    --hostname Specify the image name to delete.
 
   Testing options:
-   --test     Don't complain if we're not invoked by root.
+   --test      Don't complain if we're not invoked by root.
+   --no-xen-ok Don't complain if xen seems not installed or xend is not running
 
 =cut
 
@@ -221,7 +222,7 @@ E_O_ROOT
 #
 while ( my $name = shift )
 {
-    if ( !xenRunning($name, \%CONFIG) )
+    if ( $CONFIG{ 'no_xen_ok' } or !xenRunning($name, \%CONFIG) )
     {
         deleteXenImage($name);
     }
@@ -237,7 +238,7 @@ while ( my $name = shift )
 my $hosts = $CONFIG{ 'hostname' };
 foreach my $name (@$hosts)
 {
-    if ( !xenRunning($name, \%CONFIG) )
+    if ( $CONFIG{ 'no_xen_ok' } or !xenRunning($name, \%CONFIG) )
     {
         deleteXenImage($name);
     }
@@ -279,6 +280,7 @@ sub parseCommandLineArguments
                 "hostname=s@", \$CONFIG{ 'hostname' },
                 "test",        \$CONFIG{ 'test' },
                 "verbose",     \$CONFIG{ 'verbose' },
+                "no-xen-ok",   \$CONFIG{ 'no_xen_ok' },
                 "help",        \$HELP,
                 "manual",      \$MANUAL,
                 "version",     \$VERSION
