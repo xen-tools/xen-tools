@@ -878,7 +878,7 @@ if ( $CONFIG{ 'config' } )
     }
     else
     {
-        logprint( "The specified configuration file does not exist: '$path'\n",
+        logprint( "The specified configuration file does not exist: '$path'\n".
                   "Aborting\n\n" );
         $CONFIG{'FAIL'} = 1;
         exit 127;
@@ -1004,7 +1004,7 @@ else
 {
 
     # Can't happen we didn't get an installation type.
-    logprint( "Error:  No recognised installation type.\n",
+    logprint( "Error:  No recognised installation type.\n".
               "Please specify a directory, lvm, or evms volume to use.\n" );
     $CONFIG{'FAIL'} = 1;
     exit 127;
@@ -1144,7 +1144,7 @@ E_O_ERROR
     {
         if ( !defined( findBinary($bin) ) )
         {
-            logprint( "The script '$bin' was not found.\n", "Aborting\n\n" );
+            logprint( "The script '$bin' was not found.\nAborting\n\n" );
             $CONFIG{'FAIL'} = 1;
             exit 127;
         }
