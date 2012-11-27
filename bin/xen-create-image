@@ -4071,7 +4071,7 @@ sub unMountImage
     my @points;
 
     open( MOUNTED, "<", "/proc/mounts" ) or
-      die "Failed to open mount list";
+      fail("Failed to open mount list");
     foreach my $line (<MOUNTED>)
     {
 
