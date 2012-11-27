@@ -17,6 +17,8 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --verbose    Show useful debugging information.
 
+   --dumpconfig Show current configuration.
+
    --version    Show the version number and exit.
 
 
@@ -310,7 +312,7 @@ Install a new distribution.
 Run a collection of hook scripts to customise the freshly installed system.
 
 =item B<xt-create-xen-config>
-Create a Xen configuration file in so that xm can start the new domain.
+Create a Xen configuration file in so that xm/xl can start the new domain.
 
 =back
 
@@ -784,8 +786,8 @@ use File::Temp qw/ tempdir /;
 use File::Copy qw/ mv cp /;
 use Getopt::Long;
 use Pod::Usage;
+use Data::Dumper;
 use Xen::Tools::Common;
-
 
 
 #
@@ -1283,7 +1285,7 @@ sub setupDefaultOptions
     # Paths and files.
     #
     $CONFIG{ 'dir' }     = '';
-    $CONFIG{ 'xm' }      = findBinary("xm");
+    $CONFIG{ 'xm' }      = findXenToolstack();
     $CONFIG{ 'kernel' }  = '';
     $CONFIG{ 'modules' } = '';
     $CONFIG{ 'initrd' }  = '';
@@ -1388,6 +1390,40 @@ sub setupDefaultOptions
     #
     $CONFIG{ 'nameserver' } = '';
 
+}
+
+
+
+=begin doc
+
+  Find the right Xen toolstack. On Debian and derivatives there's a
+ script which tells you about the current toolstack.
+
+=end doc
+
+=cut
+
+sub findXenToolstack
+{
+    my $helper = '/usr/lib/xen-common/bin/xen-toolstack';
+
+    if (-x $helper) {
+        my $toolstack = `$helper`;
+        chomp($toolstack);
+        return $toolstack if $toolstack;
+    }
+
+    my $xm = findBinary('xm');
+    if ($xm and system("$xm list >/dev/null 2>/dev/null") == 0) {
+        return $xm;
+    }
+
+    my $xl = findBinary('xl');
+    if ($xl and system("$xl list >/dev/null 2>/dev/null") == 0) {
+        return $xl;
+    }
+
+    return undef;
 }
 
 
@@ -1548,9 +1584,10 @@ sub checkOption
 
 =cut
 
-my $HELP    = 0;
-my $MANUAL  = 0;
-my $VERSION = 0;
+my $HELP       = 0;
+my $MANUAL     = 0;
+my $DUMPCONFIG = 0;
+my $VERSION    = 0;
 
 sub parseCommandLineArguments
 {
@@ -1658,11 +1695,12 @@ sub parseCommandLineArguments
             "dontformat",   \&checkOption,
 
             # Help options
-            "debug",   \$CONFIG{ 'debug' },
-            "help",    \$HELP,
-            "manual",  \$MANUAL,
-            "verbose", \$CONFIG{ 'verbose' },
-            "version", \$VERSION
+            "debug",      \$CONFIG{ 'debug' },
+            "help",       \$HELP,
+            "manual",     \$MANUAL,
+            "dumpconfig", \$DUMPCONFIG,
+            "verbose",    \$CONFIG{ 'verbose' },
+            "version",    \$VERSION
         ) )
     {
         $FAIL = 2;
@@ -1722,6 +1760,12 @@ sub parseCommandLineArguments
 
         $CONFIG{ 'swap-dev' } = $install{ 'swap-dev' }
           if ( defined( $install{ 'swap-dev' } ) );
+    }
+
+    if ($DUMPCONFIG)
+    {
+        print Dumper \%CONFIG;
+        exit 0;
     }
 }
 
@@ -3894,7 +3938,7 @@ sub setupRootPassword
     {
         if ( -x $MOUNT_POINT . "/usr/bin/passwd" )
         {
-            system("chroot $MOUNT_POINT /usr/bin/passwd");
+            runCommand("chroot $MOUNT_POINT /usr/bin/passwd", \%CONFIG);
         }
         else
         {
@@ -4098,7 +4142,7 @@ sub unMountImage
 
 sub END
 {
-    exit 0 if $VERSION || $HELP || $MANUAL;
+    exit 0 if $VERSION || $HELP || $MANUAL || $DUMPCONFIG;
 
     my $host_rsa_key = '';
     #
@@ -4166,8 +4210,8 @@ sub END
             $CONFIG{ 'output' } . "/" . $CONFIG{ 'hostname' } .
             $CONFIG{ 'extension' };
 
-        # Child.
-        system("$CONFIG{'xm'} create $cfg >/dev/null 2>/dev/null");
+        # Start the DomU
+        runCommand("$CONFIG{'xm'} create $cfg");
 
         logprint("Started new Xen guest: $CONFIG{'hostname'} [$cfg]\n");
     }
@@ -4206,18 +4250,17 @@ sub END
           logprint("Removing failed install: $CONFIG{'hostname'}\n");
 
         if ($CONFIG{ 'hostname' }) {
-            my $options = '';
+            my $option = '';
             if ($CONFIG{ 'lvm' }) {
-                $options = "--lvm=$CONFIG{'lvm'}"
+                $option = "--lvm=$CONFIG{'lvm'}"
             } elsif ($CONFIG{ 'evms' }) {
-                $options = "--evms=$CONFIG{'evms'}"
+                $option = "--evms=$CONFIG{'evms'}"
             } elsif ($CONFIG{ 'dir' }) {
-                $options = "--dir=$CONFIG{'dir'}"
+                $option = "--dir=$CONFIG{'dir'}"
             }
 
-            if ($options) {
-                system('xen-delete-image', $options,
-                       "--hostname=$CONFIG{'hostname'}");
+            if ($option) {
+                runCommand("xen-delete-image $option --hostname=$CONFIG{'hostname'}");
             } else {
                 die "Assertion that either --dir, --lvm, or --dir are given".
                     " failed.\nThis is probably a bug, please report it.";

@@ -274,7 +274,7 @@ sub setupAdminUsers ($)
         open( SUDOERS, ">>", "/etc/sudoers" ) or
           warn "Failed to add user to sudoers file : $user - $!";
         print SUDOERS
-          "$user ALL = NOPASSWD: /usr/sbin/xm, /usr/bin/xen-create-image\n";
+          "$user ALL = NOPASSWD: /usr/sbin/xm, /usr/sbin/xl, /usr/bin/xen-create-image\n";
         close(SUDOERS);
 
     }

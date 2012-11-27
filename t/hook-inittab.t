@@ -7,7 +7,7 @@
 #
 
 use strict;
-use Test::More 'no_plan', skip_all => '/etc/inittab not present';
+use Test::More;
 use File::Temp;
 use File::Copy;
 
@@ -41,6 +41,7 @@ SKIP: {
 } # SKIP
 
 
+done_testing();
 
 sub testHook
 {
