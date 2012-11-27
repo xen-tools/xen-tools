@@ -4007,7 +4007,7 @@ sub generatePassword {
     while (length($password) < $length) {
         $password .= substr($possible, (int(rand(length($possible)))), 1);
     }
-    return $password
+    return $password;
 }
 
 
