@@ -4008,38 +4008,6 @@ sub generatePassword {
 
 =begin doc
 
-  Find the location of the specified binary on the curent user's PATH.
-
-  Return undef if the named binary isn't found.
-
-=end doc
-
-=cut
-
-sub findBinary
-{
-    my ($bin) = (@_);
-
-    # strip any path which might be present.
-    $bin = $2 if ( $bin =~ /(.*)[\/\\](.*)/ );
-
-    foreach my $entry ( split( /:/, $ENV{ 'PATH' } ) )
-    {
-
-        # guess of location.
-        my $guess = $entry . "/" . $bin;
-
-        # return it if it exists and is executable
-        return $guess if ( -e $guess && -x $guess );
-    }
-
-    return undef;
-}
-
-
-
-=begin doc
-
   Unmount any mount-points which are below the given path.
 
   The mountpoints are chosen by looking at /proc/mounts which

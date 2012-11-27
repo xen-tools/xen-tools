@@ -218,3 +218,5 @@ Axel's Break-Backwards-Compatibility Wishlist
 * Uncouple generating auto start symlinks from `--boot`.
 
   Maybe add some `--autostart` or such.
+
+* Maybe replace findBinary with File::Which

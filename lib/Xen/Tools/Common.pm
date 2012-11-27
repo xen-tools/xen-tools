@@ -21,7 +21,8 @@ use vars qw(@EXPORT_OK @EXPORT);
 use English;
 
 @EXPORT = qw(readConfigurationFile xenRunning runCommand setupAdminUsers
-             findXenToolstack logprint_with_config logonly_with_config fail_with_config);
+             findXenToolstack findBinary
+             logprint_with_config logonly_with_config fail_with_config);
 
 =head1 FUNCTIONS
 
@@ -135,6 +136,38 @@ sub xenRunning ($$)
     close(CMD);
 
     return ($running);
+}
+
+=head2 findBinary
+
+=begin doc
+
+  Find the location of the specified binary on the curent user's PATH.
+
+  Return undef if the named binary isn't found.
+
+=end doc
+
+=cut
+
+sub findBinary
+{
+    my ($bin) = (@_);
+
+    # strip any path which might be present.
+    $bin = $2 if ( $bin =~ /(.*)[\/\\](.*)/ );
+
+    foreach my $entry ( split( /:/, $ENV{ 'PATH' } ) )
+    {
+
+        # guess of location.
+        my $guess = $entry . "/" . $bin;
+
+        # return it if it exists and is executable
+        return $guess if ( -e $guess && -x $guess );
+    }
+
+    return undef;
 }
 
 =head2 findXenToolstack
