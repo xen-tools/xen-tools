@@ -4371,7 +4371,7 @@ sub END
             $CONFIG{ 'output' } . "/" . $CONFIG{ 'hostname' } .
             $CONFIG{ 'extension' };
 
-        # Child.
+        # Start the DomU
         system("$CONFIG{'xm'} create $cfg >/dev/null 2>/dev/null");
 
         logprint("Started new Xen guest: $CONFIG{'hostname'} [$cfg]\n");
