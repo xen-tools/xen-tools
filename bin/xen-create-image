@@ -837,8 +837,8 @@ my $PASSWORD = '';
 
 
 # Minor helpers for reducing code duplication
-sub fail     ($) { fail_with_config(@_, \%CONFIG); }
-sub logprint ($) { logprint_with_config(@_, \%CONFIG); }
+sub fail     ($) { fail_with_config($_[0], \%CONFIG); }
+sub logprint ($) { logprint_with_config($_[0], \%CONFIG); }
 
 #
 #  Setup default options.
