@@ -21,7 +21,7 @@ use vars qw(@EXPORT_OK @EXPORT);
 use English;
 
 @EXPORT = qw(readConfigurationFile xenRunning runCommand setupAdminUsers
-             logprint logonly fail);
+             findXenToolstack logprint logonly fail);
 
 =head1 FUNCTIONS
 
@@ -132,6 +132,40 @@ sub xenRunning ($)
     close(CMD);
 
     return ($running);
+}
+
+=head2 findXenToolstack
+
+=begin doc
+
+  Find the right Xen toolstack. On Debian and derivatives there's a
+ script which tells you about the current toolstack.
+
+=end doc
+
+=cut
+
+sub findXenToolstack
+{
+    my $helper = '/usr/lib/xen-common/bin/xen-toolstack';
+
+    if (-x $helper) {
+        my $toolstack = `$helper`;
+        chomp($toolstack);
+        return $toolstack if $toolstack;
+    }
+
+    my $xm = findBinary('xm');
+    if ($xm and system("$xm list >/dev/null 2>/dev/null") == 0) {
+        return $xm;
+    }
+
+    my $xl = findBinary('xl');
+    if ($xl and system("$xl list >/dev/null 2>/dev/null") == 0) {
+        return $xl;
+    }
+
+    return undef;
 }
 
 =head2 runCommand
