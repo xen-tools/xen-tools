@@ -14,12 +14,10 @@
 #
 TMP        ?= /tmp
 DIST_PREFIX = ${TMP}
-VERSION     = 4.2.1+dev
+VERSION     = 4.3.1+dev
 DEBVERSION  = $(shell echo $(VERSION)|sed 's/\(rc\|pre\|beta\|alpha\)/~\1/')
 BASE        = xen-tools
-VCS         = $(shell if git ls-files > /dev/null; then echo git; \
-                    elif hg st  > /dev/null; then echo hg; \
-                    else                          echo cannot-determine-used-vcs; fi)
+VCS         = git
 
 #
 #  Installation prefix, useful for the Debian package.
@@ -70,6 +68,7 @@ clean:
 	@if [ -d debian/xen-tools ]; then rm -rf ./debian/xen-tools; fi
 	@if [ -e $(BASE)-$(VERSION).tar.gz ]; then rm $(BASE)-$(VERSION).tar.gz ; fi
 	@if [ -e $(BASE)-$(VERSION).tar.gz.asc ]; then rm $(BASE)-$(VERSION).tar.gz.asc ; fi
+	cd t; $(MAKE) clean
 
 
 #
@@ -148,9 +147,11 @@ install-hooks:
 	for i in ${prefix}/usr/lib/xen-tools/*.d; do if [ -L "$$i" ]; then rm -vf "$$i"; fi; done
 	mkdir -p ${prefix}/usr/lib/xen-tools/centos-4.d/
 	mkdir -p ${prefix}/usr/lib/xen-tools/centos-5.d/
+	mkdir -p ${prefix}/usr/lib/xen-tools/centos-6.d/
 	mkdir -p ${prefix}/usr/lib/xen-tools/fedora-core-6.d/
 	cp -R hooks/centos-4/*-* ${prefix}/usr/lib/xen-tools/centos-4.d
 	cp -R hooks/centos-5/*-* ${prefix}/usr/lib/xen-tools/centos-5.d
+	cp -R hooks/centos-6/*-* ${prefix}/usr/lib/xen-tools/centos-6.d
 	cp -R hooks/fedora-core-6/*-* ${prefix}/usr/lib/xen-tools/fedora-core-6.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-4.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-5.d
@@ -161,6 +162,10 @@ install-hooks:
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-11.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-12.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-13.d
+	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-14.d
+	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-15.d
+	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-16.d
+	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-17.d
 	mkdir -p ${prefix}/usr/lib/xen-tools/debian.d/
 	cp -R hooks/debian/*-* ${prefix}/usr/lib/xen-tools/debian.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d sarge.d
@@ -168,6 +173,7 @@ install-hooks:
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d lenny.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d squeeze.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d wheezy.d
+	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d jessie.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d sid.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d testing.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d stable.d
@@ -191,7 +197,9 @@ install-hooks:
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s karmic.d oneiric.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s karmic.d precise.d
 	-cd ${prefix}/usr/lib/xen-tools/ && ln -s karmic.d quantal.d
+	-cd ${prefix}/usr/lib/xen-tools/ && ln -s karmic.d raring.d
 	cp hooks/common.sh ${prefix}/usr/lib/xen-tools
+	cp -r hooks/common ${prefix}/usr/lib/xen-tools
 
 
 #
@@ -233,20 +241,19 @@ release: tidy fixup-perms update-version update-modules clean changelog
 	rm -f $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz
 	cp -R . $(DIST_PREFIX)/$(BASE)-$(VERSION)
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)/debian
-	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)/.hg*
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)/.git*
 	cd $(DIST_PREFIX) && tar -cvf $(DIST_PREFIX)/$(BASE)-$(VERSION).tar $(BASE)-$(VERSION)/
 	gzip $(DIST_PREFIX)/$(BASE)-$(VERSION).tar
-	mv $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz .
+	mv $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz ..
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)
-	gpg --armour --detach-sign $(BASE)-$(VERSION).tar.gz
+	gpg --armour --detach-sign ../$(BASE)-$(VERSION).tar.gz
 
 #
 #  Make a new orig.tar.gz for the Debian package
 #
 orig-tar-gz: release
-	mv $(BASE)-$(VERSION).tar.gz ../$(BASE)_$(DEBVERSION).orig.tar.gz
-	mv $(BASE)-$(VERSION).tar.gz.asc ../$(BASE)_$(DEBVERSION).orig.tar.gz.asc
+	cp -p ../$(BASE)-$(VERSION).tar.gz ../$(BASE)_$(DEBVERSION).orig.tar.gz
+	cp -p ../$(BASE)-$(VERSION).tar.gz.asc ../$(BASE)_$(DEBVERSION).orig.tar.gz.asc
 
 
 #

@@ -36,6 +36,12 @@ domain=$(echo "$hostname" | sed -e 's/^[^.]*\.//')
 
 
 #
+#  Make sure the umask is correct
+#
+umask 022
+
+
+#
 #  Setup the hostname + domain names.
 #
 echo HOSTNAME=\"${name}\" >> ${prefix}/etc/conf.d/hostname

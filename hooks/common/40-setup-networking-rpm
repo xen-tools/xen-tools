@@ -1,0 +1,112 @@
+#!/bin/sh
+#
+#  This script sets up the networking files for the new image.
+#
+# Steve
+# --
+# http://www.steve.org.uk/
+
+
+prefix=$1
+
+
+#
+#  Source our common functions
+#
+if [ -e /usr/lib/xen-tools/common.sh ]; then
+    . /usr/lib/xen-tools/common.sh
+else
+    . ./hooks/common.sh
+fi
+
+
+#
+# Log our start
+#
+logMessage Script $0 starting
+
+
+#
+#  Make sure we have an /etc/sysconfig/network-scripts directory.
+#
+mkdir -p ${prefix}/etc/sysconfig/network-scripts/
+
+
+#
+#  Test for static vs. DHCP
+#
+if [ -z "${dhcp}" ]; then
+    
+    #
+    #  Setup the initial interface
+    #
+    cat <<E_O_STATIC >${prefix}/etc/sysconfig/network-scripts/ifcfg-eth0
+DEVICE=eth0
+ONBOOT=yes
+BOOTPROTO=static
+IPADDR=${ip1}
+NETMASK=${netmask}
+GATEWAY=${gateway}
+E_O_STATIC
+
+     #
+     #  Now setup any other ones.
+     #
+     interface=1
+     count=2
+
+     while [ "${count}" -le "${ip_count}" ]; do
+    
+         value=\$ip${count}
+         value=`eval echo $value`
+
+         logMessage Adding etho:${interface}
+
+         cat <<E_O_STATIC >${prefix}/etc/sysconfig/network-scripts/ifcfg-eth0:${interface}
+DEVICE=eth0:${interface}
+ONBOOT=yes
+BOOTPROTO=static
+IPADDR=${value}
+NETMASK=${netmask}
+E_O_STATIC
+         count=`expr $count + 1`
+         interface=`expr $interface + 1`
+     done
+
+    #
+    # Hooks are run chrooted, hence the resolv.conf is moved
+    # temporarily to /etc/resolv.conf.old. Use that file, it
+    # will be restored after hooks are run.
+    #
+    if [ '' != "$nameserver" ]; then
+        rm -f ${prefix}/etc/resolv.conf.old
+        for ns in $nameserver; do
+            echo "nameserver $ns" >>${prefix}/etc/resolv.conf.old
+        done
+    else
+        cp /etc/resolv.conf ${prefix}/etc/resolv.conf.old
+    fi
+else
+    cat <<E_O_DHCP >${prefix}/etc/sysconfig/network-scripts/ifcfg-eth0
+DEVICE=eth0
+BOOTPROTO=dhcp
+ONBOOT=yes
+E_O_DHCP
+    chroot ${prefix} /usr/bin/yum -y install dhclient
+fi
+
+
+#
+#  Don't forget to setup the default route.
+#
+cat <<EOF >${prefix}/etc/sysconfig/network
+NETWORKING=yes
+GATEWAY=${gateway}
+HOSTNAME=${hostname}
+EOF
+
+
+#
+#  Log our finish
+#
+logMessage Script $0 finished

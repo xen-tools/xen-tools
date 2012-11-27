@@ -1,0 +1,42 @@
+#!/bin/sh
+#
+#  This script installs OpenSSH upon the new system.
+#
+# Steve
+# --
+# http://www.steve.org.uk/
+
+
+prefix=$1
+
+
+#
+#  Source our common functions
+#
+if [ -e /usr/lib/xen-tools/common.sh ]; then
+    . /usr/lib/xen-tools/common.sh
+else
+    . ./hooks/common.sh
+fi
+
+
+#
+# Log our start
+#
+logMessage Script $0 starting
+
+#
+# Install the OpenSSH server.
+#
+if [ ! -d ${prefix}/proc ]; then
+    mkdir -p ${prefix}/proc
+fi
+mount -o bind /proc ${prefix}/proc
+chroot ${prefix} /usr/bin/yum  -y install openssh-server passwd
+umount ${prefix}/proc
+
+
+#
+#  Log our finish
+#
+logMessage Script $0 finished

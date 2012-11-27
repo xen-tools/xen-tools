@@ -29,8 +29,9 @@ sub checkFile
     # The file.
     my $file = $File::Find::name;
 
-    # We don't care about directories
+    # We don't care about directories or symbolic links
     return if ( ! -f $file );
+    return if (   -l $file );
 
     # Nor about backup files.
     return if ( $file =~ /~$/ );

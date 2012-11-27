@@ -172,7 +172,7 @@ my %CONFIG;
 #
 # Release number.
 #
-my $RELEASE = '4.2.1+dev';
+my $RELEASE = '4.3.1+dev';
 
 
 
@@ -290,14 +290,7 @@ sub parseCommandLineArguments
 
     if ($VERSION)
     {
-        my $REVISION = '$Revision: 1.41 $';
-
-        if ( $REVISION =~ /1.([0-9.]+) / )
-        {
-            $REVISION = $1;
-        }
-
-        print "xen-delete-image release $RELEASE - CVS: $REVISION\n";
+        print "xen-delete-image release $RELEASE\n";
         exit;
 
     }

@@ -1,0 +1,62 @@
+#!/bin/sh
+#
+#  This script ensures /etc/securetty upon the new guests has the new
+# Xen console devices in it
+#
+# Steve
+# --
+# http://www.steve.org.uk/
+
+
+prefix=$1
+
+
+#
+#  Source our common functions
+#
+if [ -e /usr/lib/xen-tools/common.sh ]; then
+    . /usr/lib/xen-tools/common.sh
+else
+    . ./hooks/common.sh
+fi
+
+
+#
+# Log our start
+#
+logMessage Script $0 starting
+
+#
+# If the file doesn't exist exit early.
+#
+if [ ! -e ${prefix}/etc/securetty ]; then
+    logMessage /etc/securetty not found.
+    exit
+fi
+
+
+#
+#  Do both the devices.
+#
+for i in xvc0 hvc0 ; do
+
+    #
+    #  Only append if not presnt.
+    #
+    if ( grep $i ${prefix}/etc/securetty > /dev/null ) ; then
+
+        logMessage Host already has $i entry
+
+    else
+        
+        echo $i >> ${prefix}/etc/securetty
+    fi
+
+done
+
+
+#
+# Log our finish
+#
+logMessage Script $0 finished.
+

@@ -106,6 +106,9 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --memory=size
                 Setup the amount of memory allocated to the new instance.
+                As suffix recognized size units are "M", "MB", "G" and
+                "GB" (case does not matter). If there's no unit given,
+                megabytes are assumed.
 
    --modules=/path/to/modules
                 Set the path to the kernel modules to use for domU.
@@ -823,7 +826,7 @@ my $FAIL = 0;
 #
 # Release number.
 #
-my $RELEASE = '4.2.1+dev';
+my $RELEASE = '4.3.1+dev';
 
 
 #
@@ -1089,73 +1092,6 @@ logprint("All done\n");
 
 
 #
-#  If we're supposed to start the new instance do so - note here we
-# have to unmount the image first.
-#
-if ( $CONFIG{ 'boot' } )
-{
-
-    #
-    #  Unmount the image and any subsequent mounts.
-    #
-    unMountImage($MOUNT_POINT);
-
-    #
-    #  Mark us as unmounted.
-    #
-    $MOUNT_POINT = undef;
-
-    #
-    #  If there is an /etc/xen/auto directory then link
-    # in the domain so that it will automatically restart, if it isn't
-    # already present.
-    #
-    #  (Will be present if this is overwriting a previous image, for example.)
-    #
-    if ( -d "/etc/xen/auto" )
-    {
-        my $cfg =
-          $CONFIG{ 'output' } . "/" . $CONFIG{ 'hostname' } .
-          $CONFIG{ 'extension' };
-
-        if ( !-e $cfg )
-        {
-            logprint("Creating auto-start symlink to: $cfg\n");
-
-            my $link = "ln -s $cfg /etc/xen/auto/";
-            runCommand($link, \%CONFIG);
-        }
-    }
-
-
-    #
-    #
-    #  Start the image
-    #
-    $CONFIG{ 'pid' } = fork();
-    if ( $CONFIG{ 'pid' } )
-    {
-
-        # Parent.
-        exit;
-    }
-    else
-    {
-
-        # Config file.
-        my $cfg =
-          $CONFIG{ 'output' } . "/" . $CONFIG{ 'hostname' } .
-          $CONFIG{ 'extension' };
-
-        # Child.
-        system("$CONFIG{'xm'} create $cfg >/dev/null 2>/dev/null");
-
-        logprint("Started new Xen guest: $CONFIG{'hostname'} [$cfg]\n");
-    }
-}
-
-
-#
 #  Finished.
 #
 exit 0;
@@ -1374,17 +1310,17 @@ sub setupDefaultOptions
     $CONFIG{ 'mirror' }        = '';
 
     # Initialize per distribution mirror defaults: Debian
-    foreach my $debdist (qw(squeeze wheezy sid testing oldstable stable unstable)) {
+    foreach my $debdist (qw(squeeze wheezy jessie sid testing oldstable stable unstable)) {
         $CONFIG{ 'mirror_'.$debdist } = $CONFIG{ 'mirror' }
     }
     foreach my $debdist (qw(sarge etch lenny)) {
         $CONFIG{ 'mirror_'.$debdist } = 'http://archive.debian.org/debian';
     }
     # Initialize per distribution mirror defaults: Ubuntu
-    foreach my $ubuntudist (qw(dapper hardy lucid natty oneiric precise quantal)) {
+    foreach my $ubuntudist (qw(hardy lucid oneiric precise quantal raring)) {
         $CONFIG{ 'mirror_'.$ubuntudist } = 'http://archive.ubuntu.com/ubuntu';
     }
-    foreach my $ubuntudist (qw(edgy feisty gutsy intrepid jaunty karmic maverick)) {
+    foreach my $ubuntudist (qw(dapper edgy feisty gutsy intrepid jaunty karmic maverick natty)) {
         $CONFIG{ 'mirror_'.$ubuntudist } = 'http://old-releases.ubuntu.com/ubuntu';
     }
     $CONFIG{ 'apt_proxy' }     = '';
@@ -1612,12 +1548,12 @@ sub checkOption
 
 =cut
 
+my $HELP    = 0;
+my $MANUAL  = 0;
+my $VERSION = 0;
+
 sub parseCommandLineArguments
 {
-    my $HELP    = 0;
-    my $MANUAL  = 0;
-    my $VERSION = 0;
-
     #
     #  We record the installation method here because we want
     # to ensure that we allow the method supplied upon the command line
@@ -1745,13 +1681,7 @@ sub parseCommandLineArguments
 
     if ($VERSION)
     {
-        my $REVISION = '$Revision: 1.192 $';
-        if ( $REVISION =~ /1.([0-9.]+) / )
-        {
-            $REVISION = $1;
-        }
-
-        logprint("xen-create-image release $RELEASE - CVS: $REVISION\n");
+        logprint("xen-create-image release $RELEASE\n");
         exit 0;
     }
 
@@ -1864,7 +1794,7 @@ sub checkArguments
     #
     #  Lucid and probably all later Ubuntus, too, don't work without pygrub
     #
-    if ( $CONFIG{ 'dist' } =~ /lucid|maverick|natty|oneiric|precise|quantal/ )
+    if ( $CONFIG{ 'dist' } =~ /lucid|maverick|natty|oneiric|precise|quantal|raring/ )
     {
         $CONFIG{ 'pygrub' } = 1;
     }
@@ -4112,8 +4042,8 @@ sub unMountImage
     #
     #  First we unmount /proc and /dev/pts in the guest install.
     #
-    runCommand("umount $MOUNT_POINT/proc", \%CONFIG);
-    #runCommand("umount $MOUNT_POINT/dev/pts", \%CONFIG);
+    runCommand("umount $point/proc", \%CONFIG);
+    #runCommand("umount $point/dev/pts", \%CONFIG);
 
     #
     #  Open /proc/mount and get a list of currently mounted paths
@@ -4168,6 +4098,8 @@ sub unMountImage
 
 sub END
 {
+    exit 0 if $VERSION || $HELP || $MANUAL;
+
     my $host_rsa_key = '';
     #
     #  Unmount the image if it is still mounted.
@@ -4185,6 +4117,59 @@ sub END
             $host_rsa_key = "N/A";
         }
         unMountImage($MOUNT_POINT);
+    }
+
+    #
+    #  If we're supposed to start the new instance do so - note here we
+    # have to unmount the image first.
+    #
+    if ( $CONFIG{ 'boot' } and !$FAIL )
+    {
+
+        #
+        #  Unmount the image and any subsequent mounts.
+        #
+        if ( defined($MOUNT_POINT) ) {
+            unMountImage($MOUNT_POINT);
+        }
+
+        #
+        #  If there is an /etc/xen/auto directory then link in the
+        # domain so that it will automatically restart, if it isn't
+        # already present.
+        #
+        #  (Will be present if this is overwriting a previous image,
+        # for example.)
+        #
+        if ( -d "/etc/xen/auto" )
+        {
+            my $cfg =
+                $CONFIG{ 'output' } . "/" . $CONFIG{ 'hostname' } .
+                $CONFIG{ 'extension' };
+
+            if ( !-e $cfg )
+            {
+                logprint("Creating auto-start symlink to: $cfg\n");
+
+                my $link = "ln -s $cfg /etc/xen/auto/";
+                runCommand($link, \%CONFIG);
+            }
+        }
+
+        #
+        #
+        #  Start the image
+        #
+
+        # Config file.
+        my $cfg =
+            $CONFIG{ 'output' } . "/" . $CONFIG{ 'hostname' } .
+            $CONFIG{ 'extension' };
+
+        # Child.
+        system("$CONFIG{'xm'} create $cfg >/dev/null 2>/dev/null");
+
+        logprint("Started new Xen guest: $CONFIG{'hostname'} [$cfg]\n");
     }
 
     #

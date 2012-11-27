@@ -93,6 +93,10 @@ Contributions
   Felipe Scarel <fbscarel [at] com.gmail>
    - Bugfix for --no-swap + LVM
 
+  Johan Schurer <johannes.schurer [at] com.alcatel-lucent>
+   - CentOS 6 support
+   - CentOS 5 fixes
+
   Radu Spineanu <radu [at] org.debian>
    - Supplied many small tweaks, bugfixes, and suggestions.
    - Radu is also one of the former Debian package maintainers.

@@ -98,7 +98,7 @@ my %CONFIG;
 #
 # Release number.
 #
-my $RELEASE = '4.2.1+dev';
+my $RELEASE = '4.3.1+dev';
 
 
 
@@ -159,13 +159,7 @@ sub parseCommandLineArguments
 
     if ($VERSION)
     {
-        my $REVISION = '$Revision: 1.33 $';
-        if ( $REVISION =~ /1.([0-9.]+) / )
-        {
-            $REVISION = $1;
-        }
-
-        print "xt-customize-image release $RELEASE - CVS: $REVISION\n";
+        print "xt-customize-image release $RELEASE\n";
         exit;
     }
 }

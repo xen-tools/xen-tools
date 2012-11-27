@@ -1,0 +1,46 @@
+#!/bin/sh
+#
+#  Install modules from the host system into the new image, and
+# ensure that 'module-init-tools' is setup.
+#
+#  This is most likely required if you're using a custom kernel
+# for your Xen system.  But even if it isn't required it can't
+# really do anything bad; just waste a bit of space.
+#
+# Steve
+# --
+# http://www.steve.org.uk/
+
+
+prefix=$1
+
+
+
+#
+#  Source our common functions
+#
+if [ -e /usr/lib/xen-tools/common.sh ]; then
+    . /usr/lib/xen-tools/common.sh
+else
+    . ./hooks/common.sh
+fi
+
+
+#
+# Log our start
+#
+logMessage Script $0 starting
+
+
+#
+#  Copy the modules from the host to the new system - we should only
+# really copy the *correct* modules, but we don't know what they are.
+#
+mkdir -p ${prefix}/lib/modules
+cp -au /lib/modules/*/ ${prefix}/lib/modules
+
+
+#
+#  Log our finish
+#
+logMessage Script $0 finished

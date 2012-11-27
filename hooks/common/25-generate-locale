@@ -1,0 +1,40 @@
+#!/bin/sh
+#
+#  This script generates a default en_US.UTF-8 locale.
+#
+# Ward
+# --
+
+
+
+prefix=$1
+
+
+#
+#  Source our common functions
+#
+if [ -e /usr/lib/xen-tools/common.sh ]; then
+    . /usr/lib/xen-tools/common.sh
+else
+    . ./hooks/common.sh
+fi
+
+
+#
+# Log our start
+#
+logMessage Script $0 starting
+
+
+#
+# Install the English language pack.
+#
+#  NOTE:  Failure to support your favourite language is *not* a bug.
+#
+installDebianPackage ${prefix} language-pack-en
+
+
+#
+#  Log our finish
+#
+logMessage Script $0 finished
