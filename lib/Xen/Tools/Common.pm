@@ -21,7 +21,7 @@ use vars qw(@EXPORT_OK @EXPORT);
 use English;
 
 @EXPORT = qw(readConfigurationFile xenRunning runCommand setupAdminUsers
-             findXenToolstack logprint logonly fail);
+             findXenToolstack logprint_with_config logonly_with_config fail_with_config);
 
 =head1 FUNCTIONS
 
@@ -46,7 +46,8 @@ sub readConfigurationFile ($$)
 
     my $line = "";
 
-    open( FILE, "<", $file ) or fail("Cannot read file '$file' - $!");
+    open( FILE, "<", $file ) or
+        fail_with_config("Cannot read file '$file' - $!", $CONFIG);
 
     while ( defined( $line = <FILE> ) )
     {
@@ -125,7 +126,7 @@ sub xenRunning ($$)
     die "Couldn't determine Xen toolstack" unless $CONFIG->{'xm'};
 
     open( CMD, $CONFIG->{'xm'}." list $hostname 2>/dev/null |" ) or
-      die "Failed to run '".$CONFIG->{'xm'}." list $hostname'";
+      fail_with_config("Failed to run '".$CONFIG->{'xm'}." list $hostname'", $CONFIG);
     while (<CMD>)
     {
         my $line = $_;
@@ -208,8 +209,8 @@ sub runCommand ($$)
     #
     my $rcopen = open(CMD, '-|', $cmd);
     if (!defined($rcopen)) {
-        logprint("Starting command '$cmd' failed: $!\n");
-        logprint("Aborting\n");
+        logprint_with_config("Starting command '$cmd' failed: $!\n", $CONFIG);
+        logprint_with_config("Aborting\n", $CONFIG);
         print "See /var/log/xen-tools/".$CONFIG->{'hostname'}.".log for details\n";
         $CONFIG->{'FAIL'} = 1;
         exit 127;
@@ -217,9 +218,9 @@ sub runCommand ($$)
 
     while (my $line = <CMD>) {
         if ($CONFIG->{ 'verbose' }) {
-            logprint $line;
+            logprint_with_config($line, $CONFIG);
         } else {
-            logonly $line;
+            logonly_with_config($line, $CONFIG);
         }
     }
 
@@ -229,8 +230,8 @@ sub runCommand ($$)
 
     if (!$rcclose)
     {
-        logprint("Running command '$cmd' failed with exit code $?.\n");
-        logprint("Aborting\n");
+        logprint_with_config("Running command '$cmd' failed with exit code $?.\n", $CONFIG);
+        logprint_with_config("Aborting\n", $CONFIG);
         print "See /var/log/xen-tools/".$CONFIG->{'hostname'}.".log for details\n";
         $CONFIG->{'FAIL'} = 1;
         exit 127;
@@ -319,17 +320,17 @@ sub setupAdminUsers ($)
 
 =begin doc
 
-  Properly set $FAIL on die
+  Properly set $CONFIG{FAIL} on die
 
 =end doc
 
 =cut
 
-sub fail ($$)
+sub fail_with_config ($$)
 {
     my ($text, $CONFIG) = (@_);
 
-    logprint($text, $CONFIG);
+    logprint_with_config($text, $CONFIG);
     $CONFIG->{'FAIL'} = 1;
     exit 127;
 }
@@ -344,7 +345,7 @@ sub fail ($$)
 
 =cut
 
-sub logonly ($$)
+sub logonly_with_config ($$)
 {
     my ($text, $CONFIG) = (@_);
 
@@ -366,12 +367,12 @@ sub logonly ($$)
 
 =cut
 
-sub logprint ($$)
+sub logprint_with_config ($$)
 {
     my ($text, $CONFIG) = (@_);
 
     print $text;
-    logonly($text, $CONFIG);
+    logonly_with_config($text, $CONFIG);
 }
 
 
