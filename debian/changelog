@@ -11,6 +11,7 @@ xen-tools (4.3.1+dev-1) UNRELEASED; urgency=low
     - Default DomUs to use the noop scheduler (Closes: #693131)
     - Remove CVS revisions from --version output
     - Preliminary support for Debian Jessie and Ubuntu Raring
+    - xen-create-image: Consistently use runCommand() instead of system()
   * Add debian/gbp.conf to be able to to build xen-tools with
     git-buildpackage.
   * Install (manually generated) upstream ChangeLog only if it

@@ -3974,7 +3974,7 @@ sub setupRootPassword
     {
         if ( -x $MOUNT_POINT . "/usr/bin/passwd" )
         {
-            system("chroot $MOUNT_POINT /usr/bin/passwd");
+            runCommand("chroot $MOUNT_POINT /usr/bin/passwd");
         }
         else
         {
@@ -4372,7 +4372,7 @@ sub END
             $CONFIG{ 'extension' };
 
         # Start the DomU
-        system("$CONFIG{'xm'} create $cfg >/dev/null 2>/dev/null");
+        runCommand("$CONFIG{'xm'} create $cfg");
 
         logprint("Started new Xen guest: $CONFIG{'hostname'} [$cfg]\n");
     }
@@ -4421,8 +4421,7 @@ sub END
             }
 
             if ($options) {
-                system('xen-delete-image', $options,
-                       "--hostname=$CONFIG{'hostname'}");
+                runCommand("xen-delete-image $options --hostname=$CONFIG{'hostname'}");
             } else {
                 die "Assertion that either --dir, --lvm, or --dir are given".
                     " failed.\nThis is probably a bug, please report it.";
