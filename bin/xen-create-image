@@ -17,6 +17,8 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --verbose    Show useful debugging information.
 
+   --dumpconfig Show current configuration.
+
    --version    Show the version number and exit.
 
 
@@ -784,7 +786,7 @@ use File::Temp qw/ tempdir /;
 use File::Copy qw/ mv cp /;
 use Getopt::Long;
 use Pod::Usage;
-
+use Data::Dumper;
 
 
 #
@@ -1662,9 +1664,10 @@ sub checkOption
 
 =cut
 
-my $HELP    = 0;
-my $MANUAL  = 0;
-my $VERSION = 0;
+my $HELP       = 0;
+my $MANUAL     = 0;
+my $DUMPCONFIG = 0;
+my $VERSION    = 0;
 
 sub parseCommandLineArguments
 {
@@ -1772,11 +1775,12 @@ sub parseCommandLineArguments
             "dontformat",   \&checkOption,
 
             # Help options
-            "debug",   \$CONFIG{ 'debug' },
-            "help",    \$HELP,
-            "manual",  \$MANUAL,
-            "verbose", \$CONFIG{ 'verbose' },
-            "version", \$VERSION
+            "debug",      \$CONFIG{ 'debug' },
+            "help",       \$HELP,
+            "manual",     \$MANUAL,
+            "dumpconfig", \$DUMPCONFIG,
+            "verbose",    \$CONFIG{ 'verbose' },
+            "version",    \$VERSION
         ) )
     {
         $FAIL = 2;
@@ -1836,6 +1840,12 @@ sub parseCommandLineArguments
 
         $CONFIG{ 'swap-dev' } = $install{ 'swap-dev' }
           if ( defined( $install{ 'swap-dev' } ) );
+    }
+
+    if ($DUMPCONFIG)
+    {
+        print Dumper \%CONFIG;
+        exit 0;
     }
 }
 
@@ -4337,7 +4347,7 @@ sub unMountImage
 
 sub END
 {
-    exit 0 if $VERSION || $HELP || $MANUAL;
+    exit 0 if $VERSION || $HELP || $MANUAL || $DUMPCONFIG;
 
     my $host_rsa_key = '';
     #
