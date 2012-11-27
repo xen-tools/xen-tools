@@ -41,7 +41,7 @@ sub testFile
     #
     #  Run the file with "--help" and capture the output.
     #
-    my $output = `$file --help`;
+    my $output = `perl -Ilib $file --help`;
 
     #
     #  Parse out the options we accept
