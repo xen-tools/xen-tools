@@ -834,6 +834,12 @@ my $IP_ADDRESSES = '';
 #
 my $PASSWORD = '';
 
+
+
+# Minor helpers for reducing code duplication
+sub fail     ($) { fail_with_config(@_, \%CONFIG); }
+sub logprint ($) { logprint_with_config(@_, \%CONFIG); }
+
 #
 #  Setup default options.
 #
@@ -3980,17 +3986,6 @@ sub setupRootPassword
         }
     }
 }
-
-=begin doc
-
-  Minor helpers for reducing code duplication
-
-=end doc
-
-=cut
-
-sub fail     ($) { fail_with_config(@_, \%CONFIG); }
-sub logprint ($) { logprint_with_config(@_, \%CONFIG); }
 
 =begin doc
 
