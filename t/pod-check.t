@@ -8,7 +8,7 @@
 #
 
 use strict;
-use Test::More qw( no_plan );
+use Test::More;
 
 foreach my $file ( glob( "bin/*-*" ) )
 {
@@ -30,3 +30,4 @@ foreach my $file ( glob( "bin/*-*" ) )
     }
 }
 
+done_testing();

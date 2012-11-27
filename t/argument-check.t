@@ -8,7 +8,7 @@
 #
 
 use strict;
-use Test::More qw( no_plan );
+use Test::More;
 
 #
 #  Open and parse the xen-tools.conf configuration file.
@@ -51,7 +51,7 @@ foreach my $key ( sort keys %OPTIONS )
     is( $found, 1 , " Found documentation for '$key'" );
 }
 
-
+done_testing();
 
 
 =head2 parseConfigFile

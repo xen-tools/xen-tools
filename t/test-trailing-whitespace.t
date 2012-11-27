@@ -9,7 +9,7 @@
 
 use strict;
 use File::Find;
-use Test::More qw( no_plan );
+use Test::More;
 
 
 #
@@ -37,6 +37,7 @@ foreach my $file (sort( glob ( $dir . "*" ) ) )
     checkFile( $file );
 }
 
+done_testing();
 
 #
 #  Check a file.

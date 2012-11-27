@@ -9,7 +9,7 @@
 
 
 use strict;
-use Test::More qw( no_plan );
+use Test::More;
 
 
 #
@@ -30,7 +30,7 @@ foreach my $dir ( glob( "hooks/*" ) )
     }
 }
 
-
+done_testing();
 
 =head2 testPlugins
 

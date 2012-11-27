@@ -15,10 +15,6 @@ if ( $Config::Config{archname} =~ /64/ )
 {
     plan skip_all => "This test will fail upon 64 bit systems" ;
 }
-else
-{
-    plan no_plan;
-}
 
 #
 #  Rather than having a hardwired list of distributions to test
@@ -38,7 +34,7 @@ foreach my $dir ( glob( "hooks/*" ) )
     }
 }
 
-
+done_testing();
 
 
 #

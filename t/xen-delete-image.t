@@ -9,7 +9,7 @@
 
 
 use strict;
-use Test::More qw( no_plan );
+use Test::More;
 use File::Temp;
 
 
@@ -91,3 +91,5 @@ ok( ! -e $domains . "/" . $hostname . "/" . "swap.img",
 #
 ok( ! -d $domains . "/" . $hostname,
     "The hostname directory was removed" );
+
+done_testing();

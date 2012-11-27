@@ -10,7 +10,7 @@
 
 
 use strict;
-use Test::More qw( no_plan );
+use Test::More;
 use File::Temp;
 
 
@@ -26,7 +26,7 @@ testRandomInstance( "bar.my.flat", 1 );
 testRandomInstance( "baz.my.flat", 0 );
 testRandomInstance( "baz.my.flat", 1 );
 
-
+done_testing();
 
 =head2 testRandomInstance
 

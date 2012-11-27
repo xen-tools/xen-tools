@@ -9,7 +9,7 @@
 
 use strict;
 use File::Find;
-use Test::More qw( no_plan );
+use Test::More;
 
 
 #
@@ -18,7 +18,7 @@ use Test::More qw( no_plan );
 #
 find( { wanted => \&checkFile, no_chdir => 1 }, '.' );
 
-
+done_testing();
 
 #
 #  Check a file.

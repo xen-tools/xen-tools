@@ -12,7 +12,7 @@
 
 use strict;
 use File::Find;
-use Test::More qw( no_plan );
+use Test::More;
 
 
 #
@@ -26,6 +26,7 @@ foreach my $file ( sort( glob "./bin/*-*" ) )
     testFile( $file );
 }
 
+done_testing();
 
 #
 #  Check that the given file implements all the option processing it

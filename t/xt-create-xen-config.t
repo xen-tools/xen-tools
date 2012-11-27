@@ -9,7 +9,7 @@
 
 
 use strict;
-use Test::More qw( no_plan );
+use Test::More;
 use File::Temp;
 
 
@@ -107,7 +107,7 @@ noMentionOf( "phy:",
 
 
 
-
+done_testing();
 
 
 

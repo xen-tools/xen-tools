@@ -6,7 +6,7 @@
 # --
 #
 
-use Test::More qw( no_plan );
+use Test::More;
 
 
 #
@@ -44,3 +44,4 @@ foreach my $file ( @optional )
     }
 }
 
+done_testing();

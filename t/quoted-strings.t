@@ -10,7 +10,7 @@
 
 use strict;
 use File::Find;
-use Test::More qw( no_plan );
+use Test::More;
 
 
 #
@@ -23,7 +23,7 @@ $dir = "./hooks"  if ( -d "./hooks" );
 ok( defined( $dir ), "Found hook directory" );
 find( { wanted => \&checkFile, no_chdir => 1 }, $dir );
 
-
+done_testing();
 
 #
 #  Check a file; if it is a shell script.

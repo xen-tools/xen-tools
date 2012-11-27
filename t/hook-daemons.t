@@ -8,7 +8,7 @@
 
 
 use strict;
-use Test::More qw( no_plan );
+use Test::More;
 use File::Temp;
 
 
@@ -32,7 +32,7 @@ foreach my $dir ( glob( "hooks/*" ) )
     }
 }
 
-
+done_testing();
 
 #
 #  If the given distribution has the following two files test them:
