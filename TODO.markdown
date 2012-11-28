@@ -176,6 +176,9 @@ Bugs to fix and features to add for 5.0
   `bin/x*` currently contain the same or similar code like e.g. in the
   function readConfigurationFile. This needs to be cleaned up.
 
+* Unify --debug and --dumpconfig. Likely make --debug exit
+  gracefully. Document --debug if --dumpconfig is removed.
+
 * Use `Perl::Critic`
 
 Stuff from Steve's TODO list / Generic TODOs
