@@ -122,6 +122,9 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
                 used the system will not have a swap entry added to
                 its /etc/fstab file either.
 
+   --no-xen-ok  Don't complain if xen seems not installed or xend is
+                not running. (Needed for the testsuite.)
+
    --output=dir Specify the output directory to create the xen configuration
                 file within.
 
@@ -1333,6 +1336,7 @@ sub setupDefaultOptions
     $CONFIG{ 'arch' }          = '';
     $CONFIG{ 'fs' }            = 'ext3';
     $CONFIG{ 'force' }         = 0;
+    $CONFIG{ 'no_xen_ok' }     = 0;
     $CONFIG{ 'install' }       = 1;
     $CONFIG{ 'hooks' }         = 1;
     $CONFIG{ 'partitions' }    = '';
@@ -1658,6 +1662,7 @@ sub parseCommandLineArguments
             "finalrole=s",       \&checkOption,
             "roledir=s",    \&checkOption,
             "force",        \$CONFIG{ 'force' },
+            "no-xen-ok",    \$CONFIG{ 'no_xen_ok' },
             "keep",         \$CONFIG{ 'keep' },
             "template=s",   \&checkOption,
             "output=s",     \&checkOption,
@@ -3047,9 +3052,14 @@ sub createLVMBits
             # Delete if forcing
             if ( $CONFIG{ 'force' } )
             {
-                logprint(
-                      "Removing $lvm_disk - since we're forcing the install\n");
-                runCommand("lvremove --force $lvm_disk", \%CONFIG);
+                if ( $CONFIG{ 'no_xen_ok' } or
+                     !xenRunning($CONFIG{ 'hostname' }, \%CONFIG)) {
+                    logprint(
+                        "Removing $lvm_disk - since we're forcing the install\n");
+                    runCommand("lvremove --force $lvm_disk", \%CONFIG);
+                } else {
+                    fail("ERROR: Xen guest $CONFIG{'hostname'} appears to be running.\nAborting.\n");
+                }
             }
             else
             {
