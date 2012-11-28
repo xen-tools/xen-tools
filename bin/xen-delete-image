@@ -176,6 +176,11 @@ my %CONFIG;
 my $RELEASE = '4.3.1+dev';
 
 
+#
+# Find xen toolstack command
+#
+$CONFIG{ 'xm' } = findXenToolstack();
+
 
 #
 # Read the global configuration file if it exists.

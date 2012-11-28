@@ -125,6 +125,12 @@ my $RELEASE = '4.3.1+dev';
 
 
 #
+# Find xen toolstack command
+#
+$CONFIG{ 'xm' } = findXenToolstack();
+
+
+#
 #  Read configuration file if it exists.
 #
 if ( -e "/etc/xen-tools/xen-tools.conf" )
