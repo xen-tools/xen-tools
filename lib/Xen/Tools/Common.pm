@@ -230,7 +230,9 @@ sub runCommand ($$)
     #
     #  Header.
     #
-    $CONFIG->{ 'verbose' } && print "Executing : $cmd\n";
+    if ($CONFIG->{ 'verbose' }) {
+        logprint_with_config("Executing : $cmd\n", $CONFIG);
+    }
 
     #
     #  Copy stderr to stdout, so we can see it, and make sure we log it.
@@ -259,7 +261,9 @@ sub runCommand ($$)
 
     my $rcclose = close(CMD);
 
-    $CONFIG->{ 'verbose' } && print "Finished : $cmd\n";
+    if ($CONFIG->{ 'verbose' }) {
+        logprint_with_config("Finished : $cmd\n", $CONFIG);
+    }
 
     if (!$rcclose)
     {
@@ -327,14 +331,18 @@ sub setupAdminUsers ($)
         {
 
             # Change shell.
-            $CONFIG->{ 'verbose' } && print "Changing shell for $user: $shell\n";
+            if ($CONFIG->{ 'verbose' }) {
+                logprint_with_config("Changing shell for $user: $shell\n", $CONFIG);
+            }
             system( "chsh", "-s", $shell, $user );
         }
         else
         {
 
             # Add a new user.
-            $CONFIG->{ 'verbose' } && print "Adding new user: $user\n";
+            if ($CONFIG->{ 'verbose' }) {
+                logprint_with_config("Adding new user: $user\n", $CONFIG);
+            }
             system( "useradd", "-s", $shell, $user );
         }
 
