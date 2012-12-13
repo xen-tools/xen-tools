@@ -1,8 +1,8 @@
 KNOWN BUGS in xen-tools
 =======================
 
-Bugs to fix before a 4.3 release
---------------------------------
+Bugs to fix rather soon
+-----------------------
 
 * `xen-delete-image` doesn't remove all logical volumes if `--partitions` is used.
 
