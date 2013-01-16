@@ -22,7 +22,8 @@ VCS         = git
 #
 #  Installation prefix, useful for the Debian package.
 #
-prefix=
+DESTDIR=
+prefix=${DESTDIR}
 
 
 nop:

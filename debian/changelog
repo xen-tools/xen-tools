@@ -14,6 +14,7 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
     - Preliminary support for Debian Jessie and Ubuntu Raring
     - Preliminary support for xl toolstack
     - xen-create-image: Consistently use runCommand() instead of system()
+    - Makefile accepts DESTDIR=…
   * Add debian/gbp.conf to be able to to build xen-tools with
     git-buildpackage.
   * Install (manually generated) upstream ChangeLog only if it
