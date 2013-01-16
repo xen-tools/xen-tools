@@ -23,6 +23,7 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
     upstream changelog.
   * debian/rules: Use dh_auto_{install,clean}; use "$(MAKE)" instead of
     "make" where dh_auto_* can't help.
+  * Fix copy & paste errors binary-* targets in debian/rules
 
  -- Axel Beckert <abe@debian.org>  Tue, 13 Nov 2012 23:37:54 +0100
 

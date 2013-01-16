@@ -33,11 +33,11 @@ install: build
 
 	dh_installdirs
 
-# Build architecture-independent files here.
-binary-indep: build install
+# Build architecture-dependent files here.
+binary-arch: build install
 # We have nothing to do by default.
 
-# Build architecture-dependent files here.
+# Build architecture-independent files here.
 binary-indep: build install
 	dh_testdir
 	dh_testroot
