@@ -19,7 +19,7 @@ build-stamp: configure-stamp
 clean:
 	dh_testdir
 	dh_testroot
-	make clean
+	dh_auto_clean
 	dh_clean 
 
 install: build
@@ -28,8 +28,8 @@ install: build
 	dh_prep
 
 	dh_auto_test
-	make manpages
-	make install prefix=`pwd`/debian/xen-tools
+	$(MAKE) manpages
+	dh_auto_install
 
 	dh_installdirs
 
