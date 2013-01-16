@@ -22,7 +22,8 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
     out of a freshly clone git repository does not fail due to a missing
     upstream changelog.
   * debian/rules: Use dh_auto_{install,clean}; use "$(MAKE)" instead of
-    "make" where dh_auto_* can't help.
+    "make" where dh_auto_* can't help. No more explicitly call "make
+    manpages", it's a depedency of "make install" in the next line anyway.
   * Fix copy & paste errors binary-* targets in debian/rules
 
  -- Axel Beckert <abe@debian.org>  Tue, 13 Nov 2012 23:37:54 +0100

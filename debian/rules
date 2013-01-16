@@ -28,7 +28,6 @@ install: build
 	dh_prep
 
 	dh_auto_test
-	$(MAKE) manpages
 	dh_auto_install
 
 	dh_installdirs
