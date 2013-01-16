@@ -17,8 +17,6 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
     - Makefile accepts DESTDIR=…
   * Add debian/gbp.conf to be able to to build xen-tools with
     git-buildpackage.
-  * Install (manually generated) upstream ChangeLog only if it
-    exists. Allows automatic builds from the git repository.
 
  -- Axel Beckert <abe@debian.org>  Tue, 13 Nov 2012 23:37:54 +0100
 

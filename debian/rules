@@ -43,7 +43,7 @@ binary-indep: build install
 	dh_testroot
 	dh_install
 	dh_installexamples debian/examples/setup-kernel-initrd debian/examples/update-modules
-	[ ! -e ChangeLog ] || dh_installchangelogs ChangeLog
+	dh_installchangelogs ChangeLog
 	dh_installdocs
 	dh_compress
 	dh_fixperms
