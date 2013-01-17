@@ -215,7 +215,7 @@ sub parseCommandLineArguments
     #
     GetOptions( "admins=s",    \$ENV{ 'admins' },
                 "output=s",    \$CONFIG{ 'output' },
-                "extension=s", \$CONFIG{ 'extension' },
+                "extension:s", \$CONFIG{ 'extension' },
                 "template=s",  \$CONFIG{ 'template' },
                 "verbose",     \$CONFIG{ 'verbose' },
                 "help",        \$HELP,

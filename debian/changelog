@@ -10,6 +10,7 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
     - Also recognize "M" and "G" instead of "MB" and "GB" as size unit for
       --memory. (Closes: #691320) Document the recognized units.
     - Default DomUs to use the noop scheduler (Closes: #693131)
+    - Fixes "--extension=" with empty parameter.
     - Remove CVS revisions from --version output
     - Preliminary support for Debian Jessie and Ubuntu Raring
     - Preliminary support for xl toolstack

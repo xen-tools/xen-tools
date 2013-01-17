@@ -35,8 +35,6 @@ Bugs to fix rather soon
 
 * `xen-list-images` does not honour `--extension`
 
-* `--extension=''` (i.e. empty string) no more works
-
 
 Bugs to fix later
 -----------------

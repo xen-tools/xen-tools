@@ -114,9 +114,9 @@ sub testFile
             }
 #print " - remove quotes : $o ";
             #
-            #  Discard anything after "=", or " "
+            #  Discard anything after "=", ":", or " "
             #
-            if ( $o =~ /(.*)[ \t=]+(.*)/ )
+            if ( $o =~ /(.*)[ \t=:]+(.*)/ )
             {
                 $o = $1;
             }

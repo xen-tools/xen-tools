@@ -1668,7 +1668,7 @@ sub parseCommandLineArguments
             "keep",         \$CONFIG{ 'keep' },
             "template=s",   \&checkOption,
             "output=s",     \&checkOption,
-            "extension=s",  \&checkOption,
+            "extension:s",  \&checkOption,
             "dontformat",   \&checkOption,
 
             # Help options
