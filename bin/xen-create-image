@@ -779,6 +779,7 @@ The LICENSE file contains the full text of the license.
 
 =cut
 
+$SIG{INT} = \&clean_up;
 
 use strict;
 use English;
@@ -4087,6 +4088,13 @@ sub unMountImage
 =end doc
 
 =cut
+
+sub clean_up () {
+    if ( defined($MOUNT_POINT) )
+    {
+        unMountImage($MOUNT_POINT, 1);
+    }
+}
 
 sub END
 {
