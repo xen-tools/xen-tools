@@ -100,7 +100,8 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --install=1  Specify whether to install the guest system or not.
 
-   --keep       Don't delete our images if installation fails.
+   --keep       Don't delete our images if installation fails. It maybe
+                unmounted, though.
 
    --kernel=/path/to/kernel
                 Set the path to the kernel to use for domU. If a
