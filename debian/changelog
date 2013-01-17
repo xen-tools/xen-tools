@@ -18,14 +18,15 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
     - Move examples from debian/examples to examples.
   * Add debian/gbp.conf to be able to to build xen-tools with
     git-buildpackage.
-  * debian/rules: Don't mention (generated) upstream changelog explicitly,
-    dh_installchangelogs finds it by itself if it exist. That way building
-    out of a freshly clone git repository does not fail due to a missing
-    upstream changelog.
-  * debian/rules: Use dh_auto_{install,clean}; use "$(MAKE)" instead of
-    "make" where dh_auto_* can't help. No more explicitly call "make
-    manpages", it's a depedency of "make install" in the next line anyway.
-  * Fix copy & paste errors binary-* targets in debian/rules
+  * Clean up debian/rules:
+    - Don't mention (generated) upstream changelog explicitly,
+      dh_installchangelogs finds it by itself if it exist. That way
+      building out of a freshly clone git repository does not fail due to
+      a missing upstream changelog.
+    - Use dh_auto_{install,clean}; use "$(MAKE)" instead of "make" where
+      dh_auto_* can't help. No more explicitly call "make manpages", it's
+      a depedency of "make install" in the next line anyway.
+    - Finally switch to a minimal dh style debian/rules.
   * Bump copyright years in debian/copyright.
 
  -- Axel Beckert <abe@debian.org>  Thu, 17 Jan 2013 17:09:02 +0100
