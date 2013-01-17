@@ -109,22 +109,22 @@ EOS
     my $success = 0;
     foreach my $line ( split( /\n/, $output ) )
     {
-        if  ( $line =~ /Memory: ([0-9]+)/i )
+        if  ( $line =~ /Memory: ([0-9]+)/ )
         {
             is( $1, $memory, "We found the right amount of memory: $memory" );
             $success += 1;
         }
-        if  ( $line =~ /Name: (.*)/i )
+        if  ( $line =~ /Name: (.*)/ )
         {
             is( $1, $name, "We found the correct hostname: $name" );
             $success += 1;
         }
-        if  ( $line =~ /DHCP/i )
+        if  ( $line =~ /DHCP/ )
         {
             is( $dhcp, 1, "Found the right DHCP details" );
             $success += 1;
         }
-        if  ( $line =~ /IP: ([0-9.]+)/i )
+        if  ( $line =~ /IP: ([0-9.]+)/ )
         {
             is( $1, $ip, "We found the IP address: $ip" );
             is( $dhcp, 0, "And DHCP is disabled" );
