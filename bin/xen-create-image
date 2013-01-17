@@ -4096,7 +4096,7 @@ sub clean_up () {
     }
 }
 
-sub END
+END
 {
     exit 0 if $VERSION || $HELP || $MANUAL || $DUMPCONFIG;
 
