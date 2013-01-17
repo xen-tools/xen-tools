@@ -4117,14 +4117,6 @@ sub END
     #
     if ( $CONFIG{ 'boot' } and !$CONFIG{'FAIL'} )
     {
-
-        #
-        #  Unmount the image and any subsequent mounts.
-        #
-        if ( defined($MOUNT_POINT) ) {
-            unMountImage($MOUNT_POINT);
-        }
-
         #
         #  If there is an /etc/xen/auto directory then link in the
         # domain so that it will automatically restart, if it isn't
