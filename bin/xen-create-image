@@ -4111,7 +4111,7 @@ END
         } else {
             $host_rsa_key = "N/A";
         }
-        unMountImage($MOUNT_POINT);
+        unMountImage($MOUNT_POINT, $CONFIG{'FAIL'});
     }
 
     #
