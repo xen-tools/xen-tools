@@ -181,6 +181,11 @@ Bugs to fix and features to add for 5.0
 
 * Use `Perl::Critic`
 
+* Make mirror choosing code more flexible so that it can depend on the
+  architecture. Obvious use case: Installing Sarge amd64 just works if
+  the mirror (archive of amd64.debian.net on archive.debian.org or a
+  mirror thereof) is given manually.
+
 Stuff from Steve's TODO list / Generic TODOs
 --------------------------------------------
 
