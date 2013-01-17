@@ -4188,7 +4188,7 @@ sub END
     #  $CONFIG{'FAIL'} = 0  -  Success
     #  $CONFIG{'FAIL'} = 1  -  Failed to install, delete the image
     #  $CONFIG{'FAIL'} = 2  -  Files exist, either .cfg or lvm... etc
-    if ( ($CONFIG{'FAIL'} == 1 or $CONFIG{'FAIL'} == 1) && ( !$CONFIG{ 'keep' } ) )
+    if ( $CONFIG{'FAIL'} == 1 && ( !$CONFIG{ 'keep' } ) )
     {
 
         #
