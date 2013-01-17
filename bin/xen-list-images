@@ -269,6 +269,7 @@ sub displayInstance
     print "Memory: $mem\n";
     print "IP: " . $ip . $mac . "\n" if length($ip);
     print "DHCP" . $mac . "\n" if $dhcp;
+    print "Config: $file\n";
 }
 
 
