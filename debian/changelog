@@ -14,12 +14,14 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
       + now understands the --extension option.
       + also outputs the file name of the config file
     - Fixes "--extension=" with empty parameter.
+    - Sarge amd64 case handle properly
     - Remove CVS revisions from --version output
     - Preliminary support for Debian Jessie and Ubuntu Raring
     - Preliminary support for xl toolstack
     - xen-create-image: Consistently use runCommand() instead of system()
     - Makefile accepts DESTDIR=…
     - Move examples from debian/examples to examples.
+    - Uses File::Which, added (build-) dependency on libfile-which-perl
   * Add debian/gbp.conf to be able to to build xen-tools with
     git-buildpackage.
   * Clean up debian/rules:

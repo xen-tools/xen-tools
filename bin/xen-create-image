@@ -789,6 +789,7 @@ use Env;
 use File::Path qw/ mkpath /;
 use File::Temp qw/ tempdir /;
 use File::Copy qw/ mv cp /;
+use File::Which;
 use Getopt::Long;
 use Pod::Usage;
 use Data::Dumper;
@@ -1325,7 +1326,7 @@ sub setupDefaultOptions
         $CONFIG{ 'mirror_'.$debdist } = $CONFIG{ 'mirror' }
     }
     foreach my $debdist (qw(sarge etch lenny)) {
-        $CONFIG{ 'mirror_'.$debdist } = 'http://archive.debian.org/debian';
+        $CONFIG{ 'mirror_'.$debdist } = 'http://archive.debian.org/debian-archive/debian';
     }
     # Initialize per distribution mirror defaults: Ubuntu
     foreach my $ubuntudist (qw(hardy lucid oneiric precise quantal raring)) {
@@ -1335,7 +1336,8 @@ sub setupDefaultOptions
         $CONFIG{ 'mirror_'.$ubuntudist } = 'http://old-releases.ubuntu.com/ubuntu';
     }
     $CONFIG{ 'apt_proxy' }     = '';
-    $CONFIG{ 'arch' }          = '';
+    $CONFIG{ 'arch' }          =
+        which('dpkg') ? `dpkg --print-architecture` : '';
     $CONFIG{ 'fs' }            = 'ext3';
     $CONFIG{ 'force' }         = 0;
     $CONFIG{ 'no_xen_ok' }     = 0;
@@ -1825,9 +1827,10 @@ sub checkArguments
     #
     if ( $CONFIG{ 'dist' } =~ /sarge/ and
          $CONFIG{ 'arch' } =~ /amd64/ and
-         $CONFIG{ 'mirror_sarge' } eq 'http://archive.debian.org/debian' )
+         $CONFIG{ 'mirror_sarge' } =~ m(/debian-archive/debian/?$))
     {
-        $CONFIG{ 'mirror_sarge' } = 'http://archive.debian.org/debian-amd64';
+        $CONFIG{ 'mirror_sarge' } =~
+            s(/debian-archive/debian/?)(/debian-archive/debian-amd64);
     }
 
     #
