@@ -41,7 +41,7 @@ binary-indep: build install
 	dh_testdir
 	dh_testroot
 	dh_install
-	dh_installexamples debian/examples/setup-kernel-initrd debian/examples/update-modules
+	dh_installexamples examples/setup-kernel-initrd examples/update-modules
 	dh_installchangelogs
 	dh_installdocs
 	dh_compress
