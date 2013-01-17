@@ -3522,15 +3522,6 @@ sub exportEnvironment
 {
 
     #
-    #  Per-distribution mirror?
-    #
-    my $distMirror = "mirror_" . $CONFIG{ 'dist' };
-    if ( $CONFIG{ $distMirror } && length( $CONFIG{ $distMirror } ) )
-    {
-        $CONFIG{ 'mirror' } = $CONFIG{ $distMirror };
-    }
-
-    #
     # Export partitions array to configuration
     #
     exportPartitionsToConfig();
