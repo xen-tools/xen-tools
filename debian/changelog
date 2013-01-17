@@ -25,8 +25,9 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
     "make" where dh_auto_* can't help. No more explicitly call "make
     manpages", it's a depedency of "make install" in the next line anyway.
   * Fix copy & paste errors binary-* targets in debian/rules
+  * Bump copyright years in debian/copyright.
 
- -- Axel Beckert <abe@debian.org>  Tue, 13 Nov 2012 23:37:54 +0100
+ -- Axel Beckert <abe@debian.org>  Thu, 17 Jan 2013 17:09:02 +0100
 
 xen-tools (4.3.1-1) unstable; urgency=low
 
