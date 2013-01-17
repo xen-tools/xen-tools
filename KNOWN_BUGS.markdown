@@ -33,8 +33,6 @@ Bugs to fix rather soon
 * `xen-create-image` says on startup summary that the Debian mirror is
   used even if Ubuntu is going to be installed (and works)
 
-* `xen-list-images` does not honour `--extension`
-
 
 Bugs to fix later
 -----------------

@@ -8,6 +8,11 @@ xen-list-images - List all the created and configured Xen images.
 
   xen-list-image [options]
 
+  Filename Options:
+
+    --extension  Specify the file extension to use. An empty extension is equal
+                 to any extension.
+
   Help Options:
    --help     Show this scripts help information.
    --manual   Read this scripts manual.
@@ -95,9 +100,10 @@ use Xen::Tools::Common;
 my %CONFIG;
 
 #
-#  Default prefix
+#  Default values
 #
 $CONFIG{ 'prefix' } = "/etc/xen";
+$CONFIG{ 'extension' } = '.cfg';
 
 #
 # Release number.
@@ -162,6 +168,7 @@ sub parseCommandLineArguments
     #  Parse options.
     #
     GetOptions( "test=s", \$CONFIG{ 'prefix' },
+                "extension:s", \$CONFIG{ 'extension' },
                 "help", \$HELP,
                 "manual", \$MANUAL,
                 "version", \$VERSION );
@@ -192,9 +199,12 @@ sub findXenInstances
 {
     my @found;
 
-    foreach my $file ( sort( glob( $CONFIG{ 'prefix' } . "/*.cfg" ) ) )
+    foreach my $file ( sort( glob( $CONFIG{ 'prefix' } . "/*" . $CONFIG{ 'extension' } ) ) )
     {
-        push @found, $file if ( -e $file );
+        push @found, $file if (
+            -f $file and
+            $file !~ m(~$|\.dpkg-[a-z]+$|\.sxp$|/xl\.conf$)
+            );
     }
 
     return (@found);
