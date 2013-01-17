@@ -30,9 +30,6 @@ Bugs to fix rather soon
 
   Fix would be to reproduce what mount does with mount `-a`.
 
-* `xen-create-image` doesn't unmount the `tempdir` properly if `/proc`
-  wasn't mounted inside
-
 * `xen-create-image` says on startup summary that the Debian mirror is
   used even if Ubuntu is going to be installed (and works)
 

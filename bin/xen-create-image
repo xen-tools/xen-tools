@@ -4029,13 +4029,13 @@ sub generatePassword {
 
 sub unMountImage
 {
-    my ($point) = (@_);
+    my ($point, $fail_ok) = (@_);
 
     #
     #  First we unmount /proc and /dev/pts in the guest install.
     #
-    runCommand("umount $point/proc", \%CONFIG);
-    #runCommand("umount $point/dev/pts", \%CONFIG);
+    runCommand("umount $point/proc", \%CONFIG, $fail_ok);
+    #runCommand("umount $point/dev/pts", \%CONFIG, $fail_ok);
 
     #
     #  Open /proc/mount and get a list of currently mounted paths
@@ -4072,7 +4072,7 @@ sub unMountImage
     foreach my $path (@points)
     {
         $CONFIG{ 'verbose' } && print "Unmounting : $path\n";
-        runCommand("umount $path", \%CONFIG);
+        runCommand("umount $path", \%CONFIG, $fail_ok);
     }
 
     $MOUNT_POINT = undef;

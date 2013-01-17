@@ -218,9 +218,9 @@ sub findXenToolstack
 
 =cut
 
-sub runCommand ($$)
+sub runCommand ($$;$)
 {
-    my ($cmd, $CONFIG) = (@_);
+    my ($cmd, $CONFIG, $fail_ok) = (@_);
 
     #
     #  Set a local if we don't have one.
@@ -245,10 +245,12 @@ sub runCommand ($$)
     my $rcopen = open(CMD, '-|', $cmd);
     if (!defined($rcopen)) {
         logprint_with_config("Starting command '$cmd' failed: $!\n", $CONFIG);
-        logprint_with_config("Aborting\n", $CONFIG);
-        print "See /var/log/xen-tools/".$CONFIG->{'hostname'}.".log for details\n";
-        $CONFIG->{'FAIL'} = 1;
-        exit 127;
+        unless ($fail_ok) {
+            logprint_with_config("Aborting\n", $CONFIG);
+            print "See /var/log/xen-tools/".$CONFIG->{'hostname'}.".log for details\n";
+            $CONFIG->{'FAIL'} = 1;
+            exit 127;
+        }
     }
 
     while (my $line = <CMD>) {
@@ -270,8 +272,10 @@ sub runCommand ($$)
         logprint_with_config("Running command '$cmd' failed with exit code $?.\n", $CONFIG);
         logprint_with_config("Aborting\n", $CONFIG);
         print "See /var/log/xen-tools/".$CONFIG->{'hostname'}.".log for details\n";
-        $CONFIG->{'FAIL'} = 1;
-        exit 127;
+        unless ($fail_ok) {
+            $CONFIG->{'FAIL'} = 1;
+            exit 127;
+        }
     }
 
 }
