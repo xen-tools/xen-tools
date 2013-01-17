@@ -28,6 +28,7 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
       a depedency of "make install" in the next line anyway.
     - Finally switch to a minimal dh style debian/rules.
   * Bump copyright years in debian/copyright.
+  * Apply wrap-and-sort.
 
  -- Axel Beckert <abe@debian.org>  Thu, 17 Jan 2013 17:09:02 +0100
 
