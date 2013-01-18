@@ -11,8 +11,6 @@ Bugs to fix rather soon
 
    [Bug Report](http://xen-tools.org/pipermail/xen-tools-discuss/2010-May/000757.html)
 
-* `xen-delete-image` ignores extension setting
-
 * partitions were mounted in config file order, not in mountpoint order.
   That implies that if you specified :
 

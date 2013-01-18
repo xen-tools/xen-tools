@@ -8,6 +8,10 @@ xen-delete-image - Delete previously created Xen instances.
 
   xen-delete-image [options] [--hostname=]imageName1 [--hostname=]imageName2
 
+  Filename Options:
+   --extension  Specify the file extension to use. An empty extension is equal
+                to any extension.
+
   Help Options:
    --help     Show help information.
    --manual   Read the manual for this script.
@@ -181,6 +185,11 @@ my $RELEASE = '4.4~dev';
 #
 $CONFIG{ 'xm' } = findXenToolstack();
 
+#
+#  Default values
+#
+$CONFIG{ 'extension' } = '.cfg';
+
 
 #
 # Read the global configuration file if it exists.
@@ -282,6 +291,7 @@ sub parseCommandLineArguments
                 "dry-run",     \$CONFIG{ 'dry-run' },
                 "lvm=s",       \$CONFIG{ 'lvm' },
                 "evms=s",      \$CONFIG{ 'evms' },
+                "extension:s", \$CONFIG{ 'extension' },
                 "hostname=s@", \$CONFIG{ 'hostname' },
                 "test",        \$CONFIG{ 'test' },
                 "verbose",     \$CONFIG{ 'verbose' },
@@ -371,17 +381,17 @@ sub deleteXenImage
     #
     #  Delete the Xen auto-start file if it exists.
     #
-    if ( -e "/etc/xen/auto/$hostname.cfg" )
+    if ( -e "/etc/xen/auto/$hostname".$CONFIG{ 'extension' } )
     {
-        push( @delete, "/etc/xen/auto/$hostname.cfg" );
+        push( @delete, "/etc/xen/auto/$hostname".$CONFIG{ 'extension' } );
     }
 
     #
     #  Delete the Xen configuration file if it exists.
     #
-    if ( -e "/etc/xen/$hostname.cfg" )
+    if ( -e "/etc/xen/$hostname".$CONFIG{ 'extension' } )
     {
-        push( @delete, "/etc/xen/$hostname.cfg" );
+        push( @delete, "/etc/xen/$hostname".$CONFIG{ 'extension' } );
     }
 
     #

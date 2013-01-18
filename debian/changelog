@@ -11,9 +11,8 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
       --memory. (Closes: #691320) Document the recognized units.
     - Default DomUs to use the noop scheduler (Closes: #693131)
     - Overwork TLS disabling on Debian and Ubuntu
-    - xen-list-images update:
-      + now understands the --extension option.
-      + also outputs the file name of the config file
+    - xen-list-images now also outputs the file name of the config file.
+    - xen-list-images and xen-delete-image now understand --extension.
     - Fixes "--extension=" with empty parameter.
     - Sarge amd64 case handle properly
     - Remove CVS revisions from --version output
