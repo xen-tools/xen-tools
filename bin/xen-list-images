@@ -9,9 +9,8 @@ xen-list-images - List all the created and configured Xen images.
   xen-list-image [options]
 
   Filename Options:
-
-    --extension  Specify the file extension to use. An empty extension is equal
-                 to any extension.
+   --extension  Specify the file extension to use. An empty extension is equal
+                to any extension.
 
   Help Options:
    --help     Show this scripts help information.
