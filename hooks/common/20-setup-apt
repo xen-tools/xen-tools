@@ -70,18 +70,14 @@ chroot ${prefix} /usr/bin/apt-get update
 
 
 #
-#  Now fixup TLS on non-64bit systems after dapper.
+#  Now fixup TLS on non-64bit systems after dapper. For dapper this is
+#  already fixed in 10-disable-tls.
 #
-if [ "$dist" != 'dapper' ]; then
-    if [ "`uname -m`" = "x86_64" ]; then
+if [ "$arch" = 'i386' -a "$dist" != 'dapper' ]; then
 
-        logMessage "Ignoring TLS since we're a 64 bit host."
+    logMessage "Installing libc6-xen"
+    installDebianPackage ${prefix} libc6-xen
 
-    else
-
-        logMessage "Installing libc6-xen"
-        installDebianPackage ${prefix} libc6-xen
-    fi
 fi
 
 

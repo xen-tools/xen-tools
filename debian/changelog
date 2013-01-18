@@ -10,6 +10,7 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
     - Also recognize "M" and "G" instead of "MB" and "GB" as size unit for
       --memory. (Closes: #691320) Document the recognized units.
     - Default DomUs to use the noop scheduler (Closes: #693131)
+    - Overwork TLS disabling on Debian and Ubuntu
     - xen-list-images update:
       + now understands the --extension option.
       + also outputs the file name of the config file

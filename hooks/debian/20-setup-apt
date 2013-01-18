@@ -90,30 +90,20 @@ fi
 #
 chroot ${prefix} /usr/bin/apt-get update
 
-
 #
-# For sid or etch systems we install libc6-xen
+# For all systems after Sarge we install libc6-xen on i386
 #
-# For sarge we don't have that option, so we disable TLS.
+# For Sarge we don't have that option, so we disable TLS the hard way.
 #
-if [ "`uname -m`" = "x86_64" ]; then
-
-    logMessage "Ignoring TLS since we're a 64 bit host."
-
-else
-
-    case "${dist}" in
-        *)
-            logMessage "Installing xen-aware libc6"
-    
-            installDebianPackage ${prefix} libc6-xen
-            ;;
-        sarge)
-            logMessage "Disabling TLS"
-            mv ${prefix}/lib/tls ${prefix}/lib/tls.disabled
-            mkdir ${prefix}/lib/tls
-            ;;
-    esac
+if [ "${arch}" = "i386" ]; then
+    if [ "${dist}" = 'sarge' ]; then
+        logMessage "Disabling TLS"
+        mv ${prefix}/lib/tls ${prefix}/lib/tls.disabled
+        mkdir ${prefix}/lib/tls
+    else
+        logMessage "Installing xen-aware libc6"
+        installDebianPackage ${prefix} libc6-xen
+    fi
 fi
 
 

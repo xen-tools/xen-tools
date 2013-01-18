@@ -3,12 +3,6 @@ TODO
 
 See KNOWN_BUGS.markdown for real bugs.
 
-Bugs to fix and features to add for 4.3
----------------------------------------
-
-Refactor TLS disabling. Seems to be happen twice, once in 20-setup-apt
-and once in 10-disable-tls.
-
 Bugs to fix and features to add for 5.0
 ---------------------------------------
 
@@ -180,6 +174,13 @@ Bugs to fix and features to add for 5.0
   gracefully. Document --debug if --dumpconfig is removed.
 
 * Use `Perl::Critic`
+
+* Refactor the different Ubuntu hooks directories so that only one
+  ubuntu hooks directory is left.
+
+  Then also refactor TLS disabling so that it works on all
+  distributions the same. Currently Debian is a special case and
+  Ubuntu half a special case.
 
 Stuff from Steve's TODO list / Generic TODOs
 --------------------------------------------
