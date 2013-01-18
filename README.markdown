@@ -40,11 +40,11 @@ known to work reliably, i.e.:
 
 (only DomUs tested)
 
-* Dapper Drake 6.06
-* Edgy Eft 6.10
+* Dapper Drake 6.06 (needs editing of `/usr/share/debootstrap/scripts/dapper` since at least debootstrap version 1.0.37, see [#659360][])
+* Edgy Eft 6.10 (needs editing of `/usr/share/debootstrap/scripts/edgy` since at least debootstrap version 1.0.37, see [#659360][])
 * Feisty Fawn 7.04
 * Gutsy Gibbon 7.10
-* Hardy Heron 8.04 (see [1][])
+* Hardy Heron 8.04 (see [8.04 DomU][])
 * Interpid Ibex 8.10
 * Jaunty Jackaplope 9.04
 * Karmic Koala 9.10
@@ -56,7 +56,10 @@ known to work reliably, i.e.:
 * Quantal Quetzal 12.10
 * Raring Ringtail 13.04 (preliminary support as it's not yet available)
 
-[1]: http://www.linux-vserver.org/Installing_Ubuntu_8.04_Hardy_as_guest
+[#659360]: http://bugs.debian.org/659360 "debootstrap in Wheezy can no more
+build Ubuntu Edgy or earlier"
+
+[8.04 DomU]: http://www.linux-vserver.org/Installing_Ubuntu_8.04_Hardy_as_guest
 "There is an issue with debootstrap on hardy not installing ksyslogd
 This can be fixed by chrooting into the newly installed system and
 removing the startup scripts."
