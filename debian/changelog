@@ -23,6 +23,7 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
     - Move examples from debian/examples to examples.
     - Uses File::Which, added (build-) dependency on libfile-which-perl
     - Knows about module-init-tools → kmod transition in wheezy/raring.
+    - Adds default mount options for ext4, identical to ext2/ext3.
   * Add debian/gbp.conf to be able to to build xen-tools with
     git-buildpackage.
   * Clean up debian/rules:
