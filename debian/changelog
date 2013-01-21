@@ -22,6 +22,7 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
     - Makefile accepts DESTDIR=…
     - Move examples from debian/examples to examples.
     - Uses File::Which, added (build-) dependency on libfile-which-perl
+    - Knows about module-init-tools → kmod transition in wheezy/raring.
   * Add debian/gbp.conf to be able to to build xen-tools with
     git-buildpackage.
   * Clean up debian/rules:
