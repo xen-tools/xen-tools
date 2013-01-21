@@ -112,6 +112,8 @@ install-etc:
 	cp partitions/*-*     ${prefix}/etc/xen-tools/partitions.d/
 	-mkdir -p             ${prefix}/etc/bash_completion.d
 	cp misc/xen-tools     ${prefix}/etc/bash_completion.d/
+	-mkdir -p                         ${prefix}/etc/initramfs-tools/conf.d/
+	cp misc/xen-tools.initramfs-tools ${prefix}/etc/initramfs-tools/conf.d/xen-tools
 
 
 #

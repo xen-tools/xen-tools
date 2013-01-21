@@ -1,0 +1,7 @@
+# This initramfs-tools configuration file is installed by xen-tools.
+#
+# To make the Dom0's initramfs working inside DomUs, too, most modules
+# need to be included, not just those necvessary for the host system
+# and its hardware.
+
+MODULES=most
