@@ -28,13 +28,13 @@ logMessage Script $0 starting
 #
 #  Install any required packages for the given root filesystem
 #
-if [ $has_xfs -eq 1 ]; then
+if [ "$has_xfs" -eq 1 ]; then
     installDebianPackage ${prefix} xfsprogs
 fi
-if [ $has_reiserfs -eq 1 ]; then
+if [ "$has_reiserfs" -eq 1 ]; then
     installDebianPackage ${prefix} reiserfsprogs
 fi
-if [ $has_btrfs -eq 1 ]; then
+if [ "$has_btrfs" -eq 1 ]; then
     installDebianPackage ${prefix} btrfs-tools
 fi
 
