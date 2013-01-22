@@ -20,13 +20,13 @@ if [ -e /usr/lib/xen-tools/common.sh ]; then
 else
     . ./hooks/common.sh
 fi
-
-if [ "${pygrub}" ]; then
 #
 # Log our start
 #
 
 logMessage Script $0 starting
+
+if [ "${pygrub}" ]; then
 
 #
 # The type of kernel that we will be installing
