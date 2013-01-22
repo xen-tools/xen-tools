@@ -60,7 +60,7 @@ assert ()
 #  We take special care so that daemons shouldn't start after installation
 # which they might otherwise do.
 #
-#  NOTE:  Function not renamed with trailing "s" for compatability reasons.
+#  NOTE:  Function not renamed with trailing "s" for compatibility reasons.
 #
 installDebianPackage ()
 {
