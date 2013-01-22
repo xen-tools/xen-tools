@@ -28,6 +28,8 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
       initrds also suitable for DomU usage. Trigger update-initramfs.
     - By default install linux-image-virtual instead of linux-image-server
       on Ubuntu Intrepid and newer (Hopefully closes: #640099, LP #839492)
+    - Installs a legacy grub in all pygrub based DomUs to be able to
+      update the menu.list automatically.
   * Add debian/gbp.conf to be able to to build xen-tools with
     git-buildpackage.
   * Clean up debian/rules:
