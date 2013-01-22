@@ -120,12 +120,6 @@ initrd          /boot/$DOMU_RAMDISK
 
 E_O_MENU
 
-#
-#  Install the module-init-tools package.
-#
-
-installDebianPackage ${prefix} module-init-tools
-
 else
     logMessage pygrub not set, skipping kernel install
 fi # if pygrub

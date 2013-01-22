@@ -75,12 +75,6 @@ else
     logMessage "Package '${linux_kernel_package}' is not available"
 fi
 
-#
-#  Install the module-init-tools package.
-#
-
-installDebianPackage ${prefix} module-init-tools
-
 else
     logMessage pygrub not set, skipping kernel install
 fi # if pygrub
