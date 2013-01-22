@@ -30,6 +30,7 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
       on Ubuntu Intrepid and newer (Hopefully closes: #640099, LP #839492)
     - Installs a legacy grub in all pygrub based Debian/Ubuntu DomUs to be
       able to update the menu.list automatically.
+    - hooks/common.sh: installDebianPackage no more installs recommends.
     - hooks/common.sh: Rename installCentOS4Package to installRPMPackage.
       Add installCentOS4Package wrapper for backward compatibility.
     - Fix filesystem tools installation in 91-install-fs-tools (which was

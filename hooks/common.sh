@@ -98,7 +98,7 @@ installDebianPackage ()
     #
     # Install the packages
     #
-    DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes --force-yes install "$@"
+    DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes --force-yes --no-install-recommends install "$@"
 
     #
     #  Remove the policy-rc.d script.
