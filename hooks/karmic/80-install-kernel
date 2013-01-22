@@ -33,7 +33,7 @@ if [ "${pygrub}" ]; then
 #
 # linux_kernel_type="desktop"
 # 
-linux_kernel_type="server"
+linux_kernel_type="virtual"
 
 linux_kernel_package="linux-image-${linux_kernel_type}"
 
