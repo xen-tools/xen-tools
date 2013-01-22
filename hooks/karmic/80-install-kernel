@@ -54,22 +54,12 @@ DOMU_KERNEL=$(basename $(ls -1 ${prefix}/boot/vmlinuz* | tail -n 1))
 DOMU_RAMDISK=$(basename $(ls -1 ${prefix}/boot/initrd*|tail -n 1))
 DOMU_ISSUE=$(head -n 1 ${prefix}/etc/issue | awk -F '\' '{ print $1 }' | sed 's/[ \t]*$//')
 
-mkdir -p ${prefix}/boot/grub
-cat << E_O_MENU > ${prefix}/boot/grub/menu.lst
-default         0
-timeout         2
+#
+# Generate a menu.lst for pygrub
+#
 
-title           $DOMU_ISSUE
-root            (hd0,0)
-kernel          /boot/$DOMU_KERNEL root=/dev/xvda2 ro elevator=noop
-initrd          /boot/$DOMU_RAMDISK
+generateDebianGrubMenuLst "${prefix}" "$DOMU_ISSUE" "$DOMU_KERNEL" "$DOMU_RAMDISK"
 
-title           $DOMU_ISSUE (Single-User)
-root            (hd0,0)
-kernel          /boot/$DOMU_KERNEL root=/dev/xvda2 ro single elevator=noop
-initrd          /boot/$DOMU_RAMDISK
-
-E_O_MENU
 
 else
     logMessage "Package '${linux_kernel_package}' is not available"
