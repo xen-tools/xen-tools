@@ -26,6 +26,8 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
     - Adds default mount options for ext4, identical to ext2/ext3.
     - Ships /etc/initramfs-tools/conf.d/xen-tools for generating Dom0
       initrds also suitable for DomU usage. Trigger update-initramfs.
+    - By default install linux-image-virtual instead of linux-image-server
+      on Ubuntu Intrepid and newer (Hopefully closes: #640099, LP #839492)
   * Add debian/gbp.conf to be able to to build xen-tools with
     git-buildpackage.
   * Clean up debian/rules:

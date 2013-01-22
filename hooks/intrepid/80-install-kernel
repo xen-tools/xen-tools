@@ -33,7 +33,7 @@ if [ ${pygrub} ]; then
 # Attempt to install a xen kernel, if that fails, then install a normal one
 #
 
-KERNEL_PKG="linux-image-server"
+KERNEL_PKG="linux-image-virtual"
 
 logMessage Attempting to install the $KERNEL_PKG kernel image
 logMessage WARNING: This kernel may not have pvops
