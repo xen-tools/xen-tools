@@ -95,7 +95,7 @@ fixup-perms:
 	chmod 644 etc/xen-tools.conf
 	chmod 644 etc/xm.tmpl
 	chmod 644 etc/xm-nfs.tmpl
-	chmod 644 misc/xen-tools misc/README
+	chmod 644 misc/*
 
 #
 #  Install files to /etc/
