@@ -1051,7 +1051,7 @@ if ( $CONFIG{ 'install' } )
     #
     if ( !-x $MOUNT_POINT . "/bin/ls" )
     {
-        logprint("System installation failed.  Aborting\n");
+        logprint("System installation failed: /bin/ls missing.  Aborting.\n");
         $CONFIG{'FAIL'} = 1;
         exit 127;
     }
