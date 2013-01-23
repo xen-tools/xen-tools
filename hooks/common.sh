@@ -227,7 +227,7 @@ installCentOS4Package () { installRPMPackage "$@" }
 #
 #  Functions to test if we're on a redhatesk or debianesk system
 #
-isAPT() ( [ -x $1/usr/bin/apt-get ] )
+isDeb() ( [ -x $1/usr/bin/apt-get -a -x $1/usr/bin/dpkg ] )
 isYum() ( [ -x $1/usr/bin/yum ] )
 
 
@@ -239,7 +239,7 @@ installPackage ()
         prefix=$1
         package=$2
 
-        if isAPT ; then
+        if isDeb ; then
                 installDebianPackage "$@"
 
         elif isYum ; then
