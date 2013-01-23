@@ -358,7 +358,7 @@ installRPMPackage ()
 }
 
 # Backwards Compatibility Function
-installCentOS4Package () { installRPMPackage "$@" }
+installCentOS4Package () ( installRPMPackage "$@" )
 
 
 #
