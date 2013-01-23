@@ -191,9 +191,9 @@ removeDebianPackage ()
 
 
 #
-#  Install a CentOS4 package via yum
+#  Install a RPM package via yum
 #
-installCentOS4Package ()
+installRPMPackage ()
 {
     prefix=$1
     package=$2
@@ -201,7 +201,7 @@ installCentOS4Package ()
     #
     # Log our options
     #
-    logMessage "Installing CentOS4 ${package} to prefix ${prefix}"
+    logMessage "Installing RPM ${package} to prefix ${prefix}"
 
     #
     #  We require a package + prefix
@@ -220,6 +220,8 @@ installCentOS4Package ()
     chroot ${prefix} /usr/bin/yum -y install ${package}
 }
 
+# Backwards Compatibility Function
+installCentOS4Package () { installRPMPackage "$@" }
 
 
 #
@@ -234,7 +236,7 @@ installPackage ()
                 installDebianPackage "$@"
 
         elif [ -x ${prefix}/usr/bin/yum ] ; then
-                installCentOS4Package "$@"
+                installRPMPackage "$@"
 
         else
                 logMessage "Unable to install package ${package}; no package manager found"
