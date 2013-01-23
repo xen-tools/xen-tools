@@ -189,6 +189,9 @@ Stuff from Steve's TODO list / Generic TODOs
 
 * `xen-delete-image` should unallocate any used IP addresses.
 
+* `installGentooPackage` in `hooks/common.sh` is a stub and does
+  nothing yet.
+
 Axel's Break-Backwards-Compatibility Wishlist
 ---------------------------------------------
 
