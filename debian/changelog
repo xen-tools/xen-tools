@@ -32,6 +32,9 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
       update the menu.list automatically.
     - hooks/common.sh: Rename installCentOS4Package to installRPMPackage.
       Add installCentOS4Package wrapper for backward compatibility.
+    - Fix filesystem tools installation in 91-install-fs-tools (which was
+      broken since 4.3~rc1-1) by merging 91-install-fs-tools back into
+      90-make-fstab. Also supports RPM-based distributions now.
   * Add debian/gbp.conf to be able to to build xen-tools with
     git-buildpackage.
   * Clean up debian/rules:

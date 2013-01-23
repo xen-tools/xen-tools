@@ -100,6 +100,34 @@ for part in `seq 1 ${NUMPARTITIONS}`; do
 done
 
 
+logMessage Checking for filesystem tools to install
+
+#
+#  Install any required packages for the given root filesystem
+#
+if [ "$has_xfs" -eq 1 ]; then
+    installPackage ${prefix} xfsprogs
+fi
+if [ "$has_reiserfs" -eq 1 ]; then
+    if isAPT; then
+        installDebianPackage reiserfsprogs
+    elif isYum; then
+        installRPMPackage reiserfs-utils
+    else
+        logMessage "Unable to install reiserfs tools; no package manager recognized"
+    fi
+fi
+if [ "$has_btrfs" -eq 1 ]; then
+    if isAPT; then
+        installDebianPackage btrfs-tools
+    elif isYum; then
+        installRPMPackage btrfs-progs
+    else
+        logMessage "Unable to install btrfs tools; no package manager recognized"
+    fi
+fi
+
+
 #
 #  Log our finish
 #
