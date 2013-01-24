@@ -37,6 +37,9 @@ else
     installDebianPackage ${prefix} grub
 fi
 
+if [ ! -e ${prefix}/boot/grub/default ]; then
+    echo default > ${prefix}/boot/grub/default
+fi
 chroot ${prefix} /usr/sbin/update-grub
 
 else
