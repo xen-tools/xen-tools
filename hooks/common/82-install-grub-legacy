@@ -31,7 +31,7 @@ if [ ${pygrub} ]; then
 #
 #  Install the grub 0.9x package ("grub-legacy" on Debian, "grub" on Ubuntu)
 #
-if chroot ${prefix} /usr/bin/apt-cache show grub-legacy >/dev/null 2>/dev/null; then
+if chroot ${prefix} /usr/bin/apt-cache show grub-legacy 2>/dev/null | egrep -qi 'GRand Unified Bootloader.*Legacy'; then
     installDebianPackage ${prefix} grub-legacy
 else
     installDebianPackage ${prefix} grub
