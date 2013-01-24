@@ -407,4 +407,3 @@ installGentooPackage ()
     logMessage "NOTE: Not doing anything - this is a stub - FIXME"
 
 }
-
