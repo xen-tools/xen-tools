@@ -37,6 +37,8 @@ else
     installDebianPackage ${prefix} grub
 fi
 
+chroot ${prefix} /usr/sbin/update-grub
+
 else
     logMessage "pygrub not set, skipping grub-legacy installation"
 fi # if pygrub
