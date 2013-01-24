@@ -1338,6 +1338,7 @@ sub setupDefaultOptions
     $CONFIG{ 'apt_proxy' }     = '';
     $CONFIG{ 'arch' }          =
         which('dpkg') ? `dpkg --print-architecture` : '';
+    chomp($CONFIG{ 'arch' });
     $CONFIG{ 'fs' }            = 'ext3';
     $CONFIG{ 'force' }         = 0;
     $CONFIG{ 'no_xen_ok' }     = 0;
