@@ -4,8 +4,7 @@ KNOWN BUGS in xen-tools
 Bugs to fix before next release
 -------------------------------
 
-* Exit code of a failed xen-create-image run seems still to be 0, at
-  least in some cases.
+[None so far]
 
 Bugs to fix rather soon
 -----------------------

@@ -4094,7 +4094,10 @@ sub clean_up () {
 
 END
 {
-    exit 0 if $VERSION || $HELP || $MANUAL || $DUMPCONFIG;
+    # Capture exit code
+    my $exitcode = $?;
+
+    exit $exitcode if $VERSION || $HELP || $MANUAL || $DUMPCONFIG;
 
     my $host_rsa_key = '';
     #
@@ -4234,4 +4237,6 @@ END
         }
         logprint("\n");
     }
+
+    exit $exitcode;
 }
