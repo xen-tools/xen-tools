@@ -252,7 +252,9 @@ while ( my $name = shift )
 my $hosts = $CONFIG{ 'hostname' };
 foreach my $name (@$hosts)
 {
-    if ( $CONFIG{ 'no_xen_ok' } or !xenRunning($name, \%CONFIG) )
+    my %PER_HOST_CONFIG = %CONFIG;
+    $PER_HOST_CONFIG{ 'hostname' } = $name;
+    if ( $CONFIG{ 'no_xen_ok' } or !xenRunning($name, \%PER_HOST_CONFIG) )
     {
         deleteXenImage($name);
     }
