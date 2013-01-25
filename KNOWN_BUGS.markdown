@@ -4,9 +4,8 @@ KNOWN BUGS in xen-tools
 Bugs to fix before next release
 -------------------------------
 
-* Splitting off `91-install-fs-tools` from `90-make-fstab[-deb]`
-  caused the `has_xfs`, `has_btrfs` and `has_reiserfs` flags to no
-  more work and hence made `91-install-fs-tools` useless.
+* Exit code of a failed xen-create-image run seems still to be 0, at
+  least in some cases.
 
 Bugs to fix rather soon
 -----------------------
