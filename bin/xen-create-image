@@ -1326,7 +1326,7 @@ sub setupDefaultOptions
         $CONFIG{ 'mirror_'.$debdist } = 'http://http.debian.net/debian';
     }
     foreach my $debdist (qw(sarge etch lenny)) {
-        $CONFIG{ 'mirror_'.$debdist } = 'http://archive.debian.org/debian-archive/debian';
+        $CONFIG{ 'mirror_'.$debdist } = 'http://http.debian.net/debian-archive/debian';
     }
     # Initialize per distribution mirror defaults: Ubuntu
     foreach my $ubuntudist (qw(hardy lucid oneiric precise quantal raring)) {
