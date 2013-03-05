@@ -9,16 +9,16 @@
 
 use strict;
 use File::Find;
-use Test::More;
+use Test::NoTabs;
 
+# Check all Perl files
+all_perl_files_ok();
 
 #
 #  Find all the files beneath the current directory,
 # and call 'checkFile' with the name.
 #
 find( { wanted => \&checkFile, no_chdir => 1 }, '.' );
-
-done_testing();
 
 #
 #  Check a file.
@@ -62,50 +62,17 @@ sub checkFile
              ( $line =~ /\/bin\/bash/ ) )
         {
             $isShell = 1;
+            last;
         }
         if ( $line =~ /\/usr\/bin\/perl/ )
         {
-            $isPerl = 1;
+            last;
         }
     }
     close( INPUT );
 
     #
-    #  Return if it wasn't a perl file.
+    #  Run check if it is a shell file.
     #
-    if ( $isShell || $isPerl )
-    {
-        #
-        #  Count TAB characters
-        #
-        my $count = countTabCharacters( $file );
-
-        is( $count, 0, "Script has no tab characters: $file" );
-    }
-}
-
-
-=head2 countTabCharacters
-
-=cut
-
-sub countTabCharacters
-{
-    my ( $file ) = (@_);
-
-    my $count = 0;
-
-    open( FILE, "<", $file )
-      or die "Cannot open $file - $!";
-    foreach my $line ( <FILE> )
-    {
-        while( $line =~ /(.*)\t(.*)/ )
-        {
-            $count += 1;
-            $line = $1 . $2;
-        }
-    }
-    close( FILE );
-
-    return( $count );
+    notabs_ok( $file ) if $isShell;
 }
