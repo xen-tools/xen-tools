@@ -3529,10 +3529,11 @@ sub exportEnvironment
 
     foreach my $key ( keys %CONFIG )
     {
-        $key =~ s/-/_/g;
         if ( defined( $CONFIG{ $key } ) )
         {
-            $ENV{ $key } = $CONFIG{ $key };
+            my $envkey = $key;
+            $envkey =~ s/-/_/g;
+            $ENV{ $envkey } = $CONFIG{ $key };
         }
     }
 }
