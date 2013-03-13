@@ -398,13 +398,13 @@ sub createXenConfig
         $ENV{ 'image_suffix' } = '';
         importPartitionsFromEnvironment();
     }
-    elsif ( $ENV{ 'image-dev' } )
+    elsif ( $ENV{ 'image_dev' } )
     {
-        $ENV{ 'image_vbd' } = "phy:$ENV{'image-dev'}";
+        $ENV{ 'image_vbd' } = "phy:$ENV{'image_dev'}";
 
-        if ( $ENV{ 'swap-dev' } )
+        if ( $ENV{ 'swap_dev' } )
         {
-            $ENV{ 'swap_vbd' } = "phy:$ENV{'swap-dev'}";
+            $ENV{ 'swap_vbd' } = "phy:$ENV{'swap_dev'}";
         }
         else
         {

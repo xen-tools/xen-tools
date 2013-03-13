@@ -1,3 +1,11 @@
+xen-tools (4.4~dev-1) UNRELEASED; urgency=low
+
+  * Exported environment variables no more contain dashes ("-"). Dashes in
+    environment variable names are from now on converted to underscores
+    ("_") before being exported. May affect some hook or role scripts.
+
+ -- Axel Beckert <abe@debian.org>  Wed, 13 Mar 2013 23:22:20 +0100
+
 xen-tools (4.2~rc1-1) unstable; urgency=low
 
   By default, xen-create-image now generates a random root password and
