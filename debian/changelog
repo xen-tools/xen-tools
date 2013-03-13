@@ -41,6 +41,7 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
     - Fix export of environment variables. Previously they could contain
       dashes and then were only accessible from within Perl, but not from
       within Bash.
+    - Uses Test::NoTabs; add according build-dependency.
   * Add debian/gbp.conf to be able to to build xen-tools with
     git-buildpackage.
   * Clean up debian/rules:
