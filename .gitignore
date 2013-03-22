@@ -28,3 +28,6 @@
 
 # backups created by "make update-version"
 *.bak
+
+# Devel::Cover cache
+cover_db/
