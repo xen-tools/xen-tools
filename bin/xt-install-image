@@ -387,7 +387,7 @@ sub checkArguments
     #  If there are no scripts then we clearly cannot
     # customise it!
     #
-    my $dir = "/usr/lib/xen-tools/" . $CONFIG{ 'dist' } . ".d";
+    my $dir = "/usr/share/xen-tools/" . $CONFIG{ 'dist' } . ".d";
 
     if ( !-d $dir )
     {

@@ -54,7 +54,7 @@ xt-customize-image - Customize a freshly installed copy of GNU/Linux
  the --location option.
 
   For the distribution named 'foo' the scripts will be loaded and
- executed from '/usr/lib/xen-tools/foo.d'.  Each executable will
+ executed from '/usr/share/xen-tools/foo.d'.  Each executable will
  be loaded and executed in sorted order.
 
 =cut
@@ -215,7 +215,7 @@ sub checkArguments
     #  If there are no scripts then we clearly cannot
     # customise it!
     #
-    my $dir = "/usr/lib/xen-tools/" . $CONFIG{ 'dist' } . ".d";
+    my $dir = "/usr/share/xen-tools/" . $CONFIG{ 'dist' } . ".d";
 
     if ( !-d $dir )
     {
@@ -257,7 +257,7 @@ sub runDistributionHooks
     #
     #  Hook directory.
     #
-    my $hooks = "/usr/lib/xen-tools/" . $CONFIG{ 'dist' } . ".d/";
+    my $hooks = "/usr/share/xen-tools/" . $CONFIG{ 'dist' } . ".d/";
 
     #
     #  Installation prefix

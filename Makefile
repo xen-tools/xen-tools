@@ -147,62 +147,62 @@ install-bin:
 #
 install-hooks:
 	for i in roles/* ; do if [ -f $$i ]; then cp $$i ${prefix}/etc/xen-tools/role.d; fi ; done
-	for i in ${prefix}/usr/lib/xen-tools/*.d; do if [ -L "$$i" ]; then rm -vf "$$i"; fi; done
-	mkdir -p ${prefix}/usr/lib/xen-tools/centos-4.d/
-	mkdir -p ${prefix}/usr/lib/xen-tools/centos-5.d/
-	mkdir -p ${prefix}/usr/lib/xen-tools/centos-6.d/
-	mkdir -p ${prefix}/usr/lib/xen-tools/fedora-core-6.d/
-	cp -R hooks/centos-4/*-* ${prefix}/usr/lib/xen-tools/centos-4.d
-	cp -R hooks/centos-5/*-* ${prefix}/usr/lib/xen-tools/centos-5.d
-	cp -R hooks/centos-6/*-* ${prefix}/usr/lib/xen-tools/centos-6.d
-	cp -R hooks/fedora-core-6/*-* ${prefix}/usr/lib/xen-tools/fedora-core-6.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-4.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-5.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-7.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-8.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-9.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-10.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-11.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-12.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-13.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-14.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-15.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-16.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s fedora-core-6.d fedora-core-17.d
-	mkdir -p ${prefix}/usr/lib/xen-tools/debian.d/
-	cp -R hooks/debian/*-* ${prefix}/usr/lib/xen-tools/debian.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d sarge.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d etch.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d lenny.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d squeeze.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d wheezy.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d jessie.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d sid.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d testing.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s debian.d stable.d
-	mkdir -p ${prefix}/usr/lib/xen-tools/gentoo.d/
-	cp -R hooks/gentoo/*-* ${prefix}/usr/lib/xen-tools/gentoo.d
-	mkdir -p ${prefix}/usr/lib/xen-tools/dapper.d/
-	cp -R hooks/dapper/*-* ${prefix}/usr/lib/xen-tools/dapper.d/
-	mkdir -p ${prefix}/usr/lib/xen-tools/edgy.d/
-	cp -R hooks/edgy/*-* ${prefix}/usr/lib/xen-tools/edgy.d/
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s edgy.d feisty.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s edgy.d gutsy.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s edgy.d hardy.d
-	mkdir -p ${prefix}/usr/lib/xen-tools/intrepid.d/
-	cp -R hooks/intrepid/*-* ${prefix}/usr/lib/xen-tools/intrepid.d/
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s intrepid.d jaunty.d
-	mkdir -p ${prefix}/usr/lib/xen-tools/karmic.d/
-	cp -R hooks/karmic/*-* ${prefix}/usr/lib/xen-tools/karmic.d/
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s karmic.d lucid.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s karmic.d maverick.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s karmic.d natty.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s karmic.d oneiric.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s karmic.d precise.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s karmic.d quantal.d
-	-cd ${prefix}/usr/lib/xen-tools/ && ln -s karmic.d raring.d
-	cp hooks/common.sh ${prefix}/usr/lib/xen-tools
-	cp -r hooks/common ${prefix}/usr/lib/xen-tools
+	for i in ${prefix}/usr/share/xen-tools/*.d; do if [ -L "$$i" ]; then rm -vf "$$i"; fi; done
+	mkdir -p ${prefix}/usr/share/xen-tools/centos-4.d/
+	mkdir -p ${prefix}/usr/share/xen-tools/centos-5.d/
+	mkdir -p ${prefix}/usr/share/xen-tools/centos-6.d/
+	mkdir -p ${prefix}/usr/share/xen-tools/fedora-core-6.d/
+	cp -R hooks/centos-4/*-* ${prefix}/usr/share/xen-tools/centos-4.d
+	cp -R hooks/centos-5/*-* ${prefix}/usr/share/xen-tools/centos-5.d
+	cp -R hooks/centos-6/*-* ${prefix}/usr/share/xen-tools/centos-6.d
+	cp -R hooks/fedora-core-6/*-* ${prefix}/usr/share/xen-tools/fedora-core-6.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s fedora-core-6.d fedora-core-4.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s fedora-core-6.d fedora-core-5.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s fedora-core-6.d fedora-core-7.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s fedora-core-6.d fedora-core-8.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s fedora-core-6.d fedora-core-9.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s fedora-core-6.d fedora-core-10.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s fedora-core-6.d fedora-core-11.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s fedora-core-6.d fedora-core-12.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s fedora-core-6.d fedora-core-13.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s fedora-core-6.d fedora-core-14.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s fedora-core-6.d fedora-core-15.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s fedora-core-6.d fedora-core-16.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s fedora-core-6.d fedora-core-17.d
+	mkdir -p ${prefix}/usr/share/xen-tools/debian.d/
+	cp -R hooks/debian/*-* ${prefix}/usr/share/xen-tools/debian.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d sarge.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d etch.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d lenny.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d squeeze.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d wheezy.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d jessie.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d sid.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d testing.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d stable.d
+	mkdir -p ${prefix}/usr/share/xen-tools/gentoo.d/
+	cp -R hooks/gentoo/*-* ${prefix}/usr/share/xen-tools/gentoo.d
+	mkdir -p ${prefix}/usr/share/xen-tools/dapper.d/
+	cp -R hooks/dapper/*-* ${prefix}/usr/share/xen-tools/dapper.d/
+	mkdir -p ${prefix}/usr/share/xen-tools/edgy.d/
+	cp -R hooks/edgy/*-* ${prefix}/usr/share/xen-tools/edgy.d/
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s edgy.d feisty.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s edgy.d gutsy.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s edgy.d hardy.d
+	mkdir -p ${prefix}/usr/share/xen-tools/intrepid.d/
+	cp -R hooks/intrepid/*-* ${prefix}/usr/share/xen-tools/intrepid.d/
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s intrepid.d jaunty.d
+	mkdir -p ${prefix}/usr/share/xen-tools/karmic.d/
+	cp -R hooks/karmic/*-* ${prefix}/usr/share/xen-tools/karmic.d/
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d lucid.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d maverick.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d natty.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d oneiric.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d precise.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d quantal.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d raring.d
+	cp hooks/common.sh ${prefix}/usr/share/xen-tools
+	cp -r hooks/common ${prefix}/usr/share/xen-tools
 
 
 #
@@ -303,7 +303,9 @@ uninstall:
 	-rm -rf ${prefix}/etc/xen-tools/skel
 	-rmdir ${prefix}/etc/xen-tools/
 	-rm -f ${prefix}/etc/bash_completion.d/xen-tools
+	# Maybe needed to remove older releases of xen-tools
 	rm -rf ${prefix}/usr/lib/xen-tools
+	rm -rf ${prefix}/usr/share/xen-tools
 	rm -f ${prefix}/usr/share/man/man8/xen-create-image.8.gz
 	rm -f ${prefix}/usr/share/man/man8/xen-delete-image.8.gz
 	rm -f ${prefix}/usr/share/man/man8/xen-list-images.8.gz
