@@ -223,12 +223,13 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --mirror=url Setup the mirror to use when installing via
                 debootstrap. (Default value: mirror used in
                 /etc/apt/sources.list or for Debian
-                "http://cdn.debian.net/debian/" and for Ubuntu
+                "http://http.debian.net/debian/" and for Ubuntu
                 "http://archive.ubuntu.com/ubuntu/")
 
-                The above mentioned Debian mirror hostname uses GeoIP
-                to choose a more or less close Debian mirror. See
-                http://wiki.debian.org/DebianGeoMirror for details.
+                The above mentioned Debian mirror hostname
+                automatically tries to choose a more or less close
+                Debian mirror. See http://http.debian.net/ for
+                details.
 
    --apt_proxy=url
                 Specify a proxy to be used by debootstrap, and within
