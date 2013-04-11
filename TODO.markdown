@@ -187,6 +187,13 @@ Bugs to fix and features to add for 5.0
 * Remove from the (unused) Xen::Tools what's already in the used
   Xen::Tools::Common.
 
+* Add test for `--size` constraints (upper- and lowercase letters,
+  with and without `B`, etc.)
+
+  * Needs a `--dry-run` or `--check-constraints` option in
+    `xen-create-image` first. Which probably both would be a good
+    idea.
+
 Stuff from Steve's TODO list / Generic TODOs
 --------------------------------------------
 
