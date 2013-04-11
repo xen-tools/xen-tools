@@ -11,26 +11,28 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
   Help Options:
 
-   --help       Show the help information for this script.
+   --help        Show the help information for this script.
 
-   --manual     Read the manual, and examples, for this script.
+   --manual      Read the manual, and examples, for this script.
 
-   --verbose    Show useful debugging information.
+   --(no)verbose (Don't) show more of what xen-create-image is
+                 currently doing.
 
-   --dumpconfig Show current configuration.
+   --dumpconfig  Show current configuration.
 
-   --version    Show the version number and exit.
+   --version     Show the version number and exit.
 
 
 
   Size / General options:
 
-   --accounts   Copy all non-system accounts to the guest image
+   --(no)accounts
+                (Don't) copy all non-system accounts to the guest image
 
    --admins     Specify that some administrators should be created for
                 this image, using xen-shell.
 
-   --boot       Boot the new instance after creating it.
+   --(no)boot   (Don't) boot the new instance after creating it.
 
    --cache=bool Cache .deb files on the host when installing the new
                 guest with the debootstrap tool. Accepted values:
@@ -46,7 +48,9 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
                 Read the specified file in addition to the global
                 configuration file.
 
-   --copyhosts  Copy entries from the dom0's /etc/hosts file to the guest
+   --(no)copyhosts
+                (Don't) copy entries from the dom0's /etc/hosts file
+                to the guest
 
    --copy-cmd   NOP:  Ignored.
 
@@ -63,9 +67,10 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
                 Specify the suffix to give the Xen configuration
                 file. (Default value: ".cfg")
 
-   --force      Force overwriting existing images. This will remove
-                existing images or LVM volumes which match those which
-                are liable to be used by the new invocation.
+   --(no)force  (Don't) force overwriting existing images. This will
+                remove existing images or LVM volumes which match
+                those which are liable to be used by the new
+                invocation.
 
    --fs=fs      Specify the filesystem type to use for the new guest.
                 Valid choices are 'ext2', 'ext3', 'ext4', 'reiserfs',
@@ -99,7 +104,7 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --install=1  Specify whether to install the guest system or not.
 
-   --keep       Don't delete our images if installation fails. It maybe
+   --(no)keep   (Don't) keep our images if installation fails. It maybe
                 unmounted, though.
 
    --kernel=/path/to/kernel
@@ -139,10 +144,10 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --password=passphrase
                 Set the root password for the new guest.
 
-   --passwd     Ask for a root password interactively during setup.
-                NOTE:  This overrides --genpass --password
+   --(no)passwd (Don't) ask for a root password interactively during
+                setup.  NOTE: This overrides --genpass --password.
 
-   --pygrub     DomU should be booted using pygrub.
+   --(no)pygrub DomU should (not) be booted using pygrub.
 
    --role=role  Run the specified role script(s) post-install.
                 Role scripts are discussed later in this manpage.
@@ -241,8 +246,8 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --broadcast=123.456.789.ABC
                 Setup the broadcast address for the new instance.
 
-   --dhcp       The guest will be configured to fetch its networking
-                details via DHCP.
+   --(no)dhcp   The guest will (not) be configured to fetch its
+                networking details via DHCP.
 
    --gateway=gw Setup the network gateway for the new instance.
 
@@ -1614,14 +1619,14 @@ sub parseCommandLineArguments
             "disk_device=s", \&checkOption,
 
             # Hosts options
-            "nohosts",   \$CONFIG{ 'nohosts' },
-            "copyhosts", \$CONFIG{ 'copyhosts' },
+            "nohosts",     \$CONFIG{ 'nohosts' },
+            "copyhosts!",  \$CONFIG{ 'copyhosts' },
             # Deprecated legacy options for backwards compatibility
-            "no-hosts",   \$CONFIG{ 'nohosts' },
-            "copy-hosts", \$CONFIG{ 'copyhosts' },
+            "no-hosts",    \$CONFIG{ 'nohosts' },
+            "copy-hosts!", \$CONFIG{ 'copyhosts' },
 
             # Networking options
-            "dhcp",         \$CONFIG{ 'dhcp' },
+            "dhcp!",        \$CONFIG{ 'dhcp' },
             "bridge=s",     \&checkOption,
             "gateway=s",    \&checkOption,
             "hostname=s",   \&checkOption,
@@ -1642,11 +1647,11 @@ sub parseCommandLineArguments
             "debootstrap-cmd=s", \$CONFIG{ 'debootstrap-cmd' },
 
             # Misc. options
-            "accounts",     \$CONFIG{ 'accounts' },
+            "accounts!",    \$CONFIG{ 'accounts' },
             "admins=s",     \&checkOption,
             "arch=s",       \&checkOption,
             "fs=s",         \&checkOption,
-            "boot",         \$CONFIG{ 'boot' },
+            "boot!",        \$CONFIG{ 'boot' },
             "cache=s",      \&checkOption,
             "cachedir=s",   \&checkOption,
             "config=s",     \&checkOption,
@@ -1654,8 +1659,8 @@ sub parseCommandLineArguments
             "scsi",         \$CONFIG{ 'scsi' },
             "install=i",    \&checkOption,
             "hooks=i",      \&checkOption,
-            "pygrub",       \$CONFIG{ 'pygrub' },
-            "passwd",       \$CONFIG{ 'passwd' },
+            "pygrub!",      \$CONFIG{ 'pygrub' },
+            "passwd!",      \$CONFIG{ 'passwd' },
             "genpass=i",    \&checkOption,
             "genpass-len=i", \&checkOption,
             "genpass_len=i", \&checkOption,
@@ -1666,20 +1671,20 @@ sub parseCommandLineArguments
             "role-args=s",  \&checkOption,
             "finalrole=s",       \&checkOption,
             "roledir=s",    \&checkOption,
-            "force",        \$CONFIG{ 'force' },
+            "force!",       \$CONFIG{ 'force' },
             "no-xen-ok",    \$CONFIG{ 'no_xen_ok' },
-            "keep",         \$CONFIG{ 'keep' },
+            "keep!",        \$CONFIG{ 'keep' },
             "template=s",   \&checkOption,
             "output=s",     \&checkOption,
             "extension:s",  \&checkOption,
             "dontformat",   \&checkOption,
 
             # Help options
-            "debug",      \$CONFIG{ 'debug' },
+            "debug!",     \$CONFIG{ 'debug' },
             "help",       \$HELP,
             "manual",     \$MANUAL,
             "dumpconfig", \$DUMPCONFIG,
-            "verbose",    \$CONFIG{ 'verbose' },
+            "verbose!",   \$CONFIG{ 'verbose' },
             "version",    \$VERSION
         ) )
     {

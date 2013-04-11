@@ -39,7 +39,7 @@ foreach my $key ( sort keys %OPTIONS )
 
     foreach my $line ( @lines )
     {
-        if ( $line =~ /--$key/ )
+        if ( $line =~ /--(\(no\))?$key/ )
         {
             $found = 1;
         }

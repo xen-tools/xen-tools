@@ -51,7 +51,7 @@ sub testFile
 
     foreach my $line ( split( /\n/, $output ) )
     {
-        if ( $line =~ /[ \t]*--([a-z-_]+)/ )
+        if ( $line =~ /[ \t]*--(?:\(no\))?([a-z-_]+)/ )
         {
             push @documented, $1 unless( $line =~ /NOP/i );
         }
@@ -120,6 +120,11 @@ sub testFile
             {
                 $o = $1;
             }
+#print " - remove negation : $o ";
+            #
+            #  Discard any "!" at the end
+            #
+            $o =~ s/!//;
 #print " - remove = : $o ";
             #
             #  Now avoid blank lines.
