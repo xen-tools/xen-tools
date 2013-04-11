@@ -36,7 +36,6 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
                 guest with the debootstrap tool. Accepted values:
                 "yes" (default) and "no".
 
-
    --cachedir=/path/to/cache/directory
                 Override the default .deb cache directory. Defaults to
                 /var/cache/apt/archives/ if it exists (i.e. on Debian
@@ -129,7 +128,6 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --output=dir Specify the output directory to create the xen configuration
                 file within.
 
-
    --partitions=file
                 Use a specific partition layout configuration file.
                 See /etc/xen-tools/partitions.d/sample-server for an
@@ -186,6 +184,7 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --vcpus=num
                 Set the number of vcpus that the new instance will have
                 instead of the default value of "1".
+
 
 
   Installation options:
@@ -274,6 +273,7 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --vifname=vifname
                 Optionally, set a specific vif name for the new instance.
+
 
 
   Mandatory options:
