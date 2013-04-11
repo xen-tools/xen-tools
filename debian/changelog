@@ -8,6 +8,7 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
     - Execute END block not on --version/--help/--manual (Closes: #684346)
     - Move code for --boot feature to END block. Fixes missing SSH
       fingerprint display if --boot was used. (Closes: #679183)
+    - Correctly handle aborts in END block. (Closes: #704882)
     - Use local parameter instead of global variable in unMountImage.
     - Also recognize "M" and "G" instead of "MB" and "GB" as size unit for
       --memory. (Closes: #691320) Document the recognized units.
@@ -41,6 +42,7 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
     - Fix export of environment variables. Previously they could contain
       dashes and then were only accessible from within Perl, but not from
       within Bash.
+    - Makes some options (like --pygrub) negatable.
     - Uses Test::NoTabs; add according build-dependency.
   * Add debian/gbp.conf to be able to to build xen-tools with
     git-buildpackage.
