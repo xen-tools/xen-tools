@@ -27,7 +27,8 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
   Size / General options:
 
    --(no)accounts
-                (Don't) copy all non-system accounts to the guest image
+                (Don't) copy all non-system accounts to the guest
+                image
 
    --admins     Specify that some administrators should be created for
                 this image, using xen-shell.
@@ -60,8 +61,8 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
                 installed. Specifying the path is optional.
 
    --disk_device=diskname
-                Use specified device name for virtual devices instead of
-                the default value "xvda".
+                Use specified device name for virtual devices instead
+                of the default value "xvda".
 
    --extension=ext
                 Specify the suffix to give the Xen configuration
@@ -74,48 +75,50 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --fs=fs      Specify the filesystem type to use for the new guest.
                 Valid choices are 'ext2', 'ext3', 'ext4', 'reiserfs',
-                'xfs' or 'btrfs'. (Note: pygrub *DOES NOT* support xfs)
+                'xfs' or 'btrfs'. (Note: pygrub *DOES NOT* support
+                xfs)
 
-   --genpass=1  Generate a random root password (default, set to 0 to turn off)
+   --genpass=1  Generate a random root password (default, set to 0 to
+                turn off)
 
    --genpass_len=N
-                Override the default password length of 8 and generate a
-                random password of length N. Note: this only works in
-                conjunction with --genpass
+                Override the default password length of 8 and generate
+                a random password of length N. Note: this only works
+                in conjunction with --genpass
 
    --hash_method=algorithm
-                Override the default hashing method of sha256 and use the
-                provided algorithm. Can be : md5, sha256 or sha512
+                Override the default hashing method of sha256 and use
+                the provided algorithm. Can be : md5, sha256 or sha512
 
    --hooks=1    Specify whether to run hooks after the image is created.
 
    --ide        Use IDE names for virtual devices (i.e. hda not xvda)
 
-   --image=str  Specify whether to create "sparse" or "full" disk images.
-                Full images are mandatory when using LVM, so this setting
-                is ignored in that case.
+   --image=str  Specify whether to create "sparse" or "full" disk
+                images.  Full images are mandatory when using LVM, so
+                this setting is ignored in that case.
 
    --image-dev=/path/to/device
                 Specify a physical/logical volume for the disk image.
 
    --initrd=/path/to/initrd
-                Specify the initial ramdisk. If an image is specified it
-                must exist.
+                Specify the initial ramdisk. If an image is specified
+                it must exist.
 
    --install=1  Specify whether to install the guest system or not.
 
-   --(no)keep   (Don't) keep our images if installation fails. It maybe
-                unmounted, though.
+   --(no)keep   (Don't) keep our images if installation fails. It
+                maybe unmounted, though.
 
    --kernel=/path/to/kernel
                 Set the path to the kernel to use for domU. If a
                 kernel is specified it must exist.
 
    --memory=size
-                Setup the amount of memory allocated to the new instance.
-                As suffix recognized size units are "M", "MB", "G" and
-                "GB" (case does not matter). If there's no unit given,
-                megabytes are assumed.
+                Setup the amount of memory allocated to the new
+                instance.  As suffix recognized size units are "M",
+                "MB", "G" and "GB" (case does not matter). If there's
+                no unit given, megabytes are assumed.
 
    --modules=/path/to/modules
                 Set the path to the kernel modules to use for domU.
@@ -130,8 +133,8 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
    --no-xen-ok  Don't complain if xen seems not installed or xend is
                 not running. (Needed for the testsuite.)
 
-   --output=dir Specify the output directory to create the xen configuration
-                file within.
+   --output=dir Specify the output directory to create the xen
+                configuration file within.
 
    --partitions=file
                 Use a specific partition layout configuration file.
@@ -149,18 +152,18 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --(no)pygrub DomU should (not) be booted using pygrub.
 
-   --role=role  Run the specified role script(s) post-install.
-                Role scripts are discussed later in this manpage.
-                Can be an absolute path. Otherwise it's relative to the
-                value of --roledir.
+   --role=role  Run the specified role script(s) post-install.  Role
+                scripts are discussed later in this manpage.  Can be
+                an absolute path. Otherwise it's relative to the value
+                of --roledir.
 
    --role-args="--arg1 --arg2"
                 Pass the named string literally to any role script.
                 This is useful for site-specific roles.
 
    --finalrole=role
-                Similar to role scripts. Run the specified role script(s)
-                after cfg file creation.
+                Similar to role scripts. Run the specified role
+                script(s) after cfg file creation.
 
    --roledir=/path/to/directory
                 Specify the directory which contains the role scripts.
@@ -187,21 +190,22 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
                 beforehand.
 
    --vcpus=num
-                Set the number of vcpus that the new instance will have
-                instead of the default value of "1".
+                Set the number of vcpus that the new instance will
+                have instead of the default value of "1".
 
 
 
   Installation options:
 
-   --arch=arch  Pass the given architecture to debootstrap, rinse,
-                or rpmstrap when installing the system.  This argument
-                is ignored for other install methods.
+   --arch=arch  Pass the given architecture to debootstrap, rinse, or
+                rpmstrap when installing the system.  This argument is
+                ignored for other install methods.
 
    --dist=dist  Specify the distribution you wish to install.
 
    --install-method=method
-                Specify the installation method to use. Valid methods are:
+                Specify the installation method to use. Valid methods
+                are:
 
                 * debootstrap
                 * cdebootstrap
@@ -239,9 +243,9 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
   Networking options:
 
    --bridge=brname
-                Optionally, set a specific bridge for the new instance.
-                This can be especially useful when running multiple
-                bridges on a dom0.
+                Optionally, set a specific bridge for the new
+                instance.  This can be especially useful when running
+                multiple bridges on a dom0.
 
    --broadcast=123.456.789.ABC
                 Setup the broadcast address for the new instance.
@@ -257,8 +261,9 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
                 one is setup as the "system" IP, and the additional
                 ones are added as aliases.
 
-                Note that Xen 3.x supports a maximum of three vif statements
-                per guest. This option conflicts with --dhcp.
+                Note that Xen 3.x supports a maximum of three vif
+                statements per guest. This option conflicts with
+                --dhcp.
 
    --mac=AA:BB:CC:DD:EE:FF
                 Specify the MAC address to use for a given interface.
@@ -272,27 +277,31 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
    --nameserver="123.456.789.ABC 123.456.789.DEF"
                 Setup the nameserver of the machine, multiple space
-                separated nameservers are allowed.
-                If not provided, Dom0's /etc/resolv.conf will be copied
-                to guest.
+                separated nameservers are allowed.  If not provided,
+                Dom0's /etc/resolv.conf will be copied to guest.
 
    --vifname=vifname
-                Optionally, set a specific vif name for the new instance.
+                Optionally, set a specific vif name for the new
+                instance.
 
 
 
   Mandatory options:
 
    --dir=/path/to/directory
+
                 Specify where the output images should go.
-                Subdirectories will be created for each guest
-                If you do not wish to use loopback images specify --lvm
-                or --evms.  (These three options are mutually exclusive.)
+                Subdirectories will be created for each guest.
+
+                If you do not wish to use loopback images specify
+                --lvm or --evms.  (These three options are mutually
+                exclusive.)
 
    --evms=lvm2/container
-                Specify the container to save images within, i.e. '--evms
-                lvm2/mycontainer'.  If you do not wish to use EVMS specify
-                --dir or --lvm.  (These three options are mutually exclusive.)
+                Specify the container to save images within,
+                i.e. '--evms lvm2/mycontainer'.  If you do not wish to
+                use EVMS specify --dir or --lvm.  (These three options
+                are mutually exclusive.)
 
    --hostname=host.example.org
                 Set the hostname of the new guest system.  Ideally
