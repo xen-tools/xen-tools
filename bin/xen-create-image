@@ -1422,8 +1422,8 @@ sub checkOption
     # Define argument types
     my %types = (
         integerWithSuffix => {
-            check   => qr/^[0-9.]+[GgMmKk]b?$/,
-            message => "takes a suffixed integer.\n",
+            check   => qr/^[0-9.]+[GMk]B?$/i,
+            message => "takes a suffixed (mb, MB, G, k, etc.) integer.\n",
         },
         distribution => {
             check   => sub { -d "/usr/lib/xen-tools/$_[0].d" },
