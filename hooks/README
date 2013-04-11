@@ -19,7 +19,7 @@ hooks/
    * The installation will have a running installation of OpenSSH
 
   The subdirectories in this hooks/ directory will be installed
- to the directory /usr/lib/xen-tools/
+ to the directory /usr/share/xen-tools/
 
 Steve
 --

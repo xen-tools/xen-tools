@@ -239,6 +239,3 @@ Axel's Break-Backwards-Compatibility Wishlist
   Maybe add some `--autostart` or such.
 
 * Maybe replace findBinary with File::Which
-
-* Move /usr/lib/xen-tools/ to /usr/share/xen-tools/ as all file in
-  there are either shell or perl scripts.

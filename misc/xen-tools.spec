@@ -40,7 +40,7 @@ rm -rf $RPM_BUILD_ROOT
 /etc/bash_completion.d/*
 /usr/bin/*
 /usr/share/man/man8/*
-/usr/lib/xen-tools
+/usr/share/xen-tools
 
 
 %changelog

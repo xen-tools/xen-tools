@@ -4,7 +4,14 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
     environment variable names are from now on converted to underscores
     ("_") before being exported. May affect some hook or role scripts.
 
- -- Axel Beckert <abe@debian.org>  Wed, 13 Mar 2013 23:22:20 +0100
+  * /usr/lib/xen-tools/ has been moved to /usr/share/xen-tools/ to
+    properly adhere to FHS. In case you had local scripts added to
+    /usr/lib/xen-tools/, please move them to /usr/share/xen-tools/, too
+    and then remove /usr/lib/xen-tools/ and its left-over subdirectories
+    which all should be empty at that point, i.e. "rmdir -p
+    /usr/lib/xen-tools/*" should do the trick.
+
+ -- Axel Beckert <abe@debian.org>  Fri, 05 Apr 2013 20:19:02 +0200
 
 xen-tools (4.2~rc1-1) unstable; urgency=low
 

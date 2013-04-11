@@ -2,6 +2,7 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
 
   * New upstream release
     - Code deduplication to unify the xen-*-image scripts
+    - Moves /usr/lib/xen-tools/ to /usr/share/xen-tools/
     - Use http.debian.net as default Debian mirror if no mirror is given
       and xt-guess-suite-and-mirror is not used.
     - Fix symbolic link hooks/centos-6/15-setup-arch (Closes: #690299)

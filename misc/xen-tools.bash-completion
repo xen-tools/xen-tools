@@ -65,8 +65,8 @@ _xen_create_image()
     # Available distributions, by which we mean distributions which
     # we have hook scripts available.
     #
-    for i in `/bin/ls -1 /usr/lib/xen-tools/ ` ; do
-        if [ -d /usr/lib/xen-tools/${i} ]; then
+    for i in `/bin/ls -1 /usr/share/xen-tools/ ` ; do
+        if [ -d /usr/share/xen-tools/${i} ]; then
             dists="${dists} ${i/.d/}"
         fi
     done

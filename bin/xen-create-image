@@ -1441,9 +1441,9 @@ sub checkOption
             message => "takes a suffixed (mb, MB, G, k, etc.) integer.\n",
         },
         distribution => {
-            check   => sub { -d "/usr/lib/xen-tools/$_[0].d" },
+            check   => sub { -d "/usr/share/xen-tools/$_[0].d" },
             message => "takes a distribution name " .
-                       "(see /usr/lib/xen-tools for valid values).\n",
+                       "(see /usr/share/xen-tools for valid values).\n",
         },
         imageType => {
             check   => qr/^sparse|full$/,
