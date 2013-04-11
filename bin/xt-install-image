@@ -133,13 +133,19 @@ my $RELEASE = '4.4~dev';
 #  needDirectory Defined if we need an install-source directory specified.
 #
 #
+my $debootstrap_cmd;
 my %dispatch = (
                  "copy" => { sub           => \&do_copy,
                              needBinary    => "/bin/cp",
                              needDirectory => 1,
                            },
                  "debootstrap" => { sub        => \&do_debootstrap,
-                                    needBinary => "/usr/sbin/debootstrap",
+                                    needBinary => ["/usr/sbin/debootstrap", "/usr/bin/cdebootstrap", "/usr/bin/cdebootstrap-static"],
+                                    var        => \$debootstrap_cmd,
+                                  },
+                 "cdebootstrap" => { sub        => \&do_debootstrap,
+                                     needBinary => ["/usr/sbin/cdebootstrap", "/usr/bin/cdebootstrap-static"],
+                                     var        => \$debootstrap_cmd,
                                   },
                  "rinse" => { sub        => \&do_rinse,
                               needBinary => "/usr/sbin/rinse",
@@ -210,13 +216,35 @@ if ( defined( $CONFIG{ 'install-method' } ) &&
         #
 
         # Do we need to test for a binary.
-        if ( ( $installer->{ 'needBinary' } ) &&
-             ( !-x $installer->{ 'needBinary' } ) )
-        {
-            print
-              "The following required binary for the installation was not found\n";
-            print "\t" . $installer->{ 'needBinary' } . "\n";
-            exit 1;
+        if ( $installer->{ 'needBinary' } ) {
+            if ( 'ARRAY' eq ref $installer->{ 'needBinary' } ) {
+                unless (ref $installer->{ 'var' }) {
+                    die "Assertion: If dispatch->->needBinary is an array ref, dispatch->->var must exist";
+                }
+
+                foreach my $binary (@{$installer->{ 'needBinary' }}) {
+                    if (-x $binary) {
+                        ${$installer->{ 'var' }} = $binary;
+                        last;
+                    }
+                }
+
+                unless ( ${$installer->{ 'var' }}  ) {
+                    print
+                        "One of the following binaries are required for the installation, but none was found\n";
+                    print "\t" . join(', ', @{$installer->{ 'needBinary' }}) . "\n";
+                    exit 1;
+                }
+            }
+            else
+            {
+                if ( !-x $installer->{ 'needBinary' } ) {
+                    print
+                        "The following required binary for the installation was not found\n";
+                    print "\t" . $installer->{ 'needBinary' } . "\n";
+                    exit 1;
+                }
+            }
         }
 
         # Do we need a directory specified as the installation source?
@@ -572,21 +600,9 @@ sub do_debootstrap
     #  The command is a little configurable - mostly to allow you
     # to use cdebootstrap.
     #
-    my $cmd = $CONFIG{ 'debootstrap-cmd' };
+    my $cmd = $CONFIG{ 'debootstrap-cmd' } || $debootstrap_cmd;
+    print "Using $cmd as debootstrap command\n";
     my $cachedir = $CONFIG{ 'cachedir' };
-    if ( !$cmd )
-    {
-        if (-x '/usr/sbin/debootstrap') {
-            $cmd = '/usr/sbin/debootstrap';
-        } elsif (-x '/usr/sbin/cdebootstrap') {
-            $cmd = '/usr/sbin/cdebootstrap';
-        } else {
-            print STDERR "Found neither debootstrap nor cdebootstrap and no --debootstrap-cmd given\n";
-            exit 1;
-        }
-        print "Using $cmd as debootstrap command\n";
-    }
-
 
     #
     #  Cache from host -> new installation if we've got caching

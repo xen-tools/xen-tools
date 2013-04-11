@@ -22,6 +22,8 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
     - Preliminary support for Debian Jessie and Ubuntu Raring
     - Preliminary support for xl toolstack
     - xen-create-image: Consistently use runCommand() instead of system()
+    - xt-install-image: Don't bail out if only cdebootstrap is installed
+      but not debootstrap (Thanks Elmar Heeb!)
     - Makefile accepts DESTDIR=…
     - Move examples from debian/examples to examples.
     - Uses File::Which, added (build-) dependency on libfile-which-perl
