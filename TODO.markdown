@@ -239,3 +239,8 @@ Axel's Break-Backwards-Compatibility Wishlist
   Maybe add some `--autostart` or such.
 
 * Maybe replace findBinary with File::Which
+
+* MAC addresses should no more depend on the distribution.
+
+* Let the admin switch between MAC addresses based on XenSource's OUI,
+  its organisation's own OUI or locally administrated MAC addresses.
