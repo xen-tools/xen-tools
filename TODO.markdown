@@ -244,3 +244,4 @@ Axel's Break-Backwards-Compatibility Wishlist
 
 * Let the admin switch between MAC addresses based on XenSource's OUI,
   its organisation's own OUI or locally administrated MAC addresses.
+  See also http://wiki.xen.org/wiki/Xen_Networking#MAC_addresses
