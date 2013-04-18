@@ -13,11 +13,6 @@ use strict;
 use File::Find;
 use Test::More;
 
-eval "use Moose";
-plan skip_all => "Moose required for testing Perl syntax"
-    if $@;
-
-
 #
 #  Find all the files beneath the current directory,
 # and call 'checkFile' with the name.

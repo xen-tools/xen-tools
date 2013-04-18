@@ -48,6 +48,9 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
     - Fixes creation of "ARRAY(0x…).log" named log files.
     - Makes some options (like --pygrub) negatable.
     - Uses Test::NoTabs; add according build-dependency.
+    - Removes unused Perl modules Xen::Tools and Xen::Tools::Log from
+      source code. Also removes the according tests from the test suite.
+      → Remove no more needed build-dependency on Moose.
   * Add debian/gbp.conf to be able to to build xen-tools with
     git-buildpackage.
   * Clean up debian/rules:

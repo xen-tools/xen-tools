@@ -210,7 +210,6 @@ install-hooks:
 #
 install-libraries:
 	-mkdir -p ${prefix}/usr/share/perl5/Xen/Tools
-	cp ./lib/Xen/*.pm ${prefix}/usr/share/perl5/Xen
 	cp ./lib/Xen/Tools/*.pm ${prefix}/usr/share/perl5/Xen/Tools
 
 #
