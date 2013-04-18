@@ -8,6 +8,18 @@ xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
 =head1 SYNOPSIS
 
+xen-create-image --hostname=<hostname> <further options>
+
+=head1 EXAMPLES
+
+xen-create-image --hostname=some-domu --dist=wheezy --lvm=vg0
+
+xen-create-image --hostname=some-domu --dist=precise --dir=/srv/xen
+
+See below for more specific examples: LOOPBACK EXAMPLES, LVM EXAMPLE
+and EVMS EXAMPLE.
+
+=head1 OPTIONS
 
   Help Options:
 
