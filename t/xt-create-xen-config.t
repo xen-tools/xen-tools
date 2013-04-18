@@ -140,7 +140,7 @@ sub runCreateCommand
     #
     #  Create a temporary directory, and make sure it is present.
     #
-    my $dir = File::Temp::tempdir( CLEANUP => 0 );
+    my $dir = File::Temp::tempdir( CLEANUP => 1 );
     ok ( -d $dir, "The temporary directory was created: $dir" );
 
     #
@@ -176,7 +176,7 @@ sub runCreateCommand
     my @LINES = <OUTPUT>;
     close( OUTPUT );
 
-    return( join( "\n", @LINES ) );
+    return( join( "\n", @LINES ), $dir );
 }
 
 
@@ -193,7 +193,7 @@ sub testOutputContains
     my ( $text, %params ) = ( @_ );
 
     # Get the output of running the command.
-    my $output = runCreateCommand( %params );
+    my ($output, $dir) = runCreateCommand( %params );
 
     #
     #  Look to see if we got the text.
@@ -220,7 +220,7 @@ sub noMentionOf
     my ( $text, %params ) = ( @_ );
 
     # Get the output of running the command.
-    my $output = runCreateCommand( %params );
+    my ($output, $dir) = runCreateCommand( %params );
 
     #
     #  Look to see if we got the text.
