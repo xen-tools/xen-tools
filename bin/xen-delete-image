@@ -232,25 +232,17 @@ E_O_ROOT
 
 #
 #  Loop over the supplied arguments, and attempt to delete each
-# image.
+# image. Check both, bare parameters as well as --hostname options.
 #
-while ( my $name = shift )
-{
-    if ( $CONFIG{ 'no_xen_ok' } or !xenRunning($name, \%CONFIG) )
-    {
-        deleteXenImage($name);
-    }
-    else
-    {
-        print "Skipping xen guest '$name' - it appears to be running.\n";
-    }
+
+my @hosts = ();
+if (exists($CONFIG{ 'hostname' }) and defined($CONFIG{ 'hostname' })) {
+    my $hostname_option = $CONFIG{ 'hostname' };
+    @hosts = 'ARRAY' eq ref($hostname_option) ?
+        @$hostname_option : $hostname_option;
 }
 
-#
-#  Also delete any which were specified using the --hostname flag
-#
-my $hosts = $CONFIG{ 'hostname' };
-foreach my $name (@$hosts)
+foreach my $name (@ARGV, @hosts)
 {
     my %PER_HOST_CONFIG = %CONFIG;
     $PER_HOST_CONFIG{ 'hostname' } = $name;
