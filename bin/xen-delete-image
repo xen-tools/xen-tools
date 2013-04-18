@@ -416,7 +416,8 @@ sub deleteXenImage
         }
     }
 
-
+    my %PER_HOST_CONFIG = %CONFIG;
+    $PER_HOST_CONFIG{ 'hostname' } = $hostname;
     if ( defined( $CONFIG{ 'dir' } ) )
     {
         my $prefix = $CONFIG{ 'dir' } . "/domains/";
@@ -450,7 +451,7 @@ sub deleteXenImage
                 print "Would remove LVM swap volume /dev/$CONFIG{'lvm'}/$hostname-swap\n";
             } else {
                 print "Removing swap volume\n";
-                runCommand("lvremove /dev/$CONFIG{'lvm'}/$hostname-swap --force", \%CONFIG);
+                runCommand("lvremove /dev/$CONFIG{'lvm'}/$hostname-swap --force", \%PER_HOST_CONFIG);
             }
         }
 
@@ -460,7 +461,7 @@ sub deleteXenImage
                 print "Would remove LVM disk volume /dev/$CONFIG{'lvm'}/$hostname-disk\n";
             } else {
                 print "Removing LVM disk volume\n";
-                runCommand("lvremove /dev/$CONFIG{'lvm'}/$hostname-disk --force", \%CONFIG);
+                runCommand("lvremove /dev/$CONFIG{'lvm'}/$hostname-disk --force", \%PER_HOST_CONFIG);
             }
         }
 
@@ -482,8 +483,8 @@ sub deleteXenImage
                 print "Would remove EVMS swap volume: $CONFIG{'evms'}/$hostname-swap\n";
             } else {
                 print "Removing EVMS swap volume\n";
-                runCommand("echo Delete : /dev/evms/$hostname-swap | evms", \%CONFIG);
-                runCommand("echo Delete : $CONFIG{'evms'}/$hostname-swap | evms", \%CONFIG);
+                runCommand("echo Delete : /dev/evms/$hostname-swap | evms", \%PER_HOST_CONFIG);
+                runCommand("echo Delete : $CONFIG{'evms'}/$hostname-swap | evms", \%PER_HOST_CONFIG);
             }
         }
 
@@ -494,8 +495,8 @@ sub deleteXenImage
                 print "Would remove EVMS disk volume: $CONFIG{'evms'}/$hostname-swap\n";
             } else {
                 print "Removing EVMS disk volume\n";
-                runCommand("echo Delete : /dev/evms/$hostname-disk | evms", \%CONFIG);
-                runCommand("echo Delete : $CONFIG{'evms'}/$hostname-disk | evms", \%CONFIG);
+                runCommand("echo Delete : /dev/evms/$hostname-disk | evms", \%PER_HOST_CONFIG);
+                runCommand("echo Delete : $CONFIG{'evms'}/$hostname-disk | evms", \%PER_HOST_CONFIG);
             }
         }
 
