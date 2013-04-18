@@ -8,7 +8,7 @@
 #
 
 
-prefix=$1
+TARGET=$1
 
 
 
@@ -28,24 +28,24 @@ fi
 #
 #  Update APT lists.
 #
-chroot ${prefix} /usr/bin/apt-get update
+chroot ${TARGET} /usr/bin/apt-get update
 
 #
 #  Install the packages
 #
-installDebianPackage ${prefix} xserver-xfree86
-installDebianPackage ${prefix} vncserver
-installDebianPackage ${prefix} xfonts-100dpi
-installDebianPackage ${prefix} xfonts-75dpi
-installDebianPackage ${prefix} xfonts-base
-installDebianPackage ${prefix} rxvt
-installDebianPackage ${prefix} gdm
-installDebianPackage ${prefix} icewm-experimental
+installDebianPackage ${TARGET} xserver-xfree86
+installDebianPackage ${TARGET} vncserver
+installDebianPackage ${TARGET} xfonts-100dpi
+installDebianPackage ${TARGET} xfonts-75dpi
+installDebianPackage ${TARGET} xfonts-base
+installDebianPackage ${TARGET} rxvt
+installDebianPackage ${TARGET} gdm
+installDebianPackage ${TARGET} icewm-experimental
 
 #
 #  Add a new section to the GDM configuration file.
 #
-cat <<EOF >> ${prefix}/etc/gdm/gdm.conf
+cat <<EOF >> ${TARGET}/etc/gdm/gdm.conf
 [server-VNC]
 name=VNC server
 command=/usr/bin/Xvnc -geometry 800x600 -depth 24
@@ -56,4 +56,4 @@ EOF
 #
 #  Make the new section the default
 #
-perl -pi.bak -e 's/^0=Standard\n//g ; s/^\[servers\]/\[servers\]\n0=VNC/g' ${prefix}/etc/gdm/gdm.conf 
+perl -pi.bak -e 's/^0=Standard\n//g ; s/^\[servers\]/\[servers\]\n0=VNC/g' ${TARGET}/etc/gdm/gdm.conf 

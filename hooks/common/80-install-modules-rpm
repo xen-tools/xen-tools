@@ -12,7 +12,7 @@
 # http://www.steve.org.uk/
 
 
-prefix=$1
+TARGET=$1
 
 
 
@@ -36,8 +36,8 @@ logMessage Script $0 starting
 #  Copy the modules from the host to the new system - we should only
 # really copy the *correct* modules, but we don't know what they are.
 #
-mkdir -p ${prefix}/lib/modules
-cp -au /lib/modules/*/ ${prefix}/lib/modules
+mkdir -p ${TARGET}/lib/modules
+cp -au /lib/modules/*/ ${TARGET}/lib/modules
 
 
 #

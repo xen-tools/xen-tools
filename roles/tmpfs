@@ -7,7 +7,7 @@
 # --
 #
 
-prefix=$1
+TARGET=$1
 
 #
 #  Source our common functions
@@ -28,7 +28,7 @@ logMessage Script $0 starting
 #
 #  Now let's fixup the fstab
 #
-cat <<END_OF_TMPFS_FSTAB >> ${prefix}/etc/fstab
+cat <<END_OF_TMPFS_FSTAB >> ${TARGET}/etc/fstab
 tmpfs           /tmp            tmpfs   rw,nosuid,nodev 0 0
 tmpfs           /var/run        tmpfs   rw,nosuid,nodev,noexec,mode=1755 0 0
 tmpfs           /var/lock       tmpfs   rw,nosuid,nodev,noexec 0 0

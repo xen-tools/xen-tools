@@ -10,7 +10,7 @@
 # http://www.steve.org.uk/
 
 
-prefix=$1
+TARGET=$1
 
 
 #
@@ -32,14 +32,14 @@ logMessage Script $0 starting
 #
 #  Install ssh
 #
-installGentooPackage ${prefix} ssh
+installGentooPackage ${TARGET} ssh
 
 
 #
 #  Make sure sshd isn't running, this will cause our unmounting of the
 # disk image to fail..
 #
-chroot ${prefix} /etc/init.d/ssh stop
+chroot ${TARGET} /etc/init.d/ssh stop
 
 
 #

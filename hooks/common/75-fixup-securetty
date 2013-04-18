@@ -8,7 +8,7 @@
 # http://www.steve.org.uk/
 
 
-prefix=$1
+TARGET=$1
 
 
 #
@@ -29,7 +29,7 @@ logMessage Script $0 starting
 #
 # If the file doesn't exist exit early.
 #
-if [ ! -e ${prefix}/etc/securetty ]; then
+if [ ! -e ${TARGET}/etc/securetty ]; then
     logMessage /etc/securetty not found.
     exit
 fi
@@ -43,13 +43,13 @@ for i in xvc0 hvc0 ; do
     #
     #  Only append if not presnt.
     #
-    if ( grep $i ${prefix}/etc/securetty > /dev/null ) ; then
+    if ( grep $i ${TARGET}/etc/securetty > /dev/null ) ; then
 
         logMessage Host already has $i entry
 
     else
         
-        echo $i >> ${prefix}/etc/securetty
+        echo $i >> ${TARGET}/etc/securetty
     fi
 
 done

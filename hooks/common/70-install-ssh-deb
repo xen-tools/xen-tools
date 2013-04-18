@@ -10,7 +10,7 @@
 # --
 # http://nedos.net/
 
-prefix=$1
+TARGET=$1
 
 #
 #  Source our common functions
@@ -31,13 +31,13 @@ logMessage Script $0 starting
 #
 #  First, create an ssh directory
 #
-mkdir -p ${prefix}/etc/ssh
+mkdir -p ${TARGET}/etc/ssh
 
 #
 #  Second, Generate the Host RSA Key
 #
-if [ ! -f ${prefix}/etc/ssh/ssh_host_rsa_key ]; then
-if ssh-keygen -t rsa -N "" -f ${prefix}/etc/ssh/ssh_host_rsa_key -C "root@${hostname}"; then
+if [ ! -f ${TARGET}/etc/ssh/ssh_host_rsa_key ]; then
+if ssh-keygen -t rsa -N "" -f ${TARGET}/etc/ssh/ssh_host_rsa_key -C "root@${hostname}"; then
     logMessage "successfully generated RSA host key"
 else
     logMessage "failed to generate RSA host key"
@@ -47,8 +47,8 @@ fi
 #
 #  Third, Generate the Host DSA Key
 #
-if [ ! -f ${prefix}/etc/ssh/ssh_host_dsa_key ]; then
-if ssh-keygen -t dsa -N "" -f ${prefix}/etc/ssh/ssh_host_dsa_key -C "root@${hostname}"; then
+if [ ! -f ${TARGET}/etc/ssh/ssh_host_dsa_key ]; then
+if ssh-keygen -t dsa -N "" -f ${TARGET}/etc/ssh/ssh_host_dsa_key -C "root@${hostname}"; then
     logMessage "successfully generated DSA host key"
 else
     logMessage "failed to generate DSA host key"
@@ -58,7 +58,7 @@ fi
 #
 #  Install ssh
 #
-installDebianPackage ${prefix} openssh-server
+installDebianPackage ${TARGET} openssh-server
 
 #
 # Log our finish

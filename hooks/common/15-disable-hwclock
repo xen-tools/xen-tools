@@ -7,7 +7,7 @@
 # http://www.steve.org.uk/
 
 
-prefix=$1
+TARGET=$1
 
 
 #
@@ -29,7 +29,7 @@ logMessage Script $0 starting
 #
 #  Disable the startup scripts from all runlevels.
 #
-chroot ${prefix} /usr/sbin/update-rc.d -f hwclock.sh remove
+chroot ${TARGET} /usr/sbin/update-rc.d -f hwclock.sh remove
 
 #
 # Log our finish

@@ -9,7 +9,7 @@
 
 
 
-prefix=$1
+TARGET=$1
 
 
 #
@@ -44,8 +44,8 @@ umask 022
 #
 #  Setup the hostname + domain names.
 #
-echo HOSTNAME=\"${name}\" >> ${prefix}/etc/conf.d/hostname
-echo DNSDOMAIN=\"${domain}\" >> ${prefix}/etc/conf.d/domainname
+echo HOSTNAME=\"${name}\" >> ${TARGET}/etc/conf.d/hostname
+echo DNSDOMAIN=\"${domain}\" >> ${TARGET}/etc/conf.d/domainname
 
 
 #
@@ -55,21 +55,21 @@ echo DNSDOMAIN=\"${domain}\" >> ${prefix}/etc/conf.d/domainname
 if [ -z "${dhcp}" ]; then
 
     # Non-IPv6 stuff.
-    grep -v '\(::\|IPv6\)' /etc/hosts > ${prefix}/etc/hosts
+    grep -v '\(::\|IPv6\)' /etc/hosts > ${TARGET}/etc/hosts
 
     # New entry.
-    echo "${ip1}    ${hostname}" >> ${prefix}/etc/hosts
-    echo " " >> ${prefix}/etc/hosts
+    echo "${ip1}    ${hostname}" >> ${TARGET}/etc/hosts
+    echo " " >> ${TARGET}/etc/hosts
 
     # IPv6 stuff.
-    grep '\(::\|IPv6\)' /etc/hosts >> ${prefix}/etc/hosts
+    grep '\(::\|IPv6\)' /etc/hosts >> ${TARGET}/etc/hosts
 
 else
 
     #
     #  Stub /etc/hosts for DHCP clients.
     #
-    cat >> ${prefix}/etc/hosts <<EOF
+    cat >> ${TARGET}/etc/hosts <<EOF
 127.0.0.1       localhost
 
 # The following lines are desirable for IPv6 capable hosts

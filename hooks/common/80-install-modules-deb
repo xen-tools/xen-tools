@@ -12,7 +12,7 @@
 # http://www.steve.org.uk/
 
 
-prefix=$1
+TARGET=$1
 
 
 
@@ -50,16 +50,16 @@ if [ -n "${modules}" -a -d "${modules}" ]; then
     #
     logMessage "Copying modules from ${modules}"
 
-    mkdir -p ${prefix}/lib/modules
-    cp -au ${modules} ${prefix}/lib/modules
-elif chroot ${prefix} /usr/bin/apt-cache show ${linux_modules_package} >/dev/null 2>/dev/null; then
+    mkdir -p ${TARGET}/lib/modules
+    cp -au ${modules} ${TARGET}/lib/modules
+elif chroot ${TARGET} /usr/bin/apt-cache show ${linux_modules_package} >/dev/null 2>/dev/null; then
 
     logMessage "Package '${linux_modules_package}' is available - installing"
 
     #
     # If it worked then we can install the package.
     #
-    installDebianPackage ${prefix} ${linux_modules_package}
+    installDebianPackage ${TARGET} ${linux_modules_package}
 else
 
     #
@@ -69,8 +69,8 @@ else
     logMessage "Package '${linux_modules_package}' is not available"
     logMessage "Copying modules from /lib/modules/$(uname -r)"
 
-    mkdir -p ${prefix}/lib/modules
-    cp -au /lib/modules/$(uname -r) ${prefix}/lib/modules
+    mkdir -p ${TARGET}/lib/modules
+    cp -au /lib/modules/$(uname -r) ${TARGET}/lib/modules
 fi
 
 fi # if pygrub

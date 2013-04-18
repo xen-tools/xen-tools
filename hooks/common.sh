@@ -64,51 +64,51 @@ assert ()
 #
 installDebianPackage ()
 {
-    prefix=$1
+    TARGET=$1
     shift
 
     #
     # Log our options
     #
-    logMessage "Installing Debian packages $@ to prefix ${prefix}"
+    logMessage "Installing Debian packages $@ to target ${TARGET}"
 
     #
-    #  We require a package + prefix
+    #  We require a package + target
     #
-    assert "$LINENO" "${prefix}"
+    assert "$LINENO" "${TARGET}"
 
     #
-    # Prefix must be a directory.
+    # Target must be a directory.
     #
-    assert "$LINENO" -d ${prefix}
+    assert "$LINENO" -d ${TARGET}
 
     #
     #  Use policy-rc to stop any daemons from starting.
     #
-    printf '#!/bin/sh\nexit 101\n' > ${prefix}/usr/sbin/policy-rc.d
-    chmod +x ${prefix}/usr/sbin/policy-rc.d
+    printf '#!/bin/sh\nexit 101\n' > ${TARGET}/usr/sbin/policy-rc.d
+    chmod +x ${TARGET}/usr/sbin/policy-rc.d
 
     #
     # Disable the start-stop-daemon - this shouldn't be necessary
     # with the policy-rc.d addition above, however leaving it in
     # place won't hurt ..
     #
-    disableStartStopDaemon ${prefix}
+    disableStartStopDaemon ${TARGET}
 
     #
     # Install the packages
     #
-    DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes --force-yes --no-install-recommends install "$@"
+    DEBIAN_FRONTEND=noninteractive chroot ${TARGET} /usr/bin/apt-get --yes --force-yes --no-install-recommends install "$@"
 
     #
     #  Remove the policy-rc.d script.
     #
-    rm -f ${prefix}/usr/sbin/policy-rc.d
+    rm -f ${TARGET}/usr/sbin/policy-rc.d
 
     #
     # Re-enable the start-stop-daemon
     #
-    enableStartStopDaemon ${prefix}
+    enableStartStopDaemon ${TARGET}
 
 }
 
@@ -118,7 +118,7 @@ installDebianPackage ()
 #
 generateDebianGrubMenuLst ()
 {
-    prefix="$1"
+    TARGET="$1"
     DOMU_ISSUE="$2"
     DOMU_KERNEL="$3"
     DOMU_RAMDISK="$4"
@@ -126,27 +126,27 @@ generateDebianGrubMenuLst ()
     #
     # Log our options
     #
-    logMessage "Generating a legacy GRUB menu.lst into prefix ${prefix}"
+    logMessage "Generating a legacy GRUB menu.lst into target ${TARGET}"
 
     #
     #  We require at least 3 parameters
     #
-    assert "$LINENO" "${prefix}"
+    assert "$LINENO" "${TARGET}"
     assert "$LINENO" "${DOMU_ISSUE}"
     assert "$LINENO" "${DOMU_KERNEL}"
 
     #
-    # Prefix must be a directory, kernel a file
+    # Target must be a directory, kernel a file
     #
-    assert "$LINENO" -d ${prefix}
-    assert "$LINENO" -f "${prefix}/boot/${DOMU_KERNEL}"
+    assert "$LINENO" -d ${TARGET}
+    assert "$LINENO" -f "${TARGET}/boot/${DOMU_KERNEL}"
 
     #
     # Generate a menu.lst for pygrub
     #
 
-    mkdir -p ${prefix}/boot/grub
-    cat << E_O_MENU > ${prefix}/boot/grub/menu.lst
+    mkdir -p ${TARGET}/boot/grub
+    cat << E_O_MENU > ${TARGET}/boot/grub/menu.lst
 default         0
 timeout         2
 
@@ -256,10 +256,10 @@ E_O_MENU
 #
 disableStartStopDaemon ()
 {
-   local prefix="$1"
-   assert "$LINENO" "${prefix}"
+   local TARGET="$1"
+   assert "$LINENO" "${TARGET}"
    for starter in start-stop-daemon initctl; do
-      local daemonfile="${prefix}/sbin/${starter}"
+      local daemonfile="${TARGET}/sbin/${starter}"
 
       mv "${daemonfile}" "${daemonfile}.REAL"
       echo '#!/bin/sh' > "${daemonfile}"
@@ -277,10 +277,10 @@ disableStartStopDaemon ()
 #
 enableStartStopDaemon ()
 {
-   local prefix=$1
-   assert "$LINENO" "${prefix}"
+   local TARGET=$1
+   assert "$LINENO" "${TARGET}"
    for starter in start-stop-daemon initctl; do
-      local daemonfile="${prefix}/sbin/${starter}"
+      local daemonfile="${TARGET}/sbin/${starter}"
 
       #
       #  If the disabled file is present then enable it.
@@ -301,28 +301,28 @@ enableStartStopDaemon ()
 #
 removeDebianPackage ()
 {
-    prefix=$1
+    TARGET=$1
     shift
 
     #
     # Log our options
     #
-    logMessage "Purging Debian package ${package} from prefix ${prefix}"
+    logMessage "Purging Debian package ${package} from target ${TARGET}"
 
     #
-    #  We require a prefix
+    #  We require a target
     #
-    assert "$LINENO" "${prefix}"
+    assert "$LINENO" "${TARGET}"
 
     #
-    # Prefix must be a directory.
+    # Target must be a directory.
     #
-    assert "$LINENO" -d ${prefix}
+    assert "$LINENO" -d ${TARGET}
 
     #
     # Purge the packages we've been given.
     #
-    chroot ${prefix} /usr/bin/apt-get remove --yes --purge "$@"
+    chroot ${TARGET} /usr/bin/apt-get remove --yes --purge "$@"
 
 }
 
@@ -332,29 +332,29 @@ removeDebianPackage ()
 #
 installRPMPackage ()
 {
-    prefix=$1
+    TARGET=$1
     package=$2
 
     #
     # Log our options
     #
-    logMessage "Installing RPM ${package} to prefix ${prefix}"
+    logMessage "Installing RPM ${package} to target ${TARGET}"
 
     #
-    #  We require a package + prefix
+    #  We require a package + target
     #
     assert "$LINENO" "${package}"
-    assert "$LINENO" "${prefix}"
+    assert "$LINENO" "${TARGET}"
 
     #
-    # Prefix must be a directory.
+    # Target must be a directory.
     #
-    assert "$LINENO" -d ${prefix}
+    assert "$LINENO" -d ${TARGET}
 
     #
     # Install the package
     #
-    chroot ${prefix} /usr/bin/yum -y install ${package}
+    chroot ${TARGET} /usr/bin/yum -y install ${package}
 }
 
 # Backwards Compatibility Function
@@ -373,7 +373,7 @@ isYum() ( [ -x $1/usr/bin/yum ] )
 #
 installPackage ()
 {
-        prefix=$1
+        TARGET=$1
         package=$2
 
         if isDeb ; then
@@ -396,13 +396,13 @@ installPackage ()
 #
 installGentooPackage ()
 {
-    prefix=$1
+    TARGET=$1
     package=$2
 
     #
     # Log our options
     #
-    logMessage "Installing Gentoo package ${package} to prefix ${prefix}"
+    logMessage "Installing Gentoo package ${package} to target ${TARGET}"
 
     logMessage "NOTE: Not doing anything - this is a stub - FIXME"
 

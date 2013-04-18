@@ -6,7 +6,7 @@
 # --
 # http://www.steve.org.uk/
 
-prefix=$1
+TARGET=$1
 
 
 #
@@ -29,15 +29,15 @@ logMessage Script $0 starting
 # Default to the same locale as the host.
 #
 if [ -e /etc/locale.gen ]; then
-   cp /etc/locale.gen ${prefix}/etc
+   cp /etc/locale.gen ${TARGET}/etc
 fi
 
 #
 #  Install the package
 #
-installDebianPackage ${prefix} locales
-installDebianPackage ${prefix} util-linux-locales
-chroot ${prefix} /usr/sbin/update-locale LANG=C
+installDebianPackage ${TARGET} locales
+installDebianPackage ${TARGET} util-linux-locales
+chroot ${TARGET} /usr/sbin/update-locale LANG=C
 
 
 #

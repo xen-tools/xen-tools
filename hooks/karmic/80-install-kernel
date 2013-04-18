@@ -9,7 +9,7 @@
 # --
 # http://nedos.net
 
-prefix=$1
+TARGET=$1
 
 #
 #  Source our common functions
@@ -38,27 +38,27 @@ linux_kernel_type="virtual"
 linux_kernel_package="linux-image-${linux_kernel_type}"
 
 logMessage "Installing the ${linux_kernel_package} kernel image"
-if chroot ${prefix} /usr/bin/apt-cache show ${linux_kernel_package} >/dev/null 2>/dev/null; then
+if chroot ${TARGET} /usr/bin/apt-cache show ${linux_kernel_package} >/dev/null 2>/dev/null; then
     logMessage "Package '${linux_kernel_package}' is available - installing"
-    installDebianPackage ${prefix} initramfs-tools
-    installDebianPackage ${prefix} ${linux_kernel_package}
+    installDebianPackage ${TARGET} initramfs-tools
+    installDebianPackage ${TARGET} ${linux_kernel_package}
 
 # Force initrd if none exists
-echo ${prefix}/boot/initrd* | grep -q 2\\.6
+echo ${TARGET}/boot/initrd* | grep -q 2\\.6
 if [ $? -ne 0 ]; then
-    chroot ${prefix} update-initramfs -c -k `ls -1 ${prefix}/lib/modules/ | head -n 1`
+    chroot ${TARGET} update-initramfs -c -k `ls -1 ${TARGET}/lib/modules/ | head -n 1`
 fi
 
 # Generate grub menu.lst
-DOMU_KERNEL=$(basename $(ls -1 ${prefix}/boot/vmlinuz* | tail -n 1))
-DOMU_RAMDISK=$(basename $(ls -1 ${prefix}/boot/initrd*|tail -n 1))
-DOMU_ISSUE=$(head -n 1 ${prefix}/etc/issue | awk -F '\' '{ print $1 }' | sed 's/[ \t]*$//')
+DOMU_KERNEL=$(basename $(ls -1 ${TARGET}/boot/vmlinuz* | tail -n 1))
+DOMU_RAMDISK=$(basename $(ls -1 ${TARGET}/boot/initrd*|tail -n 1))
+DOMU_ISSUE=$(head -n 1 ${TARGET}/etc/issue | awk -F '\' '{ print $1 }' | sed 's/[ \t]*$//')
 
 #
 # Generate a menu.lst for pygrub
 #
 
-generateDebianGrubMenuLst "${prefix}" "$DOMU_ISSUE" "$DOMU_KERNEL" "$DOMU_RAMDISK"
+generateDebianGrubMenuLst "${TARGET}" "$DOMU_ISSUE" "$DOMU_KERNEL" "$DOMU_RAMDISK"
 
 
 else

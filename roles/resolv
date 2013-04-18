@@ -3,7 +3,7 @@
 #  This role helps to customize guest's /etc/resolv.conf
 #
 
-prefix=$1
+TARGET=$1
 
 #
 #  Source our common functions - this will let us install a Debian package.
@@ -33,7 +33,7 @@ logMessage Script $0 starting
 #
 # Create Guest's resolv.conf as resolv.conf.old (see WARNING before) :
 #
-cat <<RESOLV_CONF_EOF >${prefix}/etc/resolv.conf.old
+cat <<RESOLV_CONF_EOF >${TARGET}/etc/resolv.conf.old
 nameserver 192.168.1.1
 #search domain.tld
 RESOLV_CONF_EOF

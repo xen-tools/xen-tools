@@ -7,7 +7,7 @@
 # http://www.steve.org.uk/
 
 
-prefix=$1
+TARGET=$1
 
 
 #
@@ -29,7 +29,7 @@ logMessage Script $0 starting
 #
 #  Clean the APT package cache for Debian GNU/Linux.
 #
-chroot ${prefix} /usr/bin/apt-get clean
+chroot ${TARGET} /usr/bin/apt-get clean
 
 
 #

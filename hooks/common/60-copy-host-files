@@ -5,7 +5,7 @@
 #
 
 
-prefix=$1
+TARGET=$1
 
 
 #
@@ -27,8 +27,8 @@ logMessage Script $0 starting
 #
 # Copy "required" files from our host.
 #
-cp /etc/timezone    ${prefix}/etc
-cp /etc/localtime   ${prefix}/etc
+cp /etc/timezone    ${TARGET}/etc
+cp /etc/localtime   ${TARGET}/etc
 
 
 #

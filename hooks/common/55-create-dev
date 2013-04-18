@@ -8,7 +8,7 @@
 # http://www.steve.org.uk/
 
 
-prefix=$1
+TARGET=$1
 
 
 #
@@ -32,8 +32,8 @@ logMessage Script $0 starting
 MAKEDEV=''
 MAKEDEV_PATHS="/sbin/MAKEDEV /dev/MAKEDEV"
 for MAKEDEV_PATH in ${MAKEDEV_PATHS}; do
-    if [ -x "${prefix}${MAKEDEV_PATH}" ]; then
-    MAKEDEV="${prefix}${MAKEDEV_PATH}"
+    if [ -x "${TARGET}${MAKEDEV_PATH}" ]; then
+    MAKEDEV="${TARGET}${MAKEDEV_PATH}"
     break
     fi
 done
@@ -44,11 +44,11 @@ if [ -n "${MAKEDEV}" ]; then
 # Early termination if we have a couple of common devices present
 # should speed up installs which use --copy/--tar
 #
-if ( test `ls -1 ${prefix}/dev | wc -l` -gt 10 ); then
+if ( test `ls -1 ${TARGET}/dev | wc -l` -gt 10 ); then
     #
     # We still need to make sure the basic devices are present
     #
-    cd ${prefix}/dev
+    cd ${TARGET}/dev
     ${MAKEDEV} std
     ${MAKEDEV} hda
     ${MAKEDEV} sda
@@ -62,7 +62,7 @@ fi
 #
 #  Make the device nodes.
 #
-cd ${prefix}/dev
+cd ${TARGET}/dev
 ${MAKEDEV} generic
 ${MAKEDEV} std
 

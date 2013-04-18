@@ -3,7 +3,7 @@
 #  This role installs sudo with host sudoers file.
 #
 
-prefix=$1
+TARGET=$1
 
 #
 #  Source our common functions - this will let us install a Debian package.
@@ -24,7 +24,7 @@ logMessage Script $0 starting
 #
 # Install sudo package
 #
-installDebianPackage ${prefix} sudo
+installDebianPackage ${TARGET} sudo
 
 #
 # WARNING :
@@ -36,9 +36,9 @@ installDebianPackage ${prefix} sudo
 #
 # Copy dom0's file to domU.
 #
-cp /etc/sudoers ${prefix}/etc/
-chown root:root ${prefix}/etc/sudoers
-chmod 440 ${prefix}/etc/sudoers
+cp /etc/sudoers ${TARGET}/etc/
+chown root:root ${TARGET}/etc/sudoers
+chmod 440 ${TARGET}/etc/sudoers
 
 #
 #  Log our finish

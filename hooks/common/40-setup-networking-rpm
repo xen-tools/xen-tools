@@ -7,7 +7,7 @@
 # http://www.steve.org.uk/
 
 
-prefix=$1
+TARGET=$1
 
 
 #
@@ -29,7 +29,7 @@ logMessage Script $0 starting
 #
 #  Make sure we have an /etc/sysconfig/network-scripts directory.
 #
-mkdir -p ${prefix}/etc/sysconfig/network-scripts/
+mkdir -p ${TARGET}/etc/sysconfig/network-scripts/
 
 
 #
@@ -40,7 +40,7 @@ if [ -z "${dhcp}" ]; then
     #
     #  Setup the initial interface
     #
-    cat <<E_O_STATIC >${prefix}/etc/sysconfig/network-scripts/ifcfg-eth0
+    cat <<E_O_STATIC >${TARGET}/etc/sysconfig/network-scripts/ifcfg-eth0
 DEVICE=eth0
 ONBOOT=yes
 BOOTPROTO=static
@@ -62,7 +62,7 @@ E_O_STATIC
 
          logMessage Adding etho:${interface}
 
-         cat <<E_O_STATIC >${prefix}/etc/sysconfig/network-scripts/ifcfg-eth0:${interface}
+         cat <<E_O_STATIC >${TARGET}/etc/sysconfig/network-scripts/ifcfg-eth0:${interface}
 DEVICE=eth0:${interface}
 ONBOOT=yes
 BOOTPROTO=static
@@ -79,27 +79,27 @@ E_O_STATIC
     # will be restored after hooks are run.
     #
     if [ '' != "$nameserver" ]; then
-        rm -f ${prefix}/etc/resolv.conf.old
+        rm -f ${TARGET}/etc/resolv.conf.old
         for ns in $nameserver; do
-            echo "nameserver $ns" >>${prefix}/etc/resolv.conf.old
+            echo "nameserver $ns" >>${TARGET}/etc/resolv.conf.old
         done
     else
-        cp /etc/resolv.conf ${prefix}/etc/resolv.conf.old
+        cp /etc/resolv.conf ${TARGET}/etc/resolv.conf.old
     fi
 else
-    cat <<E_O_DHCP >${prefix}/etc/sysconfig/network-scripts/ifcfg-eth0
+    cat <<E_O_DHCP >${TARGET}/etc/sysconfig/network-scripts/ifcfg-eth0
 DEVICE=eth0
 BOOTPROTO=dhcp
 ONBOOT=yes
 E_O_DHCP
-    chroot ${prefix} /usr/bin/yum -y install dhclient
+    chroot ${TARGET} /usr/bin/yum -y install dhclient
 fi
 
 
 #
 #  Don't forget to setup the default route.
 #
-cat <<EOF >${prefix}/etc/sysconfig/network
+cat <<EOF >${TARGET}/etc/sysconfig/network
 NETWORKING=yes
 GATEWAY=${gateway}
 HOSTNAME=${hostname}

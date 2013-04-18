@@ -8,7 +8,7 @@
 
 
 
-prefix=$1
+TARGET=$1
 
 
 #
@@ -37,8 +37,8 @@ if [ "`uname -m`" = "x86_64" ]; then
 else
 
     logMessage "Disabling TLS"
-    mv ${prefix}/lib/tls ${prefix}/lib/tls.disabled
-    mkdir ${prefix}/lib/tls
+    mv ${TARGET}/lib/tls ${TARGET}/lib/tls.disabled
+    mkdir ${TARGET}/lib/tls
 fi
 
 

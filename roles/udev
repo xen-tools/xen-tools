@@ -8,7 +8,7 @@
 #
 
 
-prefix=$1
+TARGET=$1
 
 
 
@@ -25,11 +25,11 @@ fi
 #
 #  Install udev.
 #
-installDebianPackage ${prefix} udev
+installDebianPackage ${TARGET} udev
 
 
 #
 #  Update APT lists.
 #
-chroot ${prefix} /usr/bin/apt-get update
+chroot ${TARGET} /usr/bin/apt-get update
 

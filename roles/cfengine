@@ -6,7 +6,7 @@
 # otherwise the temporary mounted directory will not be unmountable.
 #
 
-prefix=$1
+TARGET=$1
 
 #
 #  Source our common functions - this will let us install a Debian package.
@@ -28,20 +28,20 @@ logMessage Script $0 starting
 #
 #  Install CFengine
 #
-installDebianPackage ${prefix} cfengine2
+installDebianPackage ${TARGET} cfengine2
 
 
 #
 #  Make sure the CFengine server isn't running, this will cause our
 # unmounting of the disk image to fail..
 #
-chroot ${prefix} /etc/init.d/cfengine2 stop
+chroot ${TARGET} /etc/init.d/cfengine2 stop
 
 #
 #  Copy cfengine update.conf & defaults from Dom0
 #
-cp /etc/cfengine/update.conf ${prefix}/etc/cfengine/
-cp /etc/default/cfengine2 ${prefix}/etc/default/
+cp /etc/cfengine/update.conf ${TARGET}/etc/cfengine/
+cp /etc/default/cfengine2 ${TARGET}/etc/default/
 
 #
 #  Log our finish

@@ -7,7 +7,7 @@
 # really do anything bad; just waste a bit of space.
 
 
-prefix=$1
+TARGET=$1
 
 
 
@@ -31,16 +31,16 @@ if [ ${pygrub} ]; then
 #
 #  Install the grub 0.9x package ("grub-legacy" on Debian, "grub" on Ubuntu)
 #
-if chroot ${prefix} /usr/bin/apt-cache show grub-legacy 2>/dev/null | egrep -qi 'GRand Unified Bootloader.*Legacy'; then
-    installDebianPackage ${prefix} grub-legacy
+if chroot ${TARGET} /usr/bin/apt-cache show grub-legacy 2>/dev/null | egrep -qi 'GRand Unified Bootloader.*Legacy'; then
+    installDebianPackage ${TARGET} grub-legacy
 else
-    installDebianPackage ${prefix} grub
+    installDebianPackage ${TARGET} grub
 fi
 
-if [ ! -e ${prefix}/boot/grub/default ]; then
-    echo default > ${prefix}/boot/grub/default
+if [ ! -e ${TARGET}/boot/grub/default ]; then
+    echo default > ${TARGET}/boot/grub/default
 fi
-chroot ${prefix} /usr/sbin/update-grub
+chroot ${TARGET} /usr/sbin/update-grub
 
 else
     logMessage "pygrub not set, skipping grub-legacy installation"

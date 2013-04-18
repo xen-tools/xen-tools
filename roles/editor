@@ -21,9 +21,9 @@
 
 
 #
-#  Our installation directory + our prefix for finding scripts from.
+#  Our installation directory + our target for finding scripts from.
 #
-prefix=$1
+TARGET=$1
 source=/etc/xen-tools/sed.d/
 
 
@@ -59,7 +59,7 @@ fi
 for i in `find ${source} -name '*.sed' -print`; do
 
    #
-   #  Get the name of the file, minus the source prefix
+   #  Get the name of the file, minus the source target
    #
    file=${i#$source}
 
@@ -71,17 +71,17 @@ for i in `find ${source} -name '*.sed' -print`; do
    #
    #  Does the file exist in the new install?
    #
-   if [ -e "${prefix}/${file}" ]; then
+   if [ -e "${TARGET}/${file}" ]; then
 
        #
        #  Log it.
        #
-       logMessage "Running script $i - against ${prefix}/${file}"
+       logMessage "Running script $i - against ${TARGET}/${file}"
 
        #
        #  Invoke it.
        #
-       sed -i~ -f $i "${prefix}/${file}"
+       sed -i~ -f $i "${TARGET}/${file}"
    fi
 done
 

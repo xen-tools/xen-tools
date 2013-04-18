@@ -7,7 +7,7 @@
 # http://www.steve.org.uk/
 
 
-prefix=$1
+TARGET=$1
 
 #
 #  Source our common functions
@@ -29,20 +29,20 @@ logMessage Script $0 starting
 # Clean up RPM files.
 #
 logMessage Cleaning .rpm* files.
-find ${prefix}/ -name '*.rpmorig' -exec rm -f \{\} \;
-find ${prefix}/ -name '*.rpmnew' -exec rm -f \{\} \;
+find ${TARGET}/ -name '*.rpmorig' -exec rm -f \{\} \;
+find ${TARGET}/ -name '*.rpmnew' -exec rm -f \{\} \;
 
 #
 #  Clean yum
 #
 logMessage Cleaning Yum Repository
 
-if [ ! -d ${prefix}/proc ]; then
-    mkdir -p ${prefix}/proc
+if [ ! -d ${TARGET}/proc ]; then
+    mkdir -p ${TARGET}/proc
 fi
-mount -o bind /proc ${prefix}/proc
-chroot ${prefix} /usr/bin/yum clean all
-umount ${prefix}/proc
+mount -o bind /proc ${TARGET}/proc
+chroot ${TARGET} /usr/bin/yum clean all
+umount ${TARGET}/proc
 
 #
 #  Log our finish

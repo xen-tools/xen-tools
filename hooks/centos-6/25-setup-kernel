@@ -3,7 +3,7 @@
 #  This script sets up the kernel and fstab for CentOS 5.
 #
 
-prefix=$1
+TARGET=$1
 
 #
 #  Source our common functions
@@ -21,16 +21,16 @@ fi
 logMessage Script $0 starting
 
 # Make the console work
-sed -i "/Cancelled/ {G;s/$/co:2345:respawn:\/sbin\/mingetty console/;}" ${prefix}/etc/inittab
-sed -i "s/^1:2345/#1:2345/" ${prefix}/etc/inittab
+sed -i "/Cancelled/ {G;s/$/co:2345:respawn:\/sbin\/mingetty console/;}" ${TARGET}/etc/inittab
+sed -i "s/^1:2345/#1:2345/" ${TARGET}/etc/inittab
 
 # MAKEDEV is needed at this point
-chroot ${prefix} ln -s /sbin/MAKEDEV /dev/MAKEDEV
-chroot ${prefix} /sbin/MAKEDEV sda sdb sdc sdd
+chroot ${TARGET} ln -s /sbin/MAKEDEV /dev/MAKEDEV
+chroot ${TARGET} /sbin/MAKEDEV sda sdb sdc sdd
 
 # Create fstab
 logMessage Create /etc/fstab
-cat > ${prefix}/etc/fstab << EOF
+cat > ${TARGET}/etc/fstab << EOF
 # /etc/fstab: static file system information.
 #
 # <file system> <mount point>   <type>  <options>       <dump>  <pass>
@@ -39,26 +39,26 @@ none            /dev/pts        devpts  mode=0620       0       0
 EOF
 
 for i in `seq 1 $NUMPARTITIONS`; do
-  echo -n "/dev/sda$i " >> ${prefix}/etc/fstab
+  echo -n "/dev/sda$i " >> ${TARGET}/etc/fstab
   eval part=\$PARTITION$i
   if [ ! -z "`echo $part | grep swap`" ]; then
-     echo "none swap ws 0 0" >> ${prefix}/etc/fstab
+     echo "none swap ws 0 0" >> ${TARGET}/etc/fstab
   else
-     echo $part | awk -F: '{print $4,$3,$5,0,1}' >> ${prefix}/etc/fstab
+     echo $part | awk -F: '{print $4,$3,$5,0,1}' >> ${TARGET}/etc/fstab
   fi
 done
 
 # Install the kernel, grub and perl
-chroot ${prefix} yum clean expire-cache
-chroot ${prefix} yum -y install kernel-xen grub.x86_64 perl.x86_64
+chroot ${TARGET} yum clean expire-cache
+chroot ${TARGET} yum -y install kernel-xen grub.x86_64 perl.x86_64
 
-KERNELVERSION=`ls ${prefix}/boot/vmlinuz-* | sed "s#$prefix/boot/vmlinuz-##"`
+KERNELVERSION=`ls ${TARGET}/boot/vmlinuz-* | sed "s#${TARGET}/boot/vmlinuz-##"`
 logMessage "Kernel $KERNELVERSION found"
 
 # Create grub's menu.list
 logMessage "Creating /boot/grub/menu.lst"
-mkdir -p ${prefix}/boot/grub
-cat > ${prefix}/boot/grub/menu.lst << EOF
+mkdir -p ${TARGET}/boot/grub
+cat > ${TARGET}/boot/grub/menu.lst << EOF
 # WARNING : Don't forget to update this when you upgrade kernel !
 # You can also exclude kernel-xen from updates by putting
 # exclude=kernel-xen in in [main] in yum.conf
@@ -71,10 +71,10 @@ initrd        /boot/initramfs-$KERNELVERSION.img
 EOF
 
 # Some use lvm but mkinitrd will generate a wrong initrd when these are present.
-rm -f ${prefix}/etc/lvm/backup/* ${prefix}/etc/lvm/archive/*
+rm -f ${TARGET}/etc/lvm/backup/* ${TARGET}/etc/lvm/archive/*
 
 # Generate a correct initrd.
-chroot ${prefix} mkinitrd --with=xenblk --with=xennet --preload=xenblk --preload=xennet\
+chroot ${TARGET} mkinitrd --with=xenblk --with=xennet --preload=xenblk --preload=xennet\
  -f /boot/initramfs-$KERNELVERSION.img $KERNELVERSION
 
 #

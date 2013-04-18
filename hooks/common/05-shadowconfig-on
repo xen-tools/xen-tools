@@ -7,7 +7,7 @@
 # http://www.steve.org.uk/
 
 
-prefix=$1
+TARGET=$1
 
 
 #
@@ -29,9 +29,9 @@ logMessage Script $0 starting
 #
 # Enable the shadow passwords if the command is found.
 #
-if [ -x ${prefix}/sbin/shadowconfig ]; then
+if [ -x ${TARGET}/sbin/shadowconfig ]; then
 
-   chroot ${prefix} /sbin/shadowconfig on
+   chroot ${TARGET} /sbin/shadowconfig on
 else
 
    logMessage "/sbin/shadowconfig not found.  skipping."

@@ -8,7 +8,7 @@
 #
 
 
-prefix=$1
+TARGET=$1
 
 
 
@@ -28,16 +28,16 @@ fi
 #
 #  Update APT lists.
 #
-chroot ${prefix} /usr/bin/apt-get update
+chroot ${TARGET} /usr/bin/apt-get update
 
 
 #
 #  Install the packages
 #
-installDebianPackage ${prefix} dpkg-dev
-installDebianPackage ${prefix} devscripts
-installDebianPackage ${prefix} fakeroot
-installDebianPackage ${prefix} debhelper
-installDebianPackage ${prefix} build-essential
-installDebianPackage ${prefix} lintian
-installDebianPackage ${prefix} linda
+installDebianPackage ${TARGET} dpkg-dev
+installDebianPackage ${TARGET} devscripts
+installDebianPackage ${TARGET} fakeroot
+installDebianPackage ${TARGET} debhelper
+installDebianPackage ${TARGET} build-essential
+installDebianPackage ${TARGET} lintian
+installDebianPackage ${TARGET} linda

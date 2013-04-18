@@ -8,7 +8,7 @@
 
 
 
-prefix=$1
+TARGET=$1
 
 
 #
@@ -30,11 +30,11 @@ logMessage Script $0 starting
 #
 #  Remove the script if present.
 #
-if [ -x "${prefix}/usr/sbin/policy-rc.d" ]; then
+if [ -x "${TARGET}/usr/sbin/policy-rc.d" ]; then
 
-    rm -f "${prefix}/usr/sbin/policy-rc.d"
+    rm -f "${TARGET}/usr/sbin/policy-rc.d"
 
-    logMessage "Removed: ${prefix}/usr/sbin/policy-rc.d"
+    logMessage "Removed: ${TARGET}/usr/sbin/policy-rc.d"
 
 fi
 

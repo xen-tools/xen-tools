@@ -12,7 +12,7 @@
 # http://www.steve.org.uk/
 
 
-prefix=$1
+TARGET=$1
 
 #
 #  Source our common functions
@@ -62,7 +62,7 @@ logMessage "Root device is /dev/$device"
 has_xfs=0
 has_reiserfs=0
 has_btrfs=0
-cat <<E_O_FSTAB > ${prefix}/etc/fstab
+cat <<E_O_FSTAB > ${TARGET}/etc/fstab
 # /etc/fstab: static file system information.
 #
 # <file system> <mount point>   <type>  <options>       <dump>  <pass>
@@ -93,9 +93,9 @@ for part in `seq 1 ${NUMPARTITIONS}`; do
     esac
 
     if [ "${partdata2}" = "swap" ]; then
-        echo "/dev/${device}${part} none swap sw 0 0" >> ${prefix}/etc/fstab
+        echo "/dev/${device}${part} none swap sw 0 0" >> ${TARGET}/etc/fstab
     else
-        echo "/dev/${device}${part} ${partdata3} ${partdata2} ${partdata4} 0 1" >> ${prefix}/etc/fstab
+        echo "/dev/${device}${part} ${partdata3} ${partdata2} ${partdata4} 0 1" >> ${TARGET}/etc/fstab
     fi
 done
 
@@ -106,7 +106,7 @@ logMessage Checking for filesystem tools to install
 #  Install any required packages for the given root filesystem
 #
 if [ "$has_xfs" -eq 1 ]; then
-    installPackage ${prefix} xfsprogs
+    installPackage ${TARGET} xfsprogs
 fi
 if [ "$has_reiserfs" -eq 1 ]; then
     if isAPT; then

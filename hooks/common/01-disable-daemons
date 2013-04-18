@@ -8,7 +8,7 @@
 # http://www.steve.org.uk/
 
 
-prefix=$1
+TARGET=$1
 
 
 #
@@ -30,20 +30,20 @@ logMessage Script $0 starting
 #
 #  Make sure we have a directory.
 #
-if [ ! -d "${prefix}/usr/sbin" ]; then
+if [ ! -d "${TARGET}/usr/sbin" ]; then
 
-    mkdir -p "${prefix}/usr/sbin"
+    mkdir -p "${TARGET}/usr/sbin"
 
-    logMessage "created missing directory: ${prefix}/usr/sbin"
+    logMessage "created missing directory: ${TARGET}/usr/sbin"
 fi
 
 
 #
 #  Add the script.
 #
-echo '#!/bin/sh' >  ${prefix}/usr/sbin/policy-rc.d
-echo 'exit 101'  >> ${prefix}/usr/sbin/policy-rc.d
-chmod 755           ${prefix}/usr/sbin/policy-rc.d
+echo '#!/bin/sh' >  ${TARGET}/usr/sbin/policy-rc.d
+echo 'exit 101'  >> ${TARGET}/usr/sbin/policy-rc.d
+chmod 755           ${TARGET}/usr/sbin/policy-rc.d
 
 
 

@@ -6,7 +6,7 @@
 # can't really do anything bad; just waste a bit of space.
 #
 
-prefix=$1
+TARGET=$1
 
 
 
@@ -28,14 +28,14 @@ logMessage Script $0 starting
 #
 #  Install either kmod or module-init-tools package.
 #
-if chroot ${prefix} /usr/bin/apt-cache show module-init-tools >/dev/null 2>/dev/null; then
-    if chroot ${prefix} /usr/bin/apt-cache show module-init-tools | fgrep -qi transitional; then
-        installDebianPackage ${prefix} kmod
+if chroot ${TARGET} /usr/bin/apt-cache show module-init-tools >/dev/null 2>/dev/null; then
+    if chroot ${TARGET} /usr/bin/apt-cache show module-init-tools | fgrep -qi transitional; then
+        installDebianPackage ${TARGET} kmod
     else
-        installDebianPackage ${prefix} module-init-tools
+        installDebianPackage ${TARGET} module-init-tools
     fi
 else
-    installDebianPackage ${prefix} kmod
+    installDebianPackage ${TARGET} kmod
 fi
 
 #

@@ -9,7 +9,7 @@
 
 
 
-prefix=$1
+TARGET=$1
 
 
 #
@@ -43,8 +43,8 @@ umask 022
 #
 #  Setup the mailname + hostname files.
 #
-echo $GUEST_HOSTNAME > ${prefix}/etc/hostname
-echo $GUEST_FQDN > ${prefix}/etc/mailname
+echo $GUEST_HOSTNAME > ${TARGET}/etc/hostname
+echo $GUEST_FQDN > ${TARGET}/etc/mailname
 
 
 #
@@ -55,7 +55,7 @@ if [ -z "${copyhosts}" ]; then
     #
     #  Copy localhost
     #
-    cat > ${prefix}/etc/hosts <<EOF
+    cat > ${TARGET}/etc/hosts <<EOF
 127.0.0.1    localhost
 EOF
     #
@@ -65,21 +65,21 @@ EOF
         #
         #  If dhcp is diabled, FQDN should resolve to our IP
         #
-        cat >> ${prefix}/etc/hosts <<EOF
+        cat >> ${TARGET}/etc/hosts <<EOF
 ${ip1}    $GUEST_FQDN $GUEST_HOSTNAME
 EOF
     else
-        cat >> ${prefix}/etc/hosts <<EOF
+        cat >> ${TARGET}/etc/hosts <<EOF
 127.0.1.1    $GUEST_FQDN $GUEST_HOSTNAME
 EOF
     fi
 
-    cat >> ${prefix}/etc/hosts <<EOF
+    cat >> ${TARGET}/etc/hosts <<EOF
 
 # The following lines are desirable for IPv6 capable hosts
 ::1     ip6-localhost ip6-loopback
 fe00::0 ip6-localnet
-ff00::0 ip6-mcastprefix
+ff00::0 ip6-mcastTARGET
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 ff02::3 ip6-allhosts
@@ -88,23 +88,23 @@ EOF
 
 else
     # Non-IPv6 stuff.
-    grep -v '\(::\|IPv6\)' /etc/hosts > ${prefix}/etc/hosts
+    grep -v '\(::\|IPv6\)' /etc/hosts > ${TARGET}/etc/hosts
 
     # New entry.
     if [ -z "${dhcp}" ]; then
-        cat >> ${prefix}/etc/hosts <<EOF
+        cat >> ${TARGET}/etc/hosts <<EOF
 ${ip1}    $GUEST_FQDN $GUEST_HOSTNAME
 
 EOF
     else
-    cat >> ${prefix}/etc/hosts <<EOF
+    cat >> ${TARGET}/etc/hosts <<EOF
 127.0.1.1    $GUEST_FQDN $GUEST_HOSTNAME
 
 EOF
     fi
 
     # IPv6 stuff.
-    grep '\(::\|IPv6\)' /etc/hosts >> ${prefix}/etc/hosts
+    grep '\(::\|IPv6\)' /etc/hosts >> ${TARGET}/etc/hosts
 fi
 
 

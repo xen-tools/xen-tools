@@ -9,7 +9,7 @@
 # --
 # http://nedos.net
 
-prefix=$1
+TARGET=$1
 
 #
 #  Source our common functions
@@ -37,19 +37,19 @@ KERNEL_XEN_PKG="linux-image-xen"
 KERNEL_PKG="linux-image-server"
 
 logMessage Attempting to install the $KERNEL_XEN_PKG kernel image
-if chroot ${prefix} /usr/bin/apt-cache show $KERNEL_XEN_PKG > /dev/null 2>&1; then
+if chroot ${TARGET} /usr/bin/apt-cache show $KERNEL_XEN_PKG > /dev/null 2>&1; then
     logMessage Package $KERNEL_XEN_PKG is available - installing
-    installDebianPackage ${prefix} initramfs-tools
-    installDebianPackage ${prefix} $KERNEL_XEN_PKG
+    installDebianPackage ${TARGET} initramfs-tools
+    installDebianPackage ${TARGET} $KERNEL_XEN_PKG
 
 else
     logMessage Package $KERNEL_XEN_PKG is not available
     logMessage Attempting to install the $KERNEL_PKG kernel image
     logMessage WARNING: This kernel may not have pvops
-    if chroot ${prefix} /usr/bin/apt-cache show $KERNEL_PKG > /dev/null 2>&1; then
+    if chroot ${TARGET} /usr/bin/apt-cache show $KERNEL_PKG > /dev/null 2>&1; then
         logMessage Package $KERNEL_PKG is available - installing
-        installDebianPackage ${prefix} initramfs-tools
-        installDebianPackage ${prefix} $KERNEL_PKG
+        installDebianPackage ${TARGET} initramfs-tools
+        installDebianPackage ${TARGET} $KERNEL_PKG
     else
         logMessage Package $KERNEL_PKG is not available
         logMessage pygrub set, but kernel could not be installed
@@ -58,27 +58,27 @@ else
     fi
 fi
 
-DOMU_KERNEL=$(basename $(ls -1 ${prefix}/boot/vmlinuz* | tail -n 1))
+DOMU_KERNEL=$(basename $(ls -1 ${TARGET}/boot/vmlinuz* | tail -n 1))
 KERNEL_REV=$(echo $DOMU_KERNEL | sed "s/vmlinuz-//g")
 DOMU_RAMDISK="initrd.img-$KERNEL_REV"
-DOMU_ISSUE=$(sed -re "s/ *\\\.*//g" -e1q < ${prefix}/etc/issue)
+DOMU_ISSUE=$(sed -re "s/ *\\\.*//g" -e1q < ${TARGET}/etc/issue)
 
 #
 # Generate initrd if it does not exist
 #
 
-if [ -f ${prefix}/boot/$DOMU_RAMDISK ]; then
+if [ -f ${TARGET}/boot/$DOMU_RAMDISK ]; then
     logMessage initrd exists, skipping generation
 else
     logMessage initrd missing, generating
-    chroot ${prefix} update-initramfs -c -k $KERNEL_REV
+    chroot ${TARGET} update-initramfs -c -k $KERNEL_REV
 fi
 
 #
 # Generate a menu.lst for pygrub
 #
 
-generateDebianGrubMenuLst "${prefix}" "$DOMU_ISSUE" "$DOMU_KERNEL" "$DOMU_RAMDISK"
+generateDebianGrubMenuLst "${TARGET}" "$DOMU_ISSUE" "$DOMU_KERNEL" "$DOMU_RAMDISK"
 
 
 else

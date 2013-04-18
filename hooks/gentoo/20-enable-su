@@ -7,7 +7,7 @@
 # http://www.steve.org.uk/
 
 
-prefix=$1
+TARGET=$1
 
 #
 #  Source our common functions
@@ -27,14 +27,14 @@ logMessage Script $0 starting
 #
 # Remove lines matching 'group' or 'wheel'.
 #
-grep -v wheel ${prefix}/etc/pam.d/su     > ${prefix}/etc/pam.d/su.tmp
-grep -v group ${prefix}/etc/pam.d/su.tmp > ${prefix}/etc/pam.d/su
+grep -v wheel ${TARGET}/etc/pam.d/su     > ${TARGET}/etc/pam.d/su.tmp
+grep -v group ${TARGET}/etc/pam.d/su.tmp > ${TARGET}/etc/pam.d/su
 
 #
 # Make sure permissions are correct.
 #
-chown root:root ${prefix}/etc/pam.d/su
-chmod 600       ${prefix}/etc/pam.d/su
+chown root:root ${TARGET}/etc/pam.d/su
+chmod 600       ${TARGET}/etc/pam.d/su
 
 #
 #  Log our finish

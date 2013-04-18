@@ -8,7 +8,7 @@
 # http://www.steve.org.uk/
 
 
-prefix=$1
+TARGET=$1
 
 #
 #  Source our common functions
@@ -29,7 +29,7 @@ logMessage Script $0 starting
 #
 #  Make sure we have an /etc/network directory.
 #
-mkdir -p ${prefix}/etc/network
+mkdir -p ${TARGET}/etc/network
 
 
 #
@@ -40,7 +40,7 @@ setupDynamicNetworking ()
     #
     # The host is using DHCP.
     #
-    cat <<E_O_DHCP > ${prefix}/etc/network/interfaces
+    cat <<E_O_DHCP > ${TARGET}/etc/network/interfaces
 # This file describes the network interfaces available on your system
 # and how to activate them. For more information, see interfaces(5).
 
@@ -88,7 +88,7 @@ setupStaticNetworking ()
     #
     # We have a static IP address
     #
-    cat <<E_O_STATIC >${prefix}/etc/network/interfaces
+    cat <<E_O_STATIC >${TARGET}/etc/network/interfaces
 # This file describes the network interfaces available on your system
 # and how to activate them. For more information, see interfaces(5).
 
@@ -122,7 +122,7 @@ E_O_STATIC
 
         logMessage Adding etho:${interface}
 
-        cat <<E_O_STATIC >>${prefix}/etc/network/interfaces
+        cat <<E_O_STATIC >>${TARGET}/etc/network/interfaces
 auto eth0:${interface}
 iface eth0:${interface} inet static
  address ${value}
@@ -139,12 +139,12 @@ E_O_STATIC
     # will be restored after hooks are run.
     #
     if [ '' != "$nameserver" ]; then
-        rm -f ${prefix}/etc/resolv.conf.old
+        rm -f ${TARGET}/etc/resolv.conf.old
         for ns in $nameserver; do
-            echo "nameserver $ns" >>${prefix}/etc/resolv.conf.old
+            echo "nameserver $ns" >>${TARGET}/etc/resolv.conf.old
         done
     else
-        cp /etc/resolv.conf ${prefix}/etc/resolv.conf.old
+        cp /etc/resolv.conf ${TARGET}/etc/resolv.conf.old
     fi
 }
 

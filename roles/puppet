@@ -6,7 +6,7 @@
 # otherwise the temporary mounted directory will not be unmountable.
 #
 
-prefix=$1
+TARGET=$1
 
 #
 #  Source our common functions - this will let us install a Debian package.
@@ -26,14 +26,14 @@ logMessage Script $0 starting
 #
 #  Install ssh
 #
-installDebianPackage ${prefix} puppet
+installDebianPackage ${TARGET} puppet
 
 
 #
 #  Make sure sshd isn't running, this will cause our unmounting of the
 # disk image to fail..
 #
-chroot ${prefix} /etc/init.d/puppet stop
+chroot ${TARGET} /etc/init.d/puppet stop
 
 #
 #  Log our finish

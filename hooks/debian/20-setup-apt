@@ -8,7 +8,7 @@
 #
 
 
-prefix=$1
+TARGET=$1
 
 
 #
@@ -33,17 +33,17 @@ logMessage Script $0 starting
 # the setting to the proxy guess file.
 #
 if [ ${apt_proxy} ]; then
-  echo "Acquire::http::Proxy \"${apt_proxy}\";" > ${prefix}/etc/apt/apt.conf.d/01proxy
+  echo "Acquire::http::Proxy \"${apt_proxy}\";" > ${TARGET}/etc/apt/apt.conf.d/01proxy
 else
   logMessage The use of a proxy detected.
-  apt-config dump | grep -i Acquire::HTTP::Proxy > ${prefix}/etc/apt/apt.conf.d/01proxy
+  apt-config dump | grep -i Acquire::HTTP::Proxy > ${TARGET}/etc/apt/apt.conf.d/01proxy
 fi
 
 
 #
 # Setup the sources.list file for new installations of Debian GNU/Linux.
 #
-cat <<E_O_APT > ${prefix}/etc/apt/sources.list
+cat <<E_O_APT > ${TARGET}/etc/apt/sources.list
 #
 #  /etc/apt/sources.list
 #
@@ -66,7 +66,7 @@ if ( test "${dist}" "!=" "sid" && test "${dist}" "!=" "unstable" && \
      test -e /etc/apt/sources.list && \
      grep ^deb.*security -r /etc/apt/sources.list /etc/apt/sources.list.d >/dev/null 2>/dev/null ) ; then
 
-    cat <<E_O_APT >> ${prefix}/etc/apt/sources.list
+    cat <<E_O_APT >> ${TARGET}/etc/apt/sources.list
 # 
 #  Security updates
 # 
@@ -75,7 +75,7 @@ deb-src http://security.debian.org/ ${dist}/updates  main contrib non-free
 E_O_APT
 
 else
-    cat <<E_O_APT >> ${prefix}/etc/apt/sources.list
+    cat <<E_O_APT >> ${TARGET}/etc/apt/sources.list
 # 
 #  Security updates - Uncomment to enable.
 # 
@@ -88,7 +88,7 @@ fi
 #
 #  Now that the sources have been setup make sure the system is up to date.
 #
-chroot ${prefix} /usr/bin/apt-get update
+chroot ${TARGET} /usr/bin/apt-get update
 
 #
 # For all systems after Sarge we install libc6-xen on i386
@@ -98,11 +98,11 @@ chroot ${prefix} /usr/bin/apt-get update
 if [ "${arch}" = "i386" ]; then
     if [ "${dist}" = 'sarge' ]; then
         logMessage "Disabling TLS"
-        mv ${prefix}/lib/tls ${prefix}/lib/tls.disabled
-        mkdir ${prefix}/lib/tls
+        mv ${TARGET}/lib/tls ${TARGET}/lib/tls.disabled
+        mkdir ${TARGET}/lib/tls
     else
         logMessage "Installing xen-aware libc6"
-        installDebianPackage ${prefix} libc6-xen
+        installDebianPackage ${TARGET} libc6-xen
     fi
 fi
 

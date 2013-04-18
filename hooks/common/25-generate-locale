@@ -7,7 +7,7 @@
 
 
 
-prefix=$1
+TARGET=$1
 
 
 #
@@ -31,7 +31,7 @@ logMessage Script $0 starting
 #
 #  NOTE:  Failure to support your favourite language is *not* a bug.
 #
-installDebianPackage ${prefix} language-pack-en
+installDebianPackage ${TARGET} language-pack-en
 
 
 #

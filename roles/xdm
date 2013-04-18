@@ -8,7 +8,7 @@
 #
 
 
-prefix=$1
+TARGET=$1
 
 
 
@@ -27,29 +27,29 @@ fi
 #
 #  Update APT lists.
 #
-chroot ${prefix} /usr/bin/apt-get update
+chroot ${TARGET} /usr/bin/apt-get update
 
 #
 #  Install the packages
 #
-installDebianPackage ${prefix} xserver-xfree86
-installDebianPackage ${prefix} vncserver
-installDebianPackage ${prefix} xfonts-100dpi
-installDebianPackage ${prefix} xfonts-75dpi
-installDebianPackage ${prefix} xfonts-base
-installDebianPackage ${prefix} rxvt
-installDebianPackage ${prefix} xdm
-installDebianPackage ${prefix} icewm-experimental
+installDebianPackage ${TARGET} xserver-xfree86
+installDebianPackage ${TARGET} vncserver
+installDebianPackage ${TARGET} xfonts-100dpi
+installDebianPackage ${TARGET} xfonts-75dpi
+installDebianPackage ${TARGET} xfonts-base
+installDebianPackage ${TARGET} rxvt
+installDebianPackage ${TARGET} xdm
+installDebianPackage ${TARGET} icewm-experimental
 
 
 #
 #  Remove the default settings.
 #
-rm ${prefix}/etc/X11/xdm/Xserver
-rm ${prefix}/etc/X11/xdm/Xservers
+rm ${TARGET}/etc/X11/xdm/Xserver
+rm ${TARGET}/etc/X11/xdm/Xservers
 
 #
 #  Setup XDM to use the VNC server we installed.
 #
 /bin/echo ':0 /usr/bin/Xvnc /usr/bin/Xvnc -geometry 1024x768 -depth 24' > \
-  ${prefix}/etc/X11/xdm/Xservers
+  ${TARGET}/etc/X11/xdm/Xservers

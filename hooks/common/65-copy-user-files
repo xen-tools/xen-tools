@@ -5,7 +5,7 @@
 #
 
 
-prefix=$1
+TARGET=$1
 
 
 #
@@ -32,7 +32,7 @@ if [ -d /etc/xen-tools/skel ]; then
 
     logMessage Copying files from /etc/xen-tools/skel
 
-    (cd /etc/xen-tools/skel; tar -cf - . ) | (cd ${prefix}/; tar -xpf -)
+    (cd /etc/xen-tools/skel; tar -cf - . ) | (cd ${TARGET}/; tar -xpf -)
 
     logMessage Finished
 

@@ -9,7 +9,7 @@
 #
 
 
-prefix=$1
+TARGET=$1
 
 
 
@@ -28,12 +28,12 @@ fi
 #
 #  Install some new packages - do this first to avoid dependency errors.
 #
-installDebianPackage ${prefix} syslog-ng 
-installDebianPackage ${prefix} deborphan
-installDebianPackage ${prefix} less
-installDebianPackage ${prefix} screen
-installDebianPackage ${prefix} sudo
-installDebianPackage ${prefix} vim
+installDebianPackage ${TARGET} syslog-ng 
+installDebianPackage ${TARGET} deborphan
+installDebianPackage ${TARGET} less
+installDebianPackage ${TARGET} screen
+installDebianPackage ${TARGET} sudo
+installDebianPackage ${TARGET} vim
 
 
 #
@@ -41,28 +41,28 @@ installDebianPackage ${prefix} vim
 #
 
 # PPP stuff.
-removeDebianPackage ${prefix} pppconfig
-removeDebianPackage ${prefix} pppoeconf
-removeDebianPackage ${prefix} pppoe
-removeDebianPackage ${prefix} ppp
-removeDebianPackage ${prefix} libpcap0.7
+removeDebianPackage ${TARGET} pppconfig
+removeDebianPackage ${TARGET} pppoeconf
+removeDebianPackage ${TARGET} pppoe
+removeDebianPackage ${TARGET} ppp
+removeDebianPackage ${TARGET} libpcap0.7
 
 # Editors
-removeDebianPackage ${prefix} nano
-removeDebianPackage ${prefix} ed
-removeDebianPackage ${prefix} nvi
+removeDebianPackage ${TARGET} nano
+removeDebianPackage ${TARGET} ed
+removeDebianPackage ${TARGET} nvi
 
 # Syslog
-removeDebianPackage ${prefix} klogd
-removeDebianPackage ${prefix} sysklogd
+removeDebianPackage ${TARGET} klogd
+removeDebianPackage ${TARGET} sysklogd
 
 # manpages
-removeDebianPackage ${prefix} manpages  
-removeDebianPackage ${prefix} man-db 
-removeDebianPackage ${prefix} info
+removeDebianPackage ${TARGET} manpages  
+removeDebianPackage ${TARGET} man-db 
+removeDebianPackage ${TARGET} info
 
 # misc
-removeDebianPackage ${prefix} tasksel tasksel-data
-removeDebianPackage ${prefix} pciutils
-removeDebianPackage ${prefix} fdutils
-removeDebianPackage ${prefix} cpio
+removeDebianPackage ${TARGET} tasksel tasksel-data
+removeDebianPackage ${TARGET} pciutils
+removeDebianPackage ${TARGET} fdutils
+removeDebianPackage ${TARGET} cpio

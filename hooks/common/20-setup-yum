@@ -7,7 +7,7 @@
 # http://www.steve.org.uk/
 
 
-prefix=$1
+TARGET=$1
 
 
 #
@@ -29,12 +29,12 @@ logMessage Script $0 starting
 #
 # Update yum
 #
-if [ ! -d ${prefix}/proc ]; then
-    mkdir -p ${prefix}/proc
+if [ ! -d ${TARGET}/proc ]; then
+    mkdir -p ${TARGET}/proc
 fi
-mount -o bind /proc ${prefix}/proc
-chroot ${prefix} /usr/bin/yum update
-umount ${prefix}/proc
+mount -o bind /proc ${TARGET}/proc
+chroot ${TARGET} /usr/bin/yum update
+umount ${TARGET}/proc
 
 
 #
