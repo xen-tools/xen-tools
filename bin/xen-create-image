@@ -4,11 +4,10 @@
 
 xen-create-image - Easily create new Xen instances with networking and OpenSSH.
 
-=cut
-
 =head1 SYNOPSIS
 
 xen-create-image --hostname=<hostname> <further options>
+
 
 =head1 EXAMPLES
 
@@ -18,6 +17,7 @@ xen-create-image --hostname=some-domu --dist=precise --dir=/srv/xen
 
 See below for more specific examples: LOOPBACK EXAMPLES, LVM EXAMPLE
 and EVMS EXAMPLE.
+
 
 =head1 OPTIONS
 
@@ -326,8 +326,6 @@ and EVMS EXAMPLE.
                 If you do not wish to use LVM specify --dir or --evms.
                 (These three options are mutually exclusive.)
 
-=cut
-
 
 =head1 NOTES
 
@@ -349,8 +347,6 @@ Create a Xen configuration file in so that xm/xl can start the new domain.
 
   The result of invoking these three scripts, and some minor glue between
  them, is a simple means of creating new Xen guest domains.
-
-=cut
 
 
 =head1 DESCRIPTION
@@ -374,7 +370,6 @@ Create a Xen configuration file in so that xm/xl can start the new domain.
   If you wish to install additional packages or do any additional
  configuration of your new guests, please read the section on "ROLES".
 
-=cut
 
 =head1 CONFIGURATION
 
@@ -454,9 +449,6 @@ Create a Xen configuration file in so that xm/xl can start the new domain.
   This makes use of loopback images stored beneath /home/xen and
  will be installed via the debootstrap command.
 
-=cut
-
-
 
 =head1 NETWORKING AUTO-SETUP
 
@@ -492,8 +484,6 @@ Create a Xen configuration file in so that xm/xl can start the new domain.
  and would no longer be available.  If all the IP addresses are taken
  then the system will fail.
 
-=cut
-
 
 =head1 PARTITIONING
 
@@ -507,8 +497,6 @@ Create a Xen configuration file in so that xm/xl can start the new domain.
 
   Now when you create a new image specify the name of this file with as
  an argument to the --partition option.
-
-=cut
 
 
 =head1 XEN CONFIGURATION FILE
@@ -526,8 +514,6 @@ Create a Xen configuration file in so that xm/xl can start the new domain.
 
   Alternatively you can create multiple configuration files and
  specify the one to use with the --template option.
-
-=cut
 
 
 =head1 LOOPBACK EXAMPLES
@@ -564,8 +550,6 @@ Create a Xen configuration file in so that xm/xl can start the new domain.
 
   The '/domains/' subdirectory will be created if necessary.
 
-=cut
-
 
 =head1 LVM EXAMPLE
 
@@ -587,7 +571,6 @@ Create a Xen configuration file in so that xm/xl can start the new domain.
     mkdir -p /mnt/foo
     mount /dev/myvolumegroup/vm01.my.flat-disk /mnt/foo
 
-=cut
 
 =head1 EVMS EXAMPLE
 
@@ -609,8 +592,6 @@ Create a Xen configuration file in so that xm/xl can start the new domain.
     mkdir -p /mnt/foo
     mount /dev/evms/vm01.my.flat-disk /mnt/foo
 
-=cut
-
 
 =head1 INSTALLATION METHODS
 
@@ -626,7 +607,6 @@ Create a Xen configuration file in so that xm/xl can start the new domain.
  arguments, or settings in the configuration file.  Only one installation
  method may be specified at a time; they are mutually-exclusive.
 
-=cut
 
 =head1 INSTALLATION SPEEDUPS
 
@@ -656,8 +636,6 @@ Create a Xen configuration file in so that xm/xl can start the new domain.
           --lvm=myvolumegroup --hostname=vm01.my.flat \
           --install-method=copy --install-source=/path/to/copy/from
 
-=cut
-
 
 =head1 DEBOOTSTRAP CACHING
 
@@ -684,8 +662,6 @@ Create a Xen configuration file in so that xm/xl can start the new domain.
 
   If you set your cache directory to anything else, simply rm the
  contents of the directory.
-
-=cut
 
 
 =head1 ROLES
@@ -763,9 +739,6 @@ Install an X11 server, using VNC and XDM
   NOTE: Multiple role scripts may be invoked if you separate their
  names with commas.
 
-=cut
-
-
 
 =head1 THE SKELETON DIRECTORY
 
@@ -793,7 +766,6 @@ Install an X11 server, using VNC and XDM
  Dmitry Nedospasov, http://nedos.net/
  Stéphane Jourdois
 
-=cut
 
 =head1 LICENSE
 

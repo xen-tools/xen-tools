@@ -30,8 +30,6 @@ xen-delete-image - Delete previously created Xen instances.
    --test      Don't complain if we're not invoked by root.
    --no-xen-ok Don't complain if xen seems not installed or xend is not running
 
-=cut
-
 
 =head1 OPTIONS
 
@@ -61,10 +59,7 @@ Do not complain, or exit, if the script is not executed by the root user.
 =item B<--version>
 Show the version number and exit.
 
-
 =back
-
-=cut
 
 
 =head1 DESCRIPTION
@@ -78,8 +73,6 @@ Show the version number and exit.
   (When invoked with the '--test' flag the script will continue running,
  but will fail to remove anything which the user does not have permission
  to delete.)
-
-=cut
 
 
 =head1 LOOPBACK EXAMPLE
@@ -95,8 +88,6 @@ Show the version number and exit.
 
   (The matching Xen configuration files beneath /etc/xen will also be
  removed.)
-
-=cut
 
 
 =head1 LVM EXAMPLE
@@ -114,8 +105,6 @@ Show the version number and exit.
 
   The Xen configuration files will also be removed from beneath /etc/xen.
 
-=cut
-
 
 =head1 EVMS EXAMPLE
 
@@ -132,16 +121,12 @@ Show the version number and exit.
 
   The Xen configuration files will also be removed.
 
-=cut
-
 
 =head1 AUTHORS
 
  Steve Kemp, http://www.steve.org.uk/
  Axel Beckert, http://noone.org/abe/
  Stéphane Jourdois
-
-=cut
 
 
 =head1 LICENSE
@@ -153,7 +138,6 @@ This module is free software;
 you can redistribute it and/or modify it under
 the same terms as Perl itself.
 The LICENSE file contains the full text of the license.
-
 
 =cut
 

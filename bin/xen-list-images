@@ -20,6 +20,7 @@ xen-list-images - List all the created and configured Xen images.
   Testing options:
    --test     Specify an alternate Xen configuration directory.
 
+
 =head1 OPTIONS
 
 =over 8
@@ -52,14 +53,11 @@ Show the version number and exit.
  and then either the IP address configured, or "DHCP" to denote
  a dynamic host.
 
-=cut
 
 =head1 TODO
 
   It should be possible to determine the disk(s) used by the images,
  and then display their sizes.
-
-=cut
 
 
 =head1 AUTHORS
@@ -67,7 +65,6 @@ Show the version number and exit.
  Steve Kemp, http://www.steve.org.uk/
  Stéphane Jourdois
 
-=cut
 
 =head1 LICENSE
 

@@ -6,6 +6,7 @@ package Xen::Tools::Common;
 
 Xen::Tools::Common - Common funtions used in xen-tools' Perl scripts
 
+
 =head1 SYNOPSIS
 
  use Xen::Tools::Common;

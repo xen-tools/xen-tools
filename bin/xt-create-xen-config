@@ -4,8 +4,6 @@
 
 xt-create-config - Create a Xen configuration file for a new guest
 
-=cut
-
 =head1 SYNOPSIS
 
   xt-create-config [options]
@@ -39,7 +37,6 @@ xt-create-config - Create a Xen configuration file for a new guest
   All other options from xen-create-image, such as the new IP address(es)
  to give to the new instance, will be passed as environmental variables.
 
-=cut
 
 =head1 ABOUT
 
@@ -52,8 +49,6 @@ xt-create-config - Create a Xen configuration file for a new guest
  created.
 
   By default the script will use /etc/xen-tools/xm.tmpl as its input.
-
-=cut
 
 
 =head1 INVOCATION
@@ -73,9 +68,6 @@ xt-create-config - Create a Xen configuration file for a new guest
      --output=/etc/xen --template=/etc/xen-tools/xm.tmpl
 
 =for example end
-
-
-=cut
 
 
 =head1 ARGUMENT PASSING
@@ -102,7 +94,6 @@ xt-create-config - Create a Xen configuration file for a new guest
  for the "Text::Template" perl module.   (If you have the perldoc
  package installed you can read this with "perldoc Text::Template".)
 
-=cut
 
 =head1 AUTHORS
 
@@ -110,7 +101,6 @@ xt-create-config - Create a Xen configuration file for a new guest
  Axel Beckert, http://noone.org/abe/
  Stéphane Jourdois
 
-=cut
 
 =head1 LICENSE
 

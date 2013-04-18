@@ -4,8 +4,6 @@
 
 xt-customize-image - Customize a freshly installed copy of GNU/Linux
 
-=cut
-
 =head1 SYNOPSIS
 
   xt-customize-image [options]
@@ -25,7 +23,6 @@ xt-customize-image - Customize a freshly installed copy of GNU/Linux
   All other options from xen-create-image, such as the new IP address(es)
  to give to the new instance, will be passed as environmental variables.
 
-=cut
 
 =head1 NOTES
 
@@ -41,8 +38,6 @@ xt-customize-image - Customize a freshly installed copy of GNU/Linux
    --location  - The temporary installation root of the new install
    --dist      - The distribution which has been installed.
 
-=cut
-
 
 =head1 HOOK SCRIPTS
 
@@ -57,16 +52,12 @@ xt-customize-image - Customize a freshly installed copy of GNU/Linux
  executed from '/usr/share/xen-tools/foo.d'.  Each executable will
  be loaded and executed in sorted order.
 
-=cut
-
 
 =head1 AUTHORS
 
  Steve Kemp, http://www.steve.org.uk/
  Axel Beckert, http://noone.org/abe/
  Stéphane Jourdois
-
-=cut
 
 
 =head1 LICENSE

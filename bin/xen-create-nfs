@@ -36,8 +36,6 @@ xen-create-nfs - Create a Xen configuration file for an NFS-root guest.
    --nfs_server Specify the NFS server to mount the root partition from.
    --nfs_root   Specify the path, upon the NFS server, to mount.
 
-=cut
-
 
 =head1 OPTIONS
 
@@ -55,10 +53,7 @@ Read the manual for this script.
 =item B<--version>
 Show the version number and exit.
 
-
 =back
-
-=cut
 
 
 =head1 DESCRIPTION
@@ -71,8 +66,6 @@ Show the version number and exit.
  support more than the minimal number of options to completement the
  existing xen-create-image script, however it is hopefully useful.
 
-=cut
-
 
 =head1 REFERENCE
 
@@ -81,15 +74,11 @@ Show the version number and exit.
 
     http://www.debian-administration.org/articles/505
 
-=cut
-
 
 =head1 AUTHORS
 
  Steve Kemp, http://www.steve.org.uk/
  Stéphane Jourdois
-
-=cut
 
 
 =head1 LICENSE
@@ -101,7 +90,6 @@ This module is free software;
 you can redistribute it and/or modify it under
 the same terms as Perl itself.
 The LICENSE file contains the full text of the license.
-
 
 =cut
 

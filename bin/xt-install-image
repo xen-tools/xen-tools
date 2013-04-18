@@ -4,8 +4,6 @@
 
 xt-install-image - Install a fresh copy of GNU/Linux into a directory
 
-=cut
-
 =head1 SYNOPSIS
 
   xt-install-image [options]
@@ -39,8 +37,6 @@ xt-install-image - Install a fresh copy of GNU/Linux into a directory
   All other options from xen-create-image will be passed as environmental
  variables.
 
-=cut
-
 
 =head1 NOTES
 
@@ -49,8 +45,6 @@ xt-install-image - Install a fresh copy of GNU/Linux into a directory
  script xt-customize-image will be invoked to perform the network
  configuration, etc.
 
-
-=cut
 
 =head1 INSTALLATION METHODS
 
@@ -78,8 +72,6 @@ Untar a .tar file into the new installation location.  This tarfile is assumed t
 
 =back
 
-=cut
-
 
 =head1 AUTHORS
 
@@ -88,7 +80,6 @@ Untar a .tar file into the new installation location.  This tarfile is assumed t
  Dmitry Nedospasov, http://nedos.net/
  Stéphane Jourdois
 
-=cut
 
 =head1 LICENSE
 

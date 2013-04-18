@@ -20,8 +20,6 @@ xen-resize-guest - Resize a loopback or LVM based xen guest.
    --force    Force the resize to happen without a last-chance delay.
    --hostname Specify the hostname of the guest to resize.
 
-=cut
-
 
 =head1 OPTIONS
 
@@ -53,8 +51,6 @@ Show the version number and exit.
 
 =back
 
-=cut
-
 
 =head1 DESCRIPTION
 
@@ -74,14 +70,11 @@ Show the version number and exit.
   More than once I've heard of users making mistakes and breaking their
  filesystems; hence this tool.
 
-=cut
 
 =head1 AUTHORS
 
  Steve Kemp, http://www.steve.org.uk/
  Axel Beckert, http://noone.org/abe/
-
-=cut
 
 
 =head1 LICENSE
@@ -93,7 +86,6 @@ This module is free software;
 you can redistribute it and/or modify it under
 the same terms as Perl itself.
 The LICENSE file contains the full text of the license.
-
 
 =cut
 
