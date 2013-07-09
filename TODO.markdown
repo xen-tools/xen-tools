@@ -6,6 +6,10 @@ See KNOWN_BUGS.markdown for real bugs.
 Bugs to fix and features to add for 5.0
 ---------------------------------------
 
+* Fix documentation for `--apt_proxy`, see
+  [Debian bug #623443](http://bugs.debian.org/623443). Maybe also add
+  a sanity check.
+
 * `xen-create-image` man page overhaul:
 
   * ambiguous option list with regards to parameters
