@@ -41,7 +41,8 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
       Add installCentOS4Package wrapper for backward compatibility.
     - Fix filesystem tools installation in 91-install-fs-tools (which was
       broken since 4.3~rc1-1) by merging 91-install-fs-tools back into
-      90-make-fstab. Also supports RPM-based distributions now.
+      90-make-fstab. (Closes: #715340) Also supports RPM-based
+      distributions now.
     - Fixes export of environment variables. Previously they could contain
       dashes and then were only accessible from within Perl, but not from
       within Bash.
