@@ -243,9 +243,10 @@ and EVMS EXAMPLE.
                 Debian mirror. See http://http.debian.net/ for
                 details.
 
-   --apt_proxy=url
+   --apt_proxy=protocol://hostname:port/
                 Specify a proxy to be used by debootstrap, and within
-                the guest.
+                the guest. Needs the same syntax as APT's
+                Acquire::http::Proxy. See apt.conf(5).
 
    --template=tmpl
                 Specify which template file to use when creating the
@@ -792,6 +793,7 @@ use File::Which;
 use Getopt::Long;
 use Pod::Usage;
 use Data::Dumper;
+use Data::Validate::URI qw/ is_uri /;
 use Xen::Tools::Common;
 
 
@@ -1489,6 +1491,10 @@ sub checkOption
             check   => qr/^md5|sha256|sha512$/i,
             message => "must be md5, sha256 or sha512.\n",
         },
+        uri => {
+            check   => sub { is_uri($_[0]) },
+            message => "must be an URI including the protocol\n",
+        },
     );
 
     # Define what argument each option accepts.
@@ -1523,6 +1529,7 @@ sub checkOption
         mac           => 'mac',
         ip            => 'ipv4_or_auto',
         hash_method   => 'hashMethod',
+        apt_proxy     => 'uri',
     );
 
     # If given option does not exists in optionsTypes,

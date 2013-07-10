@@ -20,6 +20,7 @@ Package: xen-tools
 Architecture: all
 Depends: debootstrap | cdebootstrap,
          libconfig-inifiles-perl,
+         libdata-validate-uri-perl,
          libfile-slurp-perl,
          libfile-which-perl,
          libtext-template-perl,

@@ -51,6 +51,9 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
     - Removes unused Perl modules Xen::Tools and Xen::Tools::Log from
       source code. Also removes the according tests from the test suite.
       → Remove no more needed build-dependency on Moose.
+    - Better documents and checks requirements for the --apt_proxy
+      value. (See #623443 for the corresponding apt issue.) Add dependency
+      on libdata-validate-uri-perl.
   * Add debian/gbp.conf to be able to to build xen-tools with
     git-buildpackage.
   * Clean up debian/rules:
