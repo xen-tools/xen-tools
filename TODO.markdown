@@ -174,9 +174,6 @@ Bugs to fix and features to add for 5.0
   distributions the same. Currently Debian is a special case and
   Ubuntu half a special case.
 
-* Replace findBinary() and backticked calls to `which` (e.g. in
-  xt-guess-suite-and-mirror) with File::Which)
-
 * Remove from the (unused) Xen::Tools what's already in the used
   Xen::Tools::Common.
 

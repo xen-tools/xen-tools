@@ -20,9 +20,10 @@ use Exporter 'import';
 use vars qw(@EXPORT_OK @EXPORT);
 
 use English;
+use File::Which;
 
 @EXPORT = qw(readConfigurationFile xenRunning runCommand setupAdminUsers
-             findXenToolstack findBinary
+             findXenToolstack
              logprint_with_config logonly_with_config fail_with_config);
 
 =head1 FUNCTIONS
@@ -139,38 +140,6 @@ sub xenRunning ($$)
     return ($running);
 }
 
-=head2 findBinary
-
-=begin doc
-
-  Find the location of the specified binary on the curent user's PATH.
-
-  Return undef if the named binary isn't found.
-
-=end doc
-
-=cut
-
-sub findBinary
-{
-    my ($bin) = (@_);
-
-    # strip any path which might be present.
-    $bin = $2 if ( $bin =~ /(.*)[\/\\](.*)/ );
-
-    foreach my $entry ( split( /:/, $ENV{ 'PATH' } ) )
-    {
-
-        # guess of location.
-        my $guess = $entry . "/" . $bin;
-
-        # return it if it exists and is executable
-        return $guess if ( -e $guess && -x $guess );
-    }
-
-    return undef;
-}
-
 =head2 findXenToolstack
 
 =begin doc
@@ -192,12 +161,12 @@ sub findXenToolstack
         return $toolstack if $toolstack;
     }
 
-    my $xm = findBinary('xm');
+    my $xm = which('xm');
     if ($xm and system("$xm list >/dev/null 2>/dev/null") == 0) {
         return $xm;
     }
 
-    my $xl = findBinary('xl');
+    my $xl = which('xl');
     if ($xl and system("$xl list >/dev/null 2>/dev/null") == 0) {
         return $xl;
     }

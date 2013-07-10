@@ -1151,7 +1151,7 @@ E_O_ERROR
 
     foreach my $bin (@required)
     {
-        if ( !defined( findBinary($bin) ) )
+        if ( !defined( which($bin) ) )
         {
             logprint( "The script '$bin' was not found.\nAborting\n\n" );
             $CONFIG{'FAIL'} = 1;
@@ -2274,7 +2274,7 @@ sub checkBinariesPresent
 
     foreach my $file (@required)
     {
-        if ( !defined( findBinary($file) ) )
+        if ( !defined( which($file) ) )
         {
             logprint("The following binary is required to run this tool\n");
             logprint("\t$file\n");
@@ -2290,7 +2290,7 @@ sub checkBinariesPresent
     {
 
         # loopback image
-        if ( !defined( findBinary("dd") ) )
+        if ( !defined( which("dd") ) )
         {
             logprint("The following binary is required to run this tool\n");
             logprint("\tdd\n");
@@ -2311,7 +2311,7 @@ sub checkBinariesPresent
 
         foreach my $file (@evms)
         {
-            if ( !defined( findBinary($file) ) )
+            if ( !defined( which($file) ) )
             {
                 logprint("The following binary is required to run this tool\n");
                 logprint("\t$file\n");
@@ -2331,7 +2331,7 @@ sub checkBinariesPresent
 
         foreach my $file (@lvm)
         {
-            if ( !defined( findBinary($file) ) )
+            if ( !defined( which($file) ) )
             {
                 logprint("The following binary is required to run this tool\n");
                 logprint("\t$file\n");
@@ -3305,7 +3305,7 @@ sub createFilesystem
     #
     my ($binary, $args) = split(/ /, $command, 2);
 
-    if ( !defined( findBinary($binary) ) )
+    if ( !defined( which($binary) ) )
     {
         logprint(
             "The binary '$binary' required to create the filesystem $fs is missing\n"

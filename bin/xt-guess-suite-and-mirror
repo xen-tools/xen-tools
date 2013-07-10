@@ -69,6 +69,7 @@ my @sources_list_files = ( '/etc/apt/sources.list',
 use File::Slurp;
 use Getopt::Long;
 use Pod::Usage;
+use File::Which;
 
 use strict;
 
@@ -148,10 +149,8 @@ all_sources_list_files: foreach my $sources_list_file (@sources_list_files) {
 die "Couldn't find a useful entry in the sources.list files of the Dom0. Tried:\n  ".
     join("\n  ", @sources_list_files)."\n" unless $found;
 
-my $lsb_release = `which lsb_release`;
-chomp($lsb_release);
-
-if (!$found and $lsb_release and -x $lsb_release) {
+my $lsb_release = which('lsb_release');
+if (!$found and defined($lsb_release) and -x $lsb_release) {
     my $vendor = `$lsb_release -s -i`;
 
     if ($vendor eq 'Debian' or $vendor eq 'Ubuntu') {
