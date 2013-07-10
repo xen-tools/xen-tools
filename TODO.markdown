@@ -73,12 +73,6 @@ Bugs to fix and features to add for 5.0
 
 * LVM snapshot support as an install source.
 
-* Clean up mounts on `Ctrl-C`, causes error while installing otherwise:
-
-    Removing /dev/vg0/acromantula-domu1-disk - since we're forcing the
-    install Can't remove open logical volume "acromantula-domu1-disk"
-    this should be a matter of unmounting the mounted volume from /tmp.
-
 * Generic grub support
 
   This will generate a much nicer `menu.lst` as a side effect, as its
