@@ -88,6 +88,17 @@ To use these tools you'll need the following software:
 	([Debian Package libconfig-inifiles-perl](http://packages.debian.org/libconfig-inifiles-perl))
   * [Text::Template](http://metacpan.org/release/Text-Template)
 	([Debian Package libtext-template-perl](http://packages.debian.org/libtext-template-perl))
+  * [Data::Validate::Domain](http://metacpan.org/release/Data-Validate-Domain)
+	([Debian Package libdata-validate-domain-perl](http://packages.debian.org/libdata-validate-domain-perl))
+  * [Data::Validate::IP](http://metacpan.org/release/Data-Validate-IP)
+	([Debian Package libdata-validate-ip-perl](http://packages.debian.org/libdata-validate-ip-perl))
+  * [Data::Validate::URI](http://metacpan.org/release/Data-Validate-URI)
+	([Debian Package libdata-validate-uri-perl](http://packages.debian.org/libdata-validate-uri-perl))
+  * [File::Slurp](http://metacpan.org/release/File-Slurp)
+	([Debian Package libfile-slurp-perl](http://packages.debian.org/libfile-slurp-perl))
+  * [File::Which](http://metacpan.org/release/File-Which)
+	([Debian Package libfile-which-perl](http://packages.debian.org/libfile-which-perl))
+  * and some more modules which are part of the Perl core and hence do not need to be installed separately.
 * Make, if you are not installing through a package manager
 
 You can try to install RPM-based distributions such as CentOS, or
