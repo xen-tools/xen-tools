@@ -172,11 +172,6 @@ Bugs to fix and features to add for 5.0
 
 * Make used Xen toolstack configurable, i.e. via --xen-toolstack=xl
 
-* Code Deduplication / Refactor the code for less code duplication
-
-  `bin/x*` currently contain the same or similar code like e.g. in the
-  function readConfigurationFile. This needs to be cleaned up.
-
 * Unify --debug and --dumpconfig. Likely make --debug exit
   gracefully. Document --debug if --dumpconfig is removed.
 
@@ -252,3 +247,9 @@ Axel's Break-Backwards-Compatibility Wishlist
 * Let the admin switch between MAC addresses based on XenSource's OUI,
   its organisation's own OUI or locally administrated MAC addresses.
   See also http://wiki.xen.org/wiki/Xen_Networking#MAC_addresses
+
+* More radical Code Deduplication
+
+  `bin/x*` currently still contain similar code like e.g. in the
+  function parseCommandLineArguments. This should be cleaned up, too,
+  but may need a bigger redesign.
