@@ -58,6 +58,7 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
       on libdata-validate-uri-perl.
     - Use Data::Validate::{Domain,IP} for IP addresses and hostname checks.
       Add corresponding dependencies on libdata-validate-{domain,ip}-perl.
+    - Fixes broken quoting in list of required binaries
   * Add debian/gbp.conf to be able to to build xen-tools with
     git-buildpackage.
   * Clean up debian/rules:
