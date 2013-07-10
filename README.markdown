@@ -32,9 +32,9 @@ known to work reliably, i.e.:
 * Etch 4.0 (Dom0 no more tested)
 * Lenny 5.0
 * Squeeze 6.0
-* Wheezy 7.0
-* Jessie 8.0 (preliminary support as it's not yet available)
-* Sid (works at least at the moment of writing :-)
+* Wheezy 7
+* Jessie 8 (under developement)
+* Sid (always under developement; works at least at the moment of writing :-)
 
 ### Ubuntu
 
@@ -54,7 +54,7 @@ known to work reliably, i.e.:
 * Oneiric Ocelot 11.10
 * Precise Pangolin 12.04
 * Quantal Quetzal 12.10
-* Raring Ringtail 13.04 (preliminary support as it's not yet available)
+* Raring Ringtail 13.04
 
 [1]: http://bugs.debian.org/659360
     "debootstrap in Wheezy can no more build Ubuntu Edgy or earlier"

@@ -50,7 +50,8 @@ Description: Tools to manage Xen virtual servers
    * Debian 4.0 Etch
    * Debian 5.0 Lenny
    * Debian 6.0 Squeeze
-   * Debian 7.0 Wheezy
+   * Debian 7 Wheezy
+   * Debian 8 Jessie (under development)
    * Debian Sid (Unstable)
    * Ubuntu 6.06 Dapper Drake (LTS)
    * Ubuntu 6.10 Edgy Eft
@@ -65,5 +66,7 @@ Description: Tools to manage Xen virtual servers
    * Ubuntu 11.04 Natty Narwhal
    * Ubuntu 11.10 Oneiric Ocelot
    * Ubuntu 12.04 Precise Pangolin (LTS)
+   * Ubuntu 12.10 Quantal Quetzal
+   * Ubuntu 13.04 Raring Ringtail
    * CentOS 5
    * CentOS 6
