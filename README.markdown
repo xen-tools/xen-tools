@@ -84,10 +84,10 @@ To use these tools you'll need the following software:
 
 * [debootstrap](http://packages.debian.org/debootstrap)
 * Perl
-  * The Perl module [Text::Template](http://metacpan.org/release/Text-Template)
-	([Debian Package libtext-template-perl](http://packages.debian.org/libtext-template-perl))
   * The Perl module [Config::IniFiles](http://metacpan.org/release/Config-IniFiles)
 	([Debian Package libconfig-inifiles-perl](http://packages.debian.org/libconfig-inifiles-perl))
+  * The Perl module [Text::Template](http://metacpan.org/release/Text-Template)
+	([Debian Package libtext-template-perl](http://packages.debian.org/libtext-template-perl))
 * Make, if you are not installing through a package manager
 
 You can try to install RPM-based distributions such as CentOS, or
