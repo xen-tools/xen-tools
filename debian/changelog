@@ -68,6 +68,8 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
       dh_auto_* can't help. No more explicitly call "make manpages", it's
       a depedency of "make install" in the next line anyway.
     - Finally switch to a minimal dh style debian/rules.
+  * Bump debhelper compatibility to 9
+    - Update versioned debhelper build-dependency
   * Bump copyright years in debian/copyright.
   * Apply wrap-and-sort.
 
