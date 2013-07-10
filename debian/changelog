@@ -20,7 +20,9 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
     - Fixes "--extension=" with empty parameter.
     - Sarge amd64 case handle properly
     - Remove CVS revisions from --version output
-    - Preliminary support for Debian Jessie and Ubuntu Raring
+    - Support for Debian Jessie, Ubuntu Raring and preliminary support for
+      Ubuntu Saucy (debootstrap doesn't have support for Saucy at the time
+      of writing)
     - Preliminary support for xl toolstack
     - xen-create-image: Consistently use runCommand() instead of system()
     - xt-install-image: Don't bail out if only cdebootstrap is installed

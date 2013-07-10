@@ -68,5 +68,6 @@ Description: Tools to manage Xen virtual servers
    * Ubuntu 12.04 Precise Pangolin (LTS)
    * Ubuntu 12.10 Quantal Quetzal
    * Ubuntu 13.04 Raring Ringtail
+   * Ubuntu 13.10 Saucy Salamander (under development)
    * CentOS 5
    * CentOS 6

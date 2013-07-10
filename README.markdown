@@ -55,6 +55,7 @@ known to work reliably, i.e.:
 * Precise Pangolin 12.04
 * Quantal Quetzal 12.10
 * Raring Ringtail 13.04
+* Saucy Salamander 13.10 (under developement)
 
 [1]: http://bugs.debian.org/659360
     "debootstrap in Wheezy can no more build Ubuntu Edgy or earlier"
