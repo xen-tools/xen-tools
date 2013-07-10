@@ -174,7 +174,8 @@ Bugs to fix and features to add for 5.0
   distributions the same. Currently Debian is a special case and
   Ubuntu half a special case.
 
-* Replace findBinary() with File::Which
+* Replace findBinary() and backticked calls to `which` (e.g. in
+  xt-guess-suite-and-mirror) with File::Which)
 
 * Remove from the (unused) Xen::Tools what's already in the used
   Xen::Tools::Common.
@@ -185,6 +186,10 @@ Bugs to fix and features to add for 5.0
   * Needs a `--dry-run` or `--check-constraints` option in
     `xen-create-image` first. Which probably both would be a good
     idea.
+
+* Replace several occurences of backticks with runCommand. (Mostly
+  mount commands in `xen-update-image`. The calls to uname or
+  lsb_release should be fine.)
 
 Stuff from Steve's TODO list / Generic TODOs
 --------------------------------------------
@@ -229,8 +234,6 @@ Axel's Break-Backwards-Compatibility Wishlist
 * Uncouple generating auto start symlinks from `--boot`.
 
   Maybe add some `--autostart` or such.
-
-* Maybe replace findBinary with File::Which
 
 * MAC addresses should no more depend on the distribution.
 
