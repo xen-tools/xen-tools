@@ -794,6 +794,8 @@ use Getopt::Long;
 use Pod::Usage;
 use Data::Dumper;
 use Data::Validate::URI qw/ is_uri /;
+use Data::Validate::IP qw/ is_ipv4 /;
+use Data::Validate::Domain qw/ is_hostname /;
 use Xen::Tools::Common;
 
 
@@ -1452,15 +1454,15 @@ sub checkOption
             message => "must be a disk device (xvd[a-z]+, sd[a-z]+).\n",
         },
         ipv4 => {
-            check   => qr/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
+            check   => sub { is_ipv4($_[0]) },
             message => "must be valid IPv4.\n",
         },
         ipv4_or_auto => {
-            check   => qr/^(?:auto|(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))$/,
+            check   => sub { is_ipv4($_[0]) or $_[0] eq 'auto' },
             message => "must be valid IPv4 or the keyword 'auto'.\n",
         },
         hostname => {
-            check   => qr/^[a-z0-9][a-z0-9.-]{0,254}$/i,
+            check   => sub { is_hostname($_[0]) },
             message => "must be a valid hostname.\n",
         },
         supportedFs => {
