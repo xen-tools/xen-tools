@@ -32,12 +32,3 @@ Bugs to fix rather soon
   Current (unreleased) fix is to sort by mountpoint length.
 
   Fix would be to reproduce what mount does with mount `-a`.
-
-
-Bugs to fix later
------------------
-
-`t/xen-tools.t` can't really test Xen::Tools as the latter requires a
-local Xen installation. For proper testing, a dummy set of Xen
-configuration files and configurable paths to them in `Xen::Tools`
-would be necessary.
