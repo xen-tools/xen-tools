@@ -28,7 +28,8 @@ Depends: debootstrap | cdebootstrap,
          libtext-template-perl,
          openssh-client,
          perl-modules,
-         ${misc:Depends}
+         ${misc:Depends},
+         ${perl:Depends}
 Recommends: libexpect-perl,
             rinse (>= 1.9.1-1),
             xen-hypervisor-amd64 | xen-hypervisor-i386 | xen-hypervisor-i386-pae,

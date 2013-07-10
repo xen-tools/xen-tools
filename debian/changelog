@@ -70,6 +70,7 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
     - Finally switch to a minimal dh style debian/rules.
   * Bump debhelper compatibility to 9
     - Update versioned debhelper build-dependency
+  * Add dependency on ${perl:Depends} to fix dpkg-gencontrol warning.
   * Bump copyright years in debian/copyright.
   * Apply wrap-and-sort.
 
