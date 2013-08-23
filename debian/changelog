@@ -56,10 +56,11 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
       source code. Also removes the according tests from the test suite.
       → Remove no more needed build-dependency on Moose.
     - Better documents and checks requirements for the --apt_proxy
-      value. (See #623443 for the corresponding apt issue.) Add dependency
-      on libdata-validate-uri-perl.
+      value. (See #623443 for the corresponding apt issue.) Add (build-)
+      dependency on libdata-validate-uri-perl.
     - Use Data::Validate::{Domain,IP} for IP addresses and hostname checks.
-      Add corresponding dependencies on libdata-validate-{domain,ip}-perl.
+      Add corresponding (build-) dependencies on
+      libdata-validate-{domain,ip}-perl.
     - Fixes broken quoting in list of required binaries
     - Declares POD encoding. Fixes FTBFS with Perl 5.18. (Closes: #720519)
   * Add debian/gbp.conf to be able to to build xen-tools with
