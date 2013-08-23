@@ -1,5 +1,7 @@
 #!/usr/bin/perl -w
 
+=encoding utf8
+
 =head1 NAME
 
 xen-delete-image - Delete previously created Xen instances.

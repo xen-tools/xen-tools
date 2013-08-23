@@ -1,5 +1,7 @@
 #!/usr/bin/perl -w
 
+=encoding utf8
+
 =head1 NAME
 
 xt-customize-image - Customize a freshly installed copy of GNU/Linux

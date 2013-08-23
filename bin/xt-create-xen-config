@@ -1,5 +1,7 @@
 #!/usr/bin/perl -w
 
+=encoding utf8
+
 =head1 NAME
 
 xt-create-config - Create a Xen configuration file for a new guest

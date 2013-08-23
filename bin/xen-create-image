@@ -1,5 +1,7 @@
 #!/usr/bin/perl -w
 
+=encoding utf8
+
 =head1 NAME
 
 xen-create-image - Easily create new Xen instances with networking and OpenSSH.

@@ -61,6 +61,7 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
     - Use Data::Validate::{Domain,IP} for IP addresses and hostname checks.
       Add corresponding dependencies on libdata-validate-{domain,ip}-perl.
     - Fixes broken quoting in list of required binaries
+    - Declares POD encoding. Fixes FTBFS with Perl 5.18. (Closes: #720519)
   * Add debian/gbp.conf to be able to to build xen-tools with
     git-buildpackage.
   * Clean up debian/rules:
