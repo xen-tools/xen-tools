@@ -798,6 +798,8 @@ use Data::Dumper;
 use Data::Validate::URI qw/ is_uri /;
 use Data::Validate::IP qw/ is_ipv4 /;
 use Data::Validate::Domain qw/ is_hostname /;
+use Term::UI;
+use Term::ReadLine;
 use Xen::Tools::Common;
 
 
@@ -3927,7 +3929,17 @@ sub setupRootPassword
     {
         if ( -x $MOUNT_POINT . "/usr/bin/passwd" )
         {
-            system("chroot $MOUNT_POINT /usr/bin/passwd");
+            my $tryagain = 1;
+            my $term = Term::ReadLine->new('Password change failed');
+            while ($tryagain) {
+                my $rc = system("chroot $MOUNT_POINT /usr/bin/passwd");
+                if ($rc >> 8) {
+                    $tryagain = $term->ask_yn(
+                        prompt => 'Do you want to try to change the password again??',
+                        default => 'y',
+                    );
+                }
+            }
         }
         else
         {
