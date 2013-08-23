@@ -3927,7 +3927,7 @@ sub setupRootPassword
     {
         if ( -x $MOUNT_POINT . "/usr/bin/passwd" )
         {
-            runCommand("chroot $MOUNT_POINT /usr/bin/passwd", \%CONFIG);
+            system("chroot $MOUNT_POINT /usr/bin/passwd");
         }
         else
         {

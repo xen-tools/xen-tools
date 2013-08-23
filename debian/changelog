@@ -1,6 +1,9 @@
 xen-tools (4.4~dev-1) UNRELEASED; urgency=low
 
   * Also switch from cdn.debian.net to http.debian.net in xen-tools.conf
+  * Do not run "passwd" via runCommand as that one captures STDOUT for
+    logging. Makes --passwd usable again. Thanks to Christan Herzog for
+    the bug report.
 
  -- Axel Beckert <abe@debian.org>  Fri, 23 Aug 2013 21:13:07 +0200
 
