@@ -1,6 +1,6 @@
-xen-tools (4.4~dev-1) UNRELEASED; urgency=low
+xen-tools (4.4~beta1-1) unstable; urgency=low
 
-  * New upstream release
+  * New upstream beta release
     - Code deduplication to unify the xen-*-image scripts
     - Moves /usr/lib/xen-tools/ to /usr/share/xen-tools/
     - Use http.debian.net as default Debian mirror if no mirror is given
@@ -81,7 +81,7 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
   * Bump copyright years in debian/copyright.
   * Apply wrap-and-sort.
 
- -- Axel Beckert <abe@debian.org>  Thu, 17 Jan 2013 17:09:02 +0100
+ -- Axel Beckert <abe@debian.org>  Fri, 23 Aug 2013 19:00:03 +0200
 
 xen-tools (4.3.1-1) unstable; urgency=low
 
