@@ -2,7 +2,7 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
 
   * Also switch from cdn.debian.net to http.debian.net in xen-tools.conf
   * Do not run "passwd" via runCommand as that one captures STDOUT for
-    logging. Makes --passwd usable again. Thanks to Christan Herzog for
+    logging. Makes --passwd usable again. Thanks to Christian Herzog for
     the bug report.
   * Loop around calling "passwd" to get a second chance to change the
     password. Needs Term::UI (part of perl-modules, no new dependencies)
