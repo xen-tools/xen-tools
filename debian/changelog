@@ -5,8 +5,8 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
     logging. Makes --passwd usable again. Thanks to Christian Herzog for
     the bug report.
   * Loop around calling "passwd" to get a second chance to change the
-    password. Needs Term::UI (part of perl-modules, no new dependencies)
-    (Closes: #703159)
+    password. (Closes: #703159)
+    + Add dependency on "libterm-ui-perl | perl (<< 5.17.0)"
 
  -- Axel Beckert <abe@debian.org>  Fri, 23 Aug 2013 21:13:07 +0200
 
