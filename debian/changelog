@@ -6,6 +6,7 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
     the bug report.
   * Loop around calling "passwd" to get a second chance to change the
     password. Needs Term::UI (part of perl-modules, no new dependencies)
+    (Closes: #703159)
 
  -- Axel Beckert <abe@debian.org>  Fri, 23 Aug 2013 21:13:07 +0200
 
