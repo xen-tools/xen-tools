@@ -12,6 +12,8 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
   * Apply patch by Philipp Erbelding to fix overzealous line matching in
     xen-list-images. (Gitorious merge request #5)
   * xen-list-images now displays a unit after the memory size
+  * Drop support for memory size in kilobytes in
+    xen-create-image, neither xt-create-xen-config nor xm support it.
 
  -- Axel Beckert <abe@debian.org>  Fri, 23 Aug 2013 21:13:07 +0200
 
