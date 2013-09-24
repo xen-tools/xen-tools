@@ -18,6 +18,8 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
     bash completion.
   * Handle potentially empty gateway setting properly in
     hooks/common/40-setup-networking-deb. Thanks Simone Caruso!
+  * Reformat hooks/common/40-setup-networking-deb so that the result
+    neither has trailing whitespace nor broken indentation.
 
  -- Axel Beckert <abe@debian.org>  Fri, 23 Aug 2013 21:13:07 +0200
 

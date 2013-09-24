@@ -72,7 +72,7 @@ setupStaticNetworking ()
     #
     point='';
     if [ -n "${p2p}" ]; then
-        point="pointopoint ${p2p}"
+        point=" pointopoint ${p2p}"
     else
         point=''
     fi
@@ -110,8 +110,8 @@ iface eth0 inet static
  address ${ip1}
 ${gateway}
  netmask ${netmask}
- ${bcast}
- ${point}
+${bcast}
+${point}
  # post-up  ethtool -K eth0 tx off
 
 #
