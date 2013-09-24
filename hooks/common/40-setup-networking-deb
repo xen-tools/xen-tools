@@ -86,6 +86,14 @@ setupStaticNetworking ()
     fi
 
     #
+    # gateway address?
+    #
+    gateway='';
+    if [ -n "${gateway}" ]; then
+      gateway=" gateway ${gateway}"
+    fi
+
+    #
     # We have a static IP address
     #
     cat <<E_O_STATIC >${prefix}/etc/network/interfaces
@@ -100,7 +108,7 @@ iface lo inet loopback
 auto eth0
 iface eth0 inet static
  address ${ip1}
- gateway ${gateway}
+${gateway}
  netmask ${netmask}
  ${bcast}
  ${point}
