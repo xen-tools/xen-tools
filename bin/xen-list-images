@@ -249,7 +249,7 @@ sub displayInstance
         {
             $name = $1;
         }
-        if ( $line =~ /.*memory[^0-9]*([0-9]+)/i )
+        if ( $line =~ /^\s*memory[^0-9]*([0-9]+)/i )
         {
             $mem = $1;
         }
