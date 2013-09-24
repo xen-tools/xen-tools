@@ -7,6 +7,8 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
   * Loop around calling "passwd" to get a second chance to change the
     password. (Closes: #703159)
     + Add dependency on "libterm-ui-perl | perl (<< 5.17.0)"
+  * Declares one more POD encoding and recode Xen::Tools::Common to
+    UTF-8. Fixes FTBFS with Perl 5.18. (Finally closes: #720519)
 
  -- Axel Beckert <abe@debian.org>  Fri, 23 Aug 2013 21:13:07 +0200
 

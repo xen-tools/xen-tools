@@ -2,6 +2,8 @@
 
 package Xen::Tools::Common;
 
+=encoding utf8
+
 =head1 NAME
 
 Xen::Tools::Common - Common funtions used in xen-tools' Perl scripts
@@ -402,7 +404,7 @@ sub logprint_with_config ($$)
  Steve Kemp, http://www.steve.org.uk/
  Axel Beckert, http://noone.org/abe/
  Dmitry Nedospasov, http://nedos.net/
- Stéphane Jourdois
+ StÃ©phane Jourdois
 
  Merged from several scripts by Axel Beckert.
 
