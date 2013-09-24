@@ -11,6 +11,7 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
     UTF-8. Fixes FTBFS with Perl 5.18. (Finally closes: #720519)
   * Apply patch by Philipp Erbelding to fix overzealous line matching in
     xen-list-images. (Gitorious merge request #5)
+  * xen-list-images now displays a unit after the memory size
 
  -- Axel Beckert <abe@debian.org>  Fri, 23 Aug 2013 21:13:07 +0200
 
