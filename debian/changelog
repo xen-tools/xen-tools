@@ -14,6 +14,8 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
   * xen-list-images now displays a unit after the memory size
   * Drop support for memory size in kilobytes in
     xen-create-image, neither xt-create-xen-config nor xm support it.
+  * Refactoring: Replace all occurrences of "! -z" by "-n" in hooks and
+    bash completion.
 
  -- Axel Beckert <abe@debian.org>  Fri, 23 Aug 2013 21:13:07 +0200
 

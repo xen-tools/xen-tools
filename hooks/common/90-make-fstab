@@ -48,7 +48,7 @@ if [ "${ide}" ]; then
 elif [ "${scsi}" ]; then
     device=sda
 else
-    if [ ! -z "${disk_device}" ]; then
+    if [ -n "${disk_device}" ]; then
         device=`basename $disk_device`
     fi
 fi

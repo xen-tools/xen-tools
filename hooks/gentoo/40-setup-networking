@@ -61,7 +61,7 @@ setupStaticNetworking ()
     #  if $p2p is set then add a "pointopoint" setting.
     #
     point='';
-    if [ ! -z "${p2p}" ]; then
+    if [ -n "${p2p}" ]; then
         point="pointopoint ${p2p}"
     else
         point=''

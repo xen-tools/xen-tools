@@ -41,7 +41,7 @@ EOF
 for i in `seq 1 $NUMPARTITIONS`; do
   echo -n "/dev/sda$i " >> ${prefix}/etc/fstab
   eval part=\$PARTITION$i
-  if [ ! -z "`echo $part | grep swap`" ]; then
+  if [ -n "`echo $part | grep swap`" ]; then
      echo "none swap ws 0 0" >> ${prefix}/etc/fstab
   else
      echo $part | awk -F: '{print $4,$3,$5,0,1}' >> ${prefix}/etc/fstab

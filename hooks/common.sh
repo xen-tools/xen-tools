@@ -24,7 +24,7 @@ logMessage ()
 {
     message="$*"
 
-    if [ ! -z "${verbose}" ]; then
+    if [ -n "${verbose}" ]; then
         echo $message
     fi
 }
