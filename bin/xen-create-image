@@ -4245,6 +4245,7 @@ END
         logprint("---------------------\n");
         logprint("Hostname        :  $CONFIG{'hostname'}\n");
         logprint("Distribution    :  $CONFIG{'dist'}\n");
+        logprint("MAC Address     :  $CONFIG{'mac'}\n");
         logprint("IP-Address(es)  :  ");
         if ( $CONFIG{ 'dhcp' } ) {
            logprint("dynamic");
