@@ -374,6 +374,21 @@ sub createXenConfig
         $ENV{ 'memory' } = $1;
     }
 
+    #
+    #  The maxmem size:  Convert Gb -> Mb.
+    #
+    if ( $ENV{ 'maxmem' } =~ /^(\d+)Gb?.*$/i )
+    {
+        $ENV{ 'maxmem' } = $1 * 1024;
+    }
+
+    #
+    #  Remove any trailing Mb.
+    #
+    if ( $ENV{ 'maxmem' } =~ /^(\d+)Mb?.*$/i )
+    {
+        $ENV{ 'maxmem' } = $1;
+    }
 
     #
     # Images as presented to Xen - either loopback images, or LVM partitions.

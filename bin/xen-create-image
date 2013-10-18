@@ -134,6 +134,13 @@ and EVMS EXAMPLE.
                 "MB", "G" and "GB" (case does not matter). If there's
                 no unit given, megabytes are assumed.
 
+   --maxmem=size
+                Setup the maximum amount of memory that can be allocated
+                to the new instance. As suffix recognized size units are "M",
+                "MB", "G" and "GB" (case does not matter). If there's
+                no unit given, megabytes are assumed.
+                Required for dynamic memory ballooning.
+
    --modules=/path/to/modules
                 Set the path to the kernel modules to use for domU.
                 If modules are specified they must exist.
@@ -418,6 +425,7 @@ Create a Xen configuration file in so that xm/xl can start the new domain.
   size       = 2Gb      # Disk image size.
   image      = full     # Allocate the full disk size immediately.
   memory     = 128Mb    # Memory size
+  maxmem     = 512Mb    # Memory size
   swap       = 128Mb    # Swap size
   fs         = ext3     # use EXT3 filesystems
   dist       = stable   # Default distribution to install.
@@ -1511,6 +1519,7 @@ sub checkOption
         swap          => 'integerWithSuffix',
         image         => 'imageType',
         memory        => 'integerWithSuffix',
+        maxmem        => 'integerWithSuffix',
         kernel        => 'existingFile',
         initrd        => 'existingFile',
         modules       => 'existingDir',
@@ -1609,6 +1618,7 @@ sub parseCommandLineArguments
             "noswap",   \&checkOption,
             "image=s",  \&checkOption,
             "memory=s", \&checkOption,
+            "maxmem=s", \&checkOption,
             "vcpus=i",  \&checkOption,
 
             # Locations
@@ -2640,6 +2650,11 @@ sub showSummary
 
     logprint("Image type     :  $CONFIG{'image'}\n");
     logprint("Memory size    :  $CONFIG{'memory'}\n");
+
+    if ( defined( $CONFIG{ 'maxmem' } ) )
+    {
+        logprint("Max mem size   : $CONFIG{'maxmem'}\n");
+    }
 
     if ( defined( $CONFIG{ 'kernel' } ) && length( $CONFIG{ 'kernel' } ) )
     {
