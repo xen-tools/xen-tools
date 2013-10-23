@@ -17,6 +17,11 @@
   }
 }
 memory  = '{$memory}'
+{ if ( $maxmem )
+  {
+    $OUT .= "maxmem      = '$maxmem'\n";
+  }
+}
 
 
 # Name

@@ -37,6 +37,11 @@
 }
 vcpus       = '{$vcpus}'
 memory      = '{$memory}'
+{ if ( $maxmem )
+  {
+    $OUT .= "maxmem      = '$maxmem'\n";
+  }
+}
 
 #
 #  Disk device(s).

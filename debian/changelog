@@ -1,5 +1,6 @@
 xen-tools (4.4~dev-1) UNRELEASED; urgency=low
 
+  * Added --maxmem flag to set a maximum value for dynamic memory ballooning
   * Also switch from cdn.debian.net to http.debian.net in xen-tools.conf
   * Do not run "passwd" via runCommand as that one captures STDOUT for
     logging. Makes --passwd usable again. Thanks to Christian Herzog for
