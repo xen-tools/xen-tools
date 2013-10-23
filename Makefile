@@ -202,6 +202,7 @@ install-hooks:
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d quantal.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d raring.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d saucy.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d trusty.d
 	cp hooks/common.sh ${prefix}/usr/share/xen-tools
 	cp -r hooks/common ${prefix}/usr/share/xen-tools
 
