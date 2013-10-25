@@ -3953,6 +3953,8 @@ sub setupRootPassword
                         prompt => 'Do you want to try to change the password again??',
                         default => 'y',
                     );
+                } else {
+                    $tryagain=0;
                 }
             }
         }
