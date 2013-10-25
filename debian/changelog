@@ -1,6 +1,5 @@
 xen-tools (4.4~dev-1) UNRELEASED; urgency=low
 
-  * Added --maxmem flag to set a maximum value for dynamic memory ballooning
   * Also switch from cdn.debian.net to http.debian.net in xen-tools.conf
   * Do not run "passwd" via runCommand as that one captures STDOUT for
     logging. Makes --passwd usable again. Thanks to Christian Herzog for
@@ -23,6 +22,8 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
     neither has trailing whitespace nor broken indentation.
   * Also display MAC address after the DomU has been created.
   * Preliminary support for Ubuntu 14.04 Trusty Tahr.
+  * Added --maxmem flag to set a maximum value for dynamic memory
+    ballooning. Thanks to Joan <aseques@gmail.com> for the patch!
 
  -- Axel Beckert <abe@debian.org>  Fri, 23 Aug 2013 21:13:07 +0200
 
