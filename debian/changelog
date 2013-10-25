@@ -1,10 +1,10 @@
 xen-tools (4.4~dev-1) UNRELEASED; urgency=low
 
-  * Fixed password prompt iteration
   * Also switch from cdn.debian.net to http.debian.net in xen-tools.conf
   * Do not run "passwd" via runCommand as that one captures STDOUT for
     logging. Makes --passwd usable again. Thanks to Christian Herzog for
-    the bug report.
+    the bug report and Joan <aseques@gmail.com> for a bug fix for my new
+    implementation.
   * Loop around calling "passwd" to get a second chance to change the
     password. (Closes: #703159)
     + Add dependency on "libterm-ui-perl | perl (<< 5.17.0)"
