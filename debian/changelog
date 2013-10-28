@@ -25,6 +25,8 @@ xen-tools (4.4~dev-1) UNRELEASED; urgency=low
   * Preliminary support for Ubuntu 14.04 Trusty Tahr.
   * Added --maxmem flag to set a maximum value for dynamic memory
     ballooning. Thanks to Joan <aseques@gmail.com> for the patch!
+  * Added fix by Patryk Ściborek againsat disableStartStopDaemon()
+    aborting under some circumstances. (Closes: #725192)
   * Bump Standards-Version to 3.9.5 (no changes).
 
  -- Axel Beckert <abe@debian.org>  Fri, 23 Aug 2013 21:13:07 +0200
