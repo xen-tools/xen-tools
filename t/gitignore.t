@@ -7,10 +7,16 @@
 #
 
 use strict;
-use Test::More tests => 3;
+use Test::More;
+use File::Which;
 
-BEGIN { use_ok( 'Git' ); }
+if (which('git') and -d '.git') {
+    plan tests => 3;
+} else {
+    plan skip_all => 'gitignore test is only thought for release testing.';
+}
 
+use_ok( 'Git' );
 
 # First, check that no tracked files are ignored
 my $cmd = Git::command_output_pipe('ls-files', '--ignored', '--exclude-standard');
