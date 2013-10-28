@@ -335,7 +335,7 @@ sub checkArguments
         print " --dir\n";
         print " --evms\n";
         print " --lvm\n";
-        exit;
+        exit 2;
     }
 }
 
