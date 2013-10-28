@@ -261,12 +261,14 @@ disableStartStopDaemon ()
    for starter in start-stop-daemon initctl; do
       local daemonfile="${prefix}/sbin/${starter}"
 
-      mv "${daemonfile}" "${daemonfile}.REAL"
-      echo '#!/bin/sh' > "${daemonfile}"
-      echo "echo \"Warning: Fake ${starter} called, doing nothing\"" >> "${daemonfile}"
+      if [ -e "${daemonfile}" ]; then
+         mv "${daemonfile}" "${daemonfile}.REAL"
+         echo '#!/bin/sh' > "${daemonfile}"
+         echo "echo \"Warning: Fake ${starter} called, doing nothing\"" >> "${daemonfile}"
 
-      chmod 755 "${daemonfile}"
-      logMessage "${starter} disabled / made a stub."
+         chmod 755 "${daemonfile}"
+         logMessage "${starter} disabled / made a stub."
+      fi
    done
 }
 
