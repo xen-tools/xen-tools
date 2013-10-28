@@ -1,6 +1,7 @@
 xen-tools (4.4~rc2-1) UNRELEASED; urgency=low
 
   * Run t/gitignore.t only if git is installed and .git present.
+  * Also add build-dependency on "libterm-ui-perl | perl (<< 5.17.0)".
 
  -- Axel Beckert <abe@debian.org>  Tue, 29 Oct 2013 00:01:53 +0100
 
