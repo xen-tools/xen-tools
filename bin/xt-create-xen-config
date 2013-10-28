@@ -369,10 +369,7 @@ sub createXenConfig
     #
     #  Remove any trailing Mb.
     #
-    if ( $ENV{ 'memory' } =~ /^(\d+)Mb?.*$/i )
-    {
-        $ENV{ 'memory' } = $1;
-    }
+    $ENV{ 'memory' } =~ s/^(\d+)Mb?.*$/$1/i;
 
     #
     #  The maxmem size:  Convert Gb -> Mb.
@@ -387,10 +384,7 @@ sub createXenConfig
     #
     #  Remove any trailing Mb.
     #
-        if ( $ENV{ 'maxmem' } =~ /^(\d+)Mb?.*$/i )
-        {
-            $ENV{ 'maxmem' } = $1;
-        }
+        $ENV{ 'maxmem' } =~ s/^(\d+)Mb?.*$/$1/i;
     }
 
     #
