@@ -1,40 +1,41 @@
-xen-tools (4.4~dev-1) UNRELEASED; urgency=low
+xen-tools (4.4~rc1-1) unstable; urgency=low
 
-  * Also switch from cdn.debian.net to http.debian.net in xen-tools.conf
-  * Do not run "passwd" via runCommand as that one captures STDOUT for
-    logging. Makes --passwd usable again. Thanks to Christian Herzog for
-    the bug report and Joan <aseques@gmail.com> for a bug fix for my new
-    implementation.
-  * Loop around calling "passwd" to get a second chance to change the
-    password. (Closes: #703159)
-    + Add dependency on "libterm-ui-perl | perl (<< 5.17.0)"
-  * Declares one more POD encoding and recode Xen::Tools::Common to
-    UTF-8. Fixes FTBFS with Perl 5.18. (Finally closes: #720519)
-  * Apply patch by Philipp Erbelding to fix overzealous line matching in
-    xen-list-images. (Gitorious merge request #5)
-  * xen-list-images now displays a unit after the memory size
-  * Drop support for memory size in kilobytes in
-    xen-create-image, neither xt-create-xen-config nor xm support it.
-  * Refactoring: Replace all occurrences of "! -z" by "-n" in hooks and
-    bash completion.
-  * Handle potentially empty gateway setting properly in
-    hooks/common/40-setup-networking-deb. Thanks Simone Caruso!
-  * Reformat hooks/common/40-setup-networking-deb so that the result
-    neither has trailing whitespace nor broken indentation.
-  * Also display MAC address after the DomU has been created.
-  * Preliminary support for Ubuntu 14.04 Trusty Tahr.
-  * Added --maxmem flag to set a maximum value for dynamic memory
-    ballooning. Thanks to Joan <aseques@gmail.com> for the patch!
-  * Added fix by Patryk Ściborek againsat disableStartStopDaemon()
-    aborting under some circumstances. (Closes: #725192)
-  * Abort early and with proper error message if "xen-delete-image --test"
-    is not used with "--dir". (Closes: #704878)
-  * xen-delete-image: Exit with return code != 0 in all error cases.
-  * Refactoring: xt-create-xen-config: Use s/// to strip trailing MB size
-    suffixes.
+  * New upstream release candidate
+    - Also switch from cdn.debian.net to http.debian.net in xen-tools.conf
+    - Do not run "passwd" via runCommand as that one captures STDOUT for
+      logging. Makes --passwd usable again. Thanks to Christian Herzog for
+      the bug report.
+    - Loop around calling "passwd" to get a second chance to change the
+      password. (Closes: #703159) Thanks to Joan <aseques@gmail.com> for a
+      bug fix in this new code.
+      + Add dependency on "libterm-ui-perl | perl (<< 5.17.0)"
+    - Declares one more POD encoding and recode Xen::Tools::Common to
+      UTF-8. Fixes FTBFS with Perl 5.18. (Finally closes: #720519)
+    - Apply patch by Philipp Erbelding to fix overzealous line matching in
+      xen-list-images. (Gitorious merge request #5)
+    - xen-list-images now displays a unit after the memory size
+    - Drop support for memory size in kilobytes in xen-create-image,
+      neither xt-create-xen-config nor xm support it.
+    - Refactoring: Replace all occurrences of "! -z" by "-n" in hooks and
+      bash completion.
+    - Handle potentially empty gateway setting properly in
+      hooks/common/40-setup-networking-deb. Thanks Simone Caruso!
+    - Reformat hooks/common/40-setup-networking-deb so that the result
+      neither has trailing whitespace nor broken indentation.
+    - Also display MAC address after the DomU has been created.
+    - Preliminary support for Ubuntu 14.04 Trusty Tahr.
+    - Added --maxmem flag to set a maximum value for dynamic memory
+      ballooning. Thanks to Joan <aseques@gmail.com> for the patch!
+    - Added fix by Patryk Ściborek againsat disableStartStopDaemon()
+      aborting under some circumstances. (Closes: #725192)
+    - Abort early and with proper error message if "xen-delete-image
+      --test" is not used with "--dir". (Closes: #704878)
+    - xen-delete-image: Exit with return code != 0 in all error cases.
+    - Refactoring: xt-create-xen-config: Use s/// to strip trailing MB
+      size suffixes.
   * Bump Standards-Version to 3.9.5 (no changes).
 
- -- Axel Beckert <abe@debian.org>  Fri, 23 Aug 2013 21:13:07 +0200
+ -- Axel Beckert <abe@debian.org>  Mon, 28 Oct 2013 22:31:03 +0100
 
 xen-tools (4.4~beta1-1) unstable; urgency=low
 
