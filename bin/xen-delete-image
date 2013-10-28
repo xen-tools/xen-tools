@@ -56,7 +56,8 @@ Specify the LVM volume group where images were previously saved.
 Read the manual for this script.
 
 =item B<--test>
-Do not complain, or exit, if the script is not executed by the root user.
+Do not complain, or exit, if the script is not executed by the root
+user. (Only works in conjunction with --dir.)
 
 =item B<--version>
 Show the version number and exit.
@@ -309,10 +310,10 @@ sub checkArguments
     #
     #  When testing we only care about loopback images, not disk images.
     #
-    if ( $CONFIG{ 'test' } )
+    if ( $CONFIG{ 'test' } and ( $CONFIG{ 'lvm' } or $CONFIG{ 'evms' } ))
     {
-        $CONFIG{ 'lvm' }  = undef;
-        $CONFIG{ 'evms' } = undef;
+        print "Error: --test only works with --dir.\n";
+        exit 1;
     }
 
     #
