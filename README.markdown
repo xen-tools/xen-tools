@@ -33,8 +33,8 @@ known to work reliably, i.e.:
 * Lenny 5.0
 * Squeeze 6.0
 * Wheezy 7
-* Jessie 8 (under developement)
-* Sid (always under developement; works at least at the moment of writing :-)
+* Jessie 8 (under development)
+* Sid (always under development; works at least at the moment of writing :-)
 
 ### Ubuntu
 
@@ -56,7 +56,7 @@ known to work reliably, i.e.:
 * Quantal Quetzal 12.10
 * Raring Ringtail 13.04
 * Saucy Salamander 13.10
-* Trusty Tahr 14.04 (LTS, under developement)
+* Trusty Tahr 14.04 (LTS, under development)
 
 [1]: http://bugs.debian.org/659360
     "debootstrap in Wheezy can no more build Ubuntu Edgy or earlier"
