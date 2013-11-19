@@ -3,6 +3,9 @@ xen-tools (4.4~rc2-1) UNRELEASED; urgency=low
   * Run t/gitignore.t only if git is installed and .git present.
   * Also add build-dependency on "libterm-ui-perl | perl (<< 5.17.0)".
   * Mention Ubuntu 14.04 Trusty Tahr in long description.
+  * Rework "minimal" role to be less based on personal preferences.
+    + No more installs sudo, vim, syslog-ng, etc.
+    + Fixes usage together with pygrub.
 
  -- Axel Beckert <abe@debian.org>  Tue, 29 Oct 2013 00:01:53 +0100
 

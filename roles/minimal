@@ -1,13 +1,10 @@
 #!/bin/sh
 #
-#  Configure the new image to be a minimal image, by removing
-# packages I don't care about - and installing new ones I prefer.
+#  Configure the new image to be a minimal image, by removing packages
+# not necessarily needed - and installing less resource-hungry ones
 #
-# Steve
-# --
-# http://www.steve.org.uk/
-#
-
+#  Still far away from perfect. Less personal than in the past, but
+# for now still based on gut feeling.
 
 prefix=$1
 
@@ -26,15 +23,11 @@ fi
 
 
 #
-#  Install some new packages - do this first to avoid dependency errors.
+#  Install some new packages - do this first to avoid dependency errors
 #
-installDebianPackage ${prefix} syslog-ng 
-installDebianPackage ${prefix} deborphan
-installDebianPackage ${prefix} less
-installDebianPackage ${prefix} screen
-installDebianPackage ${prefix} sudo
-installDebianPackage ${prefix} vim
 
+# Minimalst possible syslog service
+installDebianPackage ${prefix} busybox-syslogd
 
 #
 #  Remove some standard packages.
@@ -47,22 +40,57 @@ removeDebianPackage ${prefix} pppoe
 removeDebianPackage ${prefix} ppp
 removeDebianPackage ${prefix} libpcap0.7
 
-# Editors
-removeDebianPackage ${prefix} nano
-removeDebianPackage ${prefix} ed
-removeDebianPackage ${prefix} nvi
+# Editors, keep only a minimal vi, namely nvi
+installDebianPackage ${prefix} nvi
+removeDebianPackage ${prefix} ed nano
+removeDebianPackage ${prefix} vim-tiny vim-common vim-runtime
 
 # Syslog
-removeDebianPackage ${prefix} klogd
-removeDebianPackage ${prefix} sysklogd
+removeDebianPackage ${prefix} klogd sysklogd
+removeDebianPackage ${prefix} rsyslog
+removeDebianPackage ${prefix} logrotate
 
-# manpages
-removeDebianPackage ${prefix} manpages  
-removeDebianPackage ${prefix} man-db 
+# Man pages
+removeDebianPackage ${prefix} manpages man-db groff-base
 removeDebianPackage ${prefix} info
 
 # misc
 removeDebianPackage ${prefix} tasksel tasksel-data
 removeDebianPackage ${prefix} pciutils
 removeDebianPackage ${prefix} fdutils
-removeDebianPackage ${prefix} cpio
+removeDebianPackage ${prefix} util-linux-locales locales
+removeDebianPackage ${prefix} debconf-i18n
+removeDebianPackage ${prefix} netcat-traditional netcat-openbsd
+removeDebianPackage ${prefix} whiptail
+
+# Unnecessary stuff only installed by default on Ubuntu
+removeDebianPackage ${prefix} sudo
+removeDebianPackage ${prefix} resolvconf
+removeDebianPackage ${prefix} console-setup keyboard-configuration kbd xkb-data ureadahead
+removeDebianPackage ${prefix} python python3 dh-python
+
+# General cleanup
+chroot ${prefix} aptitude -y markauto \
+    '~n -common' \
+    '~s libs' \
+    '~s localization' \
+    '~s misc' \
+    '~s perl' \
+    '~s python'
+chroot ${prefix} apt-mark auto \
+    cpio \
+    crda \
+    debconf \
+    install-info \
+    kmod \
+    lsb-base \
+    makedev \
+    mime-support \
+    module-init-tools \
+    plymouth
+
+chroot ${prefix} aptitude -y purge '~c'
+removeDebianPackage ${prefix} aptitude aptitude-common
+
+chroot ${prefix} apt-get autoremove --purge
+chroot ${prefix} apt-get clean
