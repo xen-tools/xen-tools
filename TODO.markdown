@@ -6,11 +6,18 @@ See KNOWN_BUGS.markdown for real bugs.
 Bugs to fix and features to add for 5.0
 ---------------------------------------
 
+* Switch build-system to autotools or something CPANish.
+
 * `xen-create-image` man page overhaul:
 
   * ambiguous option list with regards to parameters
   * Set Fail in more situations where the script has clearly failed
     i.e.: lvm exists
+
+* Roles overhaul
+
+  * Remove udev role. No more makes sense. udev gets pulled in by
+    kernels where necessary.
 
 * Test and support more file system types.
 
