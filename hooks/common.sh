@@ -55,14 +55,12 @@ assert ()
 
 
 #
-#  Install a number of Debian packages via apt-get.
+#  Install a number of Debian packages via apt-get including Recommends.
 #
 #  We take special care so that daemons shouldn't start after installation
 # which they might otherwise do.
 #
-#  NOTE:  Function not renamed with trailing "s" for compatibility reasons.
-#
-installDebianPackage ()
+installDebianPackageAndRecommends ()
 {
     prefix=$1
     shift
@@ -98,7 +96,7 @@ installDebianPackage ()
     #
     # Install the packages
     #
-    DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes --force-yes --no-install-recommends install "$@"
+    DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes --force-yes install "$@"
 
     #
     #  Remove the policy-rc.d script.
@@ -112,6 +110,21 @@ installDebianPackage ()
 
 }
 
+#
+#  Install a number of Debian packages via apt-get, but without Recommends
+#
+#  We take special care so that daemons shouldn't start after installation
+# which they might otherwise do.
+#
+#  NOTE:  Function not renamed with trailing "s" for compatibility reasons.
+#
+installDebianPackage ()
+{
+    prefix=$1
+    shift
+
+    installDebianPackageAndRecommends ${prefix} --no-install-recommends "$@"
+}
 
 #
 #  Generate a Debian-/Ubuntu-compliant menu.lst for legacy GRUB

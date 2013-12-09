@@ -6,6 +6,8 @@ xen-tools (4.4~rc2-1) UNRELEASED; urgency=low
   * Rework "minimal" role to be less based on personal preferences.
     + No more installs sudo, vim, syslog-ng, etc.
     + Fixes usage together with pygrub.
+  * hooks/common.sh: Split up installDebianPackage into
+    installDebianPackage and installDebianPackageAndRecommends.
 
  -- Axel Beckert <abe@debian.org>  Tue, 29 Oct 2013 00:01:53 +0100
 
