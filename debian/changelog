@@ -1,17 +1,18 @@
-xen-tools (4.4~rc2-1) UNRELEASED; urgency=low
+xen-tools (4.4-1) unstable; urgency=low
 
-  * Run t/gitignore.t only if git is installed and .git present.
+  * New upstream release
+    - Run t/gitignore.t only if git is installed and .git present.
+    - Rework "minimal" role to be less based on personal preferences.
+      + No more installs sudo, vim, syslog-ng, etc.
+      + Fixes usage together with pygrub.
+    - hooks/common.sh: Split up installDebianPackage into
+      installDebianPackage and installDebianPackageAndRecommends.
   * Also add build-dependency on "libterm-ui-perl | perl (<< 5.17.0)" and
     "liblog-message-perl | perl (<< 5.17.0)" to avoid warnings with Perl
     5.18 and future FTBFS.
   * Mention Ubuntu 14.04 Trusty Tahr in long description.
-  * Rework "minimal" role to be less based on personal preferences.
-    + No more installs sudo, vim, syslog-ng, etc.
-    + Fixes usage together with pygrub.
-  * hooks/common.sh: Split up installDebianPackage into
-    installDebianPackage and installDebianPackageAndRecommends.
 
- -- Axel Beckert <abe@debian.org>  Tue, 29 Oct 2013 00:01:53 +0100
+ -- Axel Beckert <abe@debian.org>  Wed, 11 Dec 2013 20:59:06 +0100
 
 xen-tools (4.4~rc1-1) unstable; urgency=low
 
