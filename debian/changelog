@@ -1,3 +1,11 @@
+xen-tools (4.4+dev-1) UNRELEASED; urgency=low
+
+  * Apply patch by Adrian C. (anrxc) to allow to override hooks in
+    /usr/share/xen-tools/*.d/ with hooks in /etc/xen-tools/hooks.d/.
+    Thanks! (Also add /etc/xen-tools/hooks.d/ to debian/dirs.)
+
+ -- Axel Beckert <abe@debian.org>  Sun, 15 Dec 2013 17:20:43 +0100
+
 xen-tools (4.4-1) unstable; urgency=low
 
   * New upstream release

@@ -1,4 +1,5 @@
 /etc/xen-tools
 /etc/xen-tools/role.d
+/etc/xen-tools/hooks.d
 /etc/xen-tools/skel
 /usr/share/xen-tools
