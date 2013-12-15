@@ -54,6 +54,15 @@ xt-customize-image - Customize a freshly installed copy of GNU/Linux
  executed from '/usr/share/xen-tools/foo.d'.  Each executable will
  be loaded and executed in sorted order.
 
+  The systems administrator can optionally provide site-specific
+ revisions of those same hooks by placing them in the directory
+ '/etc/xen-tools/hooks.d/' in which case a script with the same name
+ as the one in the 'foo.d' directory above will take precedence. In
+ this way certain hooks can be prevented from running, expanded with
+ site-specific features which won't get overwritten on upgrades, or
+ patched with critical bug-fixes before the upstream OS distribution
+ provider reacts.
+
 
 =head1 AUTHORS
 
@@ -251,6 +260,7 @@ sub runDistributionHooks
     #  Hook directory.
     #
     my $hooks = "/usr/share/xen-tools/" . $CONFIG{ 'dist' } . ".d/";
+    my $hooks_local = "/etc/xen-tools/hooks.d/";
 
     #
     #  Installation prefix
@@ -296,9 +306,19 @@ sub runDistributionHooks
             }
 
             #
+            # Run a local version of the hook instead of the system one,
+            # if the local one exists and is executable.
+            #
+            my $file_local = $hooks_local . $name;
+            if ( ( -x $file_local ) && ( -f $file_local ) )
+            {
+              $file = $file_local
+            }
+
+            #
             # Complete command we're going to execute.
             #
-            my $cmd = $hooks . $name . " $CONFIG{'location'}";
+            my $cmd = $file . " $CONFIG{'location'}";
 
             #
             #  Run the command.  This has different prolog and epilog
