@@ -51,6 +51,9 @@ sub checkFile
     # `tests/hook-tls.t` is too.
     return if ( $file =~ /hook-tls.t$/ );
 
+    # Ignore cover_db files
+    return if ( $file =~ /^\.\/cover_db\// );
+
     # See if it is a perl file.
     my $isPerl = 0;
 

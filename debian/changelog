@@ -3,6 +3,7 @@ xen-tools (4.4+dev-1) UNRELEASED; urgency=low
   * Apply patch by Adrian C. (anrxc) to allow to override hooks in
     /usr/share/xen-tools/*.d/ with hooks in /etc/xen-tools/hooks.d/.
     Thanks! (Also add /etc/xen-tools/hooks.d/ to debian/dirs.)
+  * Ignore cover_db directory in t/perl-syntax.t.
 
  -- Axel Beckert <abe@debian.org>  Sun, 15 Dec 2013 17:20:43 +0100
 
