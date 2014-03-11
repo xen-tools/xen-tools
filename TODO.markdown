@@ -195,6 +195,10 @@ Bugs to fix and features to add for 5.0
   mount commands in `xen-update-image`. The calls to uname or
   lsb_release should be fine.)
 
+* Make default source installation work on non-debianesk systems, e.g.
+  either don't use xt-guess-suite-and-mirror in xen-tools.conf or make
+  it work with e.g. Fedora.
+
 Stuff from Steve's TODO list / Generic TODOs
 --------------------------------------------
 
