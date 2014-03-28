@@ -34,8 +34,14 @@ Contributions
   Vagrant Cascadian <vagrant [at] org.debian>
    - Less redundant SSH key generation
 
+  Adrian C. (anrxc) <anrxc [at] org.sysphere>
+  - Hook overrides
+
   Edd Dumbill <edd [at] com.usefulinc>
    - Contributed APT sources.list file for Ubuntu's Dapper release.
+
+  Lionel FÉLICITÉ <lfelicite [at] com clever-age>
+   - Bugfix for Centos 6 installation
 
   Kevin Fullerton <kevin.fullerton [at] uk.co.shotgun-suicide>
    - Fixup for gentoos revised networking scripts.  (dhcp)
@@ -64,6 +70,9 @@ Contributions
   Eric Lemoine <eric.lemoine [at] com.gmail>
    - Improved binary detection and good suggestions.
    - Better portability for non-bash shells.
+
+  Daniel Lintott <daniel [at] uk.co.serverb>
+   - Bugfix for Jessie and newer installations
 
   Jorge Armando Medina <jmedina [at] com.e-compugraf>
    - Fix for backward compatibility with xvc0 serial consoles
@@ -97,6 +106,9 @@ Contributions
    - CentOS 6 support
    - CentOS 5 fixes
 
+  Patryk Ściborek <patryk [at] com.sciborek>
+   - Ubuntu-related bugfix
+
   Radu Spineanu <radu [at] org.debian>
    - Supplied many small tweaks, bugfixes, and suggestions.
    - Radu is also one of the former Debian package maintainers.
@@ -115,6 +127,10 @@ Contributions
 
   Ward Vandewege <ward [at] be.pong>
    - Made several updates for Ubuntu support.
+
+  Joan <aseques [at] com.gmail>
+   - Bugfix for password interaction
+   - maxmem option
 
   xstasi on Launchpad
    - Proper upstart handling in the chroot
