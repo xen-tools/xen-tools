@@ -33,7 +33,7 @@ if [ ! -d ${prefix}/proc ]; then
     mkdir -p ${prefix}/proc
 fi
 mount -o bind /proc ${prefix}/proc
-chroot ${prefix} /usr/bin/yum update
+chroot ${prefix} /usr/bin/yum update -y
 umount ${prefix}/proc
 
 

@@ -2,6 +2,7 @@ xen-tools (4.4+dev-1) UNRELEASED; urgency=low
 
   * Use "686-pae" kernels instead of "686" kernels on Debian Wheezy and
     later. Thanks to Daniel Lintott! (Closes: #742778)
+  * Pass "-y" option ("assume yes") to yum (Closes: #735675)
   * Apply patch by Adrian C. (anrxc) to allow to override hooks in
     /usr/share/xen-tools/*.d/ with hooks in /etc/xen-tools/hooks.d/.
     Thanks! (Also add /etc/xen-tools/hooks.d/ to debian/dirs.)
