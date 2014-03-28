@@ -199,6 +199,10 @@ Bugs to fix and features to add for 5.0
   either don't use xt-guess-suite-and-mirror in xen-tools.conf or make
   it work with e.g. Fedora.
 
+* Error messages triggered by xenRunning should rather say something
+  about "known to the Xen system" instead of "running". See
+  https://bugs.debian.org/703606
+
 Stuff from Steve's TODO list / Generic TODOs
 --------------------------------------------
 
