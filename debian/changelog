@@ -4,6 +4,8 @@ xen-tools (4.4+dev-1) UNRELEASED; urgency=low
     later. Thanks to Daniel Lintott! (Closes: #742778)
   * Pass "-y" option ("assume yes") to yum (Closes: #735675)
     Thanks Lionel FÉLICITÉ!
+  * Drop all xend related sanity checks, they cause more havoc nowadays
+    than they help. Thanks Ian Campbell! (Closes: #732456)
   * Apply patch by Adrian C. (anrxc) to allow to override hooks in
     /usr/share/xen-tools/*.d/ with hooks in /etc/xen-tools/hooks.d/.
     Thanks! (Also add /etc/xen-tools/hooks.d/ to debian/dirs.)

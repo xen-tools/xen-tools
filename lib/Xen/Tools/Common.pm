@@ -128,7 +128,10 @@ sub xenRunning ($$)
 
     my $running = 0;
 
-    die "Couldn't determine Xen toolstack" unless $CONFIG->{'xm'};
+    unless ($CONFIG->{'xm'}) {
+        warn "Couldn't determine Xen toolstack, skipping check for running DomUs.";
+        return 0;
+    }
 
     open( CMD, $CONFIG->{'xm'}." list $hostname 2>/dev/null |" ) or
       fail_with_config("Failed to run '".$CONFIG->{'xm'}." list $hostname'", $CONFIG);

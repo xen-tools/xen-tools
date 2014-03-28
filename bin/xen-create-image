@@ -151,9 +151,6 @@ and EVMS EXAMPLE.
                 used the system will not have a swap entry added to
                 its /etc/fstab file either.
 
-   --no-xen-ok  Don't complain if xen seems not installed or xend is
-                not running. (Needed for the testsuite.)
-
    --output=dir Specify the output directory to create the xen
                 configuration file within.
 
@@ -1196,95 +1193,6 @@ EOF
             exit 127;
         }
     }
-
-
-    #
-    #  Test the system has a valid (network-script) + (vif-script) setup.
-    #
-    testXenConfig();
-
-}
-
-
-
-=begin doc
-
-  Test that the current Xen host has a valid network configuration,
- this is designed to help newcomers to Xen.
-
-=end doc
-
-=cut
-
-sub testXenConfig
-{
-
-    # wierdness.
-    return if ( !-d "/etc/xen" );
-
-    #
-    #  Temporary hash.
-    #
-    my %cfg;
-
-    #
-    # Read the configuration file.
-    #
-    open( CONFIG, "<", "/etc/xen/xend-config.sxp" ) or
-      fail("Failed to read /etc/xen/xend-config.sxp: $!");
-    while (<CONFIG>)
-    {
-        next if ( !$_ || !length($_) );
-
-        # vif
-        if ( $_ =~ /^\(vif-script ([^)]+)/ )
-        {
-            $cfg{ 'vif-script' } = $1;
-        }
-
-        # network
-        if ( $_ =~ /^\(network-script ([^)]+)/ )
-        {
-            $cfg{ 'network-script' } = $1;
-        }
-    }
-    close(CONFIG);
-
-    if ( !defined( $cfg{ 'network-script' } ) ||
-         !defined( $cfg{ 'vif-script' } ) )
-    {
-        print <<EOF;
-
-WARNING
--------
-
-  You appear to have a missing vif-script, or network-script, in the
- Xen configuration file /etc/xen/xend-config.sxp.
-
-  Please fix this and restart Xend, or your guests will not be able
- to use any networking!
-
-EOF
-    }
-    else
-    {
-        if ( ( $cfg{ 'network-script' } =~ /dummy/i ) ||
-             ( $cfg{ 'vif-script' } =~ /dummy/i ) )
-        {
-
-            print <<EOF;
-WARNING
--------
-
-  You appear to have a "dummy" vif-script, or network-script, setting
- in the Xen configuration file /etc/xen/xend-config.sxp.
-
-  Please fix this and restart Xend, or your guests will not be able to
- use any networking!
-
-EOF
-        }
-    }
 }
 
 
@@ -1356,7 +1264,6 @@ sub setupDefaultOptions
     chomp($CONFIG{ 'arch' });
     $CONFIG{ 'fs' }            = 'ext3';
     $CONFIG{ 'force' }         = 0;
-    $CONFIG{ 'no_xen_ok' }     = 0;
     $CONFIG{ 'install' }       = 1;
     $CONFIG{ 'hooks' }         = 1;
     $CONFIG{ 'partitions' }    = '';
@@ -1689,7 +1596,7 @@ sub parseCommandLineArguments
             "finalrole=s",       \&checkOption,
             "roledir=s",    \&checkOption,
             "force!",       \$CONFIG{ 'force' },
-            "no-xen-ok",    \$CONFIG{ 'no_xen_ok' },
+            "no-xen-ok",    sub { warn "Option --no-xen-ok is deprecated and ignored."; },
             "keep!",        \$CONFIG{ 'keep' },
             "template=s",   \&checkOption,
             "output=s",     \&checkOption,
@@ -3085,8 +2992,7 @@ sub createLVMBits
             # Delete if forcing
             if ( $CONFIG{ 'force' } )
             {
-                if ( $CONFIG{ 'no_xen_ok' } or
-                     !xenRunning($CONFIG{ 'hostname' }, \%CONFIG)) {
+                unless ( xenRunning($CONFIG{ 'hostname' }, \%CONFIG)) {
                     logprint(
                         "Removing $lvm_disk - since we're forcing the install\n");
                     runCommand("lvremove --force $lvm_disk", \%CONFIG);
