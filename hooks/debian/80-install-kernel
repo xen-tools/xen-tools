@@ -61,6 +61,17 @@ fi
 KERNEL_XEN_PKG="linux-image-xen-$XEN_ARCH"
 KERNEL_PKG="linux-image-$XEN_ARCH"
 
+# Add "-pae" suffix for Debian releases after Squeeze. See
+# https://bugs.debian.org/742778 for details.
+if [ "${dist}" != "sarge"   -a \
+     "${dist}" != "etch"    -a \
+     "${dist}" != "lenny"   -a \
+     "${dist}" != "squeeze" -a \
+     "$XEN_ARCH" = "686" ]; then
+    KERNEL_XEN_PKG="$KERNEL_XEN_PKG-pae"
+    KERNEL_PKG="$KERNEL_PKG-pae"
+fi
+
 logMessage Attempting to install the $KERNEL_XEN_PKG kernel image
 if chroot ${prefix} /usr/bin/apt-cache show $KERNEL_XEN_PKG > /dev/null 2>&1; then
     logMessage Package $KERNEL_XEN_PKG is available - installing
