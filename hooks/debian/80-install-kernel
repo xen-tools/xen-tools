@@ -29,7 +29,7 @@ if [ "${pygrub}" ]; then
 logMessage Script $0 starting
 
 #
-# Resolve the correct architecutre
+# Resolve the correct architecture
 #
 
 if [ "${arch}" = "i386" ]; then
