@@ -10,6 +10,8 @@ xen-tools (4.4+dev-1) UNRELEASED; urgency=low
     /usr/share/xen-tools/*.d/ with hooks in /etc/xen-tools/hooks.d/.
     Thanks! (Also add /etc/xen-tools/hooks.d/ to debian/dirs.)
   * Ignore cover_db directory in t/perl-syntax.t.
+  * Update list of supported Ubuntu releases. Preliminary support for
+    Ubuntu 14.10 Utopic Unicorn.
 
  -- Axel Beckert <abe@debian.org>  Sun, 15 Dec 2013 17:20:43 +0100
 

@@ -56,7 +56,8 @@ known to work reliably, i.e.:
 * Quantal Quetzal 12.10
 * Raring Ringtail 13.04
 * Saucy Salamander 13.10
-* Trusty Tahr 14.04 (LTS, under development)
+* Trusty Tahr 14.04 (LTS)
+* Utopic Unicorn 14.10 (under development)
 
 [1]: http://bugs.debian.org/659360
     "debootstrap in Wheezy can no more build Ubuntu Edgy or earlier"

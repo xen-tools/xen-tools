@@ -75,6 +75,7 @@ Description: Tools to manage Xen virtual servers
    * Ubuntu 12.10 Quantal Quetzal
    * Ubuntu 13.04 Raring Ringtail
    * Ubuntu 13.10 Saucy Salamander
-   * Ubuntu 14.04 Trusty Tahr (LTS, under development)
+   * Ubuntu 14.04 Trusty Tahr (LTS)
+   * Ubuntu 14.10 Utopic Unicorn (under development)
    * CentOS 5
    * CentOS 6
