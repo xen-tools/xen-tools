@@ -88,7 +88,6 @@ setupStaticNetworking ()
     #
     # gateway address?
     #
-    gateway='';
     if [ -n "${gateway}" ]; then
       gateway=" gateway ${gateway}"
     fi
