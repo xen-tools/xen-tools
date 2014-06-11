@@ -12,6 +12,7 @@ xen-tools (4.4+dev-1) UNRELEASED; urgency=low
   * Ignore cover_db directory in t/perl-syntax.t.
   * Update list of supported Ubuntu releases. Preliminary support for
     Ubuntu 14.10 Utopic Unicorn.
+  * Fix always empty gateway on Debian DomUs (Thanks Joan! LP: #1328794)
 
  -- Axel Beckert <abe@debian.org>  Sun, 15 Dec 2013 17:20:43 +0100
 
