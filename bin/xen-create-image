@@ -2563,19 +2563,24 @@ sub showSummary
         logprint("Max mem size   : $CONFIG{'maxmem'}\n");
     }
 
-    if ( defined( $CONFIG{ 'kernel' } ) && length( $CONFIG{ 'kernel' } ) )
-    {
-        logprint("Kernel path    :  $CONFIG{'kernel'}\n");
-    }
+    if ( exists(  $CONFIG{ 'pygrub' } ) &&
+         $CONFIG{ 'pygrub' } ) {
+        logprint("Bootloader     :  pygrub\n");
+    } else {
+        if ( defined( $CONFIG{ 'kernel' } ) && length( $CONFIG{ 'kernel' } ) )
+        {
+            logprint("Kernel path    :  $CONFIG{'kernel'}\n");
+        }
 
-    if ( defined( $CONFIG{ 'modules' } ) && length( $CONFIG{ 'modules' } ) )
-    {
-        logprint("Module path    :  $CONFIG{'modules'}\n");
-    }
+        if ( defined( $CONFIG{ 'modules' } ) && length( $CONFIG{ 'modules' } ) )
+        {
+            logprint("Module path    :  $CONFIG{'modules'}\n");
+        }
 
-    if ( defined( $CONFIG{ 'initrd' } ) && length( $CONFIG{ 'initrd' } ) )
-    {
-        logprint("Initrd path    :  $CONFIG{'initrd'}\n");
+        if ( defined( $CONFIG{ 'initrd' } ) && length( $CONFIG{ 'initrd' } ) )
+        {
+            logprint("Initrd path    :  $CONFIG{'initrd'}\n");
+        }
     }
 
     logprint("\nNetworking Information\n");

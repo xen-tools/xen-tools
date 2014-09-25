@@ -18,6 +18,7 @@ xen-tools (4.4+dev-1) UNRELEASED; urgency=low
     + Fix lvcreate awaiting user input when creating swap lv (Closes: #754517)
       Thanks Eric Engstrom!
     + Fix missing quoting in shell function "assert" in hooks/common.sh.
+    + Fix initial configuration summary in cases where pygrub is used.
   * Bump Standards-Version to 3.9.6 (no changes needed)
   * Fix lintian warning depends-on-perl-modules.
 
