@@ -13,7 +13,7 @@ before_install:
 
 install:
    - yes '' | cpanm --verbose --notest --skip-satisfied Data::Validate::Domain Data::Validate::IP Data::Validate::URI File::Slurp File::Which Log::Message Term::UI Test::NoTabs Test::Pod::Coverage Test::Pod Text::Template Devel::Cover::Report::Coveralls
-   - export RELEASE_TESTING=1 AUTOMATED_TESTING=1 AUTHOR_TESTING=1 HARNESS_OPTIONS=j10:c HARNESS_TIMER=1 PATH=${PERLBREW_PATH}:${PATH}
+   - export RELEASE_TESTING=1 AUTOMATED_TESTING=1 AUTHOR_TESTING=1 HARNESS_OPTIONS=j10:c HARNESS_TIMER=1 PATH=bin:${PERLBREW_PATH}:${PATH}
 
 script:
    - make test
