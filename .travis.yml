@@ -9,7 +9,7 @@ perl:
 
 before_install:
    - sudo apt-get update
-   - sudo apt-get install devscripts dpkg-dev
+   - sudo apt-get install devscripts dpkg-dev lsb-release
 
 install:
    - yes '' | cpanm --verbose --notest --skip-satisfied Data::Validate::Domain Data::Validate::IP Data::Validate::URI File::Slurp File::Which Log::Message Term::UI Test::NoTabs Test::Pod::Coverage Test::Pod Text::Template Devel::Cover::Report::Coveralls
