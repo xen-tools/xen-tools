@@ -19,8 +19,8 @@ script:
    - make test
 
 after_success:
-   - prove --exec 'env PERL5OPT=-MDevel::Cover=-ignore_re,^t/ perl' t/*.t
-   - cover -ignore_re '^t/' -report coveralls
+   - prove --exec 'env PERL5OPT=-MDevel::Cover=-ignore_re,^(t/|/usr) perl' t/*.t
+   - cover -ignore_re '^(t/|/usr)' -report coveralls
 
 notifications:
   irc: "irc.lugs.ch#kivamon"
