@@ -47,7 +47,7 @@ assert ()
         shift
     fi
 
-    if [ ! $* ] ; then
+    if [ ! "$*" ] ; then
         echo "assert failed: $0:$lineno [$*]"
         exit
     fi
