@@ -146,7 +146,7 @@ sub runCreateCommand
     #
     #  Save the environment.
     #
-    my %SAFE_ENV = %ENV;
+    my %SAVE_ENV = %ENV;
 
     #
     #  Update the environment with our parameters.
@@ -164,7 +164,7 @@ sub runCreateCommand
     #
     #  Reset the environment
     #
-    %ENV = %SAFE_ENV;
+    %ENV = %SAVE_ENV;
 
 
 
