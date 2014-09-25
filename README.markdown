@@ -188,6 +188,16 @@ image.
 * The script should only be used for Xen instances of Debian or a
   Debian-derived distribution.
 
+Version Numbering Scheme
+------------------------
+
+Since release 4.4, the version numbering scheme of xen-tools tries to
+comply with the [Semantic Versioning](http://semver.org/)
+specification, with the only exception that trailing zeroes are
+omitted.
+
+Between the releases 3.9 and 4.4, the version numbering scheme
+followed roughly the same ideas, but less strict.
 
 -- 
 The Xen-Tools Developer Team
