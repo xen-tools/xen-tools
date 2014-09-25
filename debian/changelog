@@ -16,6 +16,7 @@ xen-tools (4.4+dev-1) UNRELEASED; urgency=low
     + Fix always empty gateway on Debian DomUs (Thanks Joan! LP: #1328794)
     + pygrub detection: Prefer /usr/lib/xen-default over /usr/lib/xen-x.y.
   * Bump Standards-Version to 3.9.6 (no changes needed)
+  * Fix lintian warning depends-on-perl-modules.
 
  -- Axel Beckert <abe@debian.org>  Sun, 15 Dec 2013 17:20:43 +0100
 

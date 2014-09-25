@@ -33,7 +33,7 @@ Depends: debootstrap | cdebootstrap,
          libterm-ui-perl | perl (<< 5.17.0),
          libtext-template-perl,
          openssh-client,
-         perl-modules,
+         perl,
          ${misc:Depends},
          ${perl:Depends}
 Recommends: libexpect-perl,
