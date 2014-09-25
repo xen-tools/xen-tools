@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!perl -w
 #
 #  Test that every script in ./bin/ has no trailing whitespace.
 #

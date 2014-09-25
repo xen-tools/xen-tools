@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!perl
 #
 #  Test that the POD we use in our modules is valid.
 #

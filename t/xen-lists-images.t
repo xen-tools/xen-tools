@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!perl -w
 #
 #  Test that the xen-list-images script can process two "fake"
 # installations which we construct manually.

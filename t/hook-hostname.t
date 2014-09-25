@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!perl -w
 #
 #  Test that we get an /etc/hosts etc file created when DHCP is used.
 #

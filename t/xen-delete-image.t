@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!perl -w
 #
 #  Test that the xen-delete-image script will delete an images
 # contents correctly.

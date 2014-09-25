@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w -I..
+#!perl -w -I..
 #
 #  Test that we have several required programs present.
 #

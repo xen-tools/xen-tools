@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!perl -w
 #
 #  Test that every perl + shell script we have contains no tabs.
 #

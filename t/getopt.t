@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!perl -w
 #
 #  Test that every perl script accepts and processes each of the options
 # documented in its POD.

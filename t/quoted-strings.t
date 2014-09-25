@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!perl -w
 #
 #  Test that every bash script using variables uses " not ' around the
 #  variable.

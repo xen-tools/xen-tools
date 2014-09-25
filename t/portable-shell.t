@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!perl -w
 #
 #  Test that we don't use non-portable shell syntax in our hooks.
 #

@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!perl -w
 #
 #  Test that the POD we include in our scripts is valid, via the external
 # podchecker command.

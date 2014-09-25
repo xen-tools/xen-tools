@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!perl -w
 #
 #  Test that our policy-rc.d file is created and removed as we expect in our hooks.
 #

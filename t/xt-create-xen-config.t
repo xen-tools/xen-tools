@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!perl -w
 #
 #  Test that calling xt-create-xen-config with the appropriate parameters
 # results in output we expect.
@@ -159,7 +159,7 @@ sub runCreateCommand
     #
     #  Run the command
     #
-    system( "./bin/xt-create-xen-config --output=$dir --template=./etc/xm.tmpl" );
+    system( "perl ./bin/xt-create-xen-config --output=$dir --template=./etc/xm.tmpl" );
 
     #
     #  Reset the environment

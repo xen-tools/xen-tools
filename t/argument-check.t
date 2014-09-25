@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!perl -w
 #
 #  Test that the arguments in etc/xen-tools.conf match those used in
 # xen-create-image.

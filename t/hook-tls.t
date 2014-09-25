@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!perl
 #
 #  Test that the tls-disabling hook works.
 #

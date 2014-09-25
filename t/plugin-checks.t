@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!perl -w
 #
 #  Test that the plugins each refer to environmental variables,
 # not the perl config hash.
