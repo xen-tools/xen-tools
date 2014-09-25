@@ -3025,7 +3025,7 @@ sub createLVMBits
         # The commands to create the volume.
         #
         my $disk_cmd =
-          "lvcreate $CONFIG{'lvm'} -L $partition->{'size'} -n $disk";
+          "lvcreate $CONFIG{'lvm'} --yes -L $partition->{'size'} -n $disk";
 
         #
         # Create the volume
