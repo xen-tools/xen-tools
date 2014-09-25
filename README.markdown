@@ -1,6 +1,8 @@
 xen-tools
 =========
 
+[![Travis CI Build Status](https://travis-ci.org/xtaran/xen-tools.svg)](https://travis-ci.org/xtaran/xen-tools)
+
 * [Homepage](http://www.xen-tools.org/software/xen-tools)
 * Git Repository:
   * [at Gitorious](http://gitorious.org/xen-tools)
