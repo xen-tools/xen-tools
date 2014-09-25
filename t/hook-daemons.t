@@ -87,7 +87,7 @@ sub testHook
     #
     #  Call the first hook
     #
-    `./hooks/$dist/01-disable-daemons $dir`;
+    `hooks/$dist/01-disable-daemons $dir`;
 
     #
     #  Now /usr/sbin should exist.
@@ -98,7 +98,7 @@ sub testHook
     #
     #  Now call the second hook
     #
-    `./hooks/$dist/99-enable-daemons $dir`;
+    `hooks/$dist/99-enable-daemons $dir`;
 
     ok( ! -x $dir . "/usr/sbin/policy-rc.d", "The policy-rc.d file was correctly removed" );
 }

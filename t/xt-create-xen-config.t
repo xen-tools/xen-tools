@@ -159,7 +159,7 @@ sub runCreateCommand
     #
     #  Run the command
     #
-    system( "perl ./bin/xt-create-xen-config --output=$dir --template=./etc/xm.tmpl" );
+    system( "perl bin/xt-create-xen-config --output=$dir --template=etc/xm.tmpl" );
 
     #
     #  Reset the environment
