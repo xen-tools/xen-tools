@@ -15,6 +15,8 @@ xen-tools (4.4+dev-1) UNRELEASED; urgency=low
       Ubuntu 14.10 Utopic Unicorn.
     + Fix always empty gateway on Debian DomUs (Thanks Joan! LP: #1328794)
     + pygrub detection: Prefer /usr/lib/xen-default over /usr/lib/xen-x.y.
+    + Fix lvcreate awaiting user input when creating swap lv (Closes: #754517)
+      Thanks Eric Engstrom!
   * Bump Standards-Version to 3.9.6 (no changes needed)
   * Fix lintian warning depends-on-perl-modules.
 
