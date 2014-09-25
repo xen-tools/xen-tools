@@ -20,7 +20,27 @@ use File::Temp;
 #
 #
 
+runAllTests();
 
+# Fake File::Which to find nothing at all, i.e. no lsb_release.
+$ENV{PERL5OPT} = '-It/mockup-lib'.($ENV{PERL5OPT}?" $ENV{PERL5OPT}":'');
+
+runAllTests();
+
+done_testing;
+
+
+
+=head2 runAllTests
+
+  Runs all the xt-create-xen-config test.
+
+  The idea is to be able to run these tests multiple times under
+different conditions.
+
+=cut
+
+sub runAllTests {
 #
 #  Look for mention of DHCP when setting up DHCP, this conflicts with
 # a static IP address.
@@ -104,12 +124,7 @@ testOutputContains( "/tmp/domains/foo.my.flat",
                     memory => 128, dhcp => 1, dir => '/tmp' );
 noMentionOf( "phy:",
                     memory => 128, dhcp => 1, dir => '/tmp' );
-
-
-
-done_testing();
-
-
+} # end of runAllTests
 
 
 =head2 runCreateCommand
