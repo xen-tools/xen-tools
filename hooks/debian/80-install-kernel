@@ -94,7 +94,10 @@ else
     fi
 fi
 
-DOMU_KERNEL=$(basename $(ls -1 ${prefix}/boot/vmlinuz* | tail -n 1))
+# Check for "ls -v" support
+V=''; if ls -1 ${prefix}/boot/vmlinuz* > /dev/null 2>&1; then V=-v; fi
+
+DOMU_KERNEL=$(basename $(ls -1 ${V} ${prefix}/boot/vmlinuz* | tail -n 1))
 KERNEL_REV=$(echo $DOMU_KERNEL | sed "s/vmlinuz-//g")
 DOMU_RAMDISK="initrd.img-$KERNEL_REV"
 DOMU_ISSUE=$(sed -re "s/ *\\\.*//g" -e1q < ${prefix}/etc/issue)

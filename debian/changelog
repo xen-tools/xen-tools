@@ -19,6 +19,7 @@ xen-tools (4.4+dev-1) UNRELEASED; urgency=low
       Thanks Eric Engstrom!
     + Fix missing quoting in shell function "assert" in hooks/common.sh.
     + Fix initial configuration summary in cases where pygrub is used.
+    + Fix corner cases where not the latest kernel would have been checked.
   * Bump Standards-Version to 3.9.6 (no changes needed)
   * Fix lintian warning depends-on-perl-modules.
 
