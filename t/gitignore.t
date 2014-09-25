@@ -10,6 +10,10 @@ use strict;
 use Test::More;
 use File::Which;
 
+if ( $ENV{TRAVIS} ) {
+    plan( skip_all => "these tests don't make sense on a fresh checkout" );
+}
+
 if (which('git') and -d '.git') {
     plan tests => 3;
 } else {
