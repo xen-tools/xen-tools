@@ -20,7 +20,7 @@ script:
 
 after_success:
    - prove --exec 'env PERL5OPT=-MDevel::Cover=-ignore_re,^t/ perl' t/*.t
-   - cover -report coveralls
+   - cover -ignore_re '^t/' -report coveralls
 
 notifications:
   irc: "irc.lugs.ch#kivamon"
