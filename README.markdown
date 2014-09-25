@@ -201,5 +201,13 @@ omitted.
 Between the releases 3.9 and 4.4, the version numbering scheme
 followed roughly the same ideas, but less strict.
 
+Test Suite Coverage
+-------------------
+
+Despite parts of the test suite are quite old, it only tests a small
+fraction of what xen-tools can do. Some of the scripts currently could
+only be tested on an actual Xen Dom0. Hence the
+[code coverage of xen-tools' test suite is quite bad](https://coveralls.io/r/xtaran/xen-tools).
+
 -- 
 The Xen-Tools Developer Team
