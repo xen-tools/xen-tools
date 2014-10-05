@@ -128,6 +128,9 @@ Contributions
   Ward Vandewege <ward [at] be.pong>
    - Made several updates for Ubuntu support.
 
+  Santiago Vila <sanvila [at] es.unex>
+   - Found and fixed a bunch of typos and formatting issues.
+
   Joan <aseques [at] com.gmail>
    - Bugfix for password interaction
    - maxmem option
