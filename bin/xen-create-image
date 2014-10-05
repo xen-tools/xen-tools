@@ -675,7 +675,7 @@ Create a Xen configuration file in so that xm/xl can start the new domain.
 =head1 ROLES
 
   Currently there are some roles scripts included which work for
- the Debian and Ubuntu distrubtions only. They are included
+ the Debian and Ubuntu distributions only. They are included
  primarily as examples of the kind of things you could accomplish.
 
   The supplied scripts are:
@@ -739,7 +739,7 @@ Install an X11 server, using VNC and XDM
 
   Role scripts are invoked with the directory containing the
  installed system as their first argument, and anything passed
- as a role-arg will be passed allong as additional arguments.
+ as a role-arg will be passed along as additional arguments.
 
   NOTE: Role scripts are invoked before the config file generation.
         If you need access to the config file from within your role,
