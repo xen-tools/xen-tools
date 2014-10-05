@@ -22,6 +22,8 @@ xen-tools (4.4+dev-1) UNRELEASED; urgency=low
     + Fix corner cases where not the latest kernel would have been checked.
     + Fix unaligned maxmem output of xen-create-image. (Closes: #764126)
       Thanks Santiago Vila!
+    + Fix copy & paste errors in comments in typos in roles/puppet
+      (Closes: #764134) Thanks Santiago Vila!
   * Bump Standards-Version to 3.9.6 (no changes needed)
   * Fix lintian warning depends-on-perl-modules.
 
