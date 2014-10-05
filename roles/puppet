@@ -24,13 +24,13 @@ logMessage Script $0 starting
 
 
 #
-#  Install ssh
+#  Install puppet
 #
 installDebianPackage ${prefix} puppet
 
 
 #
-#  Make sure sshd isn't running, this will cause our unmounting of the
+#  Make sure puppet isn't running, this will cause our unmounting of the
 # disk image to fail..
 #
 chroot ${prefix} /etc/init.d/puppet stop
