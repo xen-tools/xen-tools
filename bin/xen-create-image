@@ -2560,7 +2560,7 @@ sub showSummary
 
     if ( defined( $CONFIG{ 'maxmem' } ) )
     {
-        logprint("Max mem size   : $CONFIG{'maxmem'}\n");
+        logprint("Max mem size   :  $CONFIG{'maxmem'}\n");
     }
 
     if ( exists(  $CONFIG{ 'pygrub' } ) &&
