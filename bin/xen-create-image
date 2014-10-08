@@ -164,6 +164,7 @@ and EVMS EXAMPLE.
 
    --password=passphrase
                 Set the root password for the new guest.
+                Note: This overrides --genpass
 
    --(no)passwd (Don't) ask for a root password interactively during
                 setup.  NOTE: This overrides --genpass --password.
@@ -1287,7 +1288,7 @@ sub setupDefaultOptions
     #
     $CONFIG{ 'genpass' }     = 1;
     $CONFIG{ 'genpass_len' } = 8;
-    $CONFIG{ 'password' }    = '';
+    $CONFIG{ 'password' }    = undef;
     $CONFIG{ 'hash_method' } = 'sha256';
 
     #
@@ -3886,13 +3887,17 @@ sub setupRootPassword
             #
             #  Generate a password, salt and use that to generating a hash
             #
-            if ( $CONFIG{ 'genpass' } )
+            if ( defined( $CONFIG{ 'password' } ) )
+            {
+                $PASSWORD = $CONFIG { 'password' };
+            }
+            elsif ( $CONFIG{ 'genpass' } )
             {
                 $PASSWORD = generatePassword( $CONFIG{ 'genpass_len' } );
             }
             else
             {
-                $PASSWORD = $CONFIG { 'password' };
+                fail("oops... neither passwd nor password nor genpass are set, should not happen!");
             }
 
             my $salt = generatePassword(8);

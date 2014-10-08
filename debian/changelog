@@ -20,6 +20,8 @@ xen-tools (4.4+dev-1) UNRELEASED; urgency=low
     + Fix missing quoting in shell function "assert" in hooks/common.sh.
     + Fix initial configuration summary in cases where pygrub is used.
     + Fix corner cases where not the latest kernel would have been checked.
+    + --password overrides --genpass. (Closes: #764143) Based on patch by
+      Santiago Vila.
 
     [ Santiago Vila ]
     + Fix unaligned maxmem output of xen-create-image. (Closes: #764126)
