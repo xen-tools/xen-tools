@@ -857,7 +857,7 @@ my $PASSWORD = '';
 #
 # Define some fallback password length
 #
-my $default_genpass_len = 8;
+my $default_genpass_len = 23;
 
 
 # Minor helpers for reducing code duplication
