@@ -854,6 +854,11 @@ my $IP_ADDRESSES = '';
 my $PASSWORD = '';
 
 
+#
+# Define some fallback password length
+#
+my $default_genpass_len = 8;
+
 
 # Minor helpers for reducing code duplication
 sub fail     ($) { fail_with_config($_[0], \%CONFIG); }
@@ -1287,7 +1292,7 @@ sub setupDefaultOptions
     #  Default values for passwords
     #
     $CONFIG{ 'genpass' }     = 1;
-    $CONFIG{ 'genpass_len' } = 8;
+    $CONFIG{ 'genpass_len' } = $default_genpass_len;
     $CONFIG{ 'password' }    = undef;
     $CONFIG{ 'hash_method' } = 'sha256';
 
@@ -3961,6 +3966,10 @@ sub setupRootPassword
 
 sub generatePassword {
     my $length = $_[0];
+    unless ($length and $length > 0) {
+        warn "generatePassword: No (sane) password length given. Using $default_genpass_len instead.";
+        $length = $default_genpass_len;
+    }
     my $possible = 'abcdefghijkmnpqrstuvwxyz23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
     my $password = '';
     while (length($password) < $length) {
