@@ -88,8 +88,9 @@ setupStaticNetworking ()
     #
     # gateway address?
     #
+    gway='';
     if [ -n "${gateway}" ]; then
-      gateway=" gateway ${gateway}"
+      gway=" gateway ${gateway}"
     fi
 
     #
@@ -107,7 +108,7 @@ iface lo inet loopback
 auto eth0
 iface eth0 inet static
  address ${ip1}
-${gateway}
+${gway}
  netmask ${netmask}
 ${bcast}
 ${point}
