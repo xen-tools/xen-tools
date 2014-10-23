@@ -32,6 +32,7 @@ xen-tools (4.4+dev-1) UNRELEASED; urgency=low
     + Fix typos in POD of xen-create-image (Closes: #764153)
   * Bump Standards-Version to 3.9.6 (no changes needed)
   * Fix lintian warning depends-on-perl-modules.
+  * Add lintian override for debian-news-entry-uses-asterisk; I disagree.
 
  -- Axel Beckert <abe@debian.org>  Sun, 15 Dec 2013 17:20:43 +0100
 
