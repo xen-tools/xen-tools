@@ -1,4 +1,4 @@
-xen-tools (4.4+dev-1) UNRELEASED; urgency=low
+xen-tools (4.5-1) unstable; urgency=low
 
   * New upstream release
     + Use "686-pae" kernels instead of "686" kernels on Debian Wheezy and
@@ -39,7 +39,7 @@ xen-tools (4.4+dev-1) UNRELEASED; urgency=low
   * Fix lintian warning depends-on-perl-modules.
   * Add lintian override for debian-news-entry-uses-asterisk; I disagree.
 
- -- Axel Beckert <abe@debian.org>  Sun, 15 Dec 2013 17:20:43 +0100
+ -- Axel Beckert <abe@debian.org>  Sat, 25 Oct 2014 23:27:18 +0200
 
 xen-tools (4.4-1) unstable; urgency=low
 
