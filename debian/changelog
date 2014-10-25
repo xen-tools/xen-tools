@@ -26,6 +26,7 @@ xen-tools (4.4+dev-1) UNRELEASED; urgency=low
       Santiago Vila.
     + Add password length sanity check with fallback to default length.
     + Raise default password length from 8 to 23.
+    + Flush output after each line in runCommand().
 
     [ Santiago Vila ]
     + Fix unaligned maxmem output of xen-create-image. (Closes: #764126)

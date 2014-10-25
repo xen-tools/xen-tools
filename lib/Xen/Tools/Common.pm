@@ -195,6 +195,7 @@ sub findXenToolstack
 
 sub runCommand ($$;$)
 {
+    local $| = 1;
     my ($cmd, $CONFIG, $fail_ok) = (@_);
 
     #
