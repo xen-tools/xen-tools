@@ -67,6 +67,7 @@ clean:
 	@if [ -e build-stamp ]; then rm -f build-stamp ; fi
 	@if [ -e configure-stamp ]; then rm -f configure-stamp ; fi
 	@if [ -d debian/xen-tools ]; then rm -rf ./debian/xen-tools; fi
+	@if [ -d cover_db ]; then rm -rf ./cover_db; fi
 	@if [ -e $(BASE)-$(VERSION).tar.gz ]; then rm $(BASE)-$(VERSION).tar.gz ; fi
 	@if [ -e $(BASE)-$(VERSION).tar.gz.asc ]; then rm $(BASE)-$(VERSION).tar.gz.asc ; fi
 	cd t; $(MAKE) clean
@@ -247,6 +248,7 @@ release: tidy fixup-perms update-version update-modules clean changelog
 	rm -f $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz
 	cp -R . $(DIST_PREFIX)/$(BASE)-$(VERSION)
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)/debian
+	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)/cover_db
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)/.git*
 	cd $(DIST_PREFIX) && tar -cvf $(DIST_PREFIX)/$(BASE)-$(VERSION).tar $(BASE)-$(VERSION)/
 	gzip $(DIST_PREFIX)/$(BASE)-$(VERSION).tar
