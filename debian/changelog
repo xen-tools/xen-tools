@@ -11,8 +11,10 @@ xen-tools (4.4+dev-1) UNRELEASED; urgency=low
       /usr/share/xen-tools/*.d/ with hooks in /etc/xen-tools/hooks.d/.
       Thanks! (Also add /etc/xen-tools/hooks.d/ to debian/dirs.)
     + Ignore cover_db directory in t/perl-syntax.t.
-    + Update list of supported Ubuntu releases. Preliminary support for
-      Ubuntu 14.10 Utopic Unicorn.
+    + Update list of supported Ubuntu releases.
+      - Add support for Ubuntu 14.10 Utopic Unicorn.
+      - Add preliminary support for Ubuntu 15.04 Vivid Vervet.
+      - Use old-releases.ubuntu.com for Ubuntu 13.10 Saucy Salamander.
     + Fix always empty gateway on Debian DomUs (Thanks Joan! LP: #1328794)
     + pygrub detection: Prefer /usr/lib/xen-default over /usr/lib/xen-x.y.
     + Fix lvcreate awaiting user input when creating swap lv (Closes: #754517)
