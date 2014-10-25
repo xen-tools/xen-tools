@@ -28,6 +28,7 @@ xen-tools (4.4+dev-1) UNRELEASED; urgency=low
     + Raise default password length from 8 to 23.
     + Flush output after each line in runCommand().
     + Makefile: Clean up coverage data in multiple targets.
+    + t/perl-syntax.t: Ignore changelog files, too.
 
     [ Santiago Vila ]
     + Fix unaligned maxmem output of xen-create-image. (Closes: #764126)

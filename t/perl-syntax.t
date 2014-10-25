@@ -39,6 +39,9 @@ sub checkFile
     # Nor about Makefiles
     return if ( $file =~ /\/Makefile$/ );
 
+    # Nor about Change Logs
+    return if ( $file =~ /\/changelog$/i );
+
     # Nor about git files
     return if ( $file =~ /^\.\/\.git\// );
 
