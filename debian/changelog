@@ -1,3 +1,11 @@
+xen-tools (4.5+dev-1) UNRELEASED; urgency=medium
+
+  * New upstream SNAPSHOT
+    + Fix usage of nonexistent variable in removeDebianPackage (Closes:
+      #774936) Thanks Lukas Schwaighofer!
+
+ -- Axel Beckert <abe@debian.org>  Fri, 09 Jan 2015 13:10:37 +0100
+
 xen-tools (4.5-1) unstable; urgency=low
 
   * New upstream release
