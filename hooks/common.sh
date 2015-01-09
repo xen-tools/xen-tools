@@ -322,7 +322,7 @@ removeDebianPackage ()
     #
     # Log our options
     #
-    logMessage "Purging Debian package ${package} from prefix ${prefix}"
+    logMessage "Purging Debian package $@ from prefix ${prefix}"
 
     #
     #  We require a prefix
