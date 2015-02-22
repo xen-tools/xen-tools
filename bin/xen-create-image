@@ -340,11 +340,17 @@ and EVMS EXAMPLE.
                 If you do not wish to use LVM specify --dir, --evms or
                 --zpool. (These three options are mutually exclusive.)
 
+   --lvm_thin=thin pool
+                Specify the thin pool name on which thin LVM volumes
+                are created.
+
+                This enables thin provisioned LVM volumes. Note that
+                you need a LVM version which supports this.
+
    --zpool=pool Specify the ZFS pool to save images within. A new ZFS
                 volume will be created for each guest.
                 If you do not wish to use ZFS specify --dir, --evms or
                 --lvm. (These four options are mutually exclusive.)
-
 
 =head1 NOTES
 
@@ -1671,6 +1677,7 @@ sub parseCommandLineArguments
             "output=s",     \&checkOption,
             "extension:s",  \&checkOption,
             "dontformat",   \&checkOption,
+            "lvm_thin=s",   \$CONFIG{ 'lvm_thin' },
 
             # Help options
             "debug!",     \$CONFIG{ 'debug' },
@@ -3174,7 +3181,11 @@ sub createLVMBits
         my $disk_cmd =
           "lvcreate $CONFIG{'lvm'} ".
           ($lvm_needs_yes ? '--yes' : '').
-          " -L $partition->{'size'} -n $disk";
+          ' '.
+          ($CONFIG{ 'lvm_thin' } ?
+           "-T $CONFIG{'lvm'}/$CONFIG{'lvm_thin'} -V" :
+           '-L').
+          " $partition->{'size'} -n $disk";
 
         #
         # Create the volume
