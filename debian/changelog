@@ -3,6 +3,7 @@ xen-tools (4.5+dev-1) UNRELEASED; urgency=medium
   * New upstream SNAPSHOT
     + Fix usage of nonexistent variable in removeDebianPackage (Closes:
       #774936) Thanks Lukas Schwaighofer!
+  * Update Vcs-* headers as Gitorious will close its doors in June.
 
  -- Axel Beckert <abe@debian.org>  Fri, 09 Jan 2015 13:10:37 +0100
 

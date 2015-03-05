@@ -4,9 +4,10 @@ xen-tools
 [![Travis CI Build Status](https://travis-ci.org/xtaran/xen-tools.svg)](https://travis-ci.org/xtaran/xen-tools)
 
 * [Homepage](http://www.xen-tools.org/software/xen-tools)
-* Git Repository:
-  * [at Gitorious](http://gitorious.org/xen-tools)
-  * [at GitHub](http://github.com/xtaran/xen-tools)
+* Git Repositories:
+  * [at GitLab](http://gitlab.com/xen-tools/xen-tools)
+  * [at GitHub](http://github.com/xen-tools/xen-tools)
+  * [at Gitorious](http://gitorious.org/xen-tools) (deprecated)
 * [Mailing Lists](http://www.xen-tools.org/software/xen-tools/lists.html)
 
 About
