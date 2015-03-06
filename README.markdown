@@ -122,7 +122,7 @@ project.
 Installation
 ------------
 
-As root or with sudo, execute `make instal`.
+As root or with sudo, execute `make install`.
 
 See `debian/README.source` how to build the Debian package from a
 checked out copy of the git repository (i.e. without a source tar
