@@ -242,12 +242,12 @@ and EVMS EXAMPLE.
    --mirror=url Setup the mirror to use when installing via
                 debootstrap. (Default value: mirror used in
                 /etc/apt/sources.list or for Debian
-                "http://http.debian.net/debian/" and for Ubuntu
+                "http://httpredir.debian.org/debian/" and for Ubuntu
                 "http://archive.ubuntu.com/ubuntu/")
 
                 The above mentioned Debian mirror hostname
                 automatically tries to choose a more or less close
-                Debian mirror. See http://http.debian.net/ for
+                Debian mirror. See http://httpredir.debian.org/ for
                 details.
 
    --apt_proxy=protocol://hostname:port/
@@ -1252,10 +1252,10 @@ sub setupDefaultOptions
 
     # Initialize per distribution mirror defaults: Debian
     foreach my $debdist (qw(squeeze wheezy jessie sid testing oldstable stable unstable)) {
-        $CONFIG{ 'mirror_'.$debdist } = 'http://http.debian.net/debian';
+        $CONFIG{ 'mirror_'.$debdist } = 'http://httpredir.debian.org/debian';
     }
     foreach my $debdist (qw(sarge etch lenny)) {
-        $CONFIG{ 'mirror_'.$debdist } = 'http://http.debian.net/debian-archive/debian';
+        $CONFIG{ 'mirror_'.$debdist } = 'http://httpredir.debian.org/debian-archive/debian';
     }
     # Initialize per distribution mirror defaults: Ubuntu
     foreach my $ubuntudist (qw(lucid precise trusty utopic vivid)) {

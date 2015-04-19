@@ -52,9 +52,9 @@ full text of the license.
 # Fallback to Debian or Ubuntu in case we can't find anything
 my $fallback = 'Debian';
 
-# Which mirrors to use if everything else fails (http.debian.net
+# Which mirrors to use if everything else fails (httpredir.debian.org
 # redirects to a working mirror nearby)
-my %fallback_mirror = ( Debian => 'http://http.debian.net/debian/',
+my %fallback_mirror = ( Debian => 'http://httpredir.debian.org/debian/',
                         Ubuntu => 'http://archive.ubuntu.com/ubuntu/' );
 
 # Which suite to use if everything else fails. For Debian "stable"
