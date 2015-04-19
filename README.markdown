@@ -36,7 +36,8 @@ known to work reliably, i.e.:
 * Lenny 5.0
 * Squeeze 6.0
 * Wheezy 7
-* Jessie 8 (under development)
+* Jessie 8
+* Stretch 9 (under development)
 * Sid (always under development; works at least at the moment of writing :-)
 
 ### Ubuntu

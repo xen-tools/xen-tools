@@ -1251,7 +1251,7 @@ sub setupDefaultOptions
     $CONFIG{ 'mirror' }        = '';
 
     # Initialize per distribution mirror defaults: Debian
-    foreach my $debdist (qw(squeeze wheezy jessie sid testing oldstable stable unstable)) {
+    foreach my $debdist (qw(squeeze wheezy jessie stretch sid testing oldstable stable unstable)) {
         $CONFIG{ 'mirror_'.$debdist } = 'http://httpredir.debian.org/debian';
     }
     foreach my $debdist (qw(sarge etch lenny)) {

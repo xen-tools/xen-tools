@@ -57,7 +57,8 @@ Description: Tools to manage Xen virtual servers
    * Debian 5.0 Lenny
    * Debian 6.0 Squeeze
    * Debian 7 Wheezy
-   * Debian 8 Jessie (under development)
+   * Debian 8 Jessie
+   * Debian 9 Stretch (under development)
    * Debian Sid (Unstable)
    * Ubuntu 6.06 Dapper Drake (LTS)
    * Ubuntu 6.10 Edgy Eft
