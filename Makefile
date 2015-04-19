@@ -111,8 +111,8 @@ install-etc:
 	cp etc/xm.tmpl        ${prefix}/etc/xen-tools/
 	cp etc/xm-nfs.tmpl    ${prefix}/etc/xen-tools/
 	cp partitions/*-*     ${prefix}/etc/xen-tools/partitions.d/
-	-mkdir -p                         ${prefix}/etc/bash_completion.d/
-	cp misc/xen-tools.bash-completion ${prefix}/etc/bash_completion.d/xen-tools
+	-mkdir -p                         ${prefix}/usr/share/bash-completion/completions/
+	cp misc/xen-tools.bash-completion ${prefix}/usr/share/bash-completion/completions/xen-tools
 	-mkdir -p                         ${prefix}/etc/initramfs-tools/conf.d/
 	cp misc/xen-tools.initramfs-tools ${prefix}/etc/initramfs-tools/conf.d/xen-tools
 

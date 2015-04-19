@@ -5,6 +5,8 @@ xen-tools (4.5+dev-1) UNRELEASED; urgency=medium
       #774936) Thanks Lukas Schwaighofer!
     + Change all occurrences of http.debian.net to httpredir.debian.org
     + Preliminary support for Debian 9 Stretch.
+    + Installs bash completion into /usr/share/bash-completion/ (fixes
+      lintian warning package-install-into-obsolete-dir)
   * Update Vcs-* headers as Gitorious will close its doors in June.
 
  -- Axel Beckert <abe@debian.org>  Fri, 09 Jan 2015 13:10:37 +0100
