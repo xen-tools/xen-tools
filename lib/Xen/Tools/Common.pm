@@ -70,7 +70,7 @@ sub readConfigurationFile ($$)
         next if ( length($line) < 1 );
 
         # Strip trailing comments.
-        if ( $line =~ /(.*)\#(.*)/ )
+        if ( $line =~ /([^#]*)\#(.*)/ )
         {
             $line = $1;
         }
