@@ -3,6 +3,13 @@ TODO
 
 See KNOWN_BUGS.markdown for real bugs.
 
+General Ideas
+-------------
+
+* Support per-distribution-release defaults for at least the file
+  system.
+
+
 Bugs to fix and features to add for 5.0
 ---------------------------------------
 
@@ -131,6 +138,9 @@ Bugs to fix and features to add for 5.0
 
 * Generate ECDSA host keys where possible. (Likely depends on the
   to-be-installed SSH version.)
+
+* Show ECDSA host key fingerprints (and maybe others) in the final
+  summary if the according keys are present.
 
 * More generic roles
 
