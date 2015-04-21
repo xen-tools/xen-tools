@@ -7,6 +7,8 @@ xen-tools (4.5+dev-1) UNRELEASED; urgency=medium
     + Preliminary support for Debian 9 Stretch.
     + Installs bash completion into /usr/share/bash-completion/ (fixes
       lintian warning package-install-into-obsolete-dir)
+    + Allows # within configuration file comments. (Closes: #783060;
+      thanks Jean-Michel Nirgal Vourgère for the bug report and patch!)
   * Update Vcs-* headers as Gitorious will close its doors in June.
 
  -- Axel Beckert <abe@debian.org>  Fri, 09 Jan 2015 13:10:37 +0100
