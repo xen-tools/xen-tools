@@ -304,6 +304,9 @@ and EVMS EXAMPLE.
    --vifname=vifname
                 Optionally, set a specific vif name for the new
                 instance.
+  
+   --vlan=1     OpenvSwitch related, optionally you can specify a vlan
+                where the virtual machine has connectivity.
 
 
 
@@ -1422,6 +1425,10 @@ sub checkOption
             check   => sub { is_uri($_[0]) },
             message => "must be an URI including the protocol\n",
         },
+        vlan => {
+            check   => qr/^([1-9][0-9]{0,2}|10[01][0-9]|102[0-4])$/i,
+            message => "must be a number between 1 and 1024.\n",
+        },
     );
 
     # Define what argument each option accepts.
@@ -1458,6 +1465,7 @@ sub checkOption
         ip            => 'ipv4_or_auto',
         hash_method   => 'hashMethod',
         apt_proxy     => 'uri',
+        vlan          => 'vlan',
     );
 
     # If given option does not exists in optionsTypes,
@@ -1567,6 +1575,7 @@ sub parseCommandLineArguments
             "nameserver=s", \&checkOption,
             "vifname=s",    \&checkOption,
             "p2p=s",        \&checkOption,
+            "vlan=s",       \&checkOption,
 
             # Exclusive
             #
@@ -2721,6 +2730,7 @@ EOF
     $CONFIG{ 'gateway' } && logprint("Gateway        : $CONFIG{'gateway'}\n");
     $CONFIG{ 'nameserver' } && logprint("Nameserver     : $CONFIG{'nameserver'}\n");
     $CONFIG{ 'p2p' }     && logprint("Point to Point : $CONFIG{'p2p'}\n");
+    $CONFIG{ 'vlan' } && logprint("VLAN           : $CONFIG{'vlan'}\n");
     print "\n";
 
 }
