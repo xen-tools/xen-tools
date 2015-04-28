@@ -151,6 +151,12 @@ name        = '{$hostname}'
       $br = ",bridge=$bridge"
     }
 
+    my $vl = '';
+    if ( $vlan )
+    {
+      $vl = ".$vlan"
+    }
+
     $OUT .= "vif         = [ 'ip=$ips";
     $OUT .= "$m";
     $OUT .= "$vn";
