@@ -18,6 +18,9 @@ xen-tools (4.5+dev-1) UNRELEASED; urgency=medium
   * Drop all occurrences of apt's --force-yes parameter. It only forces
     the installation of untrusted packages and that's unwanted. (Closes:
     #776487)
+  * Reduce the list of alternative xen-hypervisor-* packages to just
+    "xen-hypervisor" which is a virtual package provided by at least all
+    xen-hypervisor-* packages since Debian 6 Squeeze.
 
  -- Axel Beckert <abe@debian.org>  Fri, 09 Jan 2015 13:10:37 +0100
 

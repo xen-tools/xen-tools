@@ -40,7 +40,7 @@ Recommends: debian-archive-keyring,
             libexpect-perl,
             rinse (>= 1.9.1-1),
             ubuntu-archive-keyring,
-            xen-hypervisor-amd64 | xen-hypervisor-i386 | xen-hypervisor-i386-pae,
+            xen-hypervisor,
             xen-utils
 Suggests: btrfs-tools,
           cfengine2,
