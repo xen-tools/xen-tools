@@ -1294,7 +1294,7 @@ sub setupDefaultOptions
     $CONFIG{ 'genpass' }     = 1;
     $CONFIG{ 'genpass_len' } = $default_genpass_len;
     $CONFIG{ 'password' }    = undef;
-    $CONFIG{ 'hash_method' } = 'sha256';
+    $CONFIG{ 'hash_method' } = 'md5';
 
     #
     #  The program to run to create a filesystem.

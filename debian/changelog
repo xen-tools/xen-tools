@@ -23,6 +23,9 @@ xen-tools (4.5+dev-1) UNRELEASED; urgency=medium
       versions which don't know either (but accept any Foo=Bar parameter
       to "-o"). Allows one to install earlier Debian releases (e.g. Etch)
       with the default configuration again.
+    + Use md5 as default hash method again, to be able to properly set
+      passwords in older releases. Does not affect passwords changed later
+      inside the DomU.
   * Update Vcs-* headers as Gitorious will close its doors in June.
   * Recommend debian-archive-keyring (for installing Debian DomUs on
     derivatives) and ubuntu-archive-keyring (for installing Ubuntu DomUs
