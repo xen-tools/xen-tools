@@ -13,22 +13,22 @@ xen-tools (4.5+dev-1) UNRELEASED; urgency=medium
       thanks Jean-Michel Nirgal Vourgère for the bug report and patch!)
     + Testsuite: Let modules.sh ignore the .git directory. (t/modules.t
       failed if a git commit message had a line starting with "use ".)
+    + Drop all occurrences of apt's --force-yes parameter. It only forces
+      the installation of untrusted packages and that's unwanted. (Closes:
+      #776487)
+    + Support passing commandline options with --debootstrap-cmd.
+    + Use -o APT::Install-Recommends=false instead of
+      --no-install-recommends for backwards compatibility with older APT
+      versions which don't know either (but accept any Foo=Bar parameter
+      to "-o"). Allows one to install earlier Debian releases (e.g. Etch)
+      with the default configuration again.
   * Update Vcs-* headers as Gitorious will close its doors in June.
   * Recommend debian-archive-keyring (for installing Debian DomUs on
     derivatives) and ubuntu-archive-keyring (for installing Ubuntu DomUs
     on Debian).
-  * Drop all occurrences of apt's --force-yes parameter. It only forces
-    the installation of untrusted packages and that's unwanted. (Closes:
-    #776487)
   * Reduce the list of alternative xen-hypervisor-* packages to just
     "xen-hypervisor" which is a virtual package provided by at least all
     xen-hypervisor-* packages since Debian 6 Squeeze.
-  * Support passing commandline options with --debootstrap-cmd.
-  * Use -o APT::Install-Recommends=false instead of
-    --no-install-recommends for backwards compatibility with older APT
-    versions which don't know either (but accept any Foo=Bar parameter to
-    "-o"). Allows to install earlier Debian releases (e.g. Etch) with the
-    default configuration again.
 
  -- Axel Beckert <abe@debian.org>  Fri, 09 Jan 2015 13:10:37 +0100
 
