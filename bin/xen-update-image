@@ -302,7 +302,7 @@ sub updateXenImage
         #  Now upgrade
         #
         system(
-            "DEBIAN_FRONTEND=noninteractive  chroot $tmp /usr/bin/apt-get upgrade --yes --force-yes"
+            "DEBIAN_FRONTEND=noninteractive  chroot $tmp /usr/bin/apt-get upgrade --yes"
         );
 
         #
