@@ -62,7 +62,8 @@ known to work reliably, i.e.:
 * Saucy Salamander 13.10
 * Trusty Tahr 14.04 (LTS)
 * Utopic Unicorn 14.10
-* Vivid Vervet 15.04 (under development)
+* Vivid Vervet 15.04
+* Wily Werewolf 15.10 (under development)
 
 [1]: http://bugs.debian.org/659360
     "debootstrap in Wheezy can no more build Ubuntu Edgy or earlier"

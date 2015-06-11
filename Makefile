@@ -207,6 +207,7 @@ install-hooks:
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d trusty.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d utopic.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d vivid.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d wily.d
 	cp hooks/common.sh ${prefix}/usr/share/xen-tools
 	cp -r hooks/common ${prefix}/usr/share/xen-tools
 
