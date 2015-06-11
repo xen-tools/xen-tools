@@ -25,7 +25,7 @@ use Test::More qw( no_plan );
 EOF
 
 
-for i in `grep '^use ' -r .. | egrep -v '^\./\.git/' | grep -v Expect | grep -v POSIX | grep -v Xen:: | awk '{print $2}' | tr -d \;\(\) | sort | uniq`; \
+for i in `grep '^use ' -r .. | egrep -v '^\./\.git/|Expect|POSIX|Xen::' | awk '{print $2}' | tr -d '\r;()' | sort -u`; \
     do \
      echo "BEGIN{ use_ok( '$i' ); }"; \
      echo "require_ok( '$i' );" ; \

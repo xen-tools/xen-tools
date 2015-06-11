@@ -13,6 +13,7 @@ xen-tools (4.5+dev-1) UNRELEASED; urgency=medium
       thanks Jean-Michel Nirgal Vourgère for the bug report and patch!)
     + Testsuite: Let modules.sh ignore the .git directory. (t/modules.t
       failed if a git commit message had a line starting with "use ".)
+    + Testsuite: Optimize modules.sh.
     + Drop all occurrences of apt's --force-yes parameter. It only forces
       the installation of untrusted packages and that's unwanted. (Closes:
       #776487)
