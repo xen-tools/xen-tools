@@ -31,5 +31,3 @@ for i in `grep '^use ' -r .. | egrep -v '^\./\.git/|Expect|POSIX|Xen::' | awk '{
      echo "require_ok( '$i' );" ; \
      printf '\n' ; \
 done
-
-chmod 750 modules.t

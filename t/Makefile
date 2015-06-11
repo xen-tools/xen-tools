@@ -8,6 +8,7 @@ verbose:
 
 modules: modules.sh
 	./modules.sh > modules.t
+	chmod 750 modules.t
 
 clean:
 	rm -vf *~ modules.t
