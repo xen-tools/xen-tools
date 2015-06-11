@@ -817,6 +817,18 @@ my %CONFIG;
 
 
 #
+#  Distribution meta data
+#
+my %DIST;
+
+
+#
+#  Mirror meta data
+#
+my %MIRROR;
+
+
+#
 #  Partition layout information values read from the partitions file,
 # or constructed automatically if no partitions file is specified.
 #
@@ -863,6 +875,18 @@ my $default_genpass_len = 23;
 # Minor helpers for reducing code duplication
 sub fail     ($) { fail_with_config($_[0], \%CONFIG); }
 sub logprint ($) { logprint_with_config($_[0], \%CONFIG); }
+
+#
+#  Read the global distributions meta data file.
+#
+readConfigurationFile("/etc/xen-tools/distributions.conf", \%DIST);
+
+
+#
+#  Read the global default mirrors file.
+#
+readConfigurationFile("/etc/xen-tools/mirrors.conf", \%MIRROR);
+
 
 #
 #  Setup default options.
@@ -1250,20 +1274,22 @@ sub setupDefaultOptions
     $CONFIG{ 'dist' }          = 'stable';
     $CONFIG{ 'mirror' }        = '';
 
-    # Initialize per distribution mirror defaults: Debian
-    foreach my $debdist (qw(squeeze wheezy jessie stretch sid testing oldstable stable unstable)) {
-        $CONFIG{ 'mirror_'.$debdist } = 'http://httpredir.debian.org/debian';
+    # Initialize per distribution mirror defaults
+    foreach my $debdist (keys %DIST) {
+        my $debdistinfo = $DIST{$debdist};
+        foreach my $dist (qw(debian ubuntu)) {
+            if ($debdistinfo =~ /$dist/) {
+                if ($debdistinfo =~ /eol/) {
+                    $CONFIG{ 'mirror_'.$debdist } = $MIRROR{$dist.'_archive'} or
+                        die $dist.'_archive not defined in /etc/xen-tools/mirrors.conf';
+                } else {
+                    $CONFIG{ 'mirror_'.$debdist } = $MIRROR{$dist} or
+                        die $dist.' not defined in /etc/xen-tools/mirrors.conf';
+                }
+            }
+        }
     }
-    foreach my $debdist (qw(sarge etch lenny)) {
-        $CONFIG{ 'mirror_'.$debdist } = 'http://httpredir.debian.org/debian-archive/debian';
-    }
-    # Initialize per distribution mirror defaults: Ubuntu
-    foreach my $ubuntudist (qw(precise trusty utopic vivid wily)) {
-        $CONFIG{ 'mirror_'.$ubuntudist } = 'http://archive.ubuntu.com/ubuntu';
-    }
-    foreach my $ubuntudist (qw(dapper edgy feisty gutsy hardy intrepid jaunty karmic lucid maverick natty oneiric quantal raring saucy)) {
-        $CONFIG{ 'mirror_'.$ubuntudist } = 'http://old-releases.ubuntu.com/ubuntu';
-    }
+
     $CONFIG{ 'apt_proxy' }     = '';
     $CONFIG{ 'arch' }          =
         which('dpkg') ? `dpkg --print-architecture` : '';
@@ -1753,7 +1779,7 @@ sub checkArguments
     #
     #  Lucid and probably all later Ubuntus, too, don't work without pygrub
     #
-    if ( $CONFIG{ 'dist' } =~ /lucid|maverick|natty|oneiric|precise|quantal|raring|saucy|trusty|utopic|vivid|wily/ )
+    if ( $DIST{ $CONFIG{ 'dist' } } =~ /pygrub/ )
     {
         $CONFIG{ 'pygrub' } = 1;
     }

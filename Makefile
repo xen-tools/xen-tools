@@ -93,7 +93,7 @@ diff:
 fixup-perms:
 	for i in hooks/*/*-*; do chmod 755 $$i; done
 	chmod 755 hooks/common.sh
-	chmod 644 etc/xen-tools.conf
+	chmod 644 etc/*.conf
 	chmod 644 etc/xm.tmpl
 	chmod 644 etc/xm-nfs.tmpl
 	chmod 644 misc/*
@@ -107,7 +107,7 @@ install-etc:
 	-mkdir -p ${prefix}/etc/xen-tools/skel/
 	-mkdir -p ${prefix}/etc/xen-tools/role.d/
 	-mkdir -p ${prefix}/etc/xen-tools/partitions.d/
-	cp etc/xen-tools.conf ${prefix}/etc/xen-tools/
+	cp etc/*.conf         ${prefix}/etc/xen-tools/
 	cp etc/xm.tmpl        ${prefix}/etc/xen-tools/
 	cp etc/xm-nfs.tmpl    ${prefix}/etc/xen-tools/
 	cp partitions/*-*     ${prefix}/etc/xen-tools/partitions.d/
@@ -306,6 +306,8 @@ uninstall:
 	rm -f ${prefix}/usr/bin/xen-create-nfs
 	rm -f ${prefix}/usr/bin/xt-guess-suite-and-mirror
 	rm -f ${prefix}/etc/xen-tools/xen-tools.conf
+	rm -f ${prefix}/etc/xen-tools/distributions.conf
+	rm -f ${prefix}/etc/xen-tools/mirrors.conf
 	rm -f ${prefix}/etc/xen-tools/xm.tmpl
 	-rm -rf ${prefix}/etc/xen-tools/skel
 	-rmdir ${prefix}/etc/xen-tools/

@@ -26,6 +26,9 @@ xen-tools (4.5+dev-1) UNRELEASED; urgency=medium
     + Use md5 as default hash method again, to be able to properly set
       passwords in older releases. Does not affect passwords changed later
       inside the DomU.
+    + Split off hardcoded release code names list and default mirrors in
+      xen-create-image into separate configuration file which are parsed
+      before the default settings or command-line options are set.
   * Update Vcs-* headers as Gitorious will close its doors in June.
   * Recommend debian-archive-keyring (for installing Debian DomUs on
     derivatives) and ubuntu-archive-keyring (for installing Ubuntu DomUs
