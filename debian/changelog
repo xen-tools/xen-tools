@@ -22,6 +22,11 @@ xen-tools (4.5+dev-1) UNRELEASED; urgency=medium
     "xen-hypervisor" which is a virtual package provided by at least all
     xen-hypervisor-* packages since Debian 6 Squeeze.
   * Support passing commandline options with --debootstrap-cmd.
+  * Use -o APT::Install-Recommends=false instead of
+    --no-install-recommends for backwards compatibility with older APT
+    versions which don't know either (but accept any Foo=Bar parameter to
+    "-o"). Allows to install earlier Debian releases (e.g. Etch) with the
+    default configuration again.
 
  -- Axel Beckert <abe@debian.org>  Fri, 09 Jan 2015 13:10:37 +0100
 

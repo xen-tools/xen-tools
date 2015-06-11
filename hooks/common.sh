@@ -123,7 +123,7 @@ installDebianPackage ()
     prefix=$1
     shift
 
-    installDebianPackageAndRecommends ${prefix} --no-install-recommends "$@"
+    installDebianPackageAndRecommends ${prefix} -o APT::Install-Recommends=false "$@"
 }
 
 #
