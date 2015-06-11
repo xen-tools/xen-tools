@@ -3413,7 +3413,7 @@ sub installSystem
     if ( $CONFIG{ 'install-method' } eq 'debootstrap' and
          $CONFIG{ 'debootstrap-cmd' } )
     {
-        $cmd .= " --debootstrap-cmd=$CONFIG{'debootstrap-cmd'}";
+        $cmd .= " --debootstrap-cmd='$CONFIG{'debootstrap-cmd'}'";
     }
 
 

@@ -21,6 +21,7 @@ xen-tools (4.5+dev-1) UNRELEASED; urgency=medium
   * Reduce the list of alternative xen-hypervisor-* packages to just
     "xen-hypervisor" which is a virtual package provided by at least all
     xen-hypervisor-* packages since Debian 6 Squeeze.
+  * Support passing commandline options with --debootstrap-cmd.
 
  -- Axel Beckert <abe@debian.org>  Fri, 09 Jan 2015 13:10:37 +0100
 
