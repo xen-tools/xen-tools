@@ -9,6 +9,12 @@ General Ideas
 * Support per-distribution-release defaults for at least the file
   system.
 
+* Add an option named `--apt-options` or similar to pass arbitrary APT
+  options via installDebianPackage() and friends. The reasoning behind
+  this idea is in
+  [this mail](http://xen-tools.org/pipermail/xen-tools-discuss/2015-June/001103.html)
+  and the following mails on the xen-tools-discuss mailing list.
+
 
 Bugs to fix and features to add for 5.0
 ---------------------------------------
