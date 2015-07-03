@@ -1,7 +1,7 @@
 xen-tools
 =========
 
-[![Travis CI Build Status](https://travis-ci.org/xtaran/xen-tools.svg)](https://travis-ci.org/xtaran/xen-tools)
+[![Travis CI Build Status](https://api.travis-ci.org/xen-tools/xen-tools.svg)](https://travis-ci.org/xen-tools/xen-tools)
 
 * [Homepage](http://www.xen-tools.org/software/xen-tools)
 * Git Repositories:
@@ -211,7 +211,7 @@ Test Suite Coverage
 Despite parts of the test suite are quite old, it only tests a small
 fraction of what xen-tools can do. Some of the scripts currently could
 only be tested on an actual Xen Dom0. Hence the
-[code coverage of xen-tools' test suite is quite bad](https://coveralls.io/r/xtaran/xen-tools).
+[code coverage of xen-tools' test suite is quite bad](https://coveralls.io/r/xen-tools/xen-tools).
 
 -- 
 The Xen-Tools Developer Team
