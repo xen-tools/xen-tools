@@ -208,6 +208,8 @@ followed roughly the same ideas, but less strict.
 Test Suite Coverage
 -------------------
 
+[![Coverage Status](https://coveralls.io/repos/xen-tools/xen-tools/badge.svg?branch=master)](https://coveralls.io/r/xen-tools/xen-tools?branch=master)
+
 Despite parts of the test suite are quite old, it only tests a small
 fraction of what xen-tools can do. Some of the scripts currently could
 only be tested on an actual Xen Dom0. Hence the
