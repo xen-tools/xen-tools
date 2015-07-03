@@ -145,12 +145,6 @@ Bugs to fix and features to add for 5.0
   `authorized_keys` (e.g. a users public key) or to just add the Dom0's
   `/root/.ssh/authorized_keys` as the DomU's one.
 
-* Generate ECDSA host keys where possible. (Likely depends on the
-  to-be-installed SSH version.)
-
-* Show ECDSA host key fingerprints (and maybe others) in the final
-  summary if the according keys are present.
-
 * More generic roles
 
   Deploy a web server or setup ssmtp directly via flag when setting up
