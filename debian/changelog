@@ -39,6 +39,7 @@ xen-tools (4.5+dev-1) UNRELEASED; urgency=medium
   * Reduce the list of alternative xen-hypervisor-* packages to just
     "xen-hypervisor" which is a virtual package provided by at least all
     xen-hypervisor-* packages since Debian 6 Squeeze.
+  * Recommend lvm2, it's at least required if the --lvm option is used.
 
  -- Axel Beckert <abe@debian.org>  Fri, 09 Jan 2015 13:10:37 +0100
 
