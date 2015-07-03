@@ -32,6 +32,7 @@ xen-tools (4.5+dev-1) UNRELEASED; urgency=medium
     + Pass --yes to lvcreate only if LVM version is 2.02.99 or
       higher. Fixes regression introduced with 4.5 by the fix for #754517.
       - Add new (build-)dependency on libsort-versions-perl.
+    + Report all SSH fingerprints of the created DomU, not only RSA ones.
   * Update Vcs-* headers as Gitorious will close its doors in June.
   * Recommend debian-archive-keyring (for installing Debian DomUs on
     derivatives) and ubuntu-archive-keyring (for installing Ubuntu DomUs
