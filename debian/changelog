@@ -29,6 +29,9 @@ xen-tools (4.5+dev-1) UNRELEASED; urgency=medium
     + Split off hardcoded release code names list and default mirrors in
       xen-create-image into separate configuration file which are parsed
       before the default settings or command-line options are set.
+    + Pass --yes to lvcreate only if LVM version is 2.02.99 or
+      higher. Fixes regression introduced with 4.5 by the fix for #754517.
+      - Add new (build-)dependency on libsort-versions-perl.
   * Update Vcs-* headers as Gitorious will close its doors in June.
   * Recommend debian-archive-keyring (for installing Debian DomUs on
     derivatives) and ubuntu-archive-keyring (for installing Ubuntu DomUs

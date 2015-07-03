@@ -806,6 +806,7 @@ use Data::Validate::IP qw/ is_ipv4 /;
 use Data::Validate::Domain qw/ is_hostname /;
 use Term::UI;
 use Term::ReadLine;
+use Sort::Versions;
 use Xen::Tools::Common;
 
 
@@ -3047,6 +3048,31 @@ sub createLVMBits
         }
     }
 
+    #
+    # For the calls to lvcreate below, we first need to check for the
+    # version of LVM running as their have been incompatible API
+    # changes somewhere between "2.02.95(2) (2012-03-06)" in Debian 7
+    # Wheezy and "2.02.111(2) (2014-09-01)" in Debian 8 Jessie. *sigh*
+    #
+    # See https://bugs.debian.org/754517
+    #
+    # I currently assume that all LVM version starting with 2.02.99
+    # should be fine with passing --yes as that version has an
+    # upstream changelog entry "Accept --yes in all commands so test
+    # scripts can be simpler".
+    #
+    # Assumes --yes is necessary if the LVM version can't be parsed.
+
+    my $lvm_needs_yes = 1;
+    my $lvm_version_output = `lvm version`;
+    if ($lvm_version_output =~ /^\s*LVM\s*version:\s*(\d[.\d]*)[\s(]/) {
+        my $lvm_version = $1;
+        my $no_yes_below_version = '2.02.99';
+
+        $lvm_needs_yes =
+            versioncmp($lvm_version, $no_yes_below_version) >= 0;
+    }
+
     foreach my $partition (@PARTITIONS)
     {
         my $disk     = $CONFIG{ 'hostname' } . '-' . $partition->{ 'name' };
@@ -3062,7 +3088,9 @@ sub createLVMBits
         # The commands to create the volume.
         #
         my $disk_cmd =
-          "lvcreate $CONFIG{'lvm'} --yes -L $partition->{'size'} -n $disk";
+          "lvcreate $CONFIG{'lvm'} ".
+          ($lvm_needs_yes ? '--yes' : '').
+          " -L $partition->{'size'} -n $disk";
 
         #
         # Create the volume

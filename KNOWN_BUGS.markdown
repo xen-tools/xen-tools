@@ -1,16 +1,6 @@
 KNOWN BUGS in xen-tools
 =======================
 
-Bugs to fix before next release
--------------------------------
-
-* Older versions of LVM don't understand `--yes` while newer versions
-  require it. The fix for the latter
-  ([Debian bug report 754517](https://bugs.debian.org/754517))
-  introduced a regression with older LVM versions, e.g. on Debian 7
-  Wheezy. There's likely an LVM version check and an according switch
-  necessary.
-
 Bugs to fix rather soon
 -----------------------
 
