@@ -7,7 +7,7 @@ xen-tools
 * Git Repositories:
   * [at GitLab](http://gitlab.com/xen-tools/xen-tools)
   * [at GitHub](http://github.com/xen-tools/xen-tools)
-  * [at Gitorious](http://gitorious.org/xen-tools) (deprecated)
+  * [at Gitorious](http://gitorious.org/xen-tools) (_outdated_, no more updated, for historical reference only)
 * [Mailing Lists](http://www.xen-tools.org/software/xen-tools/lists.html)
 
 About
