@@ -17,7 +17,7 @@ xen-tools contains a collection of Perl scripts for working with Xen
 guest images under Linux.
 
 Using this software, you can easily create new
-[Xen](http://www.xen.org) guests configured to be accessible over the
+[Xen](http://www.xen.org/) guests configured to be accessible over the
 network via [OpenSSH](http://www.openssh.org/).
 
 xen-tools currently has scripts to install most releases of
