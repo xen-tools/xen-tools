@@ -35,6 +35,8 @@ xen-tools (4.5+dev-1) UNRELEASED; urgency=medium
     + Report all SSH fingerprints of the created DomU, not only RSA ones.
     + Split up test suite in functionality/compatibility tests (t) and
       author/release tests (xt).
+    + Make test suite support as-installed-testing
+      - Mark package as autopkgtestable.
   * Update Vcs-* headers and documentation as Gitorious closed its doors
     in June 2015 and is now only available with static contents.
   * Recommend debian-archive-keyring (for installing Debian DomUs on
@@ -44,6 +46,7 @@ xen-tools (4.5+dev-1) UNRELEASED; urgency=medium
     "xen-hypervisor" which is a virtual package provided by at least all
     xen-hypervisor-* packages since Debian 6 Squeeze.
   * Recommend lvm2, it's at least required if the --lvm option is used.
+  * Add an adequate as-installed test to debian/tests/control.
 
  -- Axel Beckert <abe@debian.org>  Fri, 09 Jan 2015 13:10:37 +0100
 

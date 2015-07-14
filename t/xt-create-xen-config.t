@@ -174,7 +174,8 @@ sub runCreateCommand
     #
     #  Run the command
     #
-    system( "perl bin/xt-create-xen-config --output=$dir --template=etc/xm.tmpl" );
+    my $prefix = $ENV{AS_INSTALLED_TESTING} ? '/usr/' : 'perl ';
+    system( "${prefix}bin/xt-create-xen-config --output=$dir --template=etc/xm.tmpl" );
 
     #
     #  Reset the environment

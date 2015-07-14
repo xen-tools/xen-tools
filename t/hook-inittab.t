@@ -11,6 +11,7 @@ use Test::More;
 use File::Temp;
 use File::Copy;
 
+my $hook_dir = $ENV{AS_INSTALLED_TESTING} ? '/usr/share/xen-tools' : 'hooks';
 
 #
 #  Check if build system has /etc/inittab.
@@ -23,13 +24,13 @@ SKIP: {
 # against we look for subdirectories beneath hooks/ and test each
 # one.
 #
-    foreach my $dir ( glob( "hooks/*" ) )
+    foreach my $dir ( glob( "$hook_dir/*" ) )
     {
         next if ( $dir =~ /CVS/i );
         next if ( $dir =~ /common/i );
         next if ( ! -d $dir );
 
-        if ( $dir =~ /hooks\/(.*)/ )
+        if ( $dir =~ /$hook_dir\/(.*)/ )
         {
             my $dist = $1;
 
@@ -60,13 +61,13 @@ sub testHook
     ok( -d $dir, "Temporary directory created OK" );
     ok( -e $dir . "/etc/inittab", "/etc/inittab copied correctly." );
 
-    ok( -e "hooks/$dist/30-disable-gettys", "$dist inittab fixing hook exists" );
-    ok( -x "hooks/$dist/30-disable-gettys", "$dist inittab fixing hook is executable" );
+    ok( -e "$hook_dir/$dist/30-disable-gettys", "$dist inittab fixing hook exists" );
+    ok( -x "$hook_dir/$dist/30-disable-gettys", "$dist inittab fixing hook is executable" );
 
     #
     #  Call the hook
     #
-    `hooks/$dist/30-disable-gettys $dir`;
+    `$hook_dir/$dist/30-disable-gettys $dir`;
 
     #
     #  Now we read the new file, and make sure it looks like we expect.

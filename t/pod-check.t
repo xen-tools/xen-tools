@@ -10,7 +10,8 @@
 use strict;
 use Test::More;
 
-foreach my $file ( glob( "bin/*-*" ) )
+my $bin_dir = $ENV{AS_INSTALLED_TESTING} ? '/usr/bin' : 'bin';
+foreach my $file ( glob( "$bin_dir/xen-*-* $bin_dir/xt-*-*" ) )
 {
     ok( -e $file, "$file" );
     ok( -x $file, " File is executable: $file" );

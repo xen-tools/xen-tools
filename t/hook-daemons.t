@@ -19,12 +19,14 @@ use File::Temp;
 # against we look for subdirectories beneath hooks/ and test each
 # one.
 #
-foreach my $dir ( glob( "hooks/*" ) )
+
+my $hook_dir = $ENV{AS_INSTALLED_TESTING} ? '/usr/share/xen-tools' : 'hooks';
+foreach my $dir ( glob( "$hook_dir/*" ) )
 {
     next if ( $dir =~ /CVS/i );
     next if ( ! -d $dir );
 
-    if ( $dir =~ /hooks\/(.*)/ )
+    if ( $dir =~ /$hook_dir\/(.*)/ )
     {
         my $dist = $1;
 
@@ -49,7 +51,7 @@ sub maybeCallHook
     #
     foreach my $file ( qw/ 01-disable-daemons 99-enable-daemons / )
     {
-        return if ( ! -e "./hooks/$dist/$file" );
+        return if ( ! -e "$hook_dir/$dist/$file" );
     }
 
     #
@@ -87,7 +89,7 @@ sub testHook
     #
     #  Call the first hook
     #
-    `hooks/$dist/01-disable-daemons $dir`;
+    `$hook_dir/$dist/01-disable-daemons $dir`;
 
     #
     #  Now /usr/sbin should exist.
@@ -98,7 +100,7 @@ sub testHook
     #
     #  Now call the second hook
     #
-    `hooks/$dist/99-enable-daemons $dir`;
+    `$hook_dir/$dist/99-enable-daemons $dir`;
 
     ok( ! -x $dir . "/usr/sbin/policy-rc.d", "The policy-rc.d file was correctly removed" );
 }

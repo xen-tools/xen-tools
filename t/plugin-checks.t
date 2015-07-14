@@ -17,13 +17,14 @@ use Test::More;
 # against we look for subdirectories beneath hooks/ and test each
 # one.
 #
-foreach my $dir ( glob( "hooks/*" ) )
+my $hook_dir = $ENV{AS_INSTALLED_TESTING} ? '/usr/share/xen-tools' : 'hooks';
+foreach my $dir ( glob( "$hook_dir/*" ) )
 {
     next if ( $dir =~ /CVS/i );
     next if ( $dir =~ /common/i );
     next if ( ! -d $dir );
 
-    if ( $dir =~ /hooks\/(.*)/ )
+    if ( $dir =~ /$hook_dir\/(.*)/ )
     {
         my $dist = $1;
         testPlugins( $dist );
@@ -45,12 +46,12 @@ sub testPlugins
     #
     # Make sure there is a hook directory for the named distro
     #
-    ok( -d "hooks/$dist/", "There is a hook directory for the distro $dist" );
+    ok( -d "$hook_dir/$dist/", "There is a hook directory for the distro $dist" );
 
     #
     # Make sure the plugins are OK.
     #
-    foreach my $file ( glob( "hooks/$dist/*" ) )
+    foreach my $file ( glob( "$hook_dir/$dist/*" ) )
     {
         ok( -e $file, "$file" );
 

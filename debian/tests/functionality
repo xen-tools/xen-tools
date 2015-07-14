@@ -1,0 +1,15 @@
+#!/bin/sh
+
+export AS_INSTALLED_TESTING=1
+
+prove -j1 -v \
+ t/hook-daemons.t \
+ t/hook-hostname.t \
+ t/hook-inittab.t \
+ t/hook-tls.t \
+ t/hooks.t \
+ t/plugin-checks.t \
+ t/pod-check.t \
+ t/xen-delete-image.t \
+ t/xen-lists-images.t \
+ t/xt-create-xen-config.t

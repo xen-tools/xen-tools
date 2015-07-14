@@ -21,16 +21,17 @@ if ( $Config::Config{archname} =~ /64/ )
 # against we look for subdirectories beneath hooks/ and test each
 # one.
 #
-foreach my $dir ( glob( "hooks/*" ) )
+my $hook_dir = $ENV{AS_INSTALLED_TESTING} ? '/usr/share/xen-tools' : 'hooks';
+foreach my $dir ( glob( "$hook_dir/*" ) )
 {
     next if ( $dir =~ /CVS|common/i );
     next if ( ! -d $dir );
 
-    if ( $dir =~ /hooks\/(.*)/ )
+    if ( $dir =~ /$hook_dir\/(.*)/ )
     {
         my $dist = $1;
 
-        testTLSDisabling( $dist ) if -e "hooks/$dist/10-disable-tls";
+        testTLSDisabling( $dist ) if -e "$hook_dir/$dist/10-disable-tls";
     }
 }
 
@@ -63,15 +64,15 @@ sub testTLSDisabling
     # Make sure we have the distro-specific hook directory, and
     # TLS-disabling hook script.
     #
-    ok( -d "hooks/$dist", "There is a hook directory for the distro $dist" );
+    ok( -d "$hook_dir/$dist", "There is a hook directory for the distro $dist" );
 
-    ok( -e "hooks/$dist/10-disable-tls", "TLS Disabling hook exists ($dist)" );
-    ok( -x "hooks/$dist/10-disable-tls", "TLS Disabling hook is executable ($dist)" );
+    ok( -e "$hook_dir/$dist/10-disable-tls", "TLS Disabling hook exists ($dist)" );
+    ok( -x "$hook_dir/$dist/10-disable-tls", "TLS Disabling hook is executable ($dist)" );
 
     #
     #  Call the hook
     #
-    `hooks/$dist/10-disable-tls $dir`;
+    `$hook_dir/$dist/10-disable-tls $dir`;
 
     #
     # Make sure the the TLS directory is empty

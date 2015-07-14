@@ -19,13 +19,14 @@ use File::Temp;
 # against we look for subdirectories beneath hooks/ and test each
 # one.
 #
-foreach my $dir ( glob( "hooks/*" ) )
+my $hook_dir = $ENV{AS_INSTALLED_TESTING} ? '/usr/share/xen-tools' : 'hooks';
+foreach my $dir ( glob( "$hook_dir/*" ) )
 {
     next if ( $dir =~ /CVS/i );
     next if ( $dir =~ /common/i );
     next if ( ! -d $dir );
 
-    if ( $dir =~ /hooks\/(.*)/ )
+    if ( $dir =~ /$hook_dir\/(.*)/ )
     {
         my $dist = $1;
 
@@ -78,14 +79,14 @@ sub testHostCreation
     # Make sure we have the distro-specific hook directory, and
     # TLS-disabling hook script.
     #
-    ok( -d "hooks/$dist", "There is a hook directory for the distro $dist" );
+    ok( -d "$hook_dir/$dist", "There is a hook directory for the distro $dist" );
 
-    ok( -e "hooks/$dist/50-setup-hostname", "There is a hook for setting up hostname stuff." );
+    ok( -e "$hook_dir/$dist/50-setup-hostname", "There is a hook for setting up hostname stuff." );
 
     #
     #  Call the hook
     #
-    `hooks/$dist/50-setup-hostname $dir`;
+    `$hook_dir/$dist/50-setup-hostname $dir`;
 
     ok( -e $dir . "/etc/hosts", " There is now a hosts file present" );
 

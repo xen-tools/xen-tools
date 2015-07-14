@@ -21,6 +21,7 @@ Standards-Version: 3.9.6
 Homepage: http://xen-tools.org/software/xen-tools
 Vcs-Browser: https://gitlab.com/xen-tools/xen-tools
 Vcs-Git: https://gitlab.com/xen-tools/xen-tools.git
+Testsuite: autopkgtest
 
 Package: xen-tools
 Architecture: all

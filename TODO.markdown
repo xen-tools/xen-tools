@@ -15,9 +15,6 @@ General Ideas
   [this mail](http://xen-tools.org/pipermail/xen-tools-discuss/2015-June/001103.html)
   and the following mails on the xen-tools-discuss mailing list.
 
-* Use Debian's autopkgtest specification and do as-installed testing
-  on http://ci.debian.net/.
-
 
 Bugs to fix and features to add for 5.0
 ---------------------------------------

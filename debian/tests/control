@@ -1,0 +1,5 @@
+Tests: functionality
+Depends: @, @builddeps@
+
+Tests: adequate
+Depends: @, adequate
