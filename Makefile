@@ -269,16 +269,13 @@ orig-tar-gz: release
 #
 #  Run the test suite.
 #
-test: update-modules
+test: non-author-test author-test
+
+non-author-test: update-modules
 	prove --shuffle t/
 
-
-#
-#  Run the test suite verbosely.
-#
-test-verbose:
-	prove --shuffle --verbose t/
-
+author-test:
+	prove xt/
 
 
 #

@@ -33,6 +33,8 @@ xen-tools (4.5+dev-1) UNRELEASED; urgency=medium
       higher. Fixes regression introduced with 4.5 by the fix for #754517.
       - Add new (build-)dependency on libsort-versions-perl.
     + Report all SSH fingerprints of the created DomU, not only RSA ones.
+    + Split up test suite in functionality/compatibility tests (t) and
+      author/release tests (xt).
   * Update Vcs-* headers and documentation as Gitorious closed its doors
     in June 2015 and is now only available with static contents.
   * Recommend debian-archive-keyring (for installing Debian DomUs on
