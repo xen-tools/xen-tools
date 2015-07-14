@@ -4,7 +4,7 @@ How to build xen-tools directly from the Git repository?
 Clone the git repository and change to the directory of your local
 working copy.
 
-$ git clone git://gitorious.org/xen-tools/xen-tools.git
+$ git clone git://github.com/xen-tools/xen-tools.git
 $ cd xen-tools
 
 If you just want to build the binary package, run
@@ -18,5 +18,4 @@ Debian or Ubuntu:
 $ make orig-tar-gz
 $ dpkg-buildpackage
 
-
- -- Axel Beckert <abe@debian.org>, Mon, 13 Sep 2010 14:30:05 +0200
+ -- Axel Beckert <abe@debian.org>, Tue, 14 Jul 2015 18:35:38 +0200
