@@ -44,6 +44,8 @@ xen-tools (4.5+dev-1) UNRELEASED; urgency=medium
       - Make "release" target to include "orig-tar-gz" and tagging.
     + New option --keyring which is passed through to deboootstrap. Its
       default values work around bug #792729 in debootstrap.
+    + Supports "oldstable" and "oldoldstable" as distribution names, too.
+      ("oldoldstable" is not yet supported by debootstrap, see #792734.)
   * Update Vcs-* headers and documentation as Gitorious closed its doors
     in June 2015 and is now only available with static contents.
   * Recommend debian-archive-keyring (for installing Debian DomUs on

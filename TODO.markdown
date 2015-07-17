@@ -68,7 +68,7 @@ Bugs to fix and features to add for 5.0
 * `xen-create-image --dist=…` / sources.list generation should be more fine-grained
 
   xen-tools should offer the possibility to enable/disable
-  security/volatile/backports as well as
+  security/volatile/backports/lts as well as
   contrib/non-free/universe/restricted/multiverse for each of them not
   only based on defaults plus the Dom0's sources.list
 

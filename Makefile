@@ -184,6 +184,8 @@ install-hooks:
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d sid.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d testing.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d stable.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d oldstable.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d oldoldstable.d
 	mkdir -p ${prefix}/usr/share/xen-tools/gentoo.d/
 	cp -R hooks/gentoo/*-* ${prefix}/usr/share/xen-tools/gentoo.d
 	mkdir -p ${prefix}/usr/share/xen-tools/dapper.d/
