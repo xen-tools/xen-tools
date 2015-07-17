@@ -253,7 +253,7 @@ release: test tidy fixup-perms update-version update-modules clean changelog
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)/cover_db
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)/.git*
 	cd $(DIST_PREFIX) && tar -cvf $(DIST_PREFIX)/$(BASE)-$(VERSION).tar $(BASE)-$(VERSION)/
-	gzip $(DIST_PREFIX)/$(BASE)-$(VERSION).tar
+	gzip -9nv $(DIST_PREFIX)/$(BASE)-$(VERSION).tar
 	mv $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz ..
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)
 	gpg --armour --detach-sign ../$(BASE)-$(VERSION).tar.gz
