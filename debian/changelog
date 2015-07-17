@@ -4,7 +4,7 @@ xen-tools (4.5+dev-1) UNRELEASED; urgency=medium
     + Fix usage of nonexistent variable in removeDebianPackage (Closes:
       #774936) Thanks Lukas Schwaighofer!
     + Change all occurrences of http.debian.net to httpredir.debian.org
-    + Ubuntu Lucid Lynx is now EoL
+    + Ubuntu 12.04 Lucid Lynx and 14.10 Utopic Unicorn now EoL.
     + Preliminary support for Debian 9 Stretch and Ubuntu 15.10 Wily
       Werewolf.
     + Installs bash completion into /usr/share/bash-completion/ (fixes
