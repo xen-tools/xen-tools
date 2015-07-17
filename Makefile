@@ -245,7 +245,10 @@ manpages:
 #
 #  Make a new release tarball, and make a GPG signature.
 #
-release: test tidy fixup-perms update-version update-modules clean changelog
+release: orig-tar-gz
+	git tag -s -m "Release as $(VERSION)" "release-$(VERSION)"
+
+release-tarball: test tidy fixup-perms update-version update-modules clean changelog
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)
 	rm -f $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz
 	cp -R . $(DIST_PREFIX)/$(BASE)-$(VERSION)
@@ -261,7 +264,7 @@ release: test tidy fixup-perms update-version update-modules clean changelog
 #
 #  Make a new orig.tar.gz for the Debian package
 #
-orig-tar-gz: release
+orig-tar-gz: release-tarball
 	cp -p ../$(BASE)-$(VERSION).tar.gz ../$(BASE)_$(DEBVERSION).orig.tar.gz
 	cp -p ../$(BASE)-$(VERSION).tar.gz.asc ../$(BASE)_$(DEBVERSION).orig.tar.gz.asc
 
