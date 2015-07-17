@@ -37,6 +37,8 @@ xen-tools (4.5+dev-1) UNRELEASED; urgency=medium
       author/release tests (xt).
     + Make test suite support as-installed-testing
       - Mark package as autopkgtestable.
+    + Multiple release workflow improvements (target release in Makefile):
+      - Use TMPDIR instead of TMP for temporary directories.
   * Update Vcs-* headers and documentation as Gitorious closed its doors
     in June 2015 and is now only available with static contents.
   * Recommend debian-archive-keyring (for installing Debian DomUs on

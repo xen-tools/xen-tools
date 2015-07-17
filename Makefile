@@ -12,8 +12,8 @@
 #
 #  Only used to build distribution tarballs.
 #
-TMP        ?= /tmp
-DIST_PREFIX = ${TMP}
+TMPDIR     ?= /tmp
+DIST_PREFIX = ${TMPDIR}
 VERSION     = 4.5
 DEBVERSION  = $(shell echo $(VERSION)|sed 's/\(rc\|pre\|beta\|alpha\)/~\1/')
 BASE        = xen-tools
