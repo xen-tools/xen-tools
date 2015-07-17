@@ -124,6 +124,9 @@ and EVMS EXAMPLE.
    --(no)keep   (Don't) keep our images if installation fails. It
                 maybe unmounted, though.
 
+   --keyring=/path/to/keyring
+                Set the path to the keyring debootstrap should use.
+
    --kernel=/path/to/kernel
                 Set the path to the kernel to use for domU. If a
                 kernel is specified it must exist.
@@ -1275,6 +1278,7 @@ sub setupDefaultOptions
     # Default distribution is Debian Stable
     $CONFIG{ 'dist' }          = 'stable';
     $CONFIG{ 'mirror' }        = '';
+    $CONFIG{ 'keyring' }       = '';
 
     # Initialize per distribution mirror defaults
     foreach my $debdist (keys %DIST) {
@@ -1284,6 +1288,8 @@ sub setupDefaultOptions
                 if ($debdistinfo =~ /eol/) {
                     $CONFIG{ 'mirror_'.$debdist } = $MIRROR{$dist.'_archive'} or
                         die $dist.'_archive not defined in /etc/xen-tools/mirrors.conf';
+                    my $removed_keys = "/usr/share/keyrings/$dist-archive-removed-keys.gpg";
+                    $CONFIG{ 'keyring_'.$debdist } = $removed_keys if -r $removed_keys;
                 } else {
                     $CONFIG{ 'mirror_'.$debdist } = $MIRROR{$dist} or
                         die $dist.' not defined in /etc/xen-tools/mirrors.conf';
@@ -1462,6 +1468,7 @@ sub checkOption
         memory        => 'integerWithSuffix',
         maxmem        => 'integerWithSuffix',
         kernel        => 'existingFile',
+        keyring       => 'existingFile',
         initrd        => 'existingFile',
         modules       => 'existingDir',
         serial_device => 'serialDev',
@@ -1568,6 +1575,7 @@ sub parseCommandLineArguments
             "kernel=s",    \&checkOption,
             "initrd=s",    \&checkOption,
             "mirror=s",    \&checkOption,
+            "keyring=s",   \&checkOption,
             "apt_proxy=s", \&checkOption,
             "modules=s",   \&checkOption,
             "lvm=s",       \$install{ 'lvm' },
@@ -1806,6 +1814,17 @@ sub checkArguments
          length( $CONFIG{ $distMirror } ) )
     {
         $CONFIG{ 'mirror' } = $CONFIG{ $distMirror };
+    }
+
+    #
+    #  If no keyring is set, use the default per-distro keyring if present
+    #
+    my $distKeyring = "keyring_" . $CONFIG{ 'dist' };
+    if ( !$CONFIG{ 'keyring' } and
+         $CONFIG{ $distKeyring } and
+         length( $CONFIG{ $distKeyring } ) )
+    {
+        $CONFIG{ 'keyring' } = $CONFIG{ $distKeyring };
     }
 
     #
@@ -3459,6 +3478,14 @@ sub installSystem
     if ( $CONFIG{ 'arch' } )
     {
         $cmd .= " --arch=$CONFIG{'arch'}";
+    }
+
+    #
+    #  Propagate --keyring
+    #
+    if ( $CONFIG{ 'keyring' } )
+    {
+        $cmd .= " --keyring=$CONFIG{'keyring'}";
     }
 
 

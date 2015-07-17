@@ -28,6 +28,7 @@ xt-install-image - Install a fresh copy of GNU/Linux into a directory
                     configuration file.
    --mirror         The mirror to use when installing with 'debootstrap'.
    --apt_proxy      The proxy to use when installing with 'debootstrap'.
+   --keyring        The keyring to use when installing with 'debootstrap'.
 
   Installation Options:
    --install-method  Specify the installation method to use.
@@ -337,6 +338,7 @@ sub parseCommandLineArguments
         "cachedir=s", \$CONFIG{ 'cachedir' },
         "config=s", \$CONFIG{ 'config' },
         "mirror=s", \$CONFIG{ 'mirror' },
+        "keyring=s", \$CONFIG{ 'keyring' },
         "apt_proxy=s", \$CONFIG{ 'apt_proxy' },
 
         # Help.
@@ -633,6 +635,14 @@ sub do_debootstrap
     if ( $CONFIG{ 'arch' } )
     {
         $EXTRA .= " --arch $CONFIG{'arch'}";
+    }
+
+    #
+    #  Propogate the --keyring argument
+    #
+    if ( $CONFIG{ 'keyring' } )
+    {
+        $EXTRA .= " --keyring=$CONFIG{'keyring'}";
     }
 
     #

@@ -15,6 +15,9 @@ General Ideas
   [this mail](http://xen-tools.org/pipermail/xen-tools-discuss/2015-June/001103.html)
   and the following mails on the xen-tools-discuss mailing list.
 
+* Add keys in keyring given by `--keyring` to APT's keyring inside the
+  DomU by adding it with `apt-key add`.
+
 
 Bugs to fix and features to add for 5.0
 ---------------------------------------
