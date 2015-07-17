@@ -34,7 +34,9 @@ nop:
 	@echo " diff          = See local changes."
 	@echo " install       = Install the software"
 	@echo " manpages      = Make manpages beneath man/"
-	@echo " release       = Make a release tarball"
+	@echo " tarball       = Make a release tarball"
+	@echo " orig-tar-gz   = Make a tarball suitably named for Debian"
+	@echo " release       = Make a release tarball and sign it"
 	@echo " uninstall     = Remove the software"
 	@echo " update        = Update from the source repository."
 	@echo " "
@@ -246,9 +248,10 @@ manpages:
 #  Make a new release tarball, and make a GPG signature.
 #
 release: orig-tar-gz
+	gpg --armour --detach-sign ../$(BASE)-$(VERSION).tar.gz
 	git tag -s -m "Release as $(VERSION)" "release-$(VERSION)"
 
-release-tarball: test tidy fixup-perms update-version update-modules clean changelog
+tarball: test tidy fixup-perms update-version update-modules clean changelog
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)
 	rm -f $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz
 	cp -R . $(DIST_PREFIX)/$(BASE)-$(VERSION)
@@ -259,14 +262,12 @@ release-tarball: test tidy fixup-perms update-version update-modules clean chang
 	gzip -9nv $(DIST_PREFIX)/$(BASE)-$(VERSION).tar
 	mv $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz ..
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)
-	gpg --armour --detach-sign ../$(BASE)-$(VERSION).tar.gz
 
 #
 #  Make a new orig.tar.gz for the Debian package
 #
-orig-tar-gz: release-tarball
+orig-tar-gz: tarball
 	cp -p ../$(BASE)-$(VERSION).tar.gz ../$(BASE)_$(DEBVERSION).orig.tar.gz
-	cp -p ../$(BASE)-$(VERSION).tar.gz.asc ../$(BASE)_$(DEBVERSION).orig.tar.gz.asc
 
 
 #
