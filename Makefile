@@ -245,7 +245,7 @@ manpages:
 #
 #  Make a new release tarball, and make a GPG signature.
 #
-release: tidy fixup-perms update-version update-modules clean changelog
+release: test tidy fixup-perms update-version update-modules clean changelog
 	rm -rf $(DIST_PREFIX)/$(BASE)-$(VERSION)
 	rm -f $(DIST_PREFIX)/$(BASE)-$(VERSION).tar.gz
 	cp -R . $(DIST_PREFIX)/$(BASE)-$(VERSION)
