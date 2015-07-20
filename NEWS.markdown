@@ -1,3 +1,228 @@
+xen-tools 4.6 (released 20 Jul 2015)
+====================================
+
+New Features and Major Changes
+------------------------------
+
+* Drop all occurrences of apt's `--force-yes` parameter. It only
+  forces the installation of untrusted packages and that's
+  unwanted. (Closes Debian bug report #776487)
+* Support passing commandline options with `--debootstrap-cmd`.
+* Use MD5 as default hash method again, to be able to properly set
+  passwords in older releases. Does not affect passwords changed later
+  inside the DomU.
+* Split off hardcoded release code names list and default mirrors in
+  `xen-create-image` into separate configuration file which are parsed
+  before the default settings or command-line options are set.
+* Report all SSH fingerprints of the created DomU, not only RSA ones.
+* Support VLANs with Open vSwitch (GH-2). Thanks to Félix Barbeira for
+  the patch.
+
+
+New Options
+-----------
+
+* `--keyring` (xen-create-image, xt-install-image)
+* `--vlan`  (xen-create-image)
+
+Distribution Releases Changes
+-----------------------------
+
+* Debian 9 Stretch (preliminary support)
+* Ubuntu 15.10 Wily Werewolf (preliminary support; not yet suported by
+  debootstrap, see Debian bug report #787117)
+* Ubuntu 12.04 Lucid Lynx is now EoL.
+* Ubuntu 14.10 Utopic Unicorn is now EoL.
+
+Improvements
+------------
+
+* Make test suite support as-installed-testing.
+* Multiple release workflow improvements (target `release` in
+  `Makefile`).
+* Supports `unstable`, `oldstable` and `oldoldstable` as distribution
+  names, too. (`oldoldstable` is not yet supported by debootstrap, see
+  Debian feature request #792734 in debootstrap.)
+
+Bug Fixes
+---------
+
+* Fix usage of nonexistent variable in `removeDebianPackage` (Closes
+  Debian bug report #774936) Thanks Lukas Schwaighofer!
+* Allows `#` within configuration file comments. (Closes Debian bug
+  report #783060; thanks Jean-Michel Nirgal Vourgère for the bug
+  report and patch!)
+* Use `-o APT::Install-Recommends=false` instead of
+  `--no-install-recommends` for backwards compatibility with older APT
+  versions which don't know either (but accept any `Foo=Bar` parameter
+  to `-o`). Allows one to install earlier Debian releases (e.g. Etch)
+  with the default configuration again.
+
+* Pass `--yes` to `lvcreate` only if LVM version is 2.02.99 or
+  higher. Fixes regression introduced with 4.5 by the fix for Debian
+  bug report #754517.
+
+Other Changes
+-------------
+
+* Change all occurrences of `http.debian.net` to
+  `httpredir.debian.org`.
+* Installs bash completion into `/usr/share/bash-completion/` (fixes
+  lintian warning `package-install-into-obsolete-dir`)
+* Testsuite: Optimize and clean up modules.sh.
+* Split up test suite in functionality/compatibility tests (`t`) and
+  author/release tests (`xt`).
+* New example script helpful for release testing.
+
+
+xen-tools 4.5 (released 25 Oct 2014)
+====================================
+
+New Features and Major Changes
+------------------------------
+
+* Apply patch by Adrian C. (anrxc) to allow to override hooks in
+  `/usr/share/xen-tools/*.d/` with hooks in `/etc/xen-tools/hooks.d/`.
+
+Distribution Releases Changes
+-----------------------------
+
+* Ubuntu 14.10 Utopic Unicorn.
+* Ubuntu 15.04 Vivid Vervet (preliminary support)
+* Mark Ubuntu 13.10 Saucy Salamander as EoL
+
+Improvements
+------------
+
+* Use `686-pae` kernels instead of `686` kernels on Debian Wheezy and
+  later. Thanks to Daniel Lintott! (Closes Debian bug report #742778)
+* Pass `-y` option ("assume yes") to `yum` (Closes Debian bug report
+  #735675) Thanks Lionel FÉLICITÉ!
+
+Bug Fixes
+---------
+
+* Fix always empty gateway on Debian DomUs (Thanks Joan! LP: #1328794)
+* Fix `lvcreate` awaiting user input when creating swap LV (Closes
+  Debian bug report #754517) Thanks Eric Engstrom!
+* Fix missing quoting in shell function `assert` in `hooks/common.sh`.
+* Fix initial configuration summary in cases where `pygrub` is used.
+* Fix corner cases where not the latest kernel would have been
+  checked.
+* `--password` overrides `--genpass`. (Closes Debian bug report
+  #764143) Based on patch by Santiago Vila.
+* Fix unaligned maxmem output of xen-create-image. (Closes Debian bug
+  report #764126; Patch by Santiago Vila)
+* Fix copy & paste errors in comments in typos in `roles/puppet`
+  (Closes Debian bug report #764134; Patch by Santiago Vila)
+* Fix typos in POD of `xen-create-image` (Closes Debian bug report
+  #764153; Patch by Santiago Vila)
+
+Other Changes
+-------------
+
+* Drop all xend related sanity checks, they cause more havoc nowadays
+  than they help. Thanks Ian Campbell! (Closes Debian bug report
+  #732456)
+* pygrub detection: Prefer `/usr/lib/xen-default` over `/usr/lib/xen-x.y`.
+* Add password length sanity check with fallback to default length.
+* Raise default password length from 8 to 23.
+* Flush output after each line in `runCommand()`.
+* `Makefile`: Clean up coverage data in multiple targets.
+
+
+xen-tools 4.4 (released 11 Dec 2013)
+====================================
+
+Listing includes changes of according beta releases.
+
+New Features and Major Changes
+------------------------------
+
+* Preliminary support for `xl` toolstack
+* Ships `/etc/initramfs-tools/conf.d/xen-tools` for generating Dom0
+  initrds also suitable for DomU usage. Trigger `update-initramfs`.
+* Installs a legacy `grub` in all `pygrub` based Debian/Ubuntu DomUs
+  to be able to update the `menu.list` automatically.
+* `hooks/common.sh`: `installDebianPackage` no more installs
+  recommends, use `installDebianPackageAndRecommends` for that from
+  now on.
+* `hooks/common.sh`: Rename `installCentOS4Package` to
+  `installRPMPackage`.  Add `installCentOS4Package` wrapper for
+  backward compatibility.
+* Better documents and checks requirements for the `--apt_proxy`
+  value. (See #623443 for the corresponding apt issue.) Requires now
+  `Data::Validate::URI`.
+* Uses now `Data::Validate::Domain` and `Data::Validate::IP` for IP
+  addresses and hostname checks.
+
+Newly Supported Distribution Releases
+-------------------------------------
+
+* Debian 8 Jessie
+* Ubuntu 13.04 Raring
+* Ubuntu 13.10 Saucy (preliminary support; debootstrap doesn't have
+  support for Saucy at the time of writing)
+
+Improvements
+------------
+
+* Also recognize "M" and "G" instead of "MB" and "GB" as size unit for
+  `--memory`. Also document the recognized units. (Closes Debian bug
+  report #691320)
+* `xen-list-images` now also outputs the file name of the config file.
+* `xen-list-images` and `xen-delete-image` now understand `--extension`.
+* Makefile accepts `DESTDIR=…`
+* Move examples from debian/examples to examples.
+* Adds default mount options for ext4, identical to ext2/ext3.
+* By default install `linux-image-virtual` instead of
+  `linux-image-server` on Ubuntu Intrepid and newer (Hopefully closes:
+  #640099, LP #839492)
+* Makes some options (like `--pygrub`) negatable.
+* Rework "minimal" role to be less based on personal preferences:
+  * No more installs sudo, vim, syslog-ng, etc.
+  * Fixes usage together with pygrub.
+
+Bug Fixes
+---------
+
+* Fix symbolic link hooks/centos-6/15-setup-arch (Closes Debian bug
+  report #690299)
+* Execute END block not on --version/--help/--manual (Closes Debian
+  bug #684346)
+* Move code for `--boot` feature to `END` block. Fixes missing SSH
+  fingerprint display if `--boot` was used. (Closes Debian bug report
+  #679183)
+* Correctly handle aborts in `END` block. (Closes Debian bug report
+  #704882)
+* Fixes `--extension=` with empty parameter.
+* Sarge amd64 case handle properly
+* `xt-install-image`: Don't bail out if only `cdebootstrap` is
+  installed but not `debootstrap` (Thanks Elmar Heeb!)
+* Fix filesystem tools installation in `91-install-fs-tools` (which
+  was broken since 4.3~rc1-1) by merging `91-install-fs-tools back`
+  into `90-make-fstab`. (Closes Debian bug report #715340) Also
+  supports RPM-based distributions now.
+* Fixes creation of `ARRAY(0x#).log` named log files.
+
+Other Changes
+-------------
+
+* Code deduplication to unify the `xen-*-image` scripts
+* Moves `/usr/lib/xen-tools/` to `/usr/share/xen-tools/`
+* Use `http.debian.net` as default Debian mirror if no mirror is given
+  and `xt-guess-suite-and-mirror` is not used.
+* Default DomUs to use the noop scheduler (Closes Debian bug report
+  #693131)
+* Fixes export of environment variables. Previously they could contain
+  dashes and then were only accessible from within Perl, but not from
+  within Bash.
+* Uses `Test::NoTabs` instead of its own test for that.
+* Removes unused Perl modules `Xen::Tools` and `Xen::Tools::Log` from
+  source code. Also removes the according tests from the test
+  suite. No more needs `Moose`.
+
+
 xen-tools 4.3.1 (released 30-Jun-2012)
 ======================================
 
@@ -6,6 +231,28 @@ Bugfix Release only
 
 xen-tools 4.3 (released 26-Jun-2012)
 ====================================
+
+Listing includes changes of according beta releases.
+
+New Features and Major Changes
+------------------------------
+
+* Massive code deduplication in hooks directory
+
+New Options
+-----------
+
+* `--dontformat` (xen-create-image)
+* `--finalrole`  (xen-create-image)
+* `--apt_proxy`  (xen-create-image)
+
+Newly Supported Distribution Releases
+-------------------------------------
+
+* Ubuntu 11.10 Oneiric
+* Ubuntu 12.04 Precise
+* Ubuntu 12.10 Quantal
+* CentOS 6
 
 Bug Fixes
 ---------
@@ -17,30 +264,6 @@ Other Changes
 -------------
 
 * Remove most Mercurial traces
-
-
-xen-tools 4.3rc1 (released 08 Jun 2012)
-=======================================
-
-New Features and Major Changes
-------------------------------
-
-* Massive code deduplication in hooks directory
-
-New Options
------------
-
-    --dontformat (xen-create-image)
-    --finalrole  (xen-create-image)
-    --apt_proxy  (xen-create-image)
-
-Newly Supported Distribution Releases
--------------------------------------
-
-* Ubuntu 11.10 Oneiric
-* Ubuntu 12.04 Precise
-* Ubuntu 12.10 Quantal
-* CentOS 6
 
 
 xen-tools 4.2.1 (released 17 Mar 2011)
@@ -65,11 +288,11 @@ New Options
 New Features and Major Changes
 ------------------------------
 
-* Uses hvc0 and xvda devices by default
-* Also supports cdebootstrap
+* Uses `hvc0` and `xvda` devices by default
+* Also supports `cdebootstrap`
 * Preliminary btrfs support.
 * Uses GeoIP for Debian mirrors: Default Debian mirror is now
-  cdn.debian.net, see http://wiki.debian.org/DebianGeoMirror for
+  `cdn.debian.net`, see http://wiki.debian.org/DebianGeoMirror for
   details.
-* New helper program xt-guess-suite-and-mirror, used to find the
+* New helper program `xt-guess-suite-and-mirror`, used to find the
   default mirror and suite.
