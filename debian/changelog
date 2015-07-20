@@ -1,6 +1,6 @@
-xen-tools (4.5+dev-1) UNRELEASED; urgency=medium
+xen-tools (4.6-1) unstable; urgency=low
 
-  * New upstream SNAPSHOT
+  * New upstream release
     + Fix usage of nonexistent variable in removeDebianPackage (Closes:
       #774936) Thanks Lukas Schwaighofer!
     + Change all occurrences of http.debian.net to httpredir.debian.org
@@ -61,7 +61,7 @@ xen-tools (4.5+dev-1) UNRELEASED; urgency=medium
   * Recommend lvm2, it's at least required if the --lvm option is used.
   * Add an adequate as-installed test to debian/tests/control.
 
- -- Axel Beckert <abe@debian.org>  Fri, 09 Jan 2015 13:10:37 +0100
+ -- Axel Beckert <abe@debian.org>  Mon, 20 Jul 2015 16:05:04 +0200
 
 xen-tools (4.5-1) unstable; urgency=low
 
