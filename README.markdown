@@ -33,8 +33,8 @@ known to work reliably, i.e.:
 
 * Sarge 3.1 (i386 and DomU only)
 * Etch 4.0 (Dom0 no more tested)
-* Lenny 5.0
-* Squeeze 6.0
+* Lenny 5.0 (Dom0 no more tested)
+* Squeeze 6.0 (Dom0 no more tested)
 * Wheezy 7
 * Jessie 8
 * Stretch 9 (under development)
