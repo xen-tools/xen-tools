@@ -48,6 +48,8 @@ xen-tools (4.5+dev-1) UNRELEASED; urgency=medium
       names, too. ("oldoldstable" is not yet supported by debootstrap, see
       feature request #792734 in debootstrap.)
     + New example script helpful for release testing.
+    + Support VLANs with Open vSwitch (GH-2). Thanks to Félix Barbeira
+      for the patch.
   * Update Vcs-* headers and documentation as Gitorious closed its doors
     in June 2015 and is now only available with static contents.
   * Recommend debian-archive-keyring (for installing Debian DomUs on
