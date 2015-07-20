@@ -57,7 +57,6 @@ Bug Fixes
   versions which don't know either (but accept any `Foo=Bar` parameter
   to `-o`). Allows one to install earlier Debian releases (e.g. Etch)
   with the default configuration again.
-
 * Pass `--yes` to `lvcreate` only if LVM version is 2.02.99 or
   higher. Fixes regression introduced with 4.5 by the fix for Debian
   bug report #754517.
