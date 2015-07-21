@@ -1,8 +1,6 @@
 TODO
 ====
 
-See KNOWN_BUGS.markdown for real bugs.
-
 General Ideas
 -------------
 

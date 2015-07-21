@@ -244,7 +244,6 @@ test case would be a useful bonus.
 
 * [xen-tools Issue Tracker at GitHub](https://github.com/xen-tools/xen-tools/issues/new)
 * [Mailing list archives of the xen-tools mailing lists](http://xen-tools.org/software/xen-tools/lists.html)
-* [KNOWN_BUGS file in the source code](https://github.com/xen-tools/xen-tools/blob/master/KNOWN_BUGS.markdown)
 * [TODO file in the source code](https://github.com/xen-tools/xen-tools/blob/master/TODO.markdown)
 * [xen-tools in the Debian Bug Tracking System](https://bugs.debian.org/xen-tools)
 * [xen-tools in Ubuntu's Launchpad](https://bugs.launchpad.net/ubuntu/+source/xen-tools)
