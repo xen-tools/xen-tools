@@ -840,7 +840,7 @@ my %MIRROR;
 #  Partition layout information values read from the partitions file,
 # or constructed automatically if no partitions file is specified.
 #
-my @PARTITIONS = undef;
+my @PARTITIONS = ();
 
 
 #
