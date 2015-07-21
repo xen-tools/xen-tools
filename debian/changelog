@@ -2,6 +2,7 @@ xen-tools (4.6+dev-1) UNRELEASED; urgency=medium
 
   * New upstream SNAPSHOT
     + Declare GitHub as primary hosting.
+    + Integrate BUGS.markdown into README.markdown.
   * Update Vcs-* headers to point to GitHub instead of GitLab.
 
  -- Axel Beckert <abe@debian.org>  Tue, 21 Jul 2015 12:04:41 +0200

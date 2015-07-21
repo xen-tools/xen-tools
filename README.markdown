@@ -220,5 +220,34 @@ fraction of what xen-tools can do. Some of the scripts currently could
 only be tested on an actual Xen Dom0. Hence the
 [code coverage of xen-tools' test suite is quite bad](https://coveralls.io/r/xen-tools/xen-tools).
 
+Bugs
+----
+
+### Reporting Bugs
+
+If you're using the current packages included as part of the Debian
+GNU/Linux distribution or a derivative, please first report any bugs
+using the distribution's way to report bugs.
+
+In case of Debian this would be using e.g. `reportbug xen-tools`.
+
+If you're using the xen-tools built from source tar ball, please
+[report bugs via GitHub's issue tracker](https://github.com/xen-tools/xen-tools/issues/new),
+or, if you don't want to create a GitHub account or are not sure if
+it's really a bug, feel free to just write an e-mail to the
+[xen-tools dicsussion mailing list](mailto:xen-tools-discuss@xen-tools.org).
+
+If you're capable of fixing it yourself a patch is appreciated, and a
+test case would be a useful bonus.
+
+### Known/Open Issues
+
+* [xen-tools in the Debian Bug Tracking System](https://bugs.debian.org/xen-tools)
+* [xen-tools in Ubuntu's Launchpad](https://bugs.launchpad.net/ubuntu/+source/xen-tools)
+* [xen-tools Issue Tracker at GitHub](https://github.com/xen-tools/xen-tools/issues/new)
+* [Mailing list archives of the xen-tools mailing lists](http://xen-tools.org/software/xen-tools/lists.html)
+* [KNOWN_BUGS file in the source code](https://github.com/xen-tools/xen-tools/blob/master/KNOWN_BUGS.markdown)
+* [TODO file in the source code](https://github.com/xen-tools/xen-tools/blob/master/TODO.markdown)
+
 -- 
 The Xen-Tools Developer Team
