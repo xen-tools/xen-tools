@@ -1,6 +1,9 @@
 TODO
 ====
 
+Most things which used to be in here were moved to
+[xen-tools' issue tracker at GitHub](https://github.com/xen-tools/xen-tools/issues).
+
 Bugs to fix and features to add for 5.0
 ---------------------------------------
 
