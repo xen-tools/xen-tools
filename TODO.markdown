@@ -22,9 +22,6 @@ Bugs to fix and features to add for 5.0
   new kernel is installed and will also use the domU distro's `menu.lst`
   conform.
 
-* Move the hooks directory to `/etc/xen-tools/` to officially allow
-  added and modified hooks.
-
 * More generic roles
 
   Deploy a web server or setup ssmtp directly via flag when setting up
@@ -45,9 +42,6 @@ Bugs to fix and features to add for 5.0
   user interaction and rely on a common format.
 
 * Make used Xen toolstack configurable, i.e. via --xen-toolstack=xl
-
-* Remove from the (unused) Xen::Tools what's already in the used
-  Xen::Tools::Common.
 
 * Add test for `--size` constraints (upper- and lowercase letters,
   with and without `B`, etc.)
