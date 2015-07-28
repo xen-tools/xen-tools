@@ -63,18 +63,13 @@ known to work reliably, i.e.:
 * Trusty Tahr 14.04 (LTS)
 * Utopic Unicorn 14.10
 * Vivid Vervet 15.04
-* Wily Werewolf 15.10 (under development, not yet suported by
-  debootstrap, see [#787117][3], but adding a symbolic link from
-  `/usr/share/debootstrap/scripts/wily` to `gutsy` suffices.)
+* Wily Werewolf 15.10 (under development)
 
 [1]: http://bugs.debian.org/659360
     "debootstrap in Wheezy can no more build Ubuntu Edgy or earlier"
 
 [2]: http://www.linux-vserver.org/Installing_Ubuntu_8.04_Hardy_as_guest
     "There is an issue with debootstrap on hardy not installing ksyslogd."
-
-[3]: https://bugs.debian.org/787117
-    "debootstrap: missing wily"
 
 ### CentOS
 
