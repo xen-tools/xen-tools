@@ -16,14 +16,12 @@ my $hook_dir = $ENV{AS_INSTALLED_TESTING} ? '/usr/share/xen-tools' : 'hooks';
 #
 #  Check if build system has /etc/inittab.
 #
-SKIP: {
-    skip '/etc/inittab not present' unless -e "/etc/inittab";
-
-#
-#  Rather than having a hardwired list of distributions to test
-# against we look for subdirectories beneath hooks/ and test each
-# one.
-#
+if (-e "/etc/inittab") {
+    #
+    #  Rather than having a hardwired list of distributions to test
+    # against we look for subdirectories beneath hooks/ and test each
+    # one.
+    #
     foreach my $dir ( glob( "$hook_dir/*" ) )
     {
         next if ( $dir =~ /CVS/i );
@@ -39,8 +37,9 @@ SKIP: {
             testHook( $dist );
         }
     }
-} # SKIP
-
+} else {
+    plan skip_all => '/etc/inittab not present';
+}
 
 done_testing();
 
