@@ -1,0 +1,1 @@
+rm_conffile /etc/bash_completion.d/xen-tools 4.6.1-1~

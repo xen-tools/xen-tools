@@ -7,6 +7,8 @@ xen-tools (4.6+dev-1) UNRELEASED; urgency=medium
     + Fix Perl warning in t/hook-inittab.t if /etc/inittab isn't present.
       - Fixes failed autopkgtest.
   * Update Vcs-* headers to point to GitHub instead of GitLab.
+  * Add debian/maintscript to remove obsolete conffile
+    /etc/bash_completion.d/xen-tools properly.
 
  -- Axel Beckert <abe@debian.org>  Tue, 21 Jul 2015 12:04:41 +0200
 
