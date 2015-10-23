@@ -12,7 +12,7 @@ New Features and Major Changes
   passwords in older releases. Does not affect passwords changed later
   inside the DomU.
 * Split off hardcoded release code names list and default mirrors in
-  `xen-create-image` into separate configuration file which are parsed
+  `xen-create-image` into separate configuration file which is parsed
   before the default settings or command-line options are set.
 * Report all SSH fingerprints of the created DomU, not only RSA ones.
 * Support VLANs with Open vSwitch (GH-2). Thanks to Félix Barbeira for
@@ -31,7 +31,7 @@ Distribution Releases Changes
 * Debian 9 Stretch (preliminary support)
 * Ubuntu 15.10 Wily Werewolf (preliminary support; not yet suported by
   debootstrap, see Debian bug report #787117)
-* Ubuntu 12.04 Lucid Lynx is now EoL.
+* Ubuntu 10.04 Lucid Lynx is now EoL.
 * Ubuntu 14.10 Utopic Unicorn is now EoL.
 
 Improvements

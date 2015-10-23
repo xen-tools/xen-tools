@@ -10,6 +10,7 @@ xen-tools (4.6+dev-1) UNRELEASED; urgency=medium
   * Update Vcs-* headers to point to GitHub instead of GitLab.
   * Add debian/maintscript to remove obsolete conffile
     /etc/bash_completion.d/xen-tools properly.
+  * Fix typo in previous changelog entry.
 
  -- Axel Beckert <abe@debian.org>  Tue, 21 Jul 2015 12:04:41 +0200
 
@@ -19,7 +20,7 @@ xen-tools (4.6-1) unstable; urgency=low
     + Fix usage of nonexistent variable in removeDebianPackage (Closes:
       #774936) Thanks Lukas Schwaighofer!
     + Change all occurrences of http.debian.net to httpredir.debian.org
-    + Ubuntu 12.04 Lucid Lynx and 14.10 Utopic Unicorn now EoL.
+    + Ubuntu 10.04 Lucid Lynx and 14.10 Utopic Unicorn now EoL.
     + Preliminary support for Debian 9 Stretch and Ubuntu 15.10 Wily
       Werewolf.
     + Installs bash completion into /usr/share/bash-completion/ (fixes
@@ -42,7 +43,7 @@ xen-tools (4.6-1) unstable; urgency=low
       passwords in older releases. Does not affect passwords changed later
       inside the DomU.
     + Split off hardcoded release code names list and default mirrors in
-      xen-create-image into separate configuration file which are parsed
+      xen-create-image into separate configuration file which is parsed
       before the default settings or command-line options are set.
     + Pass --yes to lvcreate only if LVM version is 2.02.99 or
       higher. Fixes regression introduced with 4.5 by the fix for #754517.
