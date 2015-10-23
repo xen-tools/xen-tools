@@ -7,6 +7,7 @@ xen-tools (4.6+dev-1) UNRELEASED; urgency=medium
     + Fix Perl warning in t/hook-inittab.t if /etc/inittab isn't present.
       - Fixes failed autopkgtest.
     + Preliminary support for Ubuntu 16.04 LTS Xenial Xerus.
+    + Neither use $#array in boolean context nor @array = undef anymore.
   * Update Vcs-* headers to point to GitHub instead of GitLab.
   * Add debian/maintscript to remove obsolete conffile
     /etc/bash_completion.d/xen-tools properly.

@@ -999,7 +999,7 @@ checkBinariesPresent();
 #
 #  NOTE:  This must be done before we call "showSummary".
 #
-if ( !$#PARTITIONS )
+if ( !@PARTITIONS )
 {
     populatePartitionsData()
       if ( ( $CONFIG{ 'dir' } ) ||
