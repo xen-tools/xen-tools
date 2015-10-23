@@ -44,19 +44,19 @@ known to work reliably, i.e.:
 
 (only DomUs tested)
 
-* Dapper Drake 6.06 (needs editing of `/usr/share/debootstrap/scripts/dapper` since at least debootstrap version 1.0.37, see [#659360][1])
+* Dapper Drake 6.06 (LTS, needs editing of `/usr/share/debootstrap/scripts/dapper` since at least debootstrap version 1.0.37, see [#659360][1])
 * Edgy Eft 6.10 (needs editing of `/usr/share/debootstrap/scripts/edgy` since at least debootstrap version 1.0.37, see [#659360][1])
 * Feisty Fawn 7.04
 * Gutsy Gibbon 7.10
-* Hardy Heron 8.04 (see [Installing Ubuntu 8.04 as DomU][2])
+* Hardy Heron 8.04 (LTS, see [Installing Ubuntu 8.04 as DomU][2])
 * Interpid Ibex 8.10
 * Jaunty Jackaplope 9.04
 * Karmic Koala 9.10
-* Lucid Lynx 10.04
+* Lucid Lynx 10.04 (LTS)
 * Maverick Meerkat 10.10
 * Natty Narwhal 11.04
 * Oneiric Ocelot 11.10
-* Precise Pangolin 12.04
+* Precise Pangolin 12.04 (LTS)
 * Quantal Quetzal 12.10
 * Raring Ringtail 13.04
 * Saucy Salamander 13.10
