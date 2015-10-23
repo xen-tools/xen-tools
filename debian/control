@@ -85,6 +85,7 @@ Description: Tools to manage Xen virtual servers
    * Ubuntu 14.04 Trusty Tahr (LTS)
    * Ubuntu 14.10 Utopic Unicorn
    * Ubuntu 15.04 Vivid Vervet
-   * Ubuntu 15.10 Wily Werewolf (under development)
+   * Ubuntu 15.10 Wily Werewolf
+   * Ubuntu 16.04 Xenial Xerus (preliminary support, under development)
    * CentOS 5
    * CentOS 6
