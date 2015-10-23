@@ -1,3 +1,26 @@
+xen-tools 4.6.1 (released 24 Oct 2015)
+======================================
+
+Distribution Releases Changes
+-----------------------------
+
+* Preliminary support for Ubuntu 16.04 LTS Xenial Xerus.
+
+Bug Fixes
+---------
+
+* Fix Perl warning in t/hook-inittab.t if /etc/inittab isn't present.
+
+Other Changes
+-------------
+
+* Declare GitHub as primary hosting.
+* Integrate BUGS.markdown into README.markdown, move remaining
+  contents of KNOWN_BUGS.markdown to the GitHub issue tracker.
+* Minor README improvements.
+* Neither use $#array in boolean context nor @array = undef anymore.
+
+
 xen-tools 4.6 (released 20 Jul 2015)
 ====================================
 

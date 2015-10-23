@@ -1,6 +1,6 @@
-xen-tools (4.6+dev-1) UNRELEASED; urgency=medium
+xen-tools (4.6.1-1) unstable; urgency=medium
 
-  * New upstream SNAPSHOT
+  * New upstream bugfix release
     + Declare GitHub as primary hosting.
     + Integrate BUGS.markdown into README.markdown, move remaining
       contents of KNOWN_BUGS.markdown to the GitHub issue tracker.
@@ -13,7 +13,7 @@ xen-tools (4.6+dev-1) UNRELEASED; urgency=medium
     /etc/bash_completion.d/xen-tools properly.
   * Fix typo in previous changelog entry.
 
- -- Axel Beckert <abe@debian.org>  Tue, 21 Jul 2015 12:04:41 +0200
+ -- Axel Beckert <abe@debian.org>  Sat, 24 Oct 2015 01:13:08 +0200
 
 xen-tools (4.6-1) unstable; urgency=low
 
