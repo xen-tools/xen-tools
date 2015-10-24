@@ -19,6 +19,7 @@
 /debian/xen-tools
 /debian/xen-tools.debhelper.log
 /debian/xen-tools.substvars
+/debian/xen-tools.*.debhelper
 
 # git-generated patches
 /*.patch
