@@ -1,3 +1,9 @@
+xen-tools (4.6.1-2) UNRELEASED; urgency=medium
+
+  * Support checking upstream GPG signature in debian/watch.
+
+ -- Axel Beckert <abe@debian.org>  Sat, 24 Oct 2015 02:37:47 +0200
+
 xen-tools (4.6.1-1) unstable; urgency=medium
 
   * New upstream bugfix release

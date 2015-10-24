@@ -11,5 +11,6 @@ version=3
 #  The link to the download location, followed by the regular expression
 # to match release tarballs.
 #
+opts=pgpsigurlmangle=s/$/.asc/ \
 http://xen-tools.org/software/xen-tools/releases.html \
    xen-tools-([\d\.]+)\.tar\.gz
