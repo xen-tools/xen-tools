@@ -1,5 +1,10 @@
-xen-tools (4.6.1-2) UNRELEASED; urgency=medium
+xen-tools (4.6.2~dev-1) UNRELEASED; urgency=medium
 
+  * New upstream development release
+    [ Pierre Olivier ]
+    + Added /usr/local/bin/pygrub to the end of the pygrub search path.
+    [ nirgal ]
+    + Fixed typo in initramfs comment
   * Support checking upstream GPG signature in debian/watch.
 
  -- Axel Beckert <abe@debian.org>  Sat, 24 Oct 2015 02:37:47 +0200
