@@ -11,12 +11,13 @@ use Test::More;
 use File::Temp;
 use File::Copy;
 
+my $example_inittab = 't/data/inittab';
 my $hook_dir = $ENV{AS_INSTALLED_TESTING} ? '/usr/share/xen-tools' : 'hooks';
 
 #
-#  Check if build system has /etc/inittab.
+#  Check if example inittab is present, else bail out
 #
-if (-e "/etc/inittab") {
+if (-e $example_inittab) {
     #
     #  Rather than having a hardwired list of distributions to test
     # against we look for subdirectories beneath hooks/ and test each
@@ -38,7 +39,7 @@ if (-e "/etc/inittab") {
         }
     }
 } else {
-    plan skip_all => '/etc/inittab not present';
+    BAIL_OUT("$example_inittab not found, source distribution seems incomplete");
 }
 
 done_testing();
@@ -52,7 +53,7 @@ sub testHook
     #
     my $dir        = File::Temp::tempdir( CLEANUP => 1 );
     mkdir( $dir . "/etc", 0777 );
-    File::Copy::cp( "/etc/inittab", $dir . "/etc" );
+    File::Copy::cp( $example_inittab, $dir . "/etc" );
 
     #
     # Make sure that worked.

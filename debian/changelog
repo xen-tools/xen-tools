@@ -6,6 +6,9 @@ xen-tools (4.6.2~dev-1) UNRELEASED; urgency=medium
     [ nirgal ]
     + Fixed typo in initramfs comment
   * Support checking upstream GPG signature in debian/watch.
+  * Make t/hooks-inittab.t using its own copy of the generic /etc/inittab
+    for testing instead of using the system one's. (GH#36, should fix
+    autopkgtest on systems with modified /etc/inittab)
 
  -- Axel Beckert <abe@debian.org>  Sat, 24 Oct 2015 02:37:47 +0200
 
