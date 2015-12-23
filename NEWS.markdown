@@ -1,3 +1,22 @@
+xen-tools 4.6.2 (released 23 Dec 2015)
+======================================
+
+Bug Fixes
+---------
+
+* Make t/hooks-inittab.t using its own copy of the generic
+  /etc/inittab for testing instead of using the system one's. (GH#36,
+  should fix autopkgtest on systems with modified /etc/inittab)
+* Fix unescaped braces (deprecated since Perl 5.22) in
+  t/plugin-checks.t.
+
+Other changes
+-------------
+
+* Support for using pygrub from /usr/local/bin/pygrub.
+* Typo fixes.
+
+
 xen-tools 4.6.1 (released 24 Oct 2015)
 ======================================
 
