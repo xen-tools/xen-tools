@@ -83,7 +83,7 @@ sub testFile
 
     foreach my $line ( <FILY> )
     {
-        if ( $line =~ /\$CONFIG{[ \t'"]+(.*)[ \t'"]+}/ )
+        if ( $line =~ /\$CONFIG\{[ \t'"]+(.*)[ \t'"]+\}/ )
         {
             close( FILY );
             return $line;
