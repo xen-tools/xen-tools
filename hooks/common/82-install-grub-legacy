@@ -40,7 +40,11 @@ fi
 if [ ! -e ${prefix}/boot/grub/default ]; then
     echo default > ${prefix}/boot/grub/default
 fi
+mount -o bind /proc ${prefix}/proc
+mount -o bind /dev ${prefix}/dev
 chroot ${prefix} /usr/sbin/update-grub
+umount ${prefix}/proc
+umount ${prefix}/dev
 
 else
     logMessage "pygrub not set, skipping grub-legacy installation"
