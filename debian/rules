@@ -8,4 +8,7 @@
 override_dh_auto_test:
 	make non-author-test
 
+override_dh_installchangelogs:
+	dh_installchangelogs NEWS.markdown
+
 override_dh_auto_build:

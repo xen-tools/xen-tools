@@ -6,6 +6,7 @@ xen-tools (4.6.3~dev-1) UNRELEASED; urgency=medium
       and fixed by Yuri Sakhno, thanks!)
     + Fixes typo found by lintian.
   * Declare compliance with Debian Policy 3.9.8. (No changes needed.)
+  * Use NEWS.markdown as upstream changelog, don't install it as docs.
 
  -- Axel Beckert <abe@debian.org>  Thu, 24 Dec 2015 11:54:24 +0100
 
