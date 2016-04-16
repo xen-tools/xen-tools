@@ -6,6 +6,7 @@ Bug Fixes
 
 * Fixes reported error code in case of subcommand failure (Reported
   and fixed by Yuri Sakhno, thanks!)
+* Fixes typo found by Lintian.
 
 Other Changes
 -------------

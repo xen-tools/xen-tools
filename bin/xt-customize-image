@@ -29,7 +29,7 @@ xt-customize-image - Customize a freshly installed copy of GNU/Linux
 =head1 NOTES
 
   This script is invoked by xen-create-image after it has created a
- fresh installation of Linux withing a temporary location.
+ fresh installation of Linux within a temporary location.
 
   This script will be invoked with a full copy of the arguments from
  xen-create-image in its environment, along with several command line
