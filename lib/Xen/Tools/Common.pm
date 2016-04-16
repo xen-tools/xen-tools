@@ -246,7 +246,8 @@ sub runCommand ($$;$)
 
     if (!$rcclose)
     {
-        logprint_with_config("Running command '$cmd' failed with exit code $?.\n", $CONFIG);
+        my $exit_code = $? >> 8;
+        logprint_with_config("Running command '$cmd' failed with exit code $exit_code.\n", $CONFIG);
         logprint_with_config("Aborting\n", $CONFIG);
         print "See /var/log/xen-tools/".$CONFIG->{'hostname'}.".log for details\n";
         unless ($fail_ok) {
