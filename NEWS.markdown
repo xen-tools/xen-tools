@@ -1,3 +1,18 @@
+xen-tools 4.6.3 (released NOT YET)
+==================================
+
+Bug Fixes
+---------
+
+* Fixes reported error code in case of subcommand failure (Reported
+  and fixed by Yuri Sakhno, thanks!)
+
+Other Changes
+-------------
+
+* release-testing: Work around umount race condition between tests.
+
+
 xen-tools 4.6.2 (released 23 Dec 2015)
 ======================================
 
