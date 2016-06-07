@@ -7,6 +7,8 @@ Most things which used to be in here were moved to
 Bugs to fix and features to add for 5.0
 ---------------------------------------
 
+* Fix xdm and gdm roles wrt. to uptodate package names.
+
 * Test and support more file system types.
 
   Actually this should be pretty simple now that the parameters are
