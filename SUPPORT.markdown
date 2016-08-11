@@ -34,7 +34,7 @@ As a last resort you can to contact the current maintainer, Axel
 Beckert, at <abe@deuxchevaux.org>.
 
 As the previous xen-tools maintainer and original author, Steve
-Kemp, said, I say last resort not because I'm unwilling to help, but
+Kemp, said, I say "last resort" not because I'm unwilling to help, but
 because it may take longer for me to respond to you personally.
 
 -- 
