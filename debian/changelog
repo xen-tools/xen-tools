@@ -5,6 +5,8 @@ xen-tools (4.6.3~dev-1) UNRELEASED; urgency=medium
     + Fixes reported error code in case of subcommand failure (Reported
       and fixed by Yuri Sakhno, thanks!)
     + Fixes typo found by lintian.
+    + Preliminary support for Ubuntu 16.10 Yakkety Yak.
+    + Knows future Debian release names Buster (10) and Bullseye (11).
   * Declare compliance with Debian Policy 3.9.8. (No changes needed.)
   * Use NEWS.markdown as upstream changelog, don't install it as docs.
 

@@ -8,6 +8,13 @@ Bug Fixes
   and fixed by Yuri Sakhno, thanks!)
 * Fixes typo found by Lintian.
 
+Distribution Releases Changes
+-----------------------------
+
+* Preliminary support for Ubuntu 16.10 Yakkety Yak.
+* Knows about code names for Debian 10 (Buster) and 11 (Bullseye).
+* Considers Debian Squeeze, Ubuntu Vivid and Wily being EoL.
+
 Other Changes
 -------------
 

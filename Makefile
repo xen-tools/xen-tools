@@ -181,6 +181,8 @@ install-hooks:
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d wheezy.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d jessie.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d stretch.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d buster.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d bullseye.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d sid.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d unstable.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d testing.d
@@ -214,6 +216,7 @@ install-hooks:
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d vivid.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d wily.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d xenial.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d yakkety.d
 	cp hooks/common.sh ${prefix}/usr/share/xen-tools
 	cp -r hooks/common ${prefix}/usr/share/xen-tools
 

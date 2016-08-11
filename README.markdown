@@ -38,6 +38,8 @@ known to work reliably, i.e.:
 * Wheezy 7
 * Jessie 8
 * Stretch 9 (under development)
+* Buster 10 (knows about this future release name)
+* Bullseye 11 (knows about this future release name)
 * Sid (always under development; works at least at the moment of writing :-)
 
 ### Ubuntu
@@ -64,7 +66,8 @@ known to work reliably, i.e.:
 * Utopic Unicorn 14.10
 * Vivid Vervet 15.04
 * Wily Werewolf 15.10
-* Xenial Xerus 16.04 (under development, LTS)
+* Xenial Xerus 16.04 (LTS)
+* Yakkety Yak 16.10 (under development)
 
 [1]: http://bugs.debian.org/659360
     "debootstrap in Wheezy can no more build Ubuntu Edgy or earlier"

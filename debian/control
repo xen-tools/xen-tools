@@ -65,6 +65,8 @@ Description: Tools to manage Xen virtual servers
    * Debian 7 Wheezy
    * Debian 8 Jessie
    * Debian 9 Stretch (under development)
+   * Debian 10 Buster (future release name)
+   * Debian 11 Bullseye (future release name)
    * Debian Sid (Unstable)
    * Ubuntu 6.06 Dapper Drake (LTS)
    * Ubuntu 6.10 Edgy Eft
@@ -86,6 +88,7 @@ Description: Tools to manage Xen virtual servers
    * Ubuntu 14.10 Utopic Unicorn
    * Ubuntu 15.04 Vivid Vervet
    * Ubuntu 15.10 Wily Werewolf
-   * Ubuntu 16.04 Xenial Xerus (preliminary support, under development)
+   * Ubuntu 16.04 Xenial Xerus (LTS)
+   * Ubuntu 16.10 Yakkety Yak (preliminary support, under development)
    * CentOS 5
    * CentOS 6
