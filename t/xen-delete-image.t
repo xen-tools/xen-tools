@@ -36,7 +36,7 @@ ok ( -d $domains, "The temp directory now has a domains directory." );
 #  Generate a random hostname.
 #
 my $hostname = join ( '', map {('a'..'z')[rand 26]} 0..17 );
-ok( ! -d $domains . "/" . $hostname, "The virtual hostname doesnt exist." );
+ok( ! -d $domains . "/" . $hostname, "The virtual hostname doesn't exist." );
 
 #
 #  Make the hostname directory

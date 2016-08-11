@@ -65,7 +65,7 @@ Contributions
    - Added hook for automatic CFEngine installation.
 
   Sascha Kettler <kettler [at] net.gmx>
-   - Implemented support for arbitary partitioning schemes.
+   - Implemented support for arbitrary partitioning schemes.
 
   Eric Lemoine <eric.lemoine [at] com.gmail>
    - Improved binary detection and good suggestions.

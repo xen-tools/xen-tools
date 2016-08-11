@@ -621,7 +621,7 @@ sub do_debootstrap
     }
 
     #
-    #  Propogate --verbose appropriately.
+    #  Propagate --verbose appropriately.
     #
     my $EXTRA = '';
     if ( $CONFIG{ 'verbose' } )
@@ -630,7 +630,7 @@ sub do_debootstrap
     }
 
     #
-    #  Propogate the --arch argument
+    #  Propagate the --arch argument
     #
     if ( $CONFIG{ 'arch' } )
     {
@@ -638,7 +638,7 @@ sub do_debootstrap
     }
 
     #
-    #  Propogate the --keyring argument
+    #  Propagate the --keyring argument
     #
     if ( $CONFIG{ 'keyring' } )
     {
@@ -701,7 +701,7 @@ sub do_rinse
       "rinse --distribution=$CONFIG{'dist'} --directory=$CONFIG{'location'}";
 
     #
-    #  Propogate the --arch argument
+    #  Propagate the --arch argument
     #
     if ( $CONFIG{ 'arch' } )
     {
@@ -727,7 +727,7 @@ sub do_rinse
     }
 
     #
-    #  Propogate the verbosity setting.
+    #  Propagate the verbosity setting.
     #
     if ( $CONFIG{ 'verbose' } )
     {
@@ -751,7 +751,7 @@ sub do_rpmstrap
 {
 
     #
-    #  Propogate the verbosity setting.
+    #  Propagate the verbosity setting.
     #
     my $EXTRA = '';
     if ( $CONFIG{ 'verbose' } )
@@ -760,7 +760,7 @@ sub do_rpmstrap
     }
 
     #
-    #  Propogate any arch setting we might have.
+    #  Propagate any arch setting we might have.
     #
     if ( $CONFIG{ 'arch' } )
     {

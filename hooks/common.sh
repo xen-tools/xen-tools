@@ -210,7 +210,7 @@ timeout         2
 # altoptions=(single-user mode) single
 
 ## controls how many kernels should be put into the menu.lst
-## only counts the first occurence of a kernel, not the
+## only counts the first occurrence of a kernel, not the
 ## alternative kernel options
 ## e.g. howmany=all
 ##      howmany=7

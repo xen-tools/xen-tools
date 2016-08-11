@@ -1341,7 +1341,7 @@ sub setupDefaultOptions
     #
     # NOTE 2:  Each of these scripts will "force" the creation of a new
     #         filesystem, even if it exists.  This script must detect
-    #         prior existance itself.
+    #         prior existence itself.
     #
     $CONFIG{ 'make_fs_ext2' }     = 'mkfs.ext2 -F';
     $CONFIG{ 'make_fs_ext3' }     = 'mkfs.ext3 -F';
@@ -3161,7 +3161,7 @@ sub createLVMBits
 
   This function is responsible for creating two new logical volumes within
  a given EVMS container group (which at the moment is either LVM or LVM2), but
- should be compatible with any further extentions of evms.
+ should be compatible with any further extensions of evms.
 
 =end doc
 
@@ -3618,7 +3618,7 @@ sub runCustomisationHooks
     delete $ENV{ 'ip' };
 
     #
-    # Setup a seperate ip$count value for each IP address.
+    # Setup a separate ip$count value for each IP address.
     #
     my $ips   = $CONFIG{ 'ip' };
     my $count = 1;

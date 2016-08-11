@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 #  Automatically attempt to create a test which ensures all the modules
-# used in the code are availabe.
+# used in the code are available.
 #
 # Steve
 # --

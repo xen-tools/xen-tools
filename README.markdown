@@ -4,7 +4,7 @@ xen-tools
 [![Travis CI Build Status](https://api.travis-ci.org/xen-tools/xen-tools.svg)](https://travis-ci.org/xen-tools/xen-tools)
 
 * [Homepage](https://www.xen-tools.org/software/xen-tools)
-* Offical Git Repositories:
+* Official Git Repositories:
   * [at GitHub](https://github.com/xen-tools/xen-tools) (primary, includes [Issue Tracker](https://github.com/xen-tools/xen-tools/issues))
   * [at GitLab](https://gitlab.com/xen-tools/xen-tools) (secondary, doesn't support the `git://` protocol.)
 * Historical Git Repository: [at Gitorious](https://gitorious.org/xen-tools) (_outdated_, no more updated, for historical reference only)

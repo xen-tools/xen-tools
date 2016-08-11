@@ -254,7 +254,7 @@ sub checkArguments
     if ( !-d $CONFIG{ 'output' } )
     {
         print
-          "The output directory we've been given, $CONFIG{'output'}, doesnt exist\n";
+          "The output directory we've been given, $CONFIG{'output'}, doesn't exist\n";
         print "Aborting\n";
         exit 1;
     }

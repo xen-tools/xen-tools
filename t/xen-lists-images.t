@@ -102,7 +102,7 @@ EOS
     my $cmd = "${prefix}bin/xen-list-images --test=$dir";
     my $output = `$cmd`;
 
-    ok( defined( $output ) && length( $output ), "Runing the list command produced some output" );
+    ok( defined( $output ) && length( $output ), "Running the list command produced some output" );
 
     #
     #  Process the output of the command, and make sure it was correct.
