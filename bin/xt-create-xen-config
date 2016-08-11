@@ -99,8 +99,8 @@ xt-create-config - Create a Xen configuration file for a new guest
 
 =head1 AUTHORS
 
- Steve Kemp, http://www.steve.org.uk/
- Axel Beckert, http://noone.org/abe/
+ Steve Kemp, https://steve.fi/
+ Axel Beckert, https://axel.beckert.ch/
  Stéphane Jourdois
 
 

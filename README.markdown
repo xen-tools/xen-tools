@@ -3,12 +3,12 @@ xen-tools
 
 [![Travis CI Build Status](https://api.travis-ci.org/xen-tools/xen-tools.svg)](https://travis-ci.org/xen-tools/xen-tools)
 
-* [Homepage](http://www.xen-tools.org/software/xen-tools)
+* [Homepage](https://www.xen-tools.org/software/xen-tools)
 * Offical Git Repositories:
-  * [at GitHub](http://github.com/xen-tools/xen-tools) (primary, includes [Issue Tracker](https://github.com/xen-tools/xen-tools/issues))
-  * [at GitLab](http://gitlab.com/xen-tools/xen-tools) (secondary, doesn't support the `git://` protocol.)
-* Historical Git Repository: [at Gitorious](http://gitorious.org/xen-tools) (_outdated_, no more updated, for historical reference only)
-* [Mailing Lists](http://www.xen-tools.org/software/xen-tools/lists.html)
+  * [at GitHub](https://github.com/xen-tools/xen-tools) (primary, includes [Issue Tracker](https://github.com/xen-tools/xen-tools/issues))
+  * [at GitLab](https://gitlab.com/xen-tools/xen-tools) (secondary, doesn't support the `git://` protocol.)
+* Historical Git Repository: [at Gitorious](https://gitorious.org/xen-tools) (_outdated_, no more updated, for historical reference only)
+* [Mailing Lists](https://www.xen-tools.org/software/xen-tools/lists.html)
 
 About
 -----
@@ -21,7 +21,7 @@ Using this software, you can easily create new
 network via [OpenSSH](http://www.openssh.org/).
 
 xen-tools currently has scripts to install most releases of
-[Debian](http://www.debian.org/) (starting with 3.1 "Sarge") and
+[Debian](https://www.debian.org/) (starting with 3.1 "Sarge") and
 [Ubuntu](http://www.ubuntu.com/) (starting with 6.06 LTS "Dapper") and
 some RPM-based distributions. On the Dom0 side all current Xen
 supporting distributions should work.
@@ -69,7 +69,7 @@ known to work reliably, i.e.:
 * Xenial Xerus 16.04 (LTS)
 * Yakkety Yak 16.10 (under development)
 
-[1]: http://bugs.debian.org/659360
+[1]: https://bugs.debian.org/659360
     "debootstrap in Wheezy can no more build Ubuntu Edgy or earlier"
 
 [2]: http://www.linux-vserver.org/Installing_Ubuntu_8.04_Hardy_as_guest
@@ -95,33 +95,33 @@ Requirements
 
 To use these tools you'll need the following software:
 
-* [debootstrap](http://packages.debian.org/debootstrap)
+* [debootstrap](https://packages.debian.org/debootstrap)
 * Perl and the following Perl modules
-  * [Config::IniFiles](http://metacpan.org/release/Config-IniFiles)
-	([Debian Package libconfig-inifiles-perl](http://packages.debian.org/libconfig-inifiles-perl))
-  * [Text::Template](http://metacpan.org/release/Text-Template)
-	([Debian Package libtext-template-perl](http://packages.debian.org/libtext-template-perl))
-  * [Data::Validate::Domain](http://metacpan.org/release/Data-Validate-Domain)
-	([Debian Package libdata-validate-domain-perl](http://packages.debian.org/libdata-validate-domain-perl))
-  * [Data::Validate::IP](http://metacpan.org/release/Data-Validate-IP)
-	([Debian Package libdata-validate-ip-perl](http://packages.debian.org/libdata-validate-ip-perl))
-  * [Data::Validate::URI](http://metacpan.org/release/Data-Validate-URI)
-	([Debian Package libdata-validate-uri-perl](http://packages.debian.org/libdata-validate-uri-perl))
-  * [File::Slurp](http://metacpan.org/release/File-Slurp)
-	([Debian Package libfile-slurp-perl](http://packages.debian.org/libfile-slurp-perl))
-  * [File::Which](http://metacpan.org/release/File-Which)
-	([Debian Package libfile-which-perl](http://packages.debian.org/libfile-which-perl))
+  * [Config::IniFiles](https://metacpan.org/release/Config-IniFiles)
+	([Debian Package libconfig-inifiles-perl](https://packages.debian.org/libconfig-inifiles-perl))
+  * [Text::Template](https://metacpan.org/release/Text-Template)
+	([Debian Package libtext-template-perl](https://packages.debian.org/libtext-template-perl))
+  * [Data::Validate::Domain](https://metacpan.org/release/Data-Validate-Domain)
+	([Debian Package libdata-validate-domain-perl](https://packages.debian.org/libdata-validate-domain-perl))
+  * [Data::Validate::IP](https://metacpan.org/release/Data-Validate-IP)
+	([Debian Package libdata-validate-ip-perl](https://packages.debian.org/libdata-validate-ip-perl))
+  * [Data::Validate::URI](https://metacpan.org/release/Data-Validate-URI)
+	([Debian Package libdata-validate-uri-perl](https://packages.debian.org/libdata-validate-uri-perl))
+  * [File::Slurp](https://metacpan.org/release/File-Slurp)
+	([Debian Package libfile-slurp-perl](https://packages.debian.org/libfile-slurp-perl))
+  * [File::Which](https://metacpan.org/release/File-Which)
+	([Debian Package libfile-which-perl](https://packages.debian.org/libfile-which-perl))
   * and some more modules which are part of the Perl core and hence do not need to be installed separately.
 * Make, if you are not installing through a package manager
 
 You can try to install RPM-based distributions such as CentOS, or
 Fedora Core, but you will need a correctly installed and configured
-[rinse](http://packages.debian.org/rinse) package. This is currently
+[rinse](https://packages.debian.org/rinse) package. This is currently
 not fully supported.
 
 If you wish to create new Xen instances which may be controlled by
 users via a login shell you can have a look at the (currently
-unmaintained) [xen-shell](http://xen-tools.org/software/xen-shell/)
+unmaintained) [xen-shell](https://xen-tools.org/software/xen-shell/)
 project.
 
 
@@ -242,7 +242,7 @@ test case would be a useful bonus.
 ### Known/Open Issues
 
 * [xen-tools Issue Tracker at GitHub](https://github.com/xen-tools/xen-tools/issues/new)
-* [Mailing list archives of the xen-tools mailing lists](http://xen-tools.org/software/xen-tools/lists.html)
+* [Mailing list archives of the xen-tools mailing lists](https://xen-tools.org/software/xen-tools/lists.html)
 * [TODO file in the source code](https://github.com/xen-tools/xen-tools/blob/master/TODO.markdown)
 * [xen-tools in the Debian Bug Tracking System](https://bugs.debian.org/xen-tools)
 * [xen-tools in Ubuntu's Launchpad](https://bugs.launchpad.net/ubuntu/+source/xen-tools)

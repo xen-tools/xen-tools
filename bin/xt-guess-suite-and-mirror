@@ -30,7 +30,7 @@ xen-create-image(1) or the backticks feature in xen-tools.conf.
 
 =head1 AUTHORS
 
- Axel Beckert, http://noone.org/abe/
+ Axel Beckert, https://axel.beckert.ch/
  Stéphane Jourdois
 
 

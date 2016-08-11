@@ -407,9 +407,9 @@ sub logprint_with_config ($$)
 
 =head1 AUTHORS
 
- Steve Kemp, http://www.steve.org.uk/
- Axel Beckert, http://noone.org/abe/
- Dmitry Nedospasov, http://nedos.net/
+ Steve Kemp, https://steve.fi/
+ Axel Beckert, https://axel.beckert.ch/
+ Dmitry Nedospasov, http://www.nedos.net/
  Stéphane Jourdois
 
  Merged from several scripts by Axel Beckert.

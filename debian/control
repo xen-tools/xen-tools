@@ -18,9 +18,9 @@ Build-Depends: debhelper (>= 9~),
                libtest-pod-perl,
                libtext-template-perl
 Standards-Version: 3.9.8
-Homepage: http://xen-tools.org/software/xen-tools
+Homepage: https://xen-tools.org/software/xen-tools
 Vcs-Browser: https://github.com/xen-tools/xen-tools
-Vcs-Git: git://github.com/xen-tools/xen-tools.git
+Vcs-Git: https://github.com/xen-tools/xen-tools.git
 Testsuite: autopkgtest
 
 Package: xen-tools

@@ -357,7 +357,7 @@ New Features and Major Changes
 * Also supports `cdebootstrap`
 * Preliminary btrfs support.
 * Uses GeoIP for Debian mirrors: Default Debian mirror is now
-  `cdn.debian.net`, see http://wiki.debian.org/DebianGeoMirror for
+  `cdn.debian.net`, see https://wiki.debian.org/DebianGeoMirror for
   details.
 * New helper program `xt-guess-suite-and-mirror`, used to find the
   default mirror and suite.

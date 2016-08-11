@@ -74,12 +74,12 @@ Show the version number and exit.
   For more details on what you'll need to support NFS-root Xen guests
  the following article, written by the author, might be useful:
 
-    http://www.debian-administration.org/articles/505
+    https://debian-administration.org/articles/505
 
 
 =head1 AUTHORS
 
- Steve Kemp, http://www.steve.org.uk/
+ Steve Kemp, https://steve.fi/
  Stéphane Jourdois
 
 
@@ -282,7 +282,7 @@ sub testArguments
     die "Missing NFS root."   unless ( $CONFIG{ 'nfs_root' } );
 
 
-    # Shorthack to fix http://bugs.debian.org/648814 -- xen-create-nfs
+    # Shorthack to fix https://bugs.debian.org/648814 -- xen-create-nfs
     # should better use xt-create-xen-config instead. Guess from where
     # this code is borrowed for now...
 

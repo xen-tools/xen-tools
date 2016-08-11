@@ -5,8 +5,8 @@ Summary:        Scripts used to create new Xen domains
 
 Group:          Applications/Emulators
 License:        GPLv2 or Artistic
-URL:            http://xen-tools.org/software/xen-tools/
-Source0:        http://xen-tools.org/software/xen-tools/xen-tools-%{version}.tar.gz
+URL:            https://xen-tools.org/software/xen-tools/
+Source0:        https://xen-tools.org/software/xen-tools/xen-tools-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch

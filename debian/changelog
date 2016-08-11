@@ -10,6 +10,8 @@ xen-tools (4.6.3~dev-1) UNRELEASED; urgency=medium
     + Knows about Ubuntu's "devel" alias.
   * Declare compliance with Debian Policy 3.9.8. (No changes needed.)
   * Use NEWS.markdown as upstream changelog, don't install it as docs.
+  * Switch many URLs (upstream and in packaging) to https:// and update
+    URLs where they were broken or redirect somewhere else now.
 
  -- Axel Beckert <abe@debian.org>  Thu, 24 Dec 2015 11:54:24 +0100
 
