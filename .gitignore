@@ -15,6 +15,7 @@
 /build-stamp
 /configure-stamp
 /man
+/debian/*-stamp
 /debian/files
 /debian/xen-tools
 /debian/xen-tools.debhelper.log
