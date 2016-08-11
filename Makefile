@@ -217,6 +217,7 @@ install-hooks:
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d wily.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d xenial.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d yakkety.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d devel.d
 	cp hooks/common.sh ${prefix}/usr/share/xen-tools
 	cp -r hooks/common ${prefix}/usr/share/xen-tools
 
