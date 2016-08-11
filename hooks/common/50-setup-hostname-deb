@@ -63,7 +63,7 @@ EOF
     #
     if [ -z "${dhcp}" ]; then
         #
-        #  If dhcp is diabled, FQDN should resolve to our IP
+        #  If DHCP is disabled, FQDN should resolve to our IP
         #
         cat >> ${prefix}/etc/hosts <<EOF
 ${ip1}    $GUEST_FQDN $GUEST_HOSTNAME

@@ -75,7 +75,7 @@ sub testTLSDisabling
     `$hook_dir/$dist/10-disable-tls $dir`;
 
     #
-    # Make sure the the TLS directory is empty
+    # Make sure the TLS directory is empty
     #
     ok( ! -e "$dir/lib/tls/foo", "The fake library from /lib/tls is gone ($dist)" );
     ok( -e "$dir/lib/tls.disabled/foo", "The fake library ended up in /lib/tls.disabled ($dist)" );

@@ -340,7 +340,7 @@ sub parseCommandLineArguments
 
     #
     #  Setup mutually exclusive options in such a way that
-    # they will allow the configuration values to be overriden by
+    # they will allow the configuration values to be overridden by
     # the command line.
     #
     if ( $install{ 'lvm' } )

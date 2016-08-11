@@ -1159,7 +1159,7 @@ exit 0;
   Test that this system is fully setup for the new xen-create-image
  script.
 
-  This means that the the companion scripts xt-* are present on the
+  This means that the companion scripts xt-* are present on the
  host and executable.
 
 =end doc

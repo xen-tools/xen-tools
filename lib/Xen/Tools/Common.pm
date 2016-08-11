@@ -6,7 +6,7 @@ package Xen::Tools::Common;
 
 =head1 NAME
 
-Xen::Tools::Common - Common funtions used in xen-tools' Perl scripts
+Xen::Tools::Common - Common functions used in xen-tools' Perl scripts
 
 
 =head1 SYNOPSIS

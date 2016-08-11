@@ -95,7 +95,7 @@ Distribution Releases Changes
 -----------------------------
 
 * Debian 9 Stretch (preliminary support)
-* Ubuntu 15.10 Wily Werewolf (preliminary support; not yet suported by
+* Ubuntu 15.10 Wily Werewolf (preliminary support; not yet supported by
   debootstrap, see Debian bug report #787117)
 * Ubuntu 10.04 Lucid Lynx is now EoL.
 * Ubuntu 14.10 Utopic Unicorn is now EoL.

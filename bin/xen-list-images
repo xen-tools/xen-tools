@@ -212,7 +212,7 @@ sub findXenInstances
 
 =begin doc
 
-  Show details about the the Xen instance contained in the given
+  Show details about the Xen instance contained in the given
  configuration file.
 
 =end doc

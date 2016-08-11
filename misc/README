@@ -8,7 +8,7 @@ misc/
   Contents:
 
         xen-tools      - Bash completion code for our commands.
-        xen-tools.spec - File to build an RPM of the xen-tools pacakge.
+        xen-tools.spec - File to build an RPM of the xen-tools package.
 
 Steve
 --

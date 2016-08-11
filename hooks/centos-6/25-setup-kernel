@@ -59,9 +59,9 @@ logMessage "Kernel $KERNELVERSION found"
 logMessage "Creating /boot/grub/menu.lst"
 mkdir -p ${prefix}/boot/grub
 cat > ${prefix}/boot/grub/menu.lst << EOF
-# WARNING : Don't forget to update this when you upgrade kernel !
+# WARNING : Don't forget to update this when you upgrade kernel!
 # You can also exclude kernel-xen from updates by putting
-# exclude=kernel-xen in in [main] in yum.conf
+# exclude=kernel-xen in [main] in yum.conf
 
 default=0
 timeout=5
