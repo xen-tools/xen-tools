@@ -2,7 +2,7 @@
 size=1G
 type=ext3
 mountpoint=/
-options=sync,errors=remount-ro
+options=defaults,errors=remount-ro
 
 [swap]
 size=2G
