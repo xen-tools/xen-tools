@@ -26,7 +26,7 @@ fi
 #
 logMessage Script $0 starting
 
-if [ ${pygrub} ]; then
+if [ "${pygrub}" = "1" ]; then
 
 #
 #  Install the grub 0.9x package ("grub-legacy" on Debian, "grub" on Ubuntu)

@@ -21,7 +21,7 @@ else
     . ./hooks/common.sh
 fi
 
-if [ "${pygrub}" ]; then
+if [ "${pygrub}" = "1" ]; then
 #
 # Log our start
 #

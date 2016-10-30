@@ -27,7 +27,7 @@ fi
 
 logMessage Script $0 starting
 
-if [ "${pygrub}" ]; then
+if [ "${pygrub}" = "1" ]; then
 
 #
 # Attempt to install a xen kernel, if that fails, then install a normal one

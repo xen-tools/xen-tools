@@ -31,7 +31,7 @@ fi
 #
 logMessage Script $0 starting
 
-if [ ${pygrub} ]; then
+if [ "${pygrub}" = "1" ]; then
     logMessage "pygrub set, skipping module install"
 else
 #
