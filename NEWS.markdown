@@ -19,6 +19,9 @@ Distribution Releases Changes
 Other Changes
 -------------
 
+* Risen default values for RAM sizes in /etc/xen-tools/xen-tools.cfg
+  to cope with risen resource consumption and availability. (Closes
+  Debian bug report #776487)
 * release-testing: Work around umount race condition between tests.
 
 

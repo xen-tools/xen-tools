@@ -8,6 +8,9 @@ xen-tools (4.6.3~dev-1) UNRELEASED; urgency=medium
     + Preliminary support for Ubuntu 16.10 Yakkety Yak.
     + Knows future Debian release names Buster (10) and Bullseye (11).
     + Knows about Ubuntu's "devel" alias.
+    + Risen default values for RAM sizes in /etc/xen-tools/xen-tools.cfg
+      to cope with risen resource consumption and availability.
+      (Closes: #776487)
   * Declare compliance with Debian Policy 3.9.8. (No changes needed.)
   * Use NEWS.markdown as upstream changelog, don't install it as docs.
   * Switch many URLs (upstream and in packaging) to https:// and update
