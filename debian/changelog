@@ -12,6 +12,9 @@ xen-tools (4.6.3~dev-1) UNRELEASED; urgency=medium
       to cope with risen resource consumption and availability.
       (Closes: #776487)
     + Default file system is now ext4 (instead of ext3).
+    + Fixes inconsistent/non-functional handling of --nopygrub
+      parameter. Thanks Daniel Reichelt for the bug report and patch!
+      (Closes #842609)
   * Declare compliance with Debian Policy 3.9.8. (No changes needed.)
   * Use NEWS.markdown as upstream changelog, don't install it as docs.
   * Switch many URLs (upstream and in packaging) to https:// and update

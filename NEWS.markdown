@@ -6,6 +6,9 @@ Bug Fixes
 
 * Fixes reported error code in case of subcommand failure (Reported
   and fixed by Yuri Sakhno, thanks!)
+* Fixes inconsistent/non-functional handling of --nopygrub parameter.
+  Thanks Daniel Reichelt for the bug report and patch! (Closes
+  Debian bug report #842609)
 * Fixes typo found by Lintian.
 
 Distribution Releases Changes
