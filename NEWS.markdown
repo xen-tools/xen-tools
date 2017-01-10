@@ -9,6 +9,9 @@ Bug Fixes
 * Fixes inconsistent/non-functional handling of --nopygrub parameter.
   Thanks Daniel Reichelt for the bug report and patch! (Closes
   Debian bug report #842609)
+* Fixes possible missing gateway in generated /etc/network/interfaces.
+  Thanks Santiago Vila for the bug report and patch! (Closes Debian
+  bug report #764625)
 * Fixes typo found by Lintian.
 
 Distribution Releases Changes
