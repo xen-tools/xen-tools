@@ -89,6 +89,7 @@ Description: Tools to manage Xen virtual servers
    * Ubuntu 15.04 Vivid Vervet
    * Ubuntu 15.10 Wily Werewolf
    * Ubuntu 16.04 Xenial Xerus (LTS)
-   * Ubuntu 16.10 Yakkety Yak (preliminary support, under development)
+   * Ubuntu 16.10 Yakkety Yak
+   * Ubuntu 17.04 Zesty Zapus (preliminary support, under development)
    * CentOS 5
    * CentOS 6

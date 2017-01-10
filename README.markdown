@@ -67,7 +67,8 @@ known to work reliably, i.e.:
 * Vivid Vervet 15.04
 * Wily Werewolf 15.10
 * Xenial Xerus 16.04 (LTS)
-* Yakkety Yak 16.10 (under development)
+* Yakkety Yak 16.10
+* Zesty Zapus 17.04 (under development)
 
 [1]: https://bugs.debian.org/659360
     "debootstrap in Wheezy can no more build Ubuntu Edgy or earlier"
