@@ -15,7 +15,7 @@ xen-tools (4.6.3~dev-1) UNRELEASED; urgency=medium
     + Default file system is now ext4 (instead of ext3).
     + Fixes inconsistent/non-functional handling of --nopygrub
       parameter. Thanks Daniel Reichelt for the bug report and patch!
-      (Closes #842609)
+      (Closes: #842609)
     + Fixes possible missing gateway in generated
       /etc/network/interfaces. (Closes: #764625)
   * Declare compliance with Debian Policy 3.9.8. (No changes needed.)
