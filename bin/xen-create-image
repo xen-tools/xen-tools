@@ -1177,13 +1177,13 @@ sub checkSystem
     eval($test);
     if ( ($@) && ( !$CONFIG{ 'force' } ) )
     {
-        print <<E_O_ERROR;
+        print <<EOERROR;
 
   Aborting:  The Text::Template perl module isn\'t installed or available.
 
   Specify '--force' to skip this check and continue regardless.
 
-E_O_ERROR
+EOERROR
         $CONFIG{'FAIL'} = 1;
         exit 127;
     }
