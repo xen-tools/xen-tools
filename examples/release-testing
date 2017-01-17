@@ -2,7 +2,6 @@
 
 set -e
 
-# Skip dapper and edgy due to bug #659360 in debootstrap
-for dist in $(awk '!/^#|^$/ {print $1}' /etc/xen-tools/distributions.conf | egrep -v '^(dapper|edgy|buster|bullseye)$'); do
+for dist in $(awk '!/^#|^$|dont-test/ {print $1}' /etc/xen-tools/distributions.conf); do
     xen-create-image --dist $dist --hostname "xen-tools-release-testing-$dist" --force --verbose "$@"
 done 2>&1 | tee xen-tools-release-testing.log

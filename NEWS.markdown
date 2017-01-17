@@ -46,6 +46,8 @@ Test Suite
   + Use per-test-unique host names. Avoids race conditions with
     immediately re-used LVs.
   + Use "set -e" instead of "|| break".
+  + Declare testability in distributions.conf instead of hardcoding
+    it. Mark buster and bullseye as not testable, too, for now.
 
 
 xen-tools 4.6.2 (released 23 Dec 2015)
