@@ -1,7 +1,7 @@
 xen-tools (4.6.3~dev-1) UNRELEASED; urgency=medium
 
   * New upstream development release
-    + release-testing: Work around umount race condition between tests.
+    + release-testing: Several enhancements, race condition avoidance, …
     + Fixes reported error code in case of subcommand failure (Reported
       and fixed by Yuri Sakhno, thanks!)
     + Fixes typo found by lintian.

@@ -45,6 +45,7 @@ Test Suite
 * release-testing:
   + Use per-test-unique host names. Avoids race conditions with
     immediately re-used LVs.
+  + Use "set -e" instead of "|| break".
 
 
 xen-tools 4.6.2 (released 23 Dec 2015)
