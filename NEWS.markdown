@@ -4,6 +4,8 @@ xen-tools 4.6.3 (released NOT YET)
 New Features
 ------------
 
+New keywords in distributions.conf: default-keyring, dont-test
+
 * Support situations where distributions (e.g. Squeeze) might be end
   of life, but its archive signing key is still not removed from the
   default keyring. (As of this writing, that's the case for Debian 6
