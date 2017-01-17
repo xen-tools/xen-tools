@@ -6,13 +6,19 @@ exec 2>&1 | tee xen-tools-release-testing.log
 
 DISTRIBUTIONS=$(awk '!/^#|^$|dont-test/ {print $1}' /etc/xen-tools/distributions.conf)
 
+echo Deleting old release-testing artefacts
 for dist in $DISTRIBUTIONS; do
+    echo "*** Removing potential xen-tools-release-testing-$dist..."
     xen-delete-image --verbose --hostname "xen-tools-release-testing-$dist"
 done
 
+echo Syncing...
 sync
-sleep 5
+seconds=10
+printf "Sleeping for %i seconds to avoid LVM race conditions: " $seconds
+for i in $(seq 1 $seconds); do sleep 1; printf "%i " $i; done; printf '\n';
 
 for dist in $DISTRIBUTIONS; do
+    echo "*** Creating xen-tools-release-testing-$dist..."
     xen-create-image --verbose --hostname "xen-tools-release-testing-$dist" --dist $dist --force "$@"
 done
