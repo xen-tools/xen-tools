@@ -50,8 +50,11 @@ Test Suite
 ----------
 
 * release-testing:
-  + Use per-test-unique host names. Avoids race conditions with
-    immediately re-used LVs.
+  + Mitigate race conditions with immediately re-used LVs:
+    - Use per-test-unique host names.
+    - Delete potential old images by testing xen-delete-image before
+      calling xen-create-image. Add sync and sleep calls inbetween
+      those two commands, too.
   + Use "set -e" instead of "|| break".
   + Declare testability in distributions.conf instead of hardcoding
     it. Mark buster and bullseye as not testable, too, for now.

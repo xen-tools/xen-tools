@@ -5,5 +5,8 @@ set -e
 exec 2>&1 | tee xen-tools-release-testing.log
 
 for dist in $(awk '!/^#|^$|dont-test/ {print $1}' /etc/xen-tools/distributions.conf); do
-    xen-create-image --dist $dist --hostname "xen-tools-release-testing-$dist" --force --verbose "$@"
+    xen-delete-image --verbose --hostname "xen-tools-release-testing-$dist"
+    sync
+    sleep 5
+    xen-create-image --verbose --hostname "xen-tools-release-testing-$dist" --dist $dist --force "$@"
 done
