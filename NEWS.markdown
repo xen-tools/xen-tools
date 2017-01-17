@@ -23,6 +23,11 @@ Bug Fixes
   Thanks Santiago Vila for the bug report and patch! (Closes Debian
   bug report #764625)
 * Fixes typo found by Lintian.
+* Work around LVM related race condition when using --force with LVM:
+  If an "lvremove" is immediately followed by an "lvcreate" for an LV
+  with the same name, "mkswap" (and maybe other commands) occasionally
+  fail with "Device or resource busy". Work around it by using sync
+  and sleep.
 
 Distribution Releases Changes
 -----------------------------

@@ -21,6 +21,7 @@ xen-tools (4.6.3~dev-1) UNRELEASED; urgency=medium
     + Support situations where distributions (e.g. Squeeze) might be EoL,
       but its archive signing key is still not removed from the default
       keyring.
+    + Workaround LVM related race condition when using --force with LVM.
   * Declare compliance with Debian Policy 3.9.8. (No changes needed.)
   * Use NEWS.markdown as upstream changelog, don't install it as docs.
   * Switch many URLs (upstream and in packaging) to https:// and update

@@ -3066,6 +3066,10 @@ sub createLVMBits
                     logprint(
                         "Removing $lvm_disk - since we're forcing the install\n");
                     runCommand("lvremove --force $lvm_disk", \%CONFIG);
+                    runCommand("sync", \%CONFIG);
+                    logprint(
+                        "Sleeping a few seconds to avoid LVM race conditions...\n");
+                    sleep(3);
                 } else {
                     fail("ERROR: Xen guest $CONFIG{'hostname'} appears to be running.\nAborting.\n");
                 }
