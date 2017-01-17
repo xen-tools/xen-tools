@@ -38,7 +38,13 @@ Other Changes
   to cope with risen resource consumption and availability. (Closes
   Debian bug report #776487)
 * Default file system is now ext4 (instead of ext3).
-* release-testing: Work around umount race condition between tests.
+
+Test Suite
+----------
+
+* release-testing:
+  + Use per-test-unique host names. Avoids race conditions with
+    immediately re-used LVs.
 
 
 xen-tools 4.6.2 (released 23 Dec 2015)
