@@ -1,6 +1,6 @@
-xen-tools (4.6.3~dev-1) UNRELEASED; urgency=medium
+xen-tools (4.7-1) unstable; urgency=medium
 
-  * New upstream development release
+  * New upstream release
     + release-testing: Several enhancements, race condition avoidance, …
     + Fixes reported error code in case of subcommand failure (Reported
       and fixed by Yuri Sakhno, thanks!)
@@ -28,7 +28,7 @@ xen-tools (4.6.3~dev-1) UNRELEASED; urgency=medium
     URLs where they were broken or redirect somewhere else now.
   * Fix some typos in older debian/changelog and debian/NEWS items.
 
- -- Axel Beckert <abe@debian.org>  Thu, 24 Dec 2015 11:54:24 +0100
+ -- Axel Beckert <abe@debian.org>  Mon, 23 Jan 2017 00:39:11 +0100
 
 xen-tools (4.6.2-1) unstable; urgency=medium
 

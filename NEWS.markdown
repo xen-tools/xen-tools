@@ -1,5 +1,5 @@
-xen-tools 4.6.3 (released NOT YET)
-==================================
+xen-tools 4.7 (released 23 Jan 2017)
+====================================
 
 New Features
 ------------
