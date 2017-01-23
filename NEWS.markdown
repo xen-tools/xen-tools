@@ -43,7 +43,7 @@ Other Changes
 
 * Risen default values for RAM sizes in /etc/xen-tools/xen-tools.cfg
   to cope with risen resource consumption and availability. (Closes
-  Debian bug report #776487)
+  Debian bug report #849867)
 * Default file system is now ext4 (instead of ext3).
 
 Test Suite
