@@ -296,6 +296,8 @@ and EVMS EXAMPLE.
                 flags, but the specific MAC address will only be used
                 for the first interface.)
 
+   --randommac  Creates a random MAC address.
+
    --netmask=123.456.789.ABC
                 Setup the netmask for the new instance.
 
@@ -1630,6 +1632,7 @@ sub parseCommandLineArguments
             "hostname=s",   \&checkOption,
             "ip=s@",        \&checkOption,
             "mac=s",        \&checkOption,
+            "randommac",    \$CONFIG{ 'randommac' },
             "netmask=s",    \&checkOption,
             "broadcast=s",  \&checkOption,
             "nameserver=s", \&checkOption,
@@ -2117,10 +2120,18 @@ EOF
 
     #
     #  If we don't have a MAC address specified then generate one.
+    #  If randommac is specified, generate random MAC.
     #
     if ( !$CONFIG{ 'mac' } )
     {
-        $CONFIG{ 'mac' } = generateMACAddress();
+        if ( $CONFIG{ 'randommac' } )
+        {
+            $CONFIG{ 'mac' } = generateRandomMACAddress();
+        }
+        else
+        {
+            $CONFIG{ 'mac' } = generateMACAddress();
+        }
     }
 
     #
@@ -2169,7 +2180,7 @@ EOF
 
 =begin doc
 
-  Generate a 'random' MAC address.
+  Generate a pseudo-random MAC address.
 
   The MAC address is constructed based upon :
 
@@ -2223,6 +2234,36 @@ sub generateMACAddress
     }
 
     return ( uc($mac) );
+}
+
+
+
+=begin doc
+
+  Generate a MAC address based on the Xen prefix and a really random local part.
+
+=end doc
+
+=cut
+
+
+sub generateRandomMACAddress
+{
+
+    #
+    #  Start with the xen prefix
+    #
+    my $mac = '00:16:3E';
+
+    #
+    # Generate random local part and append to $mac
+    #
+    for ( my $count=0; $count < 3; $count++ )
+    {
+        $mac = $mac . ":" . sprintf("%02X", int(rand(255)));
+    }
+
+    return ( $mac );
 }
 
 
