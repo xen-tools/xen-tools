@@ -307,6 +307,9 @@ and EVMS EXAMPLE.
    --vifname=vifname
                 Optionally, set a specific vif name for the new
                 instance.
+  
+   --vlan=1     OpenvSwitch related, optionally you can specify a vlan
+                where the virtual machine has connectivity.
 
    --vlan=1     OpenvSwitch related, optionally you can specify a vlan
                 where the virtual machine has connectivity.
