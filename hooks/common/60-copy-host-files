@@ -1,7 +1,6 @@
 #!/bin/sh
 #
-#  Copy files from a 'skel' directory, if present, into the
-# new images
+#  Copy some specific files from host nachine into the new images
 #
 
 
