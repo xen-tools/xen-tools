@@ -1,6 +1,6 @@
 Source: xen-tools
 Section: utils
-Priority: extra
+Priority: optional
 Maintainer: Axel Beckert <abe@debian.org>
 Build-Depends: debhelper (>= 9~),
                devscripts,
@@ -17,7 +17,7 @@ Build-Depends: debhelper (>= 9~),
                libtest-pod-coverage-perl,
                libtest-pod-perl,
                libtext-template-perl
-Standards-Version: 3.9.8
+Standards-Version: 4.1.3
 Homepage: https://xen-tools.org/software/xen-tools
 Vcs-Browser: https://github.com/xen-tools/xen-tools
 Vcs-Git: https://github.com/xen-tools/xen-tools.git
