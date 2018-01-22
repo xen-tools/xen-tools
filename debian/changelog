@@ -7,6 +7,8 @@ xen-tools (4.7-2) UNRELEASED; urgency=medium
   * debian/control: Drop "Testsuite: autopkgtest" header, no more needed.
   * Switch "activate" trigger to "activate-noawait".
   * Recommend e2fsprogs. (Closes: #887236)
+  * Prefer btrfs-progs over now transitional package btrfs-tools. (Closes:
+    #878910)
 
  -- Axel Beckert <abe@debian.org>  Mon, 23 Jan 2017 01:36:27 +0100
 
