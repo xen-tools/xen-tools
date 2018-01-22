@@ -3,6 +3,7 @@ xen-tools (4.7-2) UNRELEASED; urgency=medium
   * Fix wrong bug number for #849867 in previous changelog entry.
   * Declare compliance with Debian Policy 4.1.3.
     + Change Priority from extra to optional.
+  * Use "$(MAKE)" instead of "make" in debian/rules.
 
  -- Axel Beckert <abe@debian.org>  Mon, 23 Jan 2017 01:36:27 +0100
 
