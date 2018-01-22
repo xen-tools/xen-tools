@@ -39,6 +39,7 @@ Depends: debootstrap | cdebootstrap,
          ${misc:Depends},
          ${perl:Depends}
 Recommends: debian-archive-keyring,
+            e2fsprogs,
             libexpect-perl,
             lvm2,
             rinse (>= 1.9.1-1),
