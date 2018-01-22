@@ -4,6 +4,7 @@ xen-tools (4.7-2) UNRELEASED; urgency=medium
   * Declare compliance with Debian Policy 4.1.3.
     + Change Priority from extra to optional.
   * Use "$(MAKE)" instead of "make" in debian/rules.
+  * debian/control: Drop "Testsuite: autopkgtest" header, no more needed.
 
  -- Axel Beckert <abe@debian.org>  Mon, 23 Jan 2017 01:36:27 +0100
 
