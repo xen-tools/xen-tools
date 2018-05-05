@@ -24,6 +24,7 @@ xen-delete-image - Delete previously created Xen instances.
    --dir      Specify the output directory where images were previously saved.
    --evms     Specify the EVMS container to use.
    --lvm      Specify the LVM volume to use.
+   --zpool    Specify the ZFS pool to use.
 
   Specifying hosts:
    --hostname Specify the image name to delete.
@@ -50,6 +51,9 @@ Specify the hostname to delete.
 
 =item B<--lvm>
 Specify the LVM volume group where images were previously saved.
+
+=item B<--zpool>
+Specify the ZFS pool where images were previously saved.
 
 =item B<--manual>
 Read the manual for this script.
@@ -271,6 +275,7 @@ sub parseCommandLineArguments
                 "dry-run",     \$CONFIG{ 'dry-run' },
                 "lvm=s",       \$CONFIG{ 'lvm' },
                 "evms=s",      \$CONFIG{ 'evms' },
+                "zpool=s",     \$CONFIG{ 'zpool' },
                 "extension:s", \$CONFIG{ 'extension' },
                 "hostname=s@", \$CONFIG{ 'hostname' },
                 "test",        \$CONFIG{ 'test' },
@@ -309,7 +314,7 @@ sub checkArguments
     #
     #  When testing we only care about loopback images, not disk images.
     #
-    if ( $CONFIG{ 'test' } and ( $CONFIG{ 'lvm' } or $CONFIG{ 'evms' } ))
+    if ( $CONFIG{ 'test' } and ( $CONFIG{ 'lvm' } or $CONFIG{ 'evms' } or $CONFIG{ 'zpool' } ))
     {
         print "Error: --test only works with --dir.\n";
         exit 1;
@@ -319,7 +324,7 @@ sub checkArguments
     #  Make sure we got one and only one installation method.
     #
     my $count = 0;
-    foreach my $type (qw/dir lvm evms/)
+    foreach my $type (qw/dir lvm evms zpool/)
     {
         $count += 1 if defined( $CONFIG{ $type } );
     }
@@ -334,6 +339,7 @@ sub checkArguments
         print " --dir\n";
         print " --evms\n";
         print " --lvm\n";
+        print " --zpool\n";
         exit 2;
     }
 }
@@ -475,6 +481,37 @@ sub deleteXenImage
                 print "Removing EVMS disk volume\n";
                 runCommand("echo Delete : /dev/evms/$hostname-disk | evms", \%PER_HOST_CONFIG);
                 runCommand("echo Delete : $CONFIG{'evms'}/$hostname-disk | evms", \%PER_HOST_CONFIG);
+            }
+        }
+
+    }
+    elsif ( defined( $CONFIG{ 'zpool' } ) )
+    {
+
+        #
+        #  ZFS volumes
+        #
+        #
+        #  TODO: Check we're not mounted.
+        #
+
+        if ( -e "/dev/$CONFIG{'zpool'}/$hostname-swap" )
+        {
+            if ($CONFIG{ 'dry-run' }) {
+                print "Would remove ZFS swap volume /dev/$CONFIG{'zpool'}/$hostname-swap\n";
+            } else {
+                print "Removing swap volume\n";
+                runCommand("zfs destroy -R $CONFIG{'zpool'}/$hostname-swap", \%PER_HOST_CONFIG);
+            }
+        }
+
+        if ( -e "/dev/$CONFIG{'zpool'}/$hostname-disk" )
+        {
+            if ($CONFIG{ 'dry-run' }) {
+                print "Would remove ZFS disk volume /dev/$CONFIG{'zpool'}/$hostname-disk\n";
+            } else {
+                print "Removing ZFS disk volume\n";
+                runCommand("zfs destroy -R $CONFIG{'zpool'}/$hostname-disk", \%PER_HOST_CONFIG);
             }
         }
 
