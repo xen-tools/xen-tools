@@ -3276,16 +3276,16 @@ sub createZFSBits
         #
         # The commands to create the volume.
         #
-	my $disk_cmd =
+        my $disk_cmd =
           "zfs create ".
-	  ($CONFIG{'image'} eq 'sparse' ? '-s' : '').
-	  " -V $partition->{'size'} $zfs_vol";
+            ($CONFIG{'image'} eq 'sparse' ? '-s' : '').
+            " -V $partition->{'size'} $zfs_vol";
 
         #
         # Create the volume
         #
         runCommand($disk_cmd, \%CONFIG);
-	sleep(2);
+        sleep(2);
 
         #
         # Make sure that worked.
