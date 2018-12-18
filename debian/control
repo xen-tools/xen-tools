@@ -1,6 +1,6 @@
 Source: xen-tools
 Section: utils
-Priority: extra
+Priority: optional
 Maintainer: Axel Beckert <abe@debian.org>
 Build-Depends: debhelper (>= 9~),
                devscripts,

@@ -5,6 +5,7 @@ xen-tools (4.7-2) UNRELEASED; urgency=medium
 
   [ Jelmer Vernooĳ ]
   * Trim trailing whitespace.
+  * Change priority extra to priority optional.
 
  -- Axel Beckert <abe@debian.org>  Mon, 23 Jan 2017 01:36:27 +0100
 
