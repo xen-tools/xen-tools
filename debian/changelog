@@ -1,6 +1,10 @@
 xen-tools (4.7-2) UNRELEASED; urgency=medium
 
+  [ Axel Beckert ]
   * Fix wrong bug number for #849867 in previous changelog entry.
+
+  [ Jelmer Vernooĳ ]
+  * Trim trailing whitespace.
 
  -- Axel Beckert <abe@debian.org>  Mon, 23 Jan 2017 01:36:27 +0100
 
@@ -1071,4 +1075,3 @@ xen-tools (0.4-1) unstable; urgency=low
   * Initial release (Closes: #344081)
 
  -- Radu Spineanu <radu@debian.org>  Tue, 20 Dec 2005 02:21:05 +0200
-
