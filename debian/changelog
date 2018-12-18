@@ -1,5 +1,6 @@
 xen-tools (4.7.1-1) UNRELEASED; urgency=medium
 
+  [ Axel Beckert ]
   * Fix wrong bug number for #849867 in previous changelog entry.
   * Declare compliance with Debian Policy 4.1.3.
     + Change Priority from extra to optional.
@@ -9,6 +10,9 @@ xen-tools (4.7.1-1) UNRELEASED; urgency=medium
   * Recommend e2fsprogs. (Closes: #887236)
   * Prefer btrfs-progs over now transitional package btrfs-tools. (Closes:
     #878910)
+
+  [ Jelmer Vernooĳ ]
+  * Trim trailing whitespace.
 
  -- Axel Beckert <abe@debian.org>  Sun, 03 Feb 2019 17:11:22 +0100
 
@@ -1079,4 +1083,3 @@ xen-tools (0.4-1) unstable; urgency=low
   * Initial release (Closes: #344081)
 
  -- Radu Spineanu <radu@debian.org>  Tue, 20 Dec 2005 02:21:05 +0200
-
