@@ -17,6 +17,9 @@ xen-tools (4.8-1) UNRELEASED; urgency=medium
   [ Marc Bigler ]
   * Add support for ZFS volumes. (GH #50)
 
+  [ Yuri Sakhno ]
+  * Eliminate progress reporting which is useless in logs. (GH #42)
+
  -- Axel Beckert <abe@debian.org>  Sun, 03 Feb 2019 17:11:22 +0100
 
 xen-tools (4.7-1) unstable; urgency=medium

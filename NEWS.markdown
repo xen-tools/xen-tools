@@ -4,12 +4,14 @@ xen-tools 4.8 (released TODO Feb 2019)
 New Features
 ------------
 
-* Support for ZFS volumes (by Marc Bigler)
+* Support for ZFS volumes (by Marc Bigler, GH #50)
 
 Bug Fixes
 ---------
 
 * Minor documentation fixes.
+* Eliminate progress reporting which is useless in logs. (Yuri Sakhno,
+  GH #42)
 
 
 xen-tools 4.7 (released 23 Jan 2017)
