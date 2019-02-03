@@ -10,6 +10,11 @@ xen-tools (4.8-1) UNRELEASED; urgency=medium
   * Recommend e2fsprogs. (Closes: #887236)
   * Prefer btrfs-progs over now transitional package btrfs-tools. (Closes:
     #878910)
+  * Bump debhelper compatibility level to 10.
+    + Update versioned debhelper build-dependency accordingly.
+    + Only using dh compat level 10 allows one to still build the package
+      on Debian 9 Stretch without backports, on Ubuntu 18.04 LTS and on
+      Ubuntu 16.04 LTS with backports.
 
   [ Jelmer Vernooĳ ]
   * Trim trailing whitespace from debian/changelog. (GH #54)
