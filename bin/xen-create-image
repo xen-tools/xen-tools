@@ -321,14 +321,14 @@ and EVMS EXAMPLE.
                 Subdirectories will be created for each guest.
 
                 If you do not wish to use loopback images specify
-                --lvm or --evms.  (These three options are mutually
-                exclusive.)
+                --lvm, --evms or --zpool. (These four options are
+                mutually exclusive.)
 
    --evms=lvm2/container
                 Specify the container to save images within,
                 i.e. '--evms lvm2/mycontainer'.  If you do not wish to
-                use EVMS specify --dir or --lvm.  (These three options
-                are mutually exclusive.)
+                use EVMS specify --dir, --lvm or --zpool. (These four
+                options are mutually exclusive.)
 
    --hostname=host.example.org
                 Set the hostname of the new guest system.  Ideally
@@ -337,8 +337,13 @@ and EVMS EXAMPLE.
                 out of it for various purposes.
 
    --lvm=vg     Specify the volume group to save images within.
-                If you do not wish to use LVM specify --dir or --evms.
-                (These three options are mutually exclusive.)
+                If you do not wish to use LVM specify --dir, --evms or
+                --zpool. (These three options are mutually exclusive.)
+
+   --zpool=pool Specify the ZFS pool to save images within. A new ZFS
+                volume will be created for each guest.
+                If you do not wish to use ZFS specify --dir, --evms or
+                --lvm. (These four options are mutually exclusive.)
 
 
 =head1 NOTES
@@ -1004,7 +1009,8 @@ if ( !@PARTITIONS )
     populatePartitionsData()
       if ( ( $CONFIG{ 'dir' } ) ||
            ( $CONFIG{ 'evms' } ) ||
-           ( $CONFIG{ 'lvm' } ) );
+           ( $CONFIG{ 'lvm' } ) ||
+           ( $CONFIG{ 'zpool' } ) );
 }
 
 
@@ -1056,12 +1062,20 @@ elsif ( $CONFIG{ 'image-dev' } )
     #
     usePhysicalDevice();
 }
+elsif ( $CONFIG{ 'zpool' } )
+{
+
+    #
+    #  Create our ZFS volumes
+    #
+    createZFSBits();
+}
 else
 {
 
     # Can't happen we didn't get an installation type.
     logprint( "Error:  No recognised installation type.\n".
-              "Please specify a directory, lvm, or evms volume to use.\n" );
+              "Please specify a directory, lvm, zpool, or evms volume to use.\n" );
     $CONFIG{'FAIL'} = 1;
     exit 127;
 }
@@ -1560,6 +1574,7 @@ sub parseCommandLineArguments
     $install{ 'dir' }       = undef;
     $install{ 'lvm' }       = undef;
     $install{ 'image-dev' } = undef;
+    $install{ 'zpool' }     = undef;
 
     #
     #  Parse options.
@@ -1589,6 +1604,7 @@ sub parseCommandLineArguments
             "apt_proxy=s", \&checkOption,
             "modules=s",   \&checkOption,
             "lvm=s",       \$install{ 'lvm' },
+            "zpool=s",     \$install{ 'zpool' },
             "image-dev=s", \$install{ 'image-dev' },
             "swap-dev=s",  \$install{ 'swap-dev' },
             "serial_device=s", \&checkOption,
@@ -1687,7 +1703,7 @@ sub parseCommandLineArguments
 
 
     #
-    #  Now make ensure that the command line setting of '--lvm', '--evms'
+    #  Now make ensure that the command line setting of '--lvm', '--evms', '--zpool'
     # and '--dir=x' override anything specified in the configuration file.
     #
     if ( $install{ 'dir' } )
@@ -1696,6 +1712,7 @@ sub parseCommandLineArguments
         $CONFIG{ 'evms' }      = undef;
         $CONFIG{ 'lvm' }       = undef;
         $CONFIG{ 'image-dev' } = undef;
+        $CONFIG{ 'zpool' }     = undef;
     }
     if ( $install{ 'evms' } )
     {
@@ -1703,6 +1720,7 @@ sub parseCommandLineArguments
         $CONFIG{ 'evms' }      = $install{ 'evms' };
         $CONFIG{ 'lvm' }       = undef;
         $CONFIG{ 'image-dev' } = undef;
+        $CONFIG{ 'zpool' }     = undef;
     }
     if ( $install{ 'lvm' } )
     {
@@ -1710,6 +1728,15 @@ sub parseCommandLineArguments
         $CONFIG{ 'evms' }      = undef;
         $CONFIG{ 'lvm' }       = $install{ 'lvm' };
         $CONFIG{ 'image-dev' } = undef;
+        $CONFIG{ 'zpool' }     = undef;
+    }
+    if ( $install{ 'zpool' } )
+    {
+        $CONFIG{ 'dir' }       = undef;
+        $CONFIG{ 'evms' }      = undef;
+        $CONFIG{ 'lvm' }       = undef;
+        $CONFIG{ 'image-dev' } = undef;
+        $CONFIG{ 'zpool' }     = $install{ 'zpool' };
     }
     if ( $install{ 'image-dev' } )
     {
@@ -1717,6 +1744,7 @@ sub parseCommandLineArguments
         $CONFIG{ 'evms' }      = undef;
         $CONFIG{ 'lvm' }       = undef;
         $CONFIG{ 'image-dev' } = $install{ 'image-dev' };
+        $CONFIG{ 'zpool' }     = undef;
         $CONFIG{ 'size' }      = undef;
         $CONFIG{ 'swap' }      = undef;
 
@@ -2322,6 +2350,26 @@ sub checkBinariesPresent
                 logprint("\t$file\n");
                 logprint(
                     "(This is only required for LVM volumes, which you've selected)\n"
+                );
+                $CONFIG{'FAIL'} = 1;
+                exit 127;
+            }
+        }
+    }
+    elsif (defined( $CONFIG{ 'zpool' } ) )
+    {
+
+        # ZFS-specific binaries.
+        my @zfs = qw ( zfs );
+
+        foreach my $file (@zfs)
+        {
+            if ( !defined( which($file) ) )
+            {
+                logprint("The following binary is required to run this tool\n");
+                logprint("\t$file\n");
+                logprint(
+                    "(This is only required for ZFS volumes, which you've selected)\n"
                 );
                 $CONFIG{'FAIL'} = 1;
                 exit 127;
@@ -3165,6 +3213,112 @@ sub createLVMBits
 
 =begin doc
 
+  This function is responsible for creating two new ZFS volumes within
+ a given ZFS pool.
+
+=end doc
+
+=cut
+
+sub createZFSBits
+{
+
+    #
+    #  Check whether the ZFS volume exists already, and if so abort
+    #  unless '--force' is specified.
+    #
+    foreach my $partition (@PARTITIONS)
+    {
+        my $disk     = $CONFIG{ 'hostname' } . '-' . $partition->{ 'name' };
+        my $zfs_disk = "/dev/$CONFIG{'zpool'}/$disk";
+        my $zfs_vol  = "$CONFIG{'zpool'}/$disk";
+
+        if ( -e $zfs_disk )
+        {
+
+            # Delete if forcing
+            if ( $CONFIG{ 'force' } )
+            {
+                unless ( xenRunning($CONFIG{ 'hostname' }, \%CONFIG)) {
+                    logprint(
+                        "Removing $zfs_disk - since we're forcing the install\n");
+                    runCommand("zfs destroy $zfs_vol", \%CONFIG);
+                    runCommand("sync", \%CONFIG);
+                    logprint(
+                        "Sleeping a few seconds to avoid ZFS race conditions...\n");
+                    sleep(3);
+                } else {
+                    fail("ERROR: Xen guest $CONFIG{'hostname'} appears to be running.\nAborting.\n");
+                }
+            }
+            else
+            {
+                logprint("The ZFS volume already exists.  Aborting.\n");
+                logprint("Specify '--force' to delete and recreate\n");
+                $CONFIG{'FAIL'} = 2;
+                exit 127;
+            }
+        }
+    }
+
+    foreach my $partition (@PARTITIONS)
+    {
+        my $disk     = $CONFIG{ 'hostname' } . '-' . $partition->{ 'name' };
+        my $zfs_disk = "/dev/$CONFIG{'zpool'}/$disk";
+        my $zfs_vol  = "$CONFIG{'zpool'}/$disk";
+
+        #
+        # Save the image path to the partitions array
+        #
+        $partition->{ 'imagetype' } = 'phy:';
+        $partition->{ 'image' }     = $zfs_disk;
+
+        #
+        # The commands to create the volume.
+        #
+        my $disk_cmd =
+          "zfs create ".
+            ($CONFIG{'image'} eq 'sparse' ? '-s' : '').
+            " -V $partition->{'size'} $zfs_vol";
+
+        #
+        # Create the volume
+        #
+        runCommand($disk_cmd, \%CONFIG);
+        sleep(2);
+
+        #
+        # Make sure that worked.
+        #
+        if ( !-e "$zfs_disk" )
+        {
+            logprint(
+                "The ZFS volume creation failed to create $zfs_disk.\n"
+            );
+            logprint("aborting\n");
+            $CONFIG{'FAIL'} = 1;
+            exit 127;
+        }
+
+        #
+        #  Finally create the filesystem / swap
+        #
+        if ( $partition->{ 'type' } eq 'swap' )
+        {
+            createSwap($zfs_disk);
+        }
+        else
+        {
+            createFilesystem( $zfs_disk, $partition->{ 'type' } );
+        }
+    }
+
+}
+
+
+
+=begin doc
+
   This function is responsible for creating two new logical volumes within
  a given EVMS container group (which at the moment is either LVM or LVM2), but
  should be compatible with any further extensions of evms.
@@ -3419,6 +3573,10 @@ sub mountImage
                 $mount_cmd = "mount $mount_type $image $mountpoint";
             }
             elsif ( $CONFIG{ 'image-dev' } )
+            {
+                $mount_cmd = "mount $mount_type $image $mountpoint";
+            }
+            elsif ( $CONFIG{ 'zpool' } )
             {
                 $mount_cmd = "mount $mount_type $image $mountpoint";
             }
@@ -4282,12 +4440,15 @@ END
                 $option = "--evms=$CONFIG{'evms'}"
             } elsif ($CONFIG{ 'dir' }) {
                 $option = "--dir=$CONFIG{'dir'}"
+            } elsif ($CONFIG{ 'zpool' }) {
+                $option = "--zpool=$CONFIG{'zpool'}"
             }
+
 
             if ($option) {
                 runCommand("xen-delete-image $option --hostname=$CONFIG{'hostname'}", \%CONFIG);
             } else {
-                die "Assertion that either --dir, --lvm, or --dir are given".
+                die "Assertion that either --dir, --lvm, --dir or --zpool are given".
                     " failed.\nThis is probably a bug, please report it.";
             }
         }
