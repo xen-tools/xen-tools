@@ -183,6 +183,7 @@ install-hooks:
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d stretch.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d buster.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d bullseye.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d bookworm.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d sid.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d unstable.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d testing.d
@@ -218,6 +219,10 @@ install-hooks:
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d xenial.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d yakkety.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d zesty.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d artful.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d bionic.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d cosmic.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d disco.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d devel.d
 	cp hooks/common.sh ${prefix}/usr/share/xen-tools
 	cp -r hooks/common ${prefix}/usr/share/xen-tools

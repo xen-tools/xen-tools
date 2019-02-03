@@ -13,6 +13,17 @@ Bug Fixes
 * Eliminate progress reporting which is useless in logs. (Yuri Sakhno,
   GH #42)
 
+Distribution Releases Changes
+-----------------------------
+
+* Support for
+  + Ubuntu 17.10 Artful Aardvark
+  + Ubuntu 18.04 Bionic Beaver (LTS)
+  + Ubuntu 18.10 Cosmic Cuttlefish
+* Preliminary support for Ubuntu 19.04 Disco Dingo
+* Knows about code name for Debian 12 (Bookworm).
+* Considers Ubuntu Yakkety, Zesty and Artful being EoL.
+
 
 xen-tools 4.7 (released 23 Jan 2017)
 ====================================

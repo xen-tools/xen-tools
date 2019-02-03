@@ -8,6 +8,10 @@ xen-tools (4.8-1) UNRELEASED; urgency=medium
     [ Yuri Sakhno ]
     + Eliminate progress reporting which is useless in logs. (GH #42)
 
+    [ Axel Beckert ]
+    + Add preliminary support for future Debian 12 Bookworm release.
+    + Add support for Ubuntu releases from 17.10 Artful to 19.04 Disco.
+
   [ Axel Beckert ]
   * Fix wrong bug number for #849867 in previous changelog entry.
   * Declare compliance with Debian Policy 4.1.3.

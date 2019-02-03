@@ -37,17 +37,18 @@ known to work reliably, i.e.:
 * Squeeze 6.0 (Dom0 no more tested)
 * Wheezy 7
 * Jessie 8
-* Stretch 9 (under development)
-* Buster 10 (knows about this future release name)
+* Stretch 9
+* Buster 10 (under development)
 * Bullseye 11 (knows about this future release name)
+* Bookworm 12 (knows about this future release name)
 * Sid (always under development; works at least at the moment of writing :-)
 
 ### Ubuntu
 
 (only DomUs tested)
 
-* Dapper Drake 6.06 (LTS, needs editing of `/usr/share/debootstrap/scripts/dapper` since at least debootstrap version 1.0.37, see [#659360][1])
-* Edgy Eft 6.10 (needs editing of `/usr/share/debootstrap/scripts/edgy` since at least debootstrap version 1.0.37, see [#659360][1])
+* Dapper Drake 6.06 (LTS, needs editing of `/usr/share/debootstrap/scripts/dapper` between at least debootstrap version 1.0.37 and 1.0.93 (including), see [#659360][1])
+* Edgy Eft 6.10 (needs editing of `/usr/share/debootstrap/scripts/edgy` between at least debootstrap version 1.0.37 and 1.0.93 (including), see [#659360][1])
 * Feisty Fawn 7.04
 * Gutsy Gibbon 7.10
 * Hardy Heron 8.04 (LTS, see [Installing Ubuntu 8.04 as DomU][2])
@@ -68,7 +69,11 @@ known to work reliably, i.e.:
 * Wily Werewolf 15.10
 * Xenial Xerus 16.04 (LTS)
 * Yakkety Yak 16.10
-* Zesty Zapus 17.04 (under development)
+* Zesty Zapus 17.04
+* Artful Aardvark 17.10
+* Bionic Beaver 18.04 (LTS)
+* Cosmic Cuttlefish 18.10
+* Disco Dingo 19.04 (under development)
 
 [1]: https://bugs.debian.org/659360
     "debootstrap in Wheezy can no more build Ubuntu Edgy or earlier"
