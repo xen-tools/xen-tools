@@ -25,6 +25,8 @@ xen-tools (4.8-1) UNRELEASED; urgency=medium
       Ubuntu 16.04 LTS with backports.
   * Declare compliance with Debian Policy 4.3.0. (No changes needed.)
   * Set "Rules-Requires-Root: no".
+  * Check $DEB_BUILD_OPTIONS and $DEB_BUILD_PROFILES in
+    override_dh_auto_test. Fixes according lintian warning.
 
   [ Jelmer Vernooĳ ]
   * Trim trailing whitespace from debian/changelog. (GH #54)
