@@ -96,7 +96,7 @@ installDebianPackageAndRecommends ()
     #
     # Install the packages
     #
-    DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --quiet --yes install "$@" 2>&1 | sed --expression="s/\rExtracting templates from packages: [0-9]\+%//g;s/(Reading database ... \([0-9]\+%\)\?\r//g"
+    DEBIAN_FRONTEND=noninteractive chroot ${prefix} /usr/bin/apt-get --yes install "$@" 2>&1 | sed --expression="s/\rExtracting templates from packages: [0-9]\+%//g;s/(Reading database ... \([0-9]\+%\)\?\r//g"
 
     #
     #  Remove the policy-rc.d script.
