@@ -21,6 +21,7 @@ Standards-Version: 4.3.0
 Homepage: https://xen-tools.org/software/xen-tools
 Vcs-Browser: https://github.com/xen-tools/xen-tools
 Vcs-Git: https://github.com/xen-tools/xen-tools.git
+Rules-Requires-Root: no
 
 Package: xen-tools
 Architecture: all

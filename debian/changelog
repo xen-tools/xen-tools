@@ -16,6 +16,7 @@ xen-tools (4.8-1) UNRELEASED; urgency=medium
       on Debian 9 Stretch without backports, on Ubuntu 18.04 LTS and on
       Ubuntu 16.04 LTS with backports.
   * Declare compliance with Debian Policy 4.3.0. (No changes needed.)
+  * Set "Rules-Requires-Root: no".
 
   [ Jelmer Vernooĳ ]
   * Trim trailing whitespace from debian/changelog. (GH #54)
