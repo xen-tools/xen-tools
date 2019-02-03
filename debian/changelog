@@ -1,4 +1,4 @@
-xen-tools (4.7.1-1) UNRELEASED; urgency=medium
+xen-tools (4.8-1) UNRELEASED; urgency=medium
 
   [ Axel Beckert ]
   * Fix wrong bug number for #849867 in previous changelog entry.
@@ -12,7 +12,10 @@ xen-tools (4.7.1-1) UNRELEASED; urgency=medium
     #878910)
 
   [ Jelmer Vernooĳ ]
-  * Trim trailing whitespace from debian/changelog.
+  * Trim trailing whitespace from debian/changelog. (GH #54)
+
+  [ Marc Bigler ]
+  * Add support for ZFS volumes. (GH #50)
 
  -- Axel Beckert <abe@debian.org>  Sun, 03 Feb 2019 17:11:22 +0100
 
