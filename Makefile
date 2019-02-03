@@ -219,11 +219,12 @@ install-hooks:
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d xenial.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d yakkety.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d zesty.d
-	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d artful.d
-	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d bionic.d
-	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d cosmic.d
-	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d disco.d
-	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d devel.d
+	mkdir -p ${prefix}/usr/share/xen-tools/artful.d/
+	cp -R hooks/karmic/*-* ${prefix}/usr/share/xen-tools/artful.d/
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s artful.d bionic.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s artful.d cosmic.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s artful.d disco.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s artful.d devel.d
 	cp hooks/common.sh ${prefix}/usr/share/xen-tools
 	cp -r hooks/common ${prefix}/usr/share/xen-tools
 

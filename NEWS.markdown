@@ -18,7 +18,7 @@ Distribution Releases Changes
 
 * Support for
   + Ubuntu 17.10 Artful Aardvark
-  + Ubuntu 18.04 Bionic Beaver (LTS)
+  + Ubuntu 18.04 Bionic Beaver (LTS) (GH #51)
   + Ubuntu 18.10 Cosmic Cuttlefish
 * Preliminary support for Ubuntu 19.04 Disco Dingo
 * Knows about code name for Debian 12 (Bookworm).

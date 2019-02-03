@@ -1,0 +1,128 @@
+#!/bin/sh
+#
+#  This script sets up the /etc/netplan/interface file for the new
+# image.
+#
+# Steve
+# --
+# https://steve.fi/
+
+
+prefix=$1
+
+#
+#  Source our common functions
+#
+if [ -e /usr/share/xen-tools/common.sh ]; then
+    . /usr/share/xen-tools/common.sh
+else
+    . ./hooks/common.sh
+fi
+
+# From: https://serverfault.com/questions/54981/linux-command-line-tool-to-work-with-netmasks-cidr-notation
+mask2cdr ()
+{
+   # Assumes there's no "255." after a non-255 byte in the mask
+   local x=${1##*255.}
+   set -- 0^^^128^192^224^240^248^252^254^ $(( (${#1} - ${#x})*2 )) ${x%%.*}
+   x=${1%%$3*}
+   echo $(( $2 + (${#x}/4) ))
+}
+
+#
+# Log our start
+#
+logMessage Script $0 starting
+
+
+#
+#  Make sure we have an /etc/netplan directory.
+#
+mkdir -p ${prefix}/etc/netplan
+
+
+#
+#  A function to setup DHCP for our new image.
+#
+setupDynamicNetworking ()
+{
+    #
+    # The host is using DHCP.
+    #
+    cat <<E_O_DHCP > ${prefix}/etc/netplan/01-netcfg.yaml
+# Arno: Configure VM interface eth0 via DHCP
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    eth0:
+      dhcp4: true
+E_O_DHCP
+}
+
+
+
+#
+#  A function to setup static IP addresses for our new image.
+#
+setupStaticNetworking ()
+{
+    # Arno
+    cidr='24';
+    if [ -n "${netmask}" ]; then
+      cidr="$(mask2cdr ${netmask})"
+    fi
+
+    #
+    # We have a static IP address
+    #
+    cat <<E_O_STATIC >${prefix}/etc/netplan/01-netcfg.yaml
+# Arno: Set static IP for VM interface eth0
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    eth0:
+      addresses: [${ip1}/${cidr}]
+      gateway4: ${gateway} 
+      nameservers:
+          addresses: [${nameserver}]
+E_O_STATIC
+
+    # Arno: no support for multiple interfaces
+
+    #
+    # Hooks are run chrooted, hence the resolv.conf is moved
+    # temporarily to /etc/resolv.conf.old. Use that file, it
+    # will be restored after hooks are run.
+    #
+    if [ '' != "$nameserver" ]; then
+        rm -f ${prefix}/etc/resolv.conf.old
+        for ns in $nameserver; do
+            echo "nameserver $ns" >>${prefix}/etc/resolv.conf.old
+        done
+    else
+        cp /etc/resolv.conf ${prefix}/etc/resolv.conf.old
+    fi
+}
+
+
+
+
+#
+#  Call the relevant function
+#
+if [ -z "${dhcp}" ]; then
+    logMessage "Setting up static networking"
+    setupStaticNetworking
+
+else
+    logMessage "Setting up DHCP networking"
+    setupDynamicNetworking
+fi
+
+
+#
+#  Log our finish
+#
+logMessage Script $0 finished

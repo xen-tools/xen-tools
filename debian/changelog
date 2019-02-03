@@ -11,6 +11,10 @@ xen-tools (4.8-1) UNRELEASED; urgency=medium
     [ Axel Beckert ]
     + Add preliminary support for future Debian 12 Bookworm release.
     + Add support for Ubuntu releases from 17.10 Artful to 19.04 Disco.
+      - Create hooks/artful with new 40-setup-networking-deb-netplan by
+        Arno Bakker and Peter. (Fixes xen-tools/xen-tools#51)
+      - Rename hooks/karmic/80-install-kernel to
+        hooks/common/80-install-kernel-ubu and add according symlinks.
 
   [ Axel Beckert ]
   * Fix wrong bug number for #849867 in previous changelog entry.
