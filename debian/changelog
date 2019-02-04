@@ -38,6 +38,9 @@ xen-tools (4.8-1) UNRELEASED; urgency=medium
   * Set "Rules-Requires-Root: no".
   * Check $DEB_BUILD_OPTIONS and $DEB_BUILD_PROFILES in
     override_dh_auto_test. Fixes according lintian warning.
+  * Use ubuntu-keyring instead of now transitional ubuntu-archive-keyring,
+    but keep the latter as alternative to allow one to install the
+    xen-tools package also on older Debian or Ubuntu releases.
 
   [ Jelmer Vernooĳ ]
   * Trim trailing whitespace from debian/changelog. (GH #54)

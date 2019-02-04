@@ -44,7 +44,7 @@ Recommends: debian-archive-keyring,
             libexpect-perl,
             lvm2,
             rinse (>= 1.9.1-1),
-            ubuntu-archive-keyring,
+            ubuntu-keyring | ubuntu-archive-keyring,
             xen-hypervisor,
             xen-utils
 Suggests: btrfs-progs | btrfs-tools,
