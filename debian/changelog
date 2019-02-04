@@ -19,6 +19,10 @@ xen-tools (4.8-1) UNRELEASED; urgency=medium
     [ Nico Boehr ]
     + Add support for LVM thin provisioning.
 
+    [ Pietro Stäheli ]
+    + Add support for option --randommac for really random MAC addresses
+      upon every xen-create-image invocation. (Closes: #855703)
+
   [ Axel Beckert ]
   * Fix wrong bug number for #849867 in previous changelog entry.
   * Declare compliance with Debian Policy 4.1.3.

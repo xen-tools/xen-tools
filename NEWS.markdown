@@ -6,6 +6,9 @@ New Features
 
 * Support for ZFS volumes (by Marc Bigler, GH #50)
 * Support for LVM thin provisioning (by Nico Boehr, GH #47)
+* Support for really random MAC addresses upon every xen-create-image
+  invocation by using the new option `--randommac`. (by Pietro Stäheli,
+  closes Debian bug report #855703)
 
 Bug Fixes
 ---------
