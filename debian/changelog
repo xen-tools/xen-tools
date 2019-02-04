@@ -16,6 +16,9 @@ xen-tools (4.8-1) UNRELEASED; urgency=medium
       - Rename hooks/karmic/80-install-kernel to
         hooks/common/80-install-kernel-ubu and add according symlinks.
 
+    [ Nico Boehr ]
+    + Add support for LVM thin provisioning.
+
   [ Axel Beckert ]
   * Fix wrong bug number for #849867 in previous changelog entry.
   * Declare compliance with Debian Policy 4.1.3.

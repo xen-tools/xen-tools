@@ -5,6 +5,7 @@ New Features
 ------------
 
 * Support for ZFS volumes (by Marc Bigler, GH #50)
+* Support for LVM thin provisioning (by Nico Boehr, GH #47)
 
 Bug Fixes
 ---------
