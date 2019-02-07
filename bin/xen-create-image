@@ -245,12 +245,12 @@ and EVMS EXAMPLE.
    --mirror=url Setup the mirror to use when installing via
                 debootstrap. (Default value: mirror used in
                 /etc/apt/sources.list or for Debian
-                "http://httpredir.debian.org/debian/" and for Ubuntu
+                "http://deb.debian.org/debian/" and for Ubuntu
                 "http://archive.ubuntu.com/ubuntu/")
 
                 The above mentioned Debian mirror hostname
                 automatically tries to choose a more or less close
-                Debian mirror. See http://httpredir.debian.org/ for
+                Debian mirror. See http://deb.debian.org/ for
                 details.
 
    --apt_proxy=protocol://hostname:port/

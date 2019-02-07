@@ -28,6 +28,13 @@ Distribution Releases Changes
 * Knows about code name for Debian 12 (Bookworm).
 * Considers Ubuntu Yakkety, Zesty and Artful being EoL.
 
+Other Changes
+-------------
+
+* Change all occurrences of `httpredir.debian.org` to
+  `deb.debian.org` except those for the `debian-archive`. The latter
+  now point to `archive.debian.org` directly.
+
 
 xen-tools 4.7 (released 23 Jan 2017)
 ====================================

@@ -15,6 +15,9 @@ xen-tools (4.8-1) UNRELEASED; urgency=medium
         Arno Bakker and Peter. (Fixes xen-tools/xen-tools#51)
       - Rename hooks/karmic/80-install-kernel to
         hooks/common/80-install-kernel-ubu and add according symlinks.
+    + Change all occurrences of httpredir.debian.org to deb.debian.org
+      except those for the debian-archive. The latter now point to
+      archive.debian.org directly.
 
     [ Nico Boehr ]
     + Add support for LVM thin provisioning.
