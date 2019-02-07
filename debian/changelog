@@ -49,6 +49,8 @@ xen-tools (4.8-1) UNRELEASED; urgency=medium
   * Use ubuntu-keyring instead of now transitional ubuntu-archive-keyring,
     but keep the latter as alternative to allow one to install the
     xen-tools package also on older Debian or Ubuntu releases.
+  * Suggest grub-xen-host despite the proper support for it is not
+    finished.
 
   [ Jelmer Vernooĳ ]
   * Trim trailing whitespace from debian/changelog. (GH #54)

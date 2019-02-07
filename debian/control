@@ -49,6 +49,7 @@ Recommends: debian-archive-keyring,
             xen-utils
 Suggests: btrfs-progs | btrfs-tools,
           cfengine2,
+          grub-xen-host,
           reiserfsprogs,
           xfsprogs
 Description: Tools to manage Xen virtual servers
