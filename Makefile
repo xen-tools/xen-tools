@@ -220,7 +220,7 @@ install-hooks:
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d yakkety.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s karmic.d zesty.d
 	mkdir -p ${prefix}/usr/share/xen-tools/artful.d/
-	cp -R hooks/karmic/*-* ${prefix}/usr/share/xen-tools/artful.d/
+	cp -R hooks/artful/*-* ${prefix}/usr/share/xen-tools/artful.d/
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s artful.d bionic.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s artful.d cosmic.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s artful.d disco.d
