@@ -1783,13 +1783,13 @@ sub testRootUser
 {
     if ( $EFFECTIVE_USER_ID != 0 )
     {
-        my $err = <<E_O_ROOT;
+        my $err = <<EOROOT;
 
   In order to use this script you must be running with root privileges.
 
   (This is necessary to mount the disk images which are created.)
 
-E_O_ROOT
+EOROOT
 
         logprint($err);
         $CONFIG{'FAIL'} = 1;
