@@ -2,9 +2,11 @@
 
 set -e
 
-exec 2>&1 | tee xen-tools-release-testing.log
+exec 2>&1 | tee xen-tools-release-testing-$(date -Iseconds).log
 
-DISTRIBUTIONS=$(awk '!/^#|^$|dont-test/ {print $1}' /etc/xen-tools/distributions.conf)
+if [ -z "$DISTRIBUTIONS" ]; then
+    DISTRIBUTIONS=$(awk '!/^#|^$|dont-test/ {print $1}' /etc/xen-tools/distributions.conf)
+fi
 
 echo Deleting old release-testing artefacts
 for dist in $DISTRIBUTIONS; do
@@ -18,7 +20,30 @@ seconds=10
 printf "Sleeping for %i seconds to avoid LVM race conditions: " $seconds
 for i in $(seq 1 $seconds); do sleep 1; printf "%i " $i; done; printf '\n';
 
+SUCCEEDED=''
+FAILED=''
+
+# From now on we just want to log failures, not abort.
+set +e
+
 for dist in $DISTRIBUTIONS; do
     echo "*** Creating xen-tools-release-testing-$dist..."
     xen-create-image --verbose --hostname "xen-tools-release-testing-$dist" --dist $dist --force "$@"
+
+    if [ "$?" -eq '0' ]; then
+        SUCCEEDED="$dist $SUCCEEDED"
+    else
+        FAILED="$dist $FAILED"
+    fi
 done
+
+echo ''
+echo '======================================================================'
+if [ -z "$FAILED" ]; then
+    echo '*** All tests succeeded! ***'
+elif [ -z "$SUCCEEDED!" ]; then
+    echo '*** All tests failed! ***'
+else
+    echo "*** These distributions succeeded: $SUCCEEDED ***"
+    echo "*** These distributions failed: $FAILED ***"
+fi

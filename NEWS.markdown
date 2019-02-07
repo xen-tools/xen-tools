@@ -37,6 +37,7 @@ Other Changes
 * Change all occurrences of `httpredir.debian.org` to
   `deb.debian.org` except those for the `debian-archive`. The latter
   now point to `archive.debian.org` directly.
+* Many improvements for the release-testing script.
 
 
 xen-tools 4.7 (released 23 Jan 2017)
