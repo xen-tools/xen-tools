@@ -42,7 +42,7 @@ echo ''
 echo '======================================================================'
 if [ -z "$FAILED" ]; then
     echo '*** All tests succeeded! ***'
-elif [ -z "$SUCCEEDED!" ]; then
+elif [ -z "$SUCCEEDED" ]; then
     echo '*** All tests failed! ***'
 else
     echo "*** These distributions succeeded: $SUCCEEDED ***"
