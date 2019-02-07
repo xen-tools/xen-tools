@@ -38,6 +38,8 @@ Other Changes
   `deb.debian.org` except those for the `debian-archive`. The latter
   now point to `archive.debian.org` directly.
 * Many improvements for the release-testing script.
+* Only run xen-toolstack helper script if both, xm and xl are
+  present. Avoids warning about deprecated helper script.
 
 
 xen-tools 4.7 (released 23 Jan 2017)

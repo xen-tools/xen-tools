@@ -161,18 +161,19 @@ sub findXenToolstack
 {
     my $helper = '/usr/lib/xen-common/bin/xen-toolstack';
 
-    if (-x $helper) {
+    my $xm = which('xm');
+    my $xl = which('xl');
+
+    if ($xm and $xl and -x $helper) {
         my $toolstack = `$helper`;
         chomp($toolstack);
         return $toolstack if $toolstack;
     }
 
-    my $xm = which('xm');
     if ($xm and system("$xm list >/dev/null 2>/dev/null") == 0) {
         return $xm;
     }
 
-    my $xl = which('xl');
     if ($xl and system("$xl list >/dev/null 2>/dev/null") == 0) {
         return $xl;
     }
