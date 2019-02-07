@@ -414,7 +414,7 @@ sub checkArguments
 
     if ( !-d $dir )
     {
-        print <<E_OR;
+        print <<EOR;
 
   We are trying to configure an installation of $CONFIG{'dist'} in
  $CONFIG{'location'} - but there is no hook directory for us to use.
@@ -424,7 +424,7 @@ sub checkArguments
   We would expect the hook directory to be $dir.
 
   Aborting.
-E_OR
+EOR
         exit 1;
     }
 

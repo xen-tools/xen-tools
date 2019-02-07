@@ -208,12 +208,12 @@ checkArguments();
 #
 if ( ( !$CONFIG{ 'test' } ) && ( $EFFECTIVE_USER_ID != 0 ) )
 {
-    print <<E_O_ROOT;
+    print <<EOROOT;
 
   This script is not running with root privileges, so the configuration
  file(s) beneath /etc/xen will not be removed.
 
-E_O_ROOT
+EOROOT
 
     exit 127;
 }

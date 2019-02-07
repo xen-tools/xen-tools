@@ -149,13 +149,13 @@ checkArguments();
 #
 if ( $EFFECTIVE_USER_ID != 0 )
 {
-    print <<E_O_ROOT;
+    print <<EOROOT;
 
   This script is not running with root privileges.
 
   root privileges are required to successfully mount the disk image(s).
 
-E_O_ROOT
+EOROOT
 
     exit;
 }
