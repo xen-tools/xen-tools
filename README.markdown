@@ -118,7 +118,7 @@ To use these tools you'll need the following software:
   * [File::Which](https://metacpan.org/release/File-Which)
 	([Debian Package libfile-which-perl](https://packages.debian.org/libfile-which-perl))
   * and some more modules which are part of the Perl core and hence do not need to be installed separately.
-* Make, if you are not installing through a package manager
+* "Make", if you are not installing through a package manager.
 
 You can try to install RPM-based distributions such as CentOS, or
 Fedora Core, but you will need a correctly installed and configured
