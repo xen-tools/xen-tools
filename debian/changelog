@@ -19,6 +19,8 @@ xen-tools (4.8-1) UNRELEASED; urgency=medium
       except those for the debian-archive. The latter now point to
       archive.debian.org directly.
     + Set Ubuntu fallback suite to the latest LTS, i.e. 18.04 Bionic.
+    + Drop pygrub path detection from xm.tmpl, Xen prefers a path-less
+      bootloader='pygrub'.
 
     [ Nico Boehr ]
     + Add support for LVM thin provisioning.

@@ -20,20 +20,7 @@
 {
   if ( $pygrub )
   {
-    my $pygrub_bin = '';
-    foreach my $pygrub_path (reverse glob('/usr/lib/xen-default/bin/pygrub
-                                           /usr/lib/xen-*/bin/pygrub
-                                           /usr/*bin/pygrub
-                                           /usr/local/bin/pygrub')) {
-      if (-x $pygrub_path) {
-        $pygrub_bin = $pygrub_path;
-        last;
-      }
-    }
-
-    die "pygrub not found" unless $pygrub_bin;
-
-    $OUT .= "bootloader = '$pygrub_bin'\n";
+    $OUT .= "bootloader = 'pygrub'\n";
   }
 }
 vcpus       = '{$vcpus}'

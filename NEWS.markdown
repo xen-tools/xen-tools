@@ -16,6 +16,8 @@ Bug Fixes
 * Minor documentation fixes.
 * Eliminate progress reporting which is useless in logs. (Yuri Sakhno,
   GH #42)
+* Drop pygrub path detection from xm.tmpl, Xen prefers a path-less
+  bootloader='pygrub'.
 
 Distribution Releases Changes
 -----------------------------
