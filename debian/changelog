@@ -56,6 +56,8 @@ xen-tools (4.8-1) UNRELEASED; urgency=medium
     xen-tools package also on older Debian or Ubuntu releases.
   * Suggest grub-xen-host despite the proper support for it is not
     finished.
+  * Add a note about "vsyscall=emulate" and older Linux distributions to
+    debian/NEWS. Thanks to James Clarke and Jason Crain for the hint!
 
   [ Jelmer Vernooĳ ]
   * Trim trailing whitespace from debian/changelog. (GH #54)

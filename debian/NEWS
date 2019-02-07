@@ -1,3 +1,18 @@
+xen-tools (4.8-1) unstable; urgency=medium
+
+  For security reasons (avoid risk to circumvent ASLR), recent
+  kernels have disabled the vsyscall mapping. Unfortunately older
+  distributions don't run and hence can't be bootstrapped without it.
+
+  To enable trapping and enabling emulate calls into the fixed
+  vsyscall address mapping and hence to run and bootstrap older Linux
+  distributions in a chroot (as xen-tools does), you need to add
+  "vsyscall=emulate" to the kernel commandline, e.g. by adding it to
+  GRUB_CMDLINE_LINUX_DEFAULT in /etc/default/grub, then running
+  "update-grub" afterwards and finally reboot.
+
+ -- Axel Beckert <abe@debian.org>  Thu, 07 Feb 2019 17:40:03 +0100
+
 xen-tools (4.4~beta1-1) unstable; urgency=low
 
   * Exported environment variables no more contain dashes ("-"). Dashes in

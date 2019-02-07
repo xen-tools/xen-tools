@@ -55,6 +55,10 @@ Bugs to fix and features to add for 5.0
     `xen-create-image` first. Which probably both would be a good
     idea.
 
+* Maybe check for `vsyscall=emulate` in `GRUB_CMDLINE_LINUX_DEFAULT`
+  in `/etc/default/grub` if trying to install an affected Linux
+  distribution.
+
 Stuff from Steve's TODO list / Generic TODOs
 --------------------------------------------
 

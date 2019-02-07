@@ -130,6 +130,19 @@ users via a login shell you can have a look at the (currently
 unmaintained) [xen-shell](https://xen-tools.org/software/xen-shell/)
 project.
 
+### Caveats
+
+For security reasons (avoid risk to circumvent ASLR), recent kernels
+have disabled the `vsyscall` mapping. Unfortunately older
+distributions don't run and hence can't be bootstrapped without it.
+
+To enable trapping and enabling emulate calls into the fixed
+vsyscall address mapping and hence to run and bootstrap older Linux
+distributions in a chroot (as xen-tools does), you need to add
+`vsyscall=emulate` to the kernel commandline, e.g. by adding it to
+`GRUB_CMDLINE_LINUX_DEFAULT` in `/etc/default/grub`, then running
+`update-grub` afterwards and finally reboot.
+
 
 Installation
 ------------
