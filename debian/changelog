@@ -18,6 +18,7 @@ xen-tools (4.8-1) UNRELEASED; urgency=medium
     + Change all occurrences of httpredir.debian.org to deb.debian.org
       except those for the debian-archive. The latter now point to
       archive.debian.org directly.
+    + Set Ubuntu fallback suite to the latest LTS, i.e. 18.04 Bionic.
 
     [ Nico Boehr ]
     + Add support for LVM thin provisioning.

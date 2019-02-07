@@ -27,6 +27,7 @@ Distribution Releases Changes
 * Preliminary support for Ubuntu 19.04 Disco Dingo
 * Knows about code name for Debian 12 (Bookworm).
 * Considers Ubuntu Yakkety, Zesty and Artful being EoL.
+* Set Ubuntu fallback suite to the latest LTS, i.e. 18.04 Bionic.
 
 Other Changes
 -------------
