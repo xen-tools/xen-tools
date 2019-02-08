@@ -260,7 +260,7 @@ test case would be a useful bonus.
 
 ### Known/Open Issues
 
-* [xen-tools Issue Tracker at GitHub](https://github.com/xen-tools/xen-tools/issues/new)
+* [xen-tools Issue Tracker at GitHub](https://github.com/xen-tools/xen-tools/issues)
 * [Mailing list archives of the xen-tools mailing lists](https://xen-tools.org/software/xen-tools/lists.html)
 * [TODO file in the source code](https://github.com/xen-tools/xen-tools/blob/master/TODO.markdown)
 * [xen-tools in the Debian Bug Tracking System](https://bugs.debian.org/xen-tools)
