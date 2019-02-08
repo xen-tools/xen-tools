@@ -31,11 +31,11 @@ known to work reliably, i.e.:
 
 ### Debian
 
-* Sarge 3.1 (i386 and DomU only)
-* Etch 4.0 (Dom0 no more tested)
-* Lenny 5.0 (Dom0 no more tested)
-* Squeeze 6.0 (Dom0 no more tested)
-* Wheezy 7 (Dom0 no more tested)
+* Sarge 3.1 (i386 and DomU only) [¹](#1)
+* Etch 4.0 (Dom0 no more tested) [¹](#1)
+* Lenny 5.0 (Dom0 no more tested) [¹](#1)
+* Squeeze 6.0 (Dom0 no more tested) [¹](#1)
+* Wheezy 7 (Dom0 no more tested) [¹](#1)
 * Jessie 8
 * Stretch 9
 * Buster 10 (under development)
@@ -47,19 +47,19 @@ known to work reliably, i.e.:
 
 (only DomUs tested)
 
-* Dapper Drake 6.06 (LTS) [¹](#1)
-* Edgy Eft 6.10 [¹](#1)
-* Feisty Fawn 7.04
-* Gutsy Gibbon 7.10
-* Hardy Heron 8.04 (LTS, see [Installing Ubuntu 8.04 as DomU][2])
-* Interpid Ibex 8.10
-* Jaunty Jackaplope 9.04
-* Karmic Koala 9.10
-* Lucid Lynx 10.04 (LTS)
-* Maverick Meerkat 10.10
-* Natty Narwhal 11.04
-* Oneiric Ocelot 11.10
-* Precise Pangolin 12.04 (LTS)
+* Dapper Drake 6.06 (LTS) [¹](#1)[²](#2)
+* Edgy Eft 6.10 [¹](#1)[²](#2)
+* Feisty Fawn 7.04 [¹](#1)
+* Gutsy Gibbon 7.10 [¹](#1)
+* Hardy Heron 8.04 (LTS, see [Installing Ubuntu 8.04 as DomU][2]) [¹](#1)
+* Interpid Ibex 8.10 [¹](#1)
+* Jaunty Jackaplope 9.04 [¹](#1)
+* Karmic Koala 9.10 [¹](#1)
+* Lucid Lynx 10.04 (LTS) [¹](#1)
+* Maverick Meerkat 10.10 [¹](#1)
+* Natty Narwhal 11.04 [¹](#1)
+* Oneiric Ocelot 11.10 [¹](#1)
+* Precise Pangolin 12.04 (LTS) [¹](#1)
 * Quantal Quetzal 12.10
 * Raring Ringtail 13.04
 * Saucy Salamander 13.10
@@ -77,7 +77,15 @@ known to work reliably, i.e.:
 
 ### Footnotes
 
-<dl compact="compact"><dt><a id="1" name="1">¹</a></dt><dd>
+<dl compact="compact">
+
+<dt><a id="1" name="1">¹</a></dt><dd>
+
+Installation with `xen-create-image` and updating with
+`xen-update-image` might fail with newer kernels/distributions without
+`vsyscall=emulate` on the kernel commandline.
+
+</dd><dt><a id="2" name="2">²</a></dt><dd>
 
 At least between debootstrap version 1.0.37
 and 1.0.93 (including) these distributions needs editing of
