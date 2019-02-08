@@ -47,8 +47,8 @@ known to work reliably, i.e.:
 
 (only DomUs tested)
 
-* Dapper Drake 6.06 (LTS) [¹](#1)[²](#2)
-* Edgy Eft 6.10 [¹](#1)[²](#2)
+* Dapper Drake 6.06 (LTS) [¹](#1) [²](#2)
+* Edgy Eft 6.10 [¹](#1) [²](#2)
 * Feisty Fawn 7.04 [¹](#1)
 * Gutsy Gibbon 7.10 [¹](#1)
 * Hardy Heron 8.04 (LTS, see [Installing Ubuntu 8.04 as DomU][2]) [¹](#1)
