@@ -6,7 +6,7 @@ New Features
 
 * Support for ZFS volumes (by Marc Bigler, GH #50)
 * Support for LVM thin provisioning (by Nico Boehr, GH #47)
-* Support for really random MAC addresses upon every xen-create-image
+* Support for really random MAC addresses upon every `xen-create-image`
   invocation by using the new option `--randommac`. (by Pietro Stäheli,
   closes Debian bug report #855703)
 * `distributions.conf` now supports arbitrary keyring files in
@@ -18,8 +18,8 @@ Bug Fixes
 * Minor documentation fixes.
 * Eliminate progress reporting which is useless in logs. (Yuri Sakhno,
   GH #42)
-* Drop pygrub path detection from xm.tmpl, Xen prefers a path-less
-  bootloader='pygrub'.
+* Drop `pygrub` path detection from `xm.tmpl`, Xen prefers a path-less
+  `bootloader='pygrub'`.
 
 Distribution Releases Changes
 -----------------------------
@@ -39,8 +39,8 @@ Other Changes
 * Change all occurrences of `httpredir.debian.org` to
   `deb.debian.org` except those for the `debian-archive`. The latter
   now point to `archive.debian.org` directly.
-* Many improvements for the release-testing script.
-* Only run xen-toolstack helper script if both, xm and xl are
+* Many improvements for the `release-testing` script.
+* Only run `xen-toolstack` helper script if both, `xm` and `xl` are
   present. Avoids warning about deprecated helper script.
 
 
