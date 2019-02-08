@@ -81,7 +81,7 @@ known to work reliably, i.e.:
 
 At least between debootstrap version 1.0.37
 and 1.0.93 (including) these distributions needs editing of
-`/usr/share/debootstrap/scripts/edgy` , see [#659360][1].
+`/usr/share/debootstrap/scripts/edgy`, see [#659360][1].
 
 </dd></dl>
 
