@@ -1314,9 +1314,13 @@ sub setupDefaultOptions
                     $CONFIG{ 'mirror_'.$debdist } = $MIRROR{$dist.'_archive'} or
                         die $dist.'_archive not defined in /etc/xen-tools/mirrors.conf';
                     my $removed_keys = "/usr/share/keyrings/$dist-archive-removed-keys.gpg";
-                    if ($debdistinfo !~ /default-keyring/ and -s $removed_keys) {
+                    if ($debdistinfo =~ /(\S*\.gpg)($|\s)/ and -s "/usr/share/keyrings/${1}") {
+                        $CONFIG{ 'keyring_'.$debdist } = "/usr/share/keyrings/${1}";
+                    } elsif ($debdistinfo !~ /default-keyring/ and -s $removed_keys) {
                         $CONFIG{ 'keyring_'.$debdist } = $removed_keys;
                     }
+                } elsif ($debdistinfo =~ /(\S*\.gpg)($|\s)/ and -s "/usr/share/keyrings/${1}") {
+                    $CONFIG{ 'keyring_'.$debdist } = "/usr/share/keyrings/${1}";
                 } else {
                     $CONFIG{ 'mirror_'.$debdist } = $MIRROR{$dist} or
                         die $dist.' not defined in /etc/xen-tools/mirrors.conf';
