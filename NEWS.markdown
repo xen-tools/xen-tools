@@ -9,8 +9,8 @@ New Features
 * Support for really random MAC addresses upon every xen-create-image
   invocation by using the new option `--randommac`. (by Pietro Stäheli,
   closes Debian bug report #855703)
-* distributions.conf now supports arbitrary keyring files in
-  /usr/share/keyrings/. (Needed for some EoL Ubuntu releases.)
+* `distributions.conf` now supports arbitrary keyring files in
+   `/usr/share/keyrings/`. (Needed for some EoL Ubuntu releases.)
 
 Bug Fixes
 ---------
