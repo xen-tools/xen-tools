@@ -129,7 +129,7 @@ sub xenRunning ($$)
     my $running = 0;
 
     unless ($CONFIG->{'xm'}) {
-        warn "Couldn't determine Xen toolstack, skipping check for running DomUs."
+        warn "Couldn't determine Xen toolstack, skipping check for running DomUs.\n"
             unless $ENV{AS_INSTALLED_TESTING};
         return 0;
     }
