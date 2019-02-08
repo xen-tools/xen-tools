@@ -11,6 +11,8 @@ New Features
   closes Debian bug report #855703)
 * `distributions.conf` now supports arbitrary keyring files in
    `/usr/share/keyrings/`. (Needed for some EoL Ubuntu releases.)
+* Support for netplan.io network configuration as used in recent
+  Ubuntu releases. (Hook by Arno and Peter, GH #51)
 
 Bug Fixes
 ---------
