@@ -35,7 +35,7 @@ known to work reliably, i.e.:
 * Etch 4.0 (Dom0 no more tested)
 * Lenny 5.0 (Dom0 no more tested)
 * Squeeze 6.0 (Dom0 no more tested)
-* Wheezy 7
+* Wheezy 7 (Dom0 no more tested)
 * Jessie 8
 * Stretch 9
 * Buster 10 (under development)
@@ -260,11 +260,15 @@ test case would be a useful bonus.
 
 ### Known/Open Issues
 
+You can check the following ressources for known or open issues:
+
 * [xen-tools Issue Tracker at GitHub](https://github.com/xen-tools/xen-tools/issues)
+  (primary upstream bug tracker)
 * [Mailing list archives of the xen-tools mailing lists](https://xen-tools.org/software/xen-tools/lists.html)
+  (might contain, loose, non-formal bug reports)
 * [TODO file in the source code](https://github.com/xen-tools/xen-tools/blob/master/TODO.markdown)
 * [xen-tools in the Debian Bug Tracking System](https://bugs.debian.org/xen-tools)
 * [xen-tools in Ubuntu's Launchpad](https://bugs.launchpad.net/ubuntu/+source/xen-tools)
 
--- 
+—
 The Xen-Tools Developer Team
