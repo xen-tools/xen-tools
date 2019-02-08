@@ -142,7 +142,7 @@ project.
 
 ### Caveats
 
-For security reasons (avoid risk to circumvent ASLR), recent kernels
+For security reasons (avoid risk to circumvent [ASLR][3]), recent kernels
 have disabled the `vsyscall` mapping. Unfortunately older
 distributions don't run and hence can't be bootstrapped without it.
 
@@ -152,6 +152,9 @@ distributions in a chroot (as xen-tools does), you need to add
 `vsyscall=emulate` to the kernel commandline, e.g. by adding it to
 `GRUB_CMDLINE_LINUX_DEFAULT` in `/etc/default/grub`, then running
 `update-grub` afterwards and finally reboot.
+
+[3]: https://en.wikipedia.org/wiki/Address_space_layout_randomization
+     "Address Space Layout Randomization"
 
 
 Installation
