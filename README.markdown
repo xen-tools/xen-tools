@@ -77,7 +77,7 @@ known to work reliably, i.e.:
 
 ### Footnotes
 
-<dl><dt><a id="1" name="1">¹</a></dt><dd>
+<dl compact="compact"><dt><a id="1" name="1">¹</a></dt><dd>
 
 At least between debootstrap version 1.0.37
 and 1.0.93 (including) these distributions needs editing of
