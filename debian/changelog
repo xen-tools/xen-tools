@@ -60,6 +60,7 @@ xen-tools (4.8-1) UNRELEASED; urgency=medium
     finished.
   * Add a note about "vsyscall=emulate" and older Linux distributions to
     debian/NEWS. Thanks to James Clarke and Jason Crain for the hint!
+  * Add a DEP-12 debian/upstream/metadata file.
 
   [ Jelmer Vernooĳ ]
   * Trim trailing whitespace from debian/changelog. (GH #54)

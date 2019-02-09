@@ -1,0 +1,12 @@
+%YAML 1.1
+---
+# https://wiki.debian.org/UpstreamMetadata
+Bug-Database: https://github.com/xen-tools/xen-tools/issues
+Bug-Submit: https://github.com/xen-tools/xen-tools/issues/new
+Changelog: https://github.com/xen-tools/xen-tools/blob/master/NEWS.markdown
+Contact: mailto:xen-tools-discuss@xen-tools.org
+Security-Contact: mailto:abe@debian.org
+Name: Xen-Tools
+Homepage: https://xen-tools.org/
+Repository: https://github.com/xen-tools/xen-tools.git
+Repository-Browse: https://github.com/xen-tools/xen-tools
