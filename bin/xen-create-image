@@ -3224,12 +3224,11 @@ sub createLVMBits
         # The commands to create the volume.
         #
         my $disk_cmd =
-          "lvcreate $CONFIG{'lvm'} ".
-          ($lvm_needs_yes ? '--yes' : '').
-          ' '.
+          "lvcreate ".
+          ($lvm_needs_yes ? '--yes ' : '').
           ($CONFIG{ 'lvm_thin' } ?
            "-T $CONFIG{'lvm'}/$CONFIG{'lvm_thin'} -V" :
-           '-L').
+           "$CONFIG{'lvm'} -L").
           " $partition->{'size'} -n $disk";
 
         #
