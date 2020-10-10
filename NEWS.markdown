@@ -1,3 +1,19 @@
+xen-tools 4.8.1 (UNRELEASED)
+===================================
+
+Distribution Releases Changes
+-----------------------------
+
+* Support for
+  + Ubuntu 19.10 Eoan Ermine (EoL)
+  + Ubuntu 20.04 Focal Fossa (LTS)
+* Preliminary support for Ubuntu 20.10 Groovy Gorilla
+* Declare the following releases as EoL:
+  + Ubuntu 17.10 Artful Aardvark (Was missing in previous release
+    despite mentioned in this file.)
+  + Ubuntu 18.10 Cosmic Cuttlefish
+  + Ubuntu 19.04 Disco Dingo
+
 xen-tools 4.8 (released 9 Feb 2019)
 ===================================
 
