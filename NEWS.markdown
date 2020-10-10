@@ -1,6 +1,11 @@
 xen-tools 4.8.1 (UNRELEASED)
 ===================================
 
+Bug Fixes
+---------
+
+* Fix typo in release name of the future Debian 12 release.
+
 Distribution Releases Changes
 -----------------------------
 
@@ -13,6 +18,7 @@ Distribution Releases Changes
     despite mentioned in this file.)
   + Ubuntu 18.10 Cosmic Cuttlefish
   + Ubuntu 19.04 Disco Dingo
+
 
 xen-tools 4.8 (released 9 Feb 2019)
 ===================================
