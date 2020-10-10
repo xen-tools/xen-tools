@@ -18,6 +18,8 @@ Distribution Releases Changes
     despite mentioned in this file.)
   + Ubuntu 18.10 Cosmic Cuttlefish
   + Ubuntu 19.04 Disco Dingo
+  + Debian 7 Wheezy
+  + Debian 8 Jessie
 
 
 xen-tools 4.8 (released 9 Feb 2019)
