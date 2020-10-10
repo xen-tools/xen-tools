@@ -4,6 +4,8 @@ xen-tools (4.8.1~dev-1) UNRELEASED; urgency=medium
   * Recommend deboootstrap ≥ 1.0.110~ for working bootstrapping of Ubuntu
     6.06 Dapper and 6.10 Edgy (see #659360) and for support of Ubuntu
     17.10 Artful, 18.04 LTS Bionic, 18.10 Cosmic, and 19.04 Disco.
+  * Fix non-RFC-conforming four-letter day of week abbreviations in
+    ancient debian/changelog entries.
 
  -- Axel Beckert <abe@debian.org>  Tue, 16 Apr 2019 13:23:25 +0200
 
@@ -998,7 +1000,7 @@ xen-tools (2.1-2) unstable; urgency=high
     - Fixed several typos in the configuration file, and scripts.
       (Closes: #375382)
 
- -- Steve Kemp <skx@debian.org>  Thur, 29 Jun 2006 10:31:23 +0000
+ -- Steve Kemp <skx@debian.org>  Thu, 29 Jun 2006 10:31:23 +0000
 
 xen-tools (2.1-1) unstable; urgency=high
 
@@ -1012,7 +1014,7 @@ xen-tools (2.1-1) unstable; urgency=high
   * Urgency set to high primarily because of the failure to create
     swap devices.
 
- -- Steve Kemp <skx@debian.org>  Thur, 23 Jun 2006 10:08:32 +0000
+ -- Steve Kemp <skx@debian.org>  Thu, 23 Jun 2006 10:08:32 +0000
 
 xen-tools (2.0-1) unstable; urgency=low
 
