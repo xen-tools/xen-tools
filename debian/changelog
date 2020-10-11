@@ -5,6 +5,8 @@ xen-tools (4.8.1~dev-1) UNRELEASED; urgency=medium
     + Update list of Ubuntu releases.
     + distributions.conf: Fix typo in release name of future Debian 12
       release (bookwork → bookworm).
+    + Actually install xen-resize-guest tool. (Thanks lintian for the
+      spare-manual-page warning!)
 
   * Recommend deboootstrap ≥ 1.0.110~ for working bootstrapping of Ubuntu
     6.06 Dapper and 6.10 Edgy (see #659360) and for support of Ubuntu

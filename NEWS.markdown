@@ -5,6 +5,9 @@ Bug Fixes
 ---------
 
 * Fix typo in release name of the future Debian 12 release.
+* Makefile: Actually install xen-resize-guest tool. (Thanks to
+  Debian's Lintian tool reporting that there is a man-page without
+  binary installed!)
 
 Distribution Releases Changes
 -----------------------------

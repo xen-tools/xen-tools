@@ -132,6 +132,7 @@ install-bin:
 	cp bin/xen-delete-image     ${prefix}/usr/bin
 	cp bin/xen-list-images      ${prefix}/usr/bin
 	cp bin/xen-update-image     ${prefix}/usr/bin
+	cp bin/xen-resize-guest     ${prefix}/usr/bin
 	cp bin/xt-guess-suite-and-mirror ${prefix}/usr/bin
 	chmod 755 ${prefix}/usr/bin/xen-create-image
 	chmod 755 ${prefix}/usr/bin/xen-create-nfs
