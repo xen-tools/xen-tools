@@ -20,7 +20,7 @@ install:
    - export RELEASE_TESTING=1 AUTOMATED_TESTING=1 AUTHOR_TESTING=1 HARNESS_OPTIONS=j10:c HARNESS_TIMER=1 PATH=bin:${PERLBREW_PATH}:${PATH}
 
 script:
-   - make test
+   - make test-verbose
 
 after_success:
    - prove --exec 'env PERL5OPT=-MDevel::Cover=-ignore_re,^(t/|/usr) perl' t/*.t

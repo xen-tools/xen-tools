@@ -292,13 +292,15 @@ orig-tar-gz: tarball
 #
 #  Run the test suite.
 #
+test-verbose : VERBOSE = -v
+test-verbose: test
 test: non-author-test author-test
 
 non-author-test: update-modules
-	prove --shuffle t/
+	prove $(VERBOSE) --shuffle t/
 
 author-test:
-	prove xt/
+	prove $(VERBOSE) xt/
 
 
 #

@@ -24,6 +24,11 @@ Distribution Releases Changes
   + Debian 7 Wheezy
   + Debian 8 Jessie
 
+Other Changes
+-------------
+
+* Support running tests verbosely with Make target "test-verbose".
+
 
 xen-tools 4.8 (released 9 Feb 2019)
 ===================================
