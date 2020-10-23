@@ -228,6 +228,7 @@ install-hooks:
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s artful.d eoan.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s artful.d focal.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s artful.d groovy.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s artful.d hirsute.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s artful.d devel.d
 	cp hooks/common.sh ${prefix}/usr/share/xen-tools
 	cp -r hooks/common ${prefix}/usr/share/xen-tools
