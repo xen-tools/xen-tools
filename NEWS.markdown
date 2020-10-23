@@ -28,6 +28,7 @@ Other Changes
 -------------
 
 * Support running tests verbosely with Make target "test-verbose".
+* Drop "dont-test" flag from bullseye.
 
 
 xen-tools 4.8 (released 9 Feb 2019)
