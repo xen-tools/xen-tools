@@ -9,10 +9,8 @@
 
 use strict;
 use File::Find;
+use Test::More;
 use Test::NoTabs;
-
-# Check all Perl files
-all_perl_files_ok();
 
 #
 #  Find all the files beneath the current directory,
@@ -54,25 +52,36 @@ sub checkFile
     my $isShell        = 0;
     my $isPerl        = 0;
 
-    # Read the file.
-    open( INPUT, "<", $file );
-    foreach my $line ( <INPUT> )
-    {
-        if ( ( $line =~ /\/bin\/sh/ ) ||
-             ( $line =~ /\/bin\/bash/ ) )
+
+    if ( $file =~ /\.sh$/ ) {
+        $isShell = 1;
+    } elsif ( $file =~ /\.(pl|pm|t)$/ ) {
+        $isPerl = 1;
+    } else {
+
+        # Read the file.
+        open( INPUT, "<", $file );
+        foreach my $line ( <INPUT> )
         {
-            $isShell = 1;
-            last;
+            if ( ( $line =~ /^#! *\/bin\/sh/ ) ||
+                 ( $line =~ /^#! *\/bin\/bash/ ) )
+            {
+                $isShell = 1;
+                last;
+            }
+            if ( $line =~ /^#!.*\bperl\b/ )
+            {
+                $isPerl = 1;
+                last;
+            }
         }
-        if ( $line =~ /\/usr\/bin\/perl/ )
-        {
-            last;
-        }
+        close( INPUT );
     }
-    close( INPUT );
 
     #
     #  Run check if it is a shell file.
     #
-    notabs_ok( $file ) if $isShell;
+    notabs_ok( $file ) if $isShell or $isPerl;
 }
+
+done_testing();
