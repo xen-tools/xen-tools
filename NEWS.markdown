@@ -16,7 +16,9 @@ Distribution Releases Changes
   + Ubuntu 19.10 Eoan Ermine (EoL)
   + Ubuntu 20.04 Focal Fossa (LTS)
   + Ubuntu 20.10 Groovy Gorilla
-* Preliminary support for Ubuntu 21.04 Hirsute Hippo
+* Preliminary support for
+  + Debian 13 Trixie
+  + Ubuntu 21.04 Hirsute Hippo
 * Declare the following releases as EoL:
   + Ubuntu 17.10 Artful Aardvark (Was missing in previous release
     despite mentioned in this file.)

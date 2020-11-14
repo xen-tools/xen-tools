@@ -185,6 +185,7 @@ install-hooks:
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d buster.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d bullseye.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d bookworm.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d trixie.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d sid.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d unstable.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d testing.d
