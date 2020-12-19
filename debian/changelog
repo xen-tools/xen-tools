@@ -7,6 +7,9 @@ xen-tools (4.8.1~dev-1) UNRELEASED; urgency=medium
       release (bookwork → bookworm).
     + Actually install xen-resize-guest tool. (Thanks lintian for the
       spare-manual-page warning!)
+    + Distinguish between those Debian releases using $dist/updates for
+      security updates and those who use $dist-security. Thanks Paul Wise!
+      (Closes: #972749)
 
   * Recommend deboootstrap ≥ 1.0.110~ for working bootstrapping of Ubuntu
     6.06 Dapper and 6.10 Edgy (see #659360) and for support of Ubuntu

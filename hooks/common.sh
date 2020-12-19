@@ -422,3 +422,24 @@ installGentooPackage ()
     logMessage "NOTE: Not doing anything - this is a stub - FIXME"
 
 }
+
+
+
+
+#
+#  findDistributionConf path
+#
+# returns either a relative or an absolut path to distributions.conf
+#
+findDistributionsConf ()
+{
+    prefix=$1
+
+    if [ -f etc/distributions.conf ]; then
+        echo etc/distributions.conf
+    elif [ -f ${prefix:-}/etc/xen-tools/distributions.conf ]; then
+        echo ${prefix:-}/etc/xen-tools/distributions.conf
+    elif [ -f /etc/xen-tools/distributions.conf ]; then
+        echo /etc/xen-tools/distributions.conf
+    fi
+}

@@ -20,6 +20,7 @@ else
     . ./hooks/common.sh
 fi
 
+distributions_conf=$(findDistributionsConf $prefix)
 
 #
 # Log our start
@@ -66,7 +67,9 @@ if ( test "${dist}" "!=" "sid" && test "${dist}" "!=" "unstable" && \
      test -e /etc/apt/sources.list && \
      grep ^deb.*security -r /etc/apt/sources.list /etc/apt/sources.list.d >/dev/null 2>/dev/null ) ; then
 
-    cat <<E_O_APT >> ${prefix}/etc/apt/sources.list
+    if fgrep "${dist}" $distributions_conf | fgrep -q security-subdir; then
+
+        cat <<E_O_APT >> ${prefix}/etc/apt/sources.list
 # 
 #  Security updates
 # 
@@ -74,13 +77,25 @@ deb     http://security.debian.org/ ${dist}/updates  main contrib non-free
 deb-src http://security.debian.org/ ${dist}/updates  main contrib non-free
 E_O_APT
 
+    else
+
+        cat <<E_O_APT >> ${prefix}/etc/apt/sources.list
+# 
+#  Security updates
+# 
+deb     http://security.debian.org/ ${dist}-security  main contrib non-free
+deb-src http://security.debian.org/ ${dist}-security  main contrib non-free
+E_O_APT
+
+    fi
+
 else
     cat <<E_O_APT >> ${prefix}/etc/apt/sources.list
 # 
 #  Security updates - Uncomment to enable.
 # 
-# deb     http://security.debian.org/ ${dist}/updates  main contrib non-free
-# deb-src http://security.debian.org/ ${dist}/updates  main contrib non-free
+# deb     http://security.debian.org/ ${dist}-security  main contrib non-free
+# deb-src http://security.debian.org/ ${dist}-security  main contrib non-free
 E_O_APT
 
 fi
