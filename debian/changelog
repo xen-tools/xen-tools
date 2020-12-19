@@ -18,8 +18,9 @@ xen-tools (4.8.1~dev-1) UNRELEASED; urgency=medium
     17.10 Artful, 18.04 LTS Bionic, 18.10 Cosmic, and 19.04 Disco.
   * Fix non-RFC-conforming four-letter day of week abbreviations in
     ancient debian/changelog entries.
+  * Bump debian/watch version from 3 to 4. Thanks Lintian!
 
- -- Axel Beckert <abe@debian.org>  Tue, 16 Apr 2019 13:23:25 +0200
+ -- Axel Beckert <abe@debian.org>  Sat, 19 Dec 2020 08:02:50 +0100
 
 xen-tools (4.8-1) unstable; urgency=medium
 
