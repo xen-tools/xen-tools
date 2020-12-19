@@ -2,7 +2,7 @@ Source: xen-tools
 Section: utils
 Priority: optional
 Maintainer: Axel Beckert <abe@debian.org>
-Build-Depends: debhelper (>= 10~),
+Build-Depends: debhelper-compat (= 13),
                devscripts,
                git,
                libdata-validate-domain-perl,
