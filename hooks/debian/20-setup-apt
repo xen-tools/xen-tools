@@ -70,9 +70,9 @@ if ( test "${dist}" "!=" "sid" && test "${dist}" "!=" "unstable" && \
     if fgrep "${dist}" $distributions_conf | fgrep -q security-subdir; then
 
         cat <<E_O_APT >> ${prefix}/etc/apt/sources.list
-# 
-#  Security updates
-# 
+#
+# Security updates
+#
 deb     http://security.debian.org/ ${dist}/updates  main contrib non-free
 deb-src http://security.debian.org/ ${dist}/updates  main contrib non-free
 E_O_APT
@@ -80,9 +80,9 @@ E_O_APT
     else
 
         cat <<E_O_APT >> ${prefix}/etc/apt/sources.list
-# 
-#  Security updates
-# 
+#
+# Security updates
+#
 deb     http://security.debian.org/ ${dist}-security  main contrib non-free
 deb-src http://security.debian.org/ ${dist}-security  main contrib non-free
 E_O_APT
@@ -91,9 +91,9 @@ E_O_APT
 
 else
     cat <<E_O_APT >> ${prefix}/etc/apt/sources.list
-# 
-#  Security updates - Uncomment to enable.
-# 
+#
+# Security updates - Uncomment to enable.
+#
 # deb     http://security.debian.org/ ${dist}-security  main contrib non-free
 # deb-src http://security.debian.org/ ${dist}-security  main contrib non-free
 E_O_APT
