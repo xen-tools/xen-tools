@@ -12,6 +12,8 @@ xen-tools (4.8.1~dev-1) UNRELEASED; urgency=medium
       (Closes: #972749)
     + Fix support for lvm_thin. Thanks to Andreas Sundstrom for the bug
       report and patch! (Closes: #942244)
+    + Mount /proc and /dev before calling update-grub. Thanks to Brandon
+      Bradley for the bug report and patch. (Closes: #815021)
 
   * Recommend deboootstrap ≥ 1.0.110~ for working bootstrapping of Ubuntu
     6.06 Dapper and 6.10 Edgy (see #659360) and for support of Ubuntu
