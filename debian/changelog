@@ -21,6 +21,7 @@ xen-tools (4.8.1~dev-1) UNRELEASED; urgency=medium
   * Bump debian/watch version from 3 to 4. Thanks Lintian!
   * Bump debhelper compatibility level to 13.
     + Build-depend on "debhelper-compat (= 13)" to replace debian/compat.
+  * Declare compliance with Debian Policy 4.5.1. (No changes required.)
 
  -- Axel Beckert <abe@debian.org>  Sat, 19 Dec 2020 08:02:50 +0100
 
