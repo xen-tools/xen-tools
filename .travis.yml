@@ -21,6 +21,9 @@ matrix:
     - perl: blead
 
 before_install:
+   - mount
+   - ls -ld /tmp/
+   - echo "#!/bin/sh\necho Scripts in /tmp work.\n" > /tmp/test-executable-in-tmp && chmod -c 755 /tmp/test-executable-in-tmp && /tmp/test-executable-in-tmp
    - sudo apt-get update
    - sudo apt-get install devscripts dpkg-dev lsb-release
    - eval $(curl https://travis-perl.github.io/init)
