@@ -89,7 +89,20 @@ E_O_APT
     fi
 
 else
-    cat <<E_O_APT >> ${prefix}/etc/apt/sources.list
+
+    if echo "${dist}" | egrep -q '\b(sarge|etch|lenny|squeeze|wheezyjessie|stretch|buster)\b'; then
+
+        cat <<E_O_APT >> ${prefix}/etc/apt/sources.list
+#
+# Security updates - Uncomment to enable.
+#
+# deb     http://security.debian.org/ ${dist}/updates  main contrib non-free
+# deb-src http://security.debian.org/ ${dist}/updates  main contrib non-free
+E_O_APT
+
+    else
+
+        cat <<E_O_APT >> ${prefix}/etc/apt/sources.list
 #
 # Security updates - Uncomment to enable.
 #
@@ -97,6 +110,7 @@ else
 # deb-src http://security.debian.org/ ${dist}-security  main contrib non-free
 E_O_APT
 
+    fi
 fi
     
 #
