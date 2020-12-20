@@ -59,6 +59,12 @@ Bugs to fix and features to add for 5.0
   in `/etc/default/grub` if trying to install an affected Linux
   distribution.
 
+* Drop checking the host's sources.list to decide upon including the
+  security repo or not.
+
+* Make a difference wrt. to the security repo for EoL releases.
+
+
 Stuff from Steve's TODO list / Generic TODOs
 --------------------------------------------
 
