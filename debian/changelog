@@ -10,6 +10,7 @@ xen-tools (4.8.1~dev-1) UNRELEASED; urgency=medium
     + Distinguish between those Debian releases using $dist/updates for
       security updates and those who use $dist-security. Thanks Paul Wise!
       (Closes: #972749)
+      - Add test for this; needs libtest-file-contents-perl as build-dep.
     + Fix support for lvm_thin. Thanks to Andreas Sundstrom for the bug
       report and patch! (Closes: #942244)
     + Mount /proc and /dev before calling update-grub. Thanks to Brandon
