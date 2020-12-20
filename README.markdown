@@ -39,9 +39,10 @@ known to work reliably, i.e.:
 * Wheezy 7 (Dom0 no more tested) [¹](#1)
 * Jessie 8
 * Stretch 9
-* Buster 10 (under development)
-* Bullseye 11 (knows about this future release name)
+* Buster 10
+* Bullseye 11 (under development)
 * Bookworm 12 (knows about this future release name)
+* Trixie 13 (knows about this future release name)
 * Sid (always under development; works at least at the moment of writing :-)
 
 ### Ubuntu
@@ -74,7 +75,11 @@ known to work reliably, i.e.:
 * Artful Aardvark 17.10
 * Bionic Beaver 18.04 (LTS)
 * Cosmic Cuttlefish 18.10
-* Disco Dingo 19.04 (under development)
+* Disco Dingo 19.04
+* Eoan Ermine 19.10
+* Focal Fossa 20.04 (LTS)
+* Groovy Gorilla 20.10
+* Hirsute Hippo 21.04 (under development)
 
 ### Footnotes
 
