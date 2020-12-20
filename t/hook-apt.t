@@ -55,7 +55,13 @@ sub testHook
     File::Copy::cp( $hook, $tmphook );
 
     ok( -e "$tmphook", "hook exists in temporary directory [$dist]" );
-    ok( -x "$tmphook", "hook is executable in temporary directory [$dist]" );
+    # File::Copy in Perl 5.10 does not copy permissions, so let's fix
+    # it there and check for it elsewhere.
+    if ($] < 5.011) {
+        chmod(0755, $tmphook);
+    } else {
+        ok( -x "$tmphook", "hook is executable in temporary directory [$dist]" );
+    }
 
     no warnings qw(qw);
     is(system(qw(sed -e s/chroot/#chroot/ -i), $tmphook) >> 8, 0,
