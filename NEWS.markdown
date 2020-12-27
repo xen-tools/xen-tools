@@ -24,6 +24,9 @@ Bug Fixes
 * Mount `/proc` and `/dev` before calling update-grub. Thanks to
   Brandon Bradley for the bug report and patch. (Closes Debian bug
   report #815021.)
+* Fix storage commandline options not overriding `xen-tools.conf`
+  settings also in `xen-update-image` and `xen-delete-image`. (GH #57;
+  patch by Volker Janzen @frootmig)
 
 Distribution Releases Changes
 -----------------------------
