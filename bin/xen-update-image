@@ -344,14 +344,51 @@ sub parseCommandLineArguments
     my $MANUAL  = 0;
     my $VERSION = 0;
 
+    #
+    # We record the installation method here because we want
+    # to ensure that we allow the method supplied upon the command line
+    # to overwrite the one we might have ready read from the configuration
+    # file.
+    #
+    my %install;
+    $install{ 'evms' }      = undef;
+    $install{ 'dir' }       = undef;
+    $install{ 'lvm' }       = undef;
+
     #  Parse options.
     #
-    GetOptions( "dir=s",  \$CONFIG{ 'dir' },
-                "lvm=s",   \$CONFIG{ 'lvm' },
-                "evms=s", \$CONFIG{ 'evms' },
+    GetOptions( "dir=s",  \$install{ 'dir' },
+                "lvm=s",   \$install{ 'lvm' },
+                "evms=s", \$install{ 'evms' },
                 "help",    \$HELP,
                 "manual", \$MANUAL,
                 "version", \$VERSION );
+
+    #
+    #  Now make ensure that the command line setting of '--lvm', '--evms', '--zpool'
+    # and '--dir=x' override anything specified in the configuration file.
+    #
+    if ( $install{ 'dir' } )
+    {
+        $CONFIG{ 'dir' }       = $install{ 'dir' };
+        $CONFIG{ 'evms' }      = undef;
+        $CONFIG{ 'lvm' }       = undef;
+        $CONFIG{ 'zpool' }     = undef;
+    }
+    if ( $install{ 'evms' } )
+    {
+        $CONFIG{ 'dir' }       = undef;
+        $CONFIG{ 'evms' }      = $install{ 'evms' };
+        $CONFIG{ 'lvm' }       = undef;
+        $CONFIG{ 'zpool' }     = undef;
+    }
+    if ( $install{ 'lvm' } )
+    {
+        $CONFIG{ 'dir' }       = undef;
+        $CONFIG{ 'evms' }      = undef;
+        $CONFIG{ 'lvm' }       = $install{ 'lvm' };
+        $CONFIG{ 'zpool' }     = undef;
+    }
 
     pod2usage(1) if $HELP;
     pod2usage( -verbose => 2 ) if $MANUAL;
