@@ -72,11 +72,13 @@ setupStaticNetworking ()
     if [ -n "${netmask}" ]; then
       cidr="$(mask2cdr ${netmask})"
     fi
-    # Volker
+    # p2p code by Volker Janzen
     gate="      gateway4: ${gateway}";
     point='';
     if [ -n "${p2p}" ]; then
-       # For a p2p setup the gateway4 keyword is replaced by the following on-link default route, when it matches the gateway4.
+       # For a p2p setup the gateway4 keyword is replaced by the
+       # following on-link default route, when it matches the
+       # gateway4.
        if [ "${p2p}" = "${gateway}" ]; then
           gate="      routes:
       - to: 0.0.0.0/0
