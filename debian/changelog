@@ -1,6 +1,6 @@
-xen-tools (4.8.1~dev-1) UNRELEASED; urgency=medium
+xen-tools (4.9~dev-1) UNRELEASED; urgency=medium
 
-  * New upstream bugfix release.
+  * New upstream bugfix and minor feature release.
     + Mark Debian 7 Wheezy and 8 Jessie as EoL.
     + Update list of Ubuntu and Debian releases.
     + distributions.conf: Fix typo in release name of future Debian 12

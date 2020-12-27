@@ -1,5 +1,13 @@
-xen-tools 4.8.1 (UNRELEASED)
-===================================
+xen-tools 4.9 (UNRELEASED)
+==========================
+
+New Features
+------------
+
+* Add Debian install rules for arm64. (GH #62; PR by Ian McLinden
+  @ianmclinden)
+* Add netplan p2p support for Ubuntu. (GH #58; PR by Volker Janzen
+  @frootmig)
 
 Bug Fixes
 ---------
@@ -8,6 +16,14 @@ Bug Fixes
 * Makefile: Actually install xen-resize-guest tool. (Thanks to
   Debian's Lintian tool reporting that there is a man-page without
   binary installed!)
+* Distinguish between those Debian releases using `$dist/updates` for
+  security updates and those who use `$dist-security`. Thanks to Paul
+  Wise for the bug report. (Closes Debian bug report #972749.)
+* Fix support for `lvm_thin`. Thanks to Andreas Sundstrom for the bug
+  report and patch! (Closes Debian bug report #942244.)
+* Mount `/proc` and `/dev` before calling update-grub. Thanks to
+  Brandon Bradley for the bug report and patch. (Closes Debian bug
+  report #815021.)
 
 Distribution Releases Changes
 -----------------------------

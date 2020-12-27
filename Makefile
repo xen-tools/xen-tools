@@ -14,7 +14,7 @@
 #
 TMPDIR     ?= /tmp
 DIST_PREFIX = ${TMPDIR}
-VERSION     = 4.8.1~dev
+VERSION     = 4.9~dev
 DEBVERSION  = $(shell echo $(VERSION)|sed 's/\(rc\|pre\|beta\|alpha\)/~\1/')
 BASE        = xen-tools
 VCS         = git
