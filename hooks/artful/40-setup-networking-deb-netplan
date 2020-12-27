@@ -72,6 +72,23 @@ setupStaticNetworking ()
     if [ -n "${netmask}" ]; then
       cidr="$(mask2cdr ${netmask})"
     fi
+    # Volker
+    gate="      gateway4: ${gateway}";
+    point='';
+    if [ -n "${p2p}" ]; then
+       # For a p2p setup the gateway4 keyword is replaced by the following on-link default route, when it matches the gateway4.
+       if [ "${p2p}" = "${gateway}" ]; then
+          gate="      routes:
+      - to: 0.0.0.0/0
+        via: ${p2p}
+        on-link: true"
+       else
+          gate="${gate}
+      routes:
+      - to: ${p2p}
+        on-link: true"
+       fi
+    fi
 
     #
     # We have a static IP address
@@ -84,7 +101,7 @@ network:
   ethernets:
     eth0:
       addresses: [${ip1}/${cidr}]
-      gateway4: ${gateway} 
+${gate}
       nameservers:
           addresses: [${nameserver}]
 E_O_STATIC
