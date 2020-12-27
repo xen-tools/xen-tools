@@ -26,6 +26,8 @@ xen-tools (4.8.1~dev-1) UNRELEASED; urgency=medium
   * Bump debhelper compatibility level to 13.
     + Build-depend on "debhelper-compat (= 13)" to replace debian/compat.
   * Declare compliance with Debian Policy 4.5.1. (No changes required.)
+  * Adapt distributions.conf defaults to the fact that Debian Unstable
+    still ships Ubuntu keyrings as of 2018, see #978438.
 
  -- Axel Beckert <abe@debian.org>  Sat, 19 Dec 2020 08:02:50 +0100
 
