@@ -16,9 +16,10 @@ xen-tools (4.8.1~dev-1) UNRELEASED; urgency=medium
     + Mount /proc and /dev before calling update-grub. Thanks to Brandon
       Bradley for the bug report and patch. (Closes: #815021)
 
-  * Recommend deboootstrap ≥ 1.0.110~ for working bootstrapping of Ubuntu
+  * Recommend deboootstrap ≥ 1.0.117~ for working bootstrapping of Ubuntu
     6.06 Dapper and 6.10 Edgy (see #659360) and for support of Ubuntu
-    17.10 Artful, 18.04 LTS Bionic, 18.10 Cosmic, and 19.04 Disco.
+    17.10 Artful, 18.04 LTS Bionic, 18.10 Cosmic, 19.04 Disco, 19.10 Eoan,
+    and 20.04 Focal.
   * Fix non-RFC-conforming four-letter day of week abbreviations in
     ancient debian/changelog entries.
   * Bump debian/watch version from 3 to 4. Thanks Lintian!
