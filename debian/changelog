@@ -20,6 +20,8 @@ xen-tools (4.9~dev-1) UNRELEASED; urgency=medium
     + Fix storage commandline options not overriding xen-tools.conf
       settings also in xen-update-image and xen-delete-image. (GH #57;
       patch by Volker Janzen)
+    + partitions/sample-server: Change options=sync to
+      options=defaults. (GL MR !1; pach by Wolfgang Karall)
 
   * Recommend deboootstrap ≥ 1.0.117~ for working bootstrapping of Ubuntu
     6.06 Dapper and 6.10 Edgy (see #659360) and for support of Ubuntu

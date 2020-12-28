@@ -51,6 +51,8 @@ Other Changes
 
 * Support running tests verbosely with Make target "test-verbose".
 * Drop "dont-test" flag from bullseye.
+* partitions/sample-server: Change options=sync to
+  options=defaults. (GL MR !1; pach by Wolfgang Karall)
 
 
 xen-tools 4.8 (released 9 Feb 2019)
