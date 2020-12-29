@@ -167,7 +167,7 @@ my %CONFIG;
 #
 # Release number.
 #
-my $RELEASE = '4.9~dev';
+my $RELEASE = '4.9';
 
 
 #

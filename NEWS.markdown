@@ -1,5 +1,5 @@
-xen-tools 4.9 (UNRELEASED)
-==========================
+xen-tools 4.9 (released 29 Dec 2020)
+====================================
 
 New Features
 ------------

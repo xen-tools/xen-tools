@@ -1,4 +1,4 @@
-xen-tools (4.9~dev-1) UNRELEASED; urgency=medium
+xen-tools (4.9-1) unstable; urgency=medium
 
   * New upstream bugfix and minor feature release.
     + Mark Debian 7 Wheezy and 8 Jessie as EoL.
@@ -37,7 +37,7 @@ xen-tools (4.9~dev-1) UNRELEASED; urgency=medium
   * Adapt distributions.conf defaults to the fact that Debian Unstable
     still ships Ubuntu keyrings as of 2018, see #978438.
 
- -- Axel Beckert <abe@debian.org>  Sat, 19 Dec 2020 08:02:50 +0100
+ -- Axel Beckert <abe@debian.org>  Tue, 29 Dec 2020 12:19:51 +0100
 
 xen-tools (4.8-1) unstable; urgency=medium
 
