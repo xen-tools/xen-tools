@@ -45,6 +45,7 @@ Distribution Releases Changes
   + Ubuntu 19.04 Disco Dingo
   + Debian 7 Wheezy
   + Debian 8 Jessie
+* Start all Debian releases since Stretch (9) with pygrub by default.
 
 Other Changes
 -------------

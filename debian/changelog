@@ -22,6 +22,7 @@ xen-tools (4.9~dev-1) UNRELEASED; urgency=medium
       patch by Volker Janzen)
     + partitions/sample-server: Change options=sync to
       options=defaults. (GL MR !1; patch by Wolfgang Karall)
+    + Start all Debian releases since Stretch (9) with pygrub by default.
 
   * Recommend deboootstrap ≥ 1.0.117~ for working bootstrapping of Ubuntu
     6.06 Dapper and 6.10 Edgy (see #659360) and for support of Ubuntu
