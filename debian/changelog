@@ -1,4 +1,4 @@
-xen-tools (4.9.1-1) UNRELEASED; urgency=medium
+xen-tools (4.9.1-1) unstable; urgency=medium
 
   * New upstream bugfix release.
     + Fix missing "|" in regex in Debian's 20-setup-apt. (Closes: #997668)
@@ -7,7 +7,7 @@ xen-tools (4.9.1-1) UNRELEASED; urgency=medium
     + Also create an .orig.tar.xz signature upon "make release".
   * Declare compliance with Debian Policy 4.6.0. (No changes needed.)
 
- -- Axel Beckert <abe@debian.org>  Sun, 24 Oct 2021 02:02:49 +0200
+ -- Axel Beckert <abe@debian.org>  Sun, 24 Oct 2021 05:38:40 +0200
 
 xen-tools (4.9-1) unstable; urgency=medium
 
