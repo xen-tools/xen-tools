@@ -1,3 +1,20 @@
+xen-tools 4.9.1 (released 24 Oct 2021)
+======================================
+
+Bug Fixes
+---------
+
+* Fix missing `|` in regex in `hooks/debian/20-setup-apt`. (Closes
+  Debian bug report #997668)
+
+Other Changes
+-------------
+
+* Make test `xt/gitignore.t` work with git releases ≥ 2.32.0.
+* Travis CI: stop testing again Perl `dev`. It seems to no more exist.
+* Also create an `.orig.tar.xz` signature upon `make release`.
+
+
 xen-tools 4.9 (released 29 Dec 2020)
 ====================================
 
