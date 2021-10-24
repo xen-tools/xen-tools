@@ -23,7 +23,7 @@ if (which('git') and -d '.git') {
 use_ok( 'Git' );
 
 # First, check that no tracked files are ignored
-my $cmd = Git::command_output_pipe('ls-files', '--others', '--ignored', '--exclude-standard');
+my $cmd = Git::command_output_pipe('ls-files', '--cached', '--ignored', '--exclude-standard');
 my $output;
 while (<$cmd>) { $output .= "--> $_" }
 close $cmd;
