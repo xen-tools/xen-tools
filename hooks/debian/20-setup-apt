@@ -66,7 +66,7 @@ if ( test "${dist}" "!=" "sid" && test "${dist}" "!=" "unstable" && \
      test -e /etc/apt/sources.list && \
      grep ^deb.*security -r /etc/apt/sources.list /etc/apt/sources.list.d >/dev/null 2>/dev/null ) ; then
 
-    if echo "${dist}" | egrep -q '\b(sarge|etch|lenny|squeeze|wheezyjessie|stretch|buster)\b'; then
+    if echo "${dist}" | egrep -q '\b(sarge|etch|lenny|squeeze|wheezy|jessie|stretch|buster)\b'; then
 
         cat <<E_O_APT >> ${prefix}/etc/apt/sources.list
 #
