@@ -4,6 +4,7 @@ xen-tools (4.9.1-1) UNRELEASED; urgency=medium
     + Fix missing "|" in regex in Debian's 20-setup-apt. (Closes: #997668)
     + Make test xt/gitignore.t work with git releases ≥ 2.32.0.
     + Travis CI: stop testing again Perl "dev". It no more seems to exist.
+    + Also create an .orig.tar.xz signature upon "make release".
   * Declare compliance with Debian Policy 4.6.0. (No changes needed.)
 
  -- Axel Beckert <abe@debian.org>  Sun, 24 Oct 2021 02:02:49 +0200

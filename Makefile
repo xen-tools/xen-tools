@@ -270,6 +270,7 @@ manpages:
 #
 release: orig-tar-gz
 	gpg --armour --detach-sign ../$(BASE)-$(VERSION).tar.gz
+	cp -p ../$(BASE)-$(VERSION).tar.gz.asc ../$(BASE)_$(DEBVERSION).orig.tar.gz.asc
 	git tag -s -m "Release as $(VERSION)" "release-$(VERSION)"
 
 tarball: test tidy fixup-perms update-version update-modules clean changelog
