@@ -316,9 +316,9 @@ author-test:
 #
 tidy:
 	if [ -x /usr/bin/perltidy ]; then \
-	for i in bin/*-*[^~]; do \
+	for i in $(ls -1 bin/*-* | grep -vE '~$'); do \
 		echo "tidying $$i"; \
-		perltidy  $$i \
+		perltidy $$i \
 	; done \
 	; fi
 

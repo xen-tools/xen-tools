@@ -2,6 +2,7 @@ xen-tools (4.9.2-1) UNRELEASED; urgency=medium
 
   * New upstream maintenance release
     + Update list of Ubuntu and Debian releases.
+    + Fix bashism in release testing target "tidy".
   * Update upstream signing key to update its expiry date.
 
  -- Axel Beckert <abe@debian.org>  Mon, 09 Jan 2023 04:42:57 +0100
