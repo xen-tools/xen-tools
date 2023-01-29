@@ -17,7 +17,8 @@ Build-Depends: debhelper-compat (= 13),
                libtest-notabs-perl,
                libtest-pod-coverage-perl,
                libtest-pod-perl,
-               libtext-template-perl
+               libtext-template-perl,
+               mount
 Standards-Version: 4.6.0
 Homepage: https://xen-tools.org/software/xen-tools
 Vcs-Browser: https://github.com/xen-tools/xen-tools
@@ -36,6 +37,7 @@ Depends: debootstrap | cdebootstrap,
          libsort-versions-perl,
          libterm-ui-perl | perl (<< 5.17.0),
          libtext-template-perl,
+         mount,
          openssh-client,
          perl,
          ${misc:Depends},
