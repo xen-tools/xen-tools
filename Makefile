@@ -14,7 +14,7 @@
 #
 TMPDIR     ?= /tmp
 DIST_PREFIX = ${TMPDIR}
-VERSION     = 4.9.1
+VERSION     = 4.9.2
 DEBVERSION  = $(shell echo $(VERSION)|sed 's/\(rc\|pre\|beta\|alpha\)/~\1/')
 BASE        = xen-tools
 VCS         = git
@@ -186,6 +186,7 @@ install-hooks:
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d bullseye.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d bookworm.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d trixie.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d forky.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d sid.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d unstable.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s debian.d testing.d
@@ -230,6 +231,10 @@ install-hooks:
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s artful.d focal.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s artful.d groovy.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s artful.d hirsute.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s artful.d impish.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s artful.d jammy.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s artful.d kinetic.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s artful.d lunar.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s artful.d devel.d
 	cp hooks/common.sh ${prefix}/usr/share/xen-tools
 	cp -r hooks/common ${prefix}/usr/share/xen-tools
