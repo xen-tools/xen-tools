@@ -62,7 +62,7 @@ my %fallback_mirror = ( Debian => 'http://deb.debian.org/debian/',
 # have aliases like stable or testing, so we take the nearest LTS
 # release which is 10.04 at the time of writing.
 my %fallback_suite = ( Debian => 'stable',
-                       Ubuntu => 'bionic' );
+                       Ubuntu => 'jammy' );
 
 # Where to look for the sources.list to parse
 my @sources_list_files = ( '/etc/apt/sources.list',

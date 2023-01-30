@@ -3,6 +3,7 @@ xen-tools (4.9.2-1) UNRELEASED; urgency=medium
   * New upstream maintenance release
     + Update list of Ubuntu and Debian releases.
     + Fix bashism in release testing target "tidy".
+    + Bump default ubuntu fallback release to 22.04 Jammy LTS.
   * Update upstream signing key to update its expiry date.
   * Depend and Build-Depend on non-(build-)essential package
     mount. (Closes: #1027383)
