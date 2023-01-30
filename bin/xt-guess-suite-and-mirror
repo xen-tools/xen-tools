@@ -9,8 +9,9 @@ mirror for DomUs on Debian and Ubuntu Dom0s.
 
 =head1 SYNOPSIS
 
-  --suite       Show suite
-  --mirror      Show mirror
+  --suite                Show suite
+  --mirror               Show mirror
+  --sources-list=<file>  Parse this file as sources.list
 
   Shows both if no parameter is given.
 
@@ -92,11 +93,13 @@ my $want_suite   = 0;
 my $want_version = 0;
 my $want_help    = 0;
 my $want_manual  = 0;
+my $sources_list = undef;
 
 my $result = GetOptions( 'mirror|m' => \$want_mirror,
                          'suite|s'  => \$want_suite,
                          'version'  => \$want_version,
                          'manual'   => \$want_manual,
+                         'sources-list=s' => \$sources_list,
                          'help'     => \$want_help );
 
 if ($want_help) {
@@ -105,6 +108,10 @@ if ($want_help) {
 
 if ($want_manual) {
     pod2usage( -verbose => 2 );
+}
+
+if (defined $sources_list) {
+    @sources_list_files = ($sources_list);
 }
 
 all_sources_list_files: foreach my $sources_list_file (@sources_list_files) {
