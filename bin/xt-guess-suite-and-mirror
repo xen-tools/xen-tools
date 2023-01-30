@@ -143,7 +143,7 @@ all_sources_list_files: foreach my $sources_list_file (@sources_list_files) {
             # Skip updates, backports, volatile or security mirror.
             next if $source_components[2] !~ /^[a-z]+$/;
 
-            if ($source_components[1] =~ m(/debian/?$|/ubuntu/?$)) {
+            if ($source_components[1] =~ m(/debian/?$|/ubuntu(-ports)?/?$)) {
                 # Seems a typical mirror. Let's use that one
 
                 $mirror = $source_components[1];

@@ -6,6 +6,8 @@ xen-tools (4.9.2-1) UNRELEASED; urgency=medium
     + xt-guess-suite-and-mirror:
       - Bump default ubuntu fallback release to 22.04 Jammy LTS.
       - Add new option --sources-list to pass a file to parse.
+      - Add support for Ubuntu Ports APT repos. (Closes: #1023667,
+        LP: #1995969)
   * Update upstream signing key to update its expiry date.
   * Depend and Build-Depend on non-(build-)essential package
     mount. (Closes: #1027383)
