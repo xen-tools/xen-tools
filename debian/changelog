@@ -4,7 +4,7 @@ xen-tools (4.9.2-1) UNRELEASED; urgency=medium
     + Update list of Ubuntu and Debian releases.
     + Fix bashism in release testing target "tidy".
     + xt-guess-suite-and-mirror:
-      - Bump default ubuntu fallback release to 22.04 Jammy LTS.
+      - Bump default Ubuntu fallback release to 22.04 Jammy LTS.
       - Add new option --sources-list to pass a file to parse.
       - Add support for Ubuntu Ports APT repos. (Closes: #1023667,
         LP: #1995969)
