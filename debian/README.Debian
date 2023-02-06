@@ -1,8 +1,23 @@
 README
 ======
 
+Bootstrapping Wheezy, Precise or older Releases
+-----------------------------------------------
+
+For security reasons (avoid risk to circumvent ASLR), recent kernels
+have disabled the vsyscall mapping. Unfortunately older distributions
+don't run and hence can't be bootstrapped without it.
+
+To enable trapping and enabling emulate calls into the fixed vsyscall
+address mapping and hence to run and bootstrap older Linux
+distributions in a chroot (as xen-tools does), you need to add
+"vsyscall=emulate" to the kernel commandline, e.g. by adding it to
+GRUB_CMDLINE_LINUX_DEFAULT in /etc/default/grub, then running
+"update-grub" afterwards and finally reboot.
+
+
 Kernel/initrd guessing
-======================
+----------------------
 
 In xen-tools 3.4-1 a new feature was added which allows using 
 backtick expressions in xen-tools.conf.
@@ -15,7 +30,7 @@ changing/adding the following options in xen-tools.conf:
 
 
 Upgrading Existing kernel/initrd paths
---------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The kernel, and initrd, settings which are included in the xen-tools
 (either statically or dynamically with `uname -r`) are only applied

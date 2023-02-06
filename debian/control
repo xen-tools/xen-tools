@@ -114,3 +114,9 @@ Description: Tools to manage Xen virtual servers
    * Ubuntu 23.04 Lunar Lobster (preliminary support, under development)
    * CentOS 5
    * CentOS 6
+ .
+ Note: Debian 7 Wheezy, Ubuntu 12.04 Precise Pangolin and any older
+ release requires the Linux kernel of the hosting machine to be booted
+ with "vsyscall=emulate" on the kernel commandline (i.e. in the
+ bootloader) to bootstrap these releases with xen-tools. See
+ /usr/share/doc/xen-tools/README.Debian for details.

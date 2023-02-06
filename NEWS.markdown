@@ -18,6 +18,11 @@ Distribution Releases Changes
   + Bump default Ubuntu fallback release to 22.04 Jammy LTS.
   + Add support for Ubuntu Ports APT repos (i.e. Xen on ARM64).
 
+Documentation
+-------------
+
+* Place hints on "vsyscall=emulate" on more visible places.
+
 Other Changes
 -------------
 

@@ -89,8 +89,9 @@ known to work reliably, i.e.:
 <dt><a id="1" name="1">¹</a></dt><dd>
 
 Installation with `xen-create-image` and updating with
-`xen-update-image` might fail with newer kernels/distributions as Dom0
-without `vsyscall=emulate` on the kernel commandline.
+`xen-update-image` might fail with newer kernels/distributions running
+on the Dom0 unless they have been booted with `vsyscall=emulate` on
+the kernel commandline.
 
 </dd><dt><a id="2" name="2">²</a></dt><dd>
 

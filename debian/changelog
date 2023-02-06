@@ -11,6 +11,8 @@ xen-tools (4.9.2-1) UNRELEASED; urgency=medium
   * Update upstream signing key to update its expiry date.
   * Depend and Build-Depend on non-(build-)essential package
     mount. (Closes: #1027383)
+  * Also mention "vsyscall=emulate" in package description and
+    README.Debian. (Closes: #1028388)
 
  -- Axel Beckert <abe@debian.org>  Mon, 09 Jan 2023 04:42:57 +0100
 
