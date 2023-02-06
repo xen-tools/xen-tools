@@ -40,9 +40,10 @@ known to work reliably, i.e.:
 * Jessie 8
 * Stretch 9
 * Buster 10
-* Bullseye 11 (under development)
-* Bookworm 12 (knows about this future release name)
+* Bullseye 11
+* Bookworm 12 (under development)
 * Trixie 13 (knows about this future release name)
+* Forky 14 (knows about this future release name)
 * Sid (always under development; works at least at the moment of writing :-)
 
 ### Ubuntu

@@ -1,3 +1,29 @@
+xen-tools 4.9.2 (released 06 Feb 2023)
+======================================
+
+Distribution Releases Changes
+-----------------------------
+
+* Support for
+  + Ubuntu 21.10 Impish Indri (EoL)
+  + Ubuntu 22.04 Jammy Jellyfish (LTS)
+  + Ubuntu 22.10 Kinetic Kudu
+* Preliminary support for
+  + Debian 14 Forky
+  + Ubuntu 23.04 Lunar Lobste
+* Declare the following releases as EoL:
+  + Ubuntu 20.10 Groovy Gorilla
+  + Ubuntu 21.04 Hirsute Hippo
+* xt-guess-suite-and-mirror:
+  + Bump default Ubuntu fallback release to 22.04 Jammy LTS.
+  + Add support for Ubuntu Ports APT repos (i.e. Xen on ARM64).
+
+Other Changes
+-------------
+
+* Fix bashism in release testing target "tidy".
+
+
 xen-tools 4.9.1 (released 24 Oct 2021)
 ======================================
 

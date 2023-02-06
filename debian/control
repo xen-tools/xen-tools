@@ -72,9 +72,10 @@ Description: Tools to manage Xen virtual servers
    * Debian 8 Jessie
    * Debian 9 Stretch
    * Debian 10 Buster
-   * Debian 11 Bullseye (under development)
-   * Debian 12 Bookworm (knows about this future release name)
+   * Debian 11 Bullseye
+   * Debian 12 Bookworm (under development)
    * Debian 13 Trixie (knows about this future release name)
+   * Debian 14 Forky (knows about this future release name)
    * Debian Sid (Unstable)
    * Ubuntu 6.06 Dapper Drake (LTS)
    * Ubuntu 6.10 Edgy Eft
@@ -106,6 +107,10 @@ Description: Tools to manage Xen virtual servers
    * Ubuntu 19.10 Eoan Ermine
    * Ubuntu 20.04 Focal Fossa (LTS)
    * Ubuntu 20.10 Groovy Gorilla
-   * Ubuntu 21.04 Hirsute Hippo (preliminary support, under development)
+   * Ubuntu 21.04 Hirsute Hippo
+   * Ubuntu 21.10 Impish Indri
+   * Ubuntu 22.04 Jammy Jellyfish (LTS)
+   * Ubuntu 22.10 Kinetic Kudu
+   * Ubuntu 23.04 Lunar Lobster (preliminary support, under development)
    * CentOS 5
    * CentOS 6
