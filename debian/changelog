@@ -13,6 +13,7 @@ xen-tools (4.9.2-1) UNRELEASED; urgency=medium
     mount. (Closes: #1027383)
   * Also mention "vsyscall=emulate" in package description and
     README.Debian. (Closes: #1028388)
+  * Declare compliance with Debian Policy 4.6.2. No changes needed.
 
  -- Axel Beckert <abe@debian.org>  Mon, 09 Jan 2023 04:42:57 +0100
 
