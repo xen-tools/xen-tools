@@ -12,6 +12,7 @@ Distribution Releases Changes
   + Debian 14 Forky
   + Ubuntu 23.04 Lunar Lobste
 * Declare the following releases as EoL:
+  + Ubuntu 12.04 Precise Pangolin (LTS)
   + Ubuntu 20.10 Groovy Gorilla
   + Ubuntu 21.04 Hirsute Hippo
 * xt-guess-suite-and-mirror:
