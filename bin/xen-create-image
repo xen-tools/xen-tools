@@ -1495,7 +1495,7 @@ sub checkOption
             message => "must be a number between 1 and 1024.\n",
         }, # Arno
         guestType => {
-            check   => qr/^pv|pvh|hvm$/,    # man xl.cfg
+            check   => qr/^(pv|pvh|hvm)$/,    # man xl.cfg
             message => "must be 'pv', 'pvh' or 'hvm'.\n",
         },
     );
