@@ -446,7 +446,7 @@ Create a Xen configuration file in so that xm/xl can start the new domain.
   memory     = 128Mb    # Memory size
   maxmem     = 512Mb    # Memory size
   swap       = 128Mb    # Swap size
-  fs         = ext3     # use EXT3 filesystems
+  fs         = ext4     # use EXT4 filesystems
   dist       = stable   # Default distribution to install.
 
   #
@@ -1335,7 +1335,7 @@ sub setupDefaultOptions
     $CONFIG{ 'arch' }          =
         which('dpkg') ? `dpkg --print-architecture` : '';
     chomp($CONFIG{ 'arch' });
-    $CONFIG{ 'fs' }            = 'ext3';
+    $CONFIG{ 'fs' }            = 'ext4';
     $CONFIG{ 'force' }         = 0;
     $CONFIG{ 'install' }       = 1;
     $CONFIG{ 'hooks' }         = 1;

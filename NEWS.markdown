@@ -20,6 +20,8 @@ Other Changes
 -------------
 
 * Switch to pure Semantic Versioning including trailing zeros.
+* Sync examples for "fs" and "fs" defaults in xen-create-image with
+  (effective) values in xen-tools.conf: ext3 → ext4
 
 
 xen-tools 4.9.2 (released 06 Feb 2023)
