@@ -51,7 +51,7 @@ Recommends: debian-archive-keyring,
             ubuntu-keyring | ubuntu-archive-keyring,
             xen-hypervisor,
             xen-utils
-Suggests: btrfs-progs | btrfs-tools,
+Suggests: btrfs-progs,
           cfengine2,
           grub-xen-host,
           reiserfsprogs,
