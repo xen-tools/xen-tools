@@ -874,7 +874,7 @@ my $MOUNT_POINT = undef;
 #
 # Release number.
 #
-my $RELEASE = '4.9.3';
+my $RELEASE = '4.10.0';
 
 
 #

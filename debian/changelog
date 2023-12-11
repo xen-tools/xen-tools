@@ -1,7 +1,9 @@
-xen-tools (4.9.3-1) UNRELEASED; urgency=medium
+xen-tools (4.10.0-1) UNRELEASED; urgency=medium
 
-  * New upstream maintenance release
+  * New upstream feature release
     + Update list of Ubuntu and Debian releases.
+    + Support for specifying guest type. (initial patch by Arno Bakker;
+      GH #64)
   * Drop alternative Suggests on btrfs-tools. (Closes: #932122; Security
     support for Xen in Debian 8 has long ended.)
 

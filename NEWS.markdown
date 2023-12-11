@@ -1,3 +1,27 @@
+xen-tools 4.10.0 (TODO: UNRELEASED)
+===================================
+
+New Features
+------------
+
+* Add support for specifying guest type. (GH #64; PR by Arno Bakker
+  @arno481)
+
+Distribution Releases Changes
+-----------------------------
+
+* Preliminary support for
+  + Ubuntu 23.10 Mantic Minotaur
+* Declare the following releases as EoL:
+  + Ubuntu 22.10 Kinetic Kudu
+* Debian Trixie is now Testing → remove dont-test flag
+
+Other Changes
+-------------
+
+* Switch to pure Semantic Versioning including trailing zeros.
+
+
 xen-tools 4.9.2 (released 06 Feb 2023)
 ======================================
 
@@ -10,7 +34,7 @@ Distribution Releases Changes
   + Ubuntu 22.10 Kinetic Kudu
 * Preliminary support for
   + Debian 14 Forky
-  + Ubuntu 23.04 Lunar Lobste
+  + Ubuntu 23.04 Lunar Lobster
 * Declare the following releases as EoL:
   + Ubuntu 12.04 Precise Pangolin (LTS)
   + Ubuntu 20.10 Groovy Gorilla

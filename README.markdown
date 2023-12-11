@@ -251,8 +251,8 @@ Version Numbering Scheme
 
 Since release 4.4, the version numbering scheme of xen-tools tries to
 comply with the [Semantic Versioning](http://semver.org/)
-specification, with the only exception that trailing zeroes are
-omitted.
+specification, with the only exception that in releases before 4.10
+trailing zeroes were omitted.
 
 Between the releases 3.9 and 4.4, the version numbering scheme
 followed roughly the same ideas, but less strict.
