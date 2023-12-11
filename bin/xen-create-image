@@ -1536,7 +1536,7 @@ sub checkOption
         hash_method   => 'hashMethod',
         apt_proxy     => 'uri',
         vlan          => 'vlan',
-	type          => 'guestType', # Arno
+        type          => 'guestType', # Arno
     );
 
     # If given option does not exists in optionsTypes,
@@ -1694,7 +1694,7 @@ sub parseCommandLineArguments
             "dontformat",   \&checkOption,
             "lvm_thin=s",   \$CONFIG{ 'lvm_thin' },
             "type:s",       \&checkOption, # Arno
-	    
+
             # Help options
             "debug!",     \$CONFIG{ 'debug' },
             "help",       \$HELP,
