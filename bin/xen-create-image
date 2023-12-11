@@ -216,7 +216,7 @@ and EVMS EXAMPLE.
                 have instead of the default value of "1".
 
    --type=type  Specify the VM type to use for the new guest.
-                Valid choices are 'pv' (default), 'pvh', or 'pvh'.
+                Valid choices are 'pv' (default), 'pvh', or 'hvm'.
 
 
   Installation options:
