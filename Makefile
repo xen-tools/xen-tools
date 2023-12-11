@@ -14,7 +14,7 @@
 #
 TMPDIR     ?= /tmp
 DIST_PREFIX = ${TMPDIR}
-VERSION     = 4.9.2
+VERSION     = 4.9.3
 DEBVERSION  = $(shell echo $(VERSION)|sed 's/\(rc\|pre\|beta\|alpha\)/~\1/')
 BASE        = xen-tools
 VCS         = git
@@ -235,6 +235,7 @@ install-hooks:
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s artful.d jammy.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s artful.d kinetic.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s artful.d lunar.d
+	-cd ${prefix}/usr/share/xen-tools/ && ln -s artful.d mantic.d
 	-cd ${prefix}/usr/share/xen-tools/ && ln -s artful.d devel.d
 	cp hooks/common.sh ${prefix}/usr/share/xen-tools
 	cp -r hooks/common ${prefix}/usr/share/xen-tools
