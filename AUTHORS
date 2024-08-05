@@ -12,9 +12,6 @@ Contributions
 
   Listed alphabetically by surname.
 
-  C.J. Adams-Collier <cjcollier [at] com.gmail>
-   - Added new modular structure to the code.
-
   Nick Anderson  <nick [at] net.anders0n>
    - Better bash completion for xen-create-image.
 
@@ -30,6 +27,9 @@ Contributions
 
   Brian Bennett <bahamat [at] net.digitalelf>
    - Made multiple times given --ip options work
+
+  C.J. Collier <cjac [at] google.com>
+   - Added new modular structure to the code.
 
   Vagrant Cascadian <vagrant [at] org.debian>
    - Less redundant SSH key generation
