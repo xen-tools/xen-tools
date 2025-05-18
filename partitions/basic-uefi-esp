@@ -1,0 +1,11 @@
+[root]
+size=4G
+type=ext4
+mountpoint=/
+options=defaults,errors=remount-ro
+
+[uefi-esp]
+size=500M
+type=esp
+mountpoint=/boot/efi
+options=defaults

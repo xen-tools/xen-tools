@@ -177,7 +177,7 @@ timeout         2
 ## e.g. kopt=root=/dev/hda1 ro
 ##      kopt_2_6_8=root=/dev/hdc1 ro
 ##      kopt_2_6_8_2_686=root=/dev/hdc2 ro
-# kopt=root=/dev/xvda2 ro elevator=noop
+# kopt=root=/dev/xvda ro earlyprintk=xen
 
 ## default grub root device
 ## e.g. groot=(hd0,0)
@@ -239,22 +239,22 @@ timeout         2
 
 title           $DOMU_ISSUE
 root            (hd0,0)
-kernel          /boot/$DOMU_KERNEL root=/dev/xvda2 ro elevator=noop
+kernel          /boot/$DOMU_KERNEL root=/dev/xvda ro earlyprintk=xen
 initrd          /boot/$DOMU_RAMDISK
 
 title           $DOMU_ISSUE (Single-User)
 root            (hd0,0)
-kernel          /boot/$DOMU_KERNEL root=/dev/xvda2 ro single elevator=noop
+kernel          /boot/$DOMU_KERNEL root=/dev/xvda ro single earlyprintk=xen
 initrd          /boot/$DOMU_RAMDISK
 
 title           $DOMU_ISSUE (Default Kernel)
 root            (hd0,0)
-kernel          /vmlinuz root=/dev/xvda2 ro elevator=noop
+kernel          /vmlinuz root=/dev/xvda ro earlyprintk=xen
 initrd          /initrd.img
 
 title           $DOMU_ISSUE (Default Kernel, Single-User)
 root            (hd0,0)
-kernel          /vmlinuz root=/dev/xvda2 ro single elevator=noop
+kernel          /vmlinuz root=/dev/xvda ro single earlyprintk=xen
 initrd          /initrd.img
 
 E_O_MENU

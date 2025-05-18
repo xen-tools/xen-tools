@@ -51,7 +51,7 @@ sub testFile
 
     foreach my $line ( split( /\n/, $output ) )
     {
-        if ( $line =~ /[ \t]*--(?:\(no\))?([a-z-_]+)/ )
+        if ( $line =~ /[ \t]*--(?:\(no\))?([a-z0-9-_]+)/ )
         {
             push @documented, $1 unless( $line =~ /NOP/i );
         }

@@ -197,6 +197,10 @@ _xen_create_image()
             _filedir
             return 0
             ;;
+        --type)
+            COMPREPLY=( $( compgen -W 'pvh pv hvm'  -- "${COMP_WORDS[COMP_CWORD]}" ) )
+            return 0
+            ;;
     esac
 
     if [[ ${cur} == -* ]] || [[ ${prev} == xen-create-image ]]; then

@@ -26,7 +26,7 @@ fi
 
 logMessage Script $0 starting
 
-if [ "${pygrub}" = "1" ]; then
+if [ "x${firmware}" != "x" ] || [ "${pygrub}" = "1" ] || [ "${pvgrub}" = "1"  ]; then
 
 #
 # The type of kernel that we will be installing
@@ -54,19 +54,21 @@ DOMU_KERNEL=$(basename $(ls -1 ${prefix}/boot/vmlinuz* | tail -n 1))
 DOMU_RAMDISK=$(basename $(ls -1 ${prefix}/boot/initrd*|tail -n 1))
 DOMU_ISSUE=$(head -n 1 ${prefix}/etc/issue | awk -F '\' '{ print $1 }' | sed 's/[ \t]*$//')
 
-#
-# Generate a menu.lst for pygrub
-#
 
-generateDebianGrubMenuLst "${prefix}" "$DOMU_ISSUE" "$DOMU_KERNEL" "$DOMU_RAMDISK"
-
+# PVGRUB uses normal methods, but pygrub needs this
+if [ "${pygrub}" = "1" ]; then
+    #
+    # Generate a menu.lst for pygrub
+    #
+    generateDebianGrubMenuLst "${prefix}" "$DOMU_ISSUE" "$DOMU_KERNEL" "$DOMU_RAMDISK"
+fi
 
 else
     logMessage "Package '${linux_kernel_package}' is not available"
 fi
 
 else
-    logMessage pygrub not set, skipping kernel install
+    logMessage bootloader not set, skipping kernel install
 fi # if pygrub
 
 #

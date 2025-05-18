@@ -1,0 +1,153 @@
+#
+# Configuration file for the Xen instance {$hostname}, created
+# by xen-tools {$xen_tools_version} on { scalar localtime }.
+#
+
+#
+#  Kernel + memory size
+#
+{ if ( ( $kernel ) && ( !$pygrub) && ( !$pvgrub) && ( $firmware eq '' or  ($firmware eq 'uefi' and $type eq 'pvh' ) ) )
+  {
+    $OUT .= "kernel = '$kernel'";
+  }
+}
+{ if ( ( $initrd ) && ( !$pygrub) && ( !$pvgrub) && ( $firmware eq '') )
+  {
+    $OUT.= "ramdisk = '$initrd'";
+  }
+}
+{ if ( ( $kernel ) && ( !$pygrub) && ( !$pvgrub) && ( $firmware eq '') )
+  {
+    for ( my $i = $#PARTITIONS; $i >= 0 ; $i-- )
+    {
+      if ( $PARTITIONS[$i]{'mountpoint'} eq '/' )
+      {
+          $OUT .= "cmdline = 'root=/dev/$PARTITIONS[$i]{'vdev'} ro console=".( $serial_device)."'";
+      }
+    }
+  }
+}
+{ if ( $firmware ne '' and $type ne 'pvh'  )
+  {
+    $OUT .= "firmware = 'uefi'\n";
+    if ( $firmware ne 'uefi' )
+    {
+      $OUT .= "system_firmware = '$firmware'\n";
+    }
+    $OUT .= "serial = ['pty']";
+  } elsif ( $pvgrub ) {
+    $OUT .= "kernel = '$pvgrub_path'";
+  } elsif ( $pygrub ) {
+    $OUT .= "bootloader = 'pygrub'";
+  } else { 
+    # this else must be here, or else the template will print a 0
+  }
+}
+vcpus = '{$vcpus}'
+memory = '{$memory}'
+{ if ( $maxmem )
+  {
+    $OUT .= "maxmem = '$maxmem'\n";
+  }
+}
+type = '{$type}'
+
+#
+#  Disk device(s).
+#
+{
+  $OUT .= "disk = [\n";
+  for ( my $i = $#PARTITIONS; $i >= 0 ; $i-- )
+  {
+      if ( $PARTITIONS[$i]{'mountpoint'} eq '/' )
+      {
+          $OUT .= "                  'vdev=$PARTITIONS[$i]{'vdev'}, target=$PARTITIONS[$i]{'image'}',\n";
+      }
+  }
+  for ( my $i = $#PARTITIONS; $i >= 0 ; $i-- )
+  {
+      if ( $PARTITIONS[$i]{'mountpoint'} ne '/' )
+      {
+          $OUT .= "                  'vdev=$PARTITIONS[$i]{'vdev'}, target=$PARTITIONS[$i]{'image'}',\n";
+      }
+  }
+  $OUT .= "              ]\n";
+}
+
+#
+#  Hostname
+#
+name = '{$hostname}'
+
+#
+#  Networking
+#
+{ if ( $dhcp )
+  {
+    $OUT .= "dhcp = 'dhcp'\n";
+
+    # Setup the mac address, if present.
+    my $m = '';
+    if ( $mac )
+    {
+      $m = "mac=$mac"
+    }
+    my $br = '';
+    if ( $bridge )
+    {
+      if ( $mac )
+      {
+        $br = ",bridge=$bridge"
+      }
+      else
+      {
+        $br = "bridge=$bridge"
+      }
+    }
+    $OUT .= "vif = [ '";
+    $OUT .= "$m";
+    $OUT .= "$br";
+    $OUT .= "' ]";
+  }
+  else
+  {
+    #
+    # Setup the mac address, if present.
+    #
+    my $m = '';
+    if ( $mac )
+    {
+      $m = ",mac=$mac"
+    }
+
+    my $vn = '';
+    if ( $vifname )
+    {
+      $vn = ",vifname=$vifname";
+    }
+
+    my $br = '';
+    if ( $bridge )
+    {
+      $br = ",bridge=$bridge"
+    }
+
+    my $vl = '';
+    if ( $vlan )
+    {
+      $vl = ".$vlan"
+    }
+
+    $OUT .= "vif = [ 'ip=$ips";
+    $OUT .= "$m";
+    $OUT .= "$vn";
+    $OUT .= "$br";
+    $OUT .= "' ]";
+  }
+}
+
+{ if ( $admins )
+  {
+    $OUT .= "xen_shell = '$admins'\n";
+  }
+}

@@ -32,7 +32,11 @@ if chroot ${prefix} /usr/bin/apt-cache show module-init-tools >/dev/null 2>/dev/
     if chroot ${prefix} /usr/bin/apt-cache show module-init-tools | fgrep -qi transitional; then
         installDebianPackage ${prefix} kmod
     else
-        installDebianPackage ${prefix} module-init-tools
+        if [ $(chroot ${prefix} /usr/bin/apt-cache show module-init-tools | wc -l) = 0 ]; then
+            installDebianPackage ${prefix} kmod
+        else
+            installDebianPackage ${prefix} module-init-tools
+        fi
     fi
 else
     installDebianPackage ${prefix} kmod

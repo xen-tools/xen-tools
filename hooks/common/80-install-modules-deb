@@ -31,8 +31,8 @@ fi
 #
 logMessage Script $0 starting
 
-if [ "${pygrub}" = "1" ]; then
-    logMessage "pygrub set, skipping module install"
+if [ "x${firmware}" != "x" ] || [ "${pygrub}" = "1" ] || [ "${pvgrub}" = "1" ]; then
+    logMessage "bootloader set, skipping module install"
 else
 #
 #  The name of the package containing the correct modules.

@@ -1,0 +1,105 @@
+#!/bin/sh
+#
+#  Ensure that either modules-init-tools or kmod is setup.
+#
+#  This is most likely required if you're using a custom kernel
+# for your Xen system.  But even if it isn't required it can't
+# really do anything bad; just waste a bit of space.
+
+
+prefix=$1
+
+
+
+#
+#  Source our common functions
+#
+if [ -e /usr/share/xen-tools/common.sh ]; then
+    . /usr/share/xen-tools/common.sh
+else
+    . ./hooks/common.sh
+fi
+
+
+#
+# Log our start
+#
+logMessage Script $0 starting
+
+if [ "x${firmware}" != "x" ] || [ "${pvgrub}" = "1" ]; then
+    grubtarget=xen
+    if [ "x${firmware}" != "x" ]; then
+        grubtarget=efi
+        logMessage "UEFI set, using grub2-efi"
+    else
+        logMessage "grub2 set, using grub2-xen"
+    fi
+
+    mount -o bind /proc ${prefix}/proc
+    mount -o bind /dev ${prefix}/dev
+    mount -o bind /dev/pts ${prefix}/dev/pts
+    mount -o bind /sys ${prefix}/sys
+    #
+    #  Install the grub2 xen binaries
+    #
+    installDebianPackage ${prefix} grub-${grubtarget}
+
+    # PV(H) should always have this set unless using HVM, but either way it's needed for update-grub to not break
+    echo 'GRUB_TERMINAL=console' > ${prefix}/etc/default/grub.d/xen-guest-serial.cfg
+    echo 'GRUB_DISABLE_OS_PROBER=true' > ${prefix}/etc/default/grub.d/xen-guest-disable-prober.cfg
+
+    # Grub2 < 2.12 doesn't like generating in chroots. Patch that change out
+    if grep -q "We can't cope with devices loop-mounted from files here." ${prefix}/etc/grub.d/10_linux; then
+        sed -i 's/*) exit 0 ;;/*) ;;/' ${prefix}/etc/grub.d/10_linux
+    fi
+
+    # set the serial device
+    sed -i 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="console='$serial_device'"/' ${prefix}/etc/default/grub
+    # For reasons unknown, PVH shows systemd status by default, but PVH doesn't.
+    # setting 'systemd.show_status=true quiet' may be handy to normalize them
+
+    # Put the EFI bootloader at EFI/BOOT/BOOTX64.efi so we don't have to worry about OVMF settings. 
+    # Grub-install defaults to EFI/$distro/grubx64.efi without --removable
+    if [ "${grubtarget}" = "efi" ]; then
+        chroot ${prefix} /usr/sbin/grub-install --target=x86_64-efi --removable
+    fi
+
+    echo "Generating grub.cfg, this may cause several errors to be printed if you are using loop devices..."
+    chroot ${prefix} /usr/sbin/update-grub2
+    result=$?
+    umount ${prefix}/sys
+    umount ${prefix}/dev/pts
+    umount ${prefix}/dev
+    umount ${prefix}/proc
+    if [ $result != 0 ]; then
+        exit $result
+    fi
+elif [ "${pygrub}" = "1" ]; then
+    logMessage "pygrub set, using pygrub + grub-legacy"
+
+    #
+    #  Install the grub 0.9x package ("grub-legacy" on Debian, "grub" on Ubuntu)
+    #
+    if chroot ${prefix} /usr/bin/apt-cache show grub-legacy 2>/dev/null | egrep -qi 'GRand Unified Bootloader.*Legacy'; then
+        installDebianPackage ${prefix} grub-legacy
+    else
+        installDebianPackage ${prefix} grub
+    fi
+
+    if [ ! -e ${prefix}/boot/grub/default ]; then
+        echo default > ${prefix}/boot/grub/default
+    fi
+    mount -o bind /proc ${prefix}/proc
+    mount -o bind /dev ${prefix}/dev
+    chroot ${prefix} /usr/sbin/update-grub
+    umount ${prefix}/proc
+    umount ${prefix}/dev
+
+else
+    logMessage "No bootloader set, skipping grub2 and grub-legacy installations"
+fi
+
+#
+#  Log our finish
+#
+logMessage Script $0 finished

@@ -96,7 +96,7 @@ fixup-perms:
 	for i in hooks/*/*-*; do chmod 755 $$i; done
 	chmod 755 hooks/common.sh
 	chmod 644 etc/*.conf
-	chmod 644 etc/xm.tmpl
+	chmod 644 etc/xl.tmpl
 	chmod 644 etc/xm-nfs.tmpl
 	chmod 644 misc/*
 
@@ -110,7 +110,7 @@ install-etc:
 	-mkdir -p ${prefix}/etc/xen-tools/role.d/
 	-mkdir -p ${prefix}/etc/xen-tools/partitions.d/
 	cp etc/*.conf         ${prefix}/etc/xen-tools/
-	cp etc/xm.tmpl        ${prefix}/etc/xen-tools/
+	cp etc/xl.tmpl        ${prefix}/etc/xen-tools/
 	cp etc/xm-nfs.tmpl    ${prefix}/etc/xen-tools/
 	cp partitions/*-*     ${prefix}/etc/xen-tools/partitions.d/
 	-mkdir -p                         ${prefix}/usr/share/bash-completion/completions/
@@ -339,7 +339,7 @@ uninstall:
 	rm -f ${prefix}/etc/xen-tools/xen-tools.conf
 	rm -f ${prefix}/etc/xen-tools/distributions.conf
 	rm -f ${prefix}/etc/xen-tools/mirrors.conf
-	rm -f ${prefix}/etc/xen-tools/xm.tmpl
+	rm -f ${prefix}/etc/xen-tools/xl.tmpl
 	-rm -rf ${prefix}/etc/xen-tools/skel
 	-rmdir ${prefix}/etc/xen-tools/
 	-rm -f ${prefix}/etc/bash_completion.d/xen-tools

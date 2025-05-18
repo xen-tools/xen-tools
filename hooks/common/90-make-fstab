@@ -31,30 +31,6 @@ logMessage Script $0 starting
 
 logMessage Filesystem options are ${options}
 
-#
-# Find the root device.
-#
-#  1.  default to xvda.
-#
-#  2.  If --ide is specified use hda.
-#
-#  3.  If --scsi is specified use sda.
-#
-#  4.  Otherwise use a named $disk_device
-#
-device=xvda
-if [ "${ide}" ]; then
-    device=hda
-elif [ "${scsi}" ]; then
-    device=sda
-else
-    if [ -n "${disk_device}" ]; then
-        device=`basename $disk_device`
-    fi
-fi
-
-logMessage "Root device is /dev/$device"
-
 
 #
 #  Now we have the options we can create the fstab.
@@ -93,11 +69,33 @@ for part in `seq 1 ${NUMPARTITIONS}`; do
     esac
 
     if [ "${partdata2}" = "swap" ]; then
-        echo "/dev/${device}${part} none swap sw 0 0" >> ${prefix}/etc/fstab
+        echo "UUID=$(blkid "$partdata6" -o value -s UUID) none swap sw 0 0" >> ${prefix}/etc/fstab
     else
-        echo "/dev/${device}${part} ${partdata3} ${partdata2} ${partdata4} 0 1" >> ${prefix}/etc/fstab
+        if [ "${partdata2}" = "esp" ]; then
+            partdata2=vfat
+        fi
+        # ESP partitions are nested, so use the chrrot to pull out the UUID from the disk or partition
+        mount -o bind /proc ${prefix}/proc
+        mount -o bind /dev ${prefix}/dev
+        mount -o bind /dev/pts ${prefix}/dev/pts
+        mount -o bind /sys ${prefix}/sys
+        device="$(chroot ${prefix} findmnt -n -o SOURCE -M ${partdata3})"
+        uuid="$(chroot ${prefix} blkid "$device" -o value -s UUID)"
+        umount ${prefix}/sys
+        umount ${prefix}/dev/pts
+        umount ${prefix}/dev
+        umount ${prefix}/proc
+        if [ "x${uuid}" = "x" ]; then
+            logMessage "Could not find UUID for partition"
+            exit 1
+        fi
+        echo "UUID=${uuid} ${partdata3} ${partdata2} ${partdata4} 0 1" >> ${prefix}/etc/fstab
     fi
 done
+
+echo "Generated /etc/fstab:"
+cat ${prefix}/etc/fstab
+echo ""
 
 
 logMessage Checking for filesystem tools to install

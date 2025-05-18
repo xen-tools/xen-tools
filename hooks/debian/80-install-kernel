@@ -21,7 +21,7 @@ else
     . ./hooks/common.sh
 fi
 
-if [ "${pygrub}" = "1" ]; then
+if [ "x${firmware}" != "x" ] || [ "${pygrub}" = "1" ] || [ "${pvgrub}" = "1"  ]; then
 #
 # Log our start
 #
@@ -92,7 +92,7 @@ else
         installDebianPackage ${prefix} $KERNEL_PKG
     else
         logMessage Package $KERNEL_PKG is not available
-        logMessage pygrub set, but kernel could not be installed
+        logMessage pygrub or grub2-xen set, but kernel could not be installed
         logMessage Script $0 failed
         exit 1
     fi
@@ -117,12 +117,14 @@ else
     chroot ${prefix} update-initramfs -c -k $KERNEL_REV
 fi
 
-#
-# Generate a menu.lst for pygrub
-#
+# PVGRUB2 uses normal methods, but pygrub needs this
+if [ "${pygrub}" = "1" ]; then
+    #
+    # Generate a menu.lst for pygrub
+    #
 
-generateDebianGrubMenuLst "${prefix}" "$DOMU_ISSUE" "$DOMU_KERNEL" "$DOMU_RAMDISK"
-
+    generateDebianGrubMenuLst "${prefix}" "$DOMU_ISSUE" "$DOMU_KERNEL" "$DOMU_RAMDISK"
+fi
 
 else
     logMessage pygrub not set, skipping kernel install

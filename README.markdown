@@ -82,6 +82,17 @@ known to work reliably, i.e.:
 * Groovy Gorilla 20.10
 * Hirsute Hippo 21.04 (under development)
 
+### Supported Boot Method & Type Matrix
+
+| Type | pygrub        | grub2-xen     | Direct Kernel Boot           | UEFI          | BIOS                 |
+| ---- | ------------- | ------------- | ------------- | ------------- | -------------------- |
+| PVH  | Yes (no logs) | Yes (no logs) | Yes (no logs) | Yes (no logs)  | N/A                  |
+| PV   | Yes           | Yes (no logs) | Yes           | N/A           | N/A                  |
+| HVM  | N/A           | N/A           | Yes           | Yes (no logs) | Not yet in `xen-tools` |
+
+1. "no logs" means that quiet or other flags prevent seeing systemd messages by default
+2. "N/A" means that Xen doesn't suppor this method
+
 ### Footnotes
 
 <dl compact="compact">

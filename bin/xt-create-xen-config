@@ -50,7 +50,7 @@ xt-create-config - Create a Xen configuration file for a new guest
  a template file to determine how the configuration file should be
  created.
 
-  By default the script will use /etc/xen-tools/xm.tmpl as its input.
+  By default the script will use /etc/xen-tools/xl.tmpl as its input.
 
 
 =head1 INVOCATION
@@ -67,7 +67,7 @@ xt-create-config - Create a Xen configuration file for a new guest
 =for example begin
 
    hostname=foo.my.flat ip=192.168.1.2 ... xm-create-xen-config \
-     --output=/etc/xen --template=/etc/xen-tools/xm.tmpl
+     --output=/etc/xen --template=/etc/xen-tools/xl.tmpl
 
 =for example end
 
@@ -141,7 +141,7 @@ my @PARTITIONS = undef;
 #
 #  Default options
 #
-$CONFIG{ 'template' } = '/etc/xen-tools/xm.tmpl';
+$CONFIG{ 'template' } = '/etc/xen-tools/xl.tmpl';
 $CONFIG{ 'extension' } = '.cfg';
 
 
@@ -218,6 +218,12 @@ sub parseCommandLineArguments
     pod2usage(1) if $HELP;
     pod2usage( -verbose => 2 ) if $MANUAL;
 
+    if (defined($ENV{"CREATE_XEN_CONFIG_DUMP"}))
+    {
+        foreach my $key (sort keys %ENV) {
+            print "$key=$ENV{$key}\n";
+        }
+    }
 
     if ($VERSION)
     {
@@ -292,9 +298,26 @@ sub importPartitionsFromEnvironment
     @PARTITIONS = ();
 
     return unless exists $ENV{ 'NUMPARTITIONS' };
+
+    # Get the base without trailing 'a'
+    my $device = $ENV{ 'device' };
+    my $device_base = substr($device, 0, -1);
+
     for ( my $i = 1 ; $i <= $ENV{ 'NUMPARTITIONS' } ; $i++ )
     {
         my @parts = split( /:/, $ENV{ 'PARTITION' . $i }, 7 );
+
+        # This script only works up to 26 partitions
+        my $partition_letter = chr( ord('a') + $i - 1 );
+        my $vdev;
+        # IDE and SCSI devices support up to 4 drives, make the rest VDB
+        if ($device_base eq 'xvd' || $i <= 4) {
+            $vdev = $device_base . $partition_letter;
+        } else {
+            # in theory we could elide these into one disk, but not for now
+            $vdev = 'xvd' . $partition_letter;
+        }
+
         push( @PARTITIONS,
               {  'name'       => $parts[0],
                  'size'       => $parts[1],
@@ -302,7 +325,9 @@ sub importPartitionsFromEnvironment
                  'mountpoint' => $parts[3],
                  'options'    => $parts[4],
                  'imagetype'  => $parts[5],
-                 'image'      => $parts[6] } );
+                 'image'      => $parts[6],
+                 'vdev'       => $vdev
+             } );
     }
 }
 
@@ -392,32 +417,50 @@ sub createXenConfig
     #
     if ( $ENV{ 'lvm' } )
     {
-        $ENV{ 'image_prefix' } = "phy:$ENV{'lvm'}/$ENV{'hostname'}-";
+        $ENV{ 'image_prefix' } = "$ENV{'lvm'}/$ENV{'hostname'}-";
         $ENV{ 'image_suffix' } = '';
         importPartitionsFromEnvironment();
     }
     elsif ( $ENV{ 'evms' } )
     {
-        $ENV{ 'image_prefix' } = "phy:/dev/evms/$ENV{'hostname'}-";
+        $ENV{ 'image_prefix' } = "/dev/evms/$ENV{'hostname'}-";
         $ENV{ 'image_suffix' } = '';
         importPartitionsFromEnvironment();
     }
     elsif ( $ENV{ 'image_dev' } )
     {
-        $ENV{ 'image_vbd' } = "phy:$ENV{'image_dev'}";
+        @PARTITIONS = ();
+
+        push( @PARTITIONS,
+              {  'name'       => 'disk',
+                 'size'       => '',
+                 'type'       => '',
+                 'mountpoint' => '/',
+                 'options'    => '',
+                 'imagetype'  => '',
+                 'image'      => "$ENV{'image_dev'}",
+                 'vdev'       => "xvda"
+             } );
 
         if ( $ENV{ 'swap_dev' } )
         {
-            $ENV{ 'swap_vbd' } = "phy:$ENV{'swap_dev'}";
-        }
-        else
-        {
-            $ENV{ 'swap_vbd' } = undef;
+            $ENV{ 'swap_vbd' } = "$ENV{'swap_dev'}";
+
+            push( @PARTITIONS,
+                {  'name'       => 'swap',
+                    'size'       => '',
+                    'type'       => 'swap',
+                    'mountpoint' => '/',
+                    'options'    => '',
+                    'imagetype'  => '',
+                    'image'      => "$ENV{'swap_dev'}",
+                    'vdev'       => "xvdb"
+                } );
         }
     }
     else
     {
-        $ENV{ 'image_prefix' } = "file:$ENV{'dir'}/domains/$ENV{'hostname'}/";
+        $ENV{ 'image_prefix' } = "$ENV{'dir'}/domains/$ENV{'hostname'}/";
         $ENV{ 'image_suffix' } = '.img';
         importPartitionsFromEnvironment();
     }

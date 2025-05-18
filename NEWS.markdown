@@ -6,6 +6,12 @@ New Features
 
 * Add support for specifying guest type. (GH #64; PR by Arno Bakker
   @arno481)
+* Rename xm.tmpl to xl.tmpl and use more modern settings in the configuration file.
+* Use UUIDs for fstab.
+* Add PVGrub2/grub2-xen support.
+* Add HVM UEFI support.
+* Add PVH UEFI support.
+* Add UEFI-ESP partition support for UEFI.
 
 Distribution Releases Changes
 -----------------------------
@@ -22,6 +28,7 @@ Other Changes
 * Switch to pure Semantic Versioning including trailing zeros.
 * Sync examples for "fs" and "fs" defaults in xen-create-image with
   (effective) values in xen-tools.conf: ext3 → ext4
+* Remove useless tests.
 
 
 xen-tools 4.9.2 (released 06 Feb 2023)

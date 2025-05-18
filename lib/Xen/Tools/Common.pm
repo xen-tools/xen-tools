@@ -23,9 +23,11 @@ use vars qw(@EXPORT_OK @EXPORT);
 
 use English;
 use File::Which;
+# If not available, use =~ s/\A\s+|\s+\z//urg
+use builtin qw(trim);
 
 @EXPORT = qw(readConfigurationFile xenRunning runCommand setupAdminUsers
-             findXenToolstack
+             findXenToolstack readCommand
              logprint_with_config logonly_with_config fail_with_config);
 
 =head1 FUNCTIONS
@@ -257,6 +259,54 @@ sub runCommand ($$;$)
         }
     }
 
+}
+
+=head2 readCommand
+
+=begin doc
+
+  A utility method to read a system command.  We will capture the return
+ value and exit if the command files.
+
+  The stdout of the command is returned
+
+=end doc
+
+=cut
+
+sub readCommand ($$;$)
+{
+    local $| = 1;
+    my ($cmd, $CONFIG, $fail_ok) = (@_);
+
+    #
+    #  Set a local if we don't have one.
+    #
+    $ENV{ 'LC_ALL' } = "C" unless ( $ENV{ 'LC_ALL' } );
+
+    #
+    #  Header.
+    #
+    if ($CONFIG->{ 'verbose' }) {
+        logprint_with_config("Executing : $cmd\n", $CONFIG);
+    }
+
+    my $result = do {
+        local $/ = undef;
+        my $rcopen = open my $fh, "-|", $cmd;
+        if (!defined($rcopen)) {
+            logprint_with_config("Starting command '$cmd' failed: $!\n", $CONFIG);
+            unless ($fail_ok) {
+                logprint_with_config("Aborting\n", $CONFIG);
+                print "See /var/log/xen-tools/".$CONFIG->{'hostname'}.".log for details\n";
+                $CONFIG->{'FAIL'} = 1;
+                exit 127;
+            }
+        }
+        <$fh>;
+    };
+
+    return (trim($result));
 }
 
 =head2 setupAdminUsers (xen-shell helper)
