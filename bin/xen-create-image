@@ -830,6 +830,7 @@ use Term::UI;
 use Term::ReadLine;
 use Sort::Versions;
 use Xen::Tools::Common;
+use List::Util qw(all);
 
 
 #
@@ -1450,6 +1451,10 @@ sub checkOption
             check   => sub { is_ipv4($_[0]) },
             message => "must be valid IPv4.\n",
         },
+        ipv4_multi => {
+            check   => sub { all { is_ipv4($_) } split(/ +/, $_[0]) },
+            message => "must be valid IPv4(s) (multiple space separated allowed).\n",
+        },
         ipv4_or_auto => {
             check   => sub { is_ipv4($_[0]) or $_[0] eq 'auto' },
             message => "must be valid IPv4 or the keyword 'auto'.\n",
@@ -1519,7 +1524,7 @@ sub checkOption
         netmask       => 'ipv4', # This is dubious.
         broadcast     => 'ipv4',
         hostname      => 'hostname',
-        nameserver    => 'ipv4',
+        nameserver    => 'ipv4_multi',
         pointopoint   => 'ipv4',
         fs            => 'supportedFs',
         cache         => 'yesNo',

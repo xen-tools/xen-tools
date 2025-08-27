@@ -105,9 +105,13 @@ network:
       addresses: [${ip1}/${cidr}]
 ${gate}
       nameservers:
-          addresses: [${nameserver}]
+          addresses:
 E_O_STATIC
-
+    for ns in $nameserver; do
+        cat <<E_O_STATIC >>${prefix}/etc/netplan/01-netcfg.yaml
+            - $ns
+E_O_STATIC
+    done
     # Arno: no support for multiple interfaces
 
     #
