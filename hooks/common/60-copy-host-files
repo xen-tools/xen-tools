@@ -27,7 +27,7 @@ logMessage Script $0 starting
 # Copy "required" files from our host.
 #
 cp /etc/timezone    ${prefix}/etc
-cp /etc/localtime   ${prefix}/etc
+cp -d /etc/localtime ${prefix}/etc
 
 
 #
