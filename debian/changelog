@@ -1,13 +1,18 @@
-xen-tools (4.10.0-1) UNRELEASED; urgency=medium
+xen-tools (4.10.0-1) unstable; urgency=medium
 
+  * New maintainer (Closes: #922126).
   * New upstream feature release
     + Update list of Ubuntu and Debian releases.
     + Support for specifying guest type. (initial patch by Arno Bakker;
       GH #64)
   * Drop alternative Suggests on btrfs-tools. (Closes: #932122; Security
     support for Xen in Debian 8 has long ended.)
+  * hooks/common/60-copy-host-files: copy /etc/localtime with -d instead
+    of dereferencing it, so a host where it is a symlink to
+    /usr/share/zoneinfo/... does not get that file overwritten with the
+    guest's own timezone data (Closes: #1092454).
 
- -- Axel Beckert <abe@debian.org>  Mon, 11 Dec 2023 23:11:47 +0100
+ -- Ivo Marino <ivo.marino+debian@gmail.com>  Tue, 15 Sep 2026 11:15:00 +0000
 
 xen-tools (4.9.2-1) unstable; urgency=medium
 

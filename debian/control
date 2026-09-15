@@ -1,7 +1,7 @@
 Source: xen-tools
 Section: utils
 Priority: optional
-Maintainer: Axel Beckert <abe@debian.org>
+Maintainer: Ivo Marino <ivo.marino+debian@gmail.com>
 Build-Depends: debhelper-compat (= 13),
                devscripts,
                git,
